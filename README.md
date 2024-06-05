@@ -38,6 +38,8 @@
 
 ## About The Project
 
+Work in Progress
+
 Able to manage and See Chat changes from Twitch and YouTube(future)
 
 Able to Manage Responses, Alerts, Activities and more
