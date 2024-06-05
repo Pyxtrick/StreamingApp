@@ -1,0 +1,15 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "endOfLine": "auto",
+  "pluginSearchDirs": false,
+  "overrides": [
+    {
+      "files": "src/assets/i18n/*.json",
+      "options": {
+        "plugins": ["prettier-plugin-sort-json"]
+      }
+    }
+  ]
+}

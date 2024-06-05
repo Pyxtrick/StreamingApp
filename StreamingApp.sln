@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingApp.Web", "StreamingApp\StreamingApp.Web.csproj", "{CC22CF03-E81E-4185-93CF-33B4BBF49864}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingApp.DB", "StreamingApp.DB\StreamingApp.DB.csproj", "{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingApp.Core", "StreamingApp.Core\StreamingApp.Core.csproj", "{1BB242D9-E6D6-4F6D-87E5-CE4BBAAE0D0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE} = {DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingApp.API", "StreamingApp.API\StreamingApp.API.csproj", "{39FC064D-E295-40EE-9922-ACA332EB93C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamingApp.Domain", "StreamingApp.Domain\StreamingApp.Domain.csproj", "{6076BDD7-1226-4F14-8B74-06E77003EA53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{734DEEF7-EFDF-4E61-ACA0-F18FDA6D70A4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC22CF03-E81E-4185-93CF-33B4BBF49864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC22CF03-E81E-4185-93CF-33B4BBF49864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC22CF03-E81E-4185-93CF-33B4BBF49864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC22CF03-E81E-4185-93CF-33B4BBF49864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DACA839A-3AA2-4CD1-9F8D-D95CF2633EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BB242D9-E6D6-4F6D-87E5-CE4BBAAE0D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB242D9-E6D6-4F6D-87E5-CE4BBAAE0D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB242D9-E6D6-4F6D-87E5-CE4BBAAE0D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB242D9-E6D6-4F6D-87E5-CE4BBAAE0D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FC064D-E295-40EE-9922-ACA332EB93C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FC064D-E295-40EE-9922-ACA332EB93C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FC064D-E295-40EE-9922-ACA332EB93C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FC064D-E295-40EE-9922-ACA332EB93C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6076BDD7-1226-4F14-8B74-06E77003EA53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6076BDD7-1226-4F14-8B74-06E77003EA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6076BDD7-1226-4F14-8B74-06E77003EA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6076BDD7-1226-4F14-8B74-06E77003EA53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11E72899-901F-4D46-82A6-2530CB60B0E8}
+	EndGlobalSection
+EndGlobal

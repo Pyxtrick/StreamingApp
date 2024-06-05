@@ -1,0 +1,23 @@
+﻿private Object SendMessage<TMessage>(string url, TMessage message, IDatatransConfiguration configuration)
+{
+	TMessage result = null;
+
+	using (HttpClient client = new HttpClient())
+	{
+		client.BaseAddress = new Uri(url);
+		client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(configuration.MerchantId, configuration.Password);
+
+		var json = JsonConvert.SerializeObject(message);
+		var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+		using (HttpResponseMessage response = client.PostAsync("", content).Result)
+		{
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				var output = response.Content.ReadAsStringAsync().Result;
+				result = JsonConvert.DeserializeObject<TMessage>(output);
+			}
+		}
+	}
+	return result;
+}

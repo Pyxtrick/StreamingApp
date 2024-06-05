@@ -1,0 +1,8 @@
+<div class="info-box">
+  <!--<ng-container [ngSwitch]="selectedFormType$ | async"> </ng-container>-->
+  <mat-list>
+    <mat-list-item *ngFor="let shoe of typesOfShoes">
+      <div>{{ shoe }}</div>
+    </mat-list-item>
+  </mat-list>
+</div>

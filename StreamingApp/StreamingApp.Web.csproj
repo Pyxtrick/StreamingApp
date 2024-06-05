@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>bfdf9515-767f-4dc2-bb8d-a6d2790b5a00</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.20.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StreamingApp.Core\StreamingApp.Core.csproj" />
+    <ProjectReference Include="..\StreamingApp.DB\StreamingApp.DB.csproj" />
+  </ItemGroup>
+
+  <Target Name="NSwag" AfterTargets="Build">
+    <!--<Exec Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)" />-->
+  </Target>
+
+  <Target Name="NSwag" AfterTargets="Build">
+    <PropertyGroup>
+      <_BackendWebDllExists>.\bin\$(Configuration)\$(TargetFramework)\StreamingApp.Web.dll</_BackendWebDllExists>
+    </PropertyGroup>
+    <Exec Command="$(NSwagExe_Net80) run Properties/nswag.json /variables:Configuration=$(Configuration)"
+          Condition="Exists('$(_BackendWebDllExists)')" />
+  </Target>
+
+</Project>

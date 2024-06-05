@@ -1,0 +1,92 @@
+
+// Frontnend
+TODO: Skip allerts
+TODO: stop allerts from playing
+TODO: mute allerts
+TODO: delay allerts that they are not overlayed
+TODO: Speed up TTS / allerts when to long
+
+TODO: reset list / view
+
+TODO: authorice users in frontend using twitch auth
+TODO: have an frontend for users for polls / votes / Comunity day queue / forms (ticket / "job application")
+
+TODO: Show statistics in Frontend
+
+TODO: Raid rains or move across the screen the raiders mascot / emotes
+
+TODO: update View if message in the backend has been deleted / banded / timeout
+
+TODO: update data in forntend / upload images / audio / video
+
+TODO: implement funny effect in chat
+
+TODO: use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
+
+TODO: main view over the etire screen so tings can be placed anywhere on the screen
+that certain tings can go over the etire screen
+TODO: place things on screen at specific locations with x and y axies
+
+// Backend
+TODO: have a counter for like things that happend multiple times
+TODO: have a counter for how many times a sound has been played
+
+TOOD: respond to messages
+
+TODO: able to get the new 7ttv or betterttv emtoes when they are added
+
+TODO: make some parts of it "inactive" when offline
+
+TODO: Make Twitch chanes like Title / Game
+
+TODO: Subathon timer
+TODO: sstart
+TODO: sstop
+TODO: sset
+
+TODO: able to Ban users with specific message in the chat message in a specific time area | the Saved Chat messages needs to be able to go back at least 5 - 10 min to catch all Bot accounts
+TODO: able to detect Spam messages from one or multiple users / Bots | needs to avoid Raids or other specific events | show affected Users and there message/s on a new View that has the capability to Ban, Timeout or Delete the message
+
+TODO: send Chat Message every x minutes
+
+TODO: use /me to change chat text message to my collor / Italic -> depenging on the users setting
+TODO: Maybe use a diffrent twitch account for the "Bot" some thing like PyxtricksBot
+
+TODO: clip creates twitch clip of the last x seconds
+TODO: clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
+
+TODO: Things can be tracked from things outside this Programm
+
+TODO: Spam protection for Commands / use Cache for checking when it was last used
+TODO: Same for Bot Spam with fallower
+TODO: Able to disable it for a x time or reset some data / Cache
+
+TODO: able to respond to good "spam" (Dance Emojis)
+TODO: respond with sound
+
+TODO: Create a Diffretnt application for an Discord crawler to get Images / and other tings
+
+TODO: auto delete message if there are in a diffrent language
+
+TODO: create a screen shot of the current Stream using bits or point rediam
+
+TODO: every x minutes: https://crontab.cronhub.io/
+
+TODO: use keyword to get into an list for an raffle
+
+TODO: NSWAG setup
+
+/** TODO: Stream statistics
+ * gifted Subs
+ * subs
+ * prime subs
+ * Tier 1 / 2 / 3
+ * bits
+ * messages
+ * emotes used
+ * rediam ammount
+ * Raid amounts
+ * individual chatted user count
+ * max viewers count
+ * stream time
+ */

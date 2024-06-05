@@ -1,0 +1,21 @@
+import { ChatOriginEnum } from '../enums/ChatOriginEnum';
+import { ChatUserEnum } from '../enums/ChatUserEnum';
+import { EffectEnum } from '../enums/EffectEnum';
+import { SpecialMessgeEnum } from '../enums/SpecialMessgeEnum';
+import { EmoteSet } from '../external/EmoteSet';
+
+export interface ChatDto {
+  id: string;
+  userName: string;
+  colorHex: string;
+  ReplayMessage: string;
+  Message: string;
+  EmoteReplacedMessage: string;
+  EmoteSetdata: EmoteSet;
+  Badges: string[][];
+  ChatOrigin: ChatOriginEnum;
+  Auth: ChatUserEnum[];
+  SpecialMessage: SpecialMessgeEnum[];
+  Effect: EffectEnum;
+  Date: Date;
+}
