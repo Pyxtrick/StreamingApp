@@ -15,6 +15,8 @@ public class CommandAndResponse : EntityBase
     [Required]
     public string Response { get; set; }
 
+    public string Description { get; set; }
+
     // Is Active
     public bool Active { get; set; }
 
