@@ -9,15 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.0.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="NSwag.MSBuild" Version="14.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -27,14 +21,11 @@
   </ItemGroup>
 
   <Target Name="NSwag" AfterTargets="Build">
-    <!--<Exec Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)" />-->
-  </Target>
-
-  <Target Name="NSwag" AfterTargets="Build">
     <PropertyGroup>
       <_BackendWebDllExists>.\bin\$(Configuration)\$(TargetFramework)\StreamingApp.Web.dll</_BackendWebDllExists>
     </PropertyGroup>
     <Exec Command="$(NSwagExe_Net80) run Properties/nswag.json /variables:Configuration=$(Configuration)" Condition="Exists('$(_BackendWebDllExists)')" />
+    
   </Target>
 
 </Project>

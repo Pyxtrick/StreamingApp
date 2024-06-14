@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": "StreamingApp.Web.csproj",
+      "project": "../StreamingApp.Web.csproj",
       "msBuildProjectExtensionsPath": null,
       "configuration": "$(Configuration)",
       "runtime": null,
@@ -113,7 +113,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../StreamingApp.Frontend_Angular/src/api/api.service.ts",
+      "output": "../../StreamingApp.Frontend_Angular/src/api/api.service.ts",
       "newLineBehavior": "Auto"
     }
   }
