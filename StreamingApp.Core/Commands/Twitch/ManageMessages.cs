@@ -29,7 +29,7 @@ public class ManageMessages : IManageMessages
     public async Task Execute()
     {
         //TODO: Check if 1 second is enouth for this
-        IList<MessageDto> t = (IList<MessageDto>)_twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+        IList<MessageDto> t = new List<MessageDto>(); // (IList<MessageDto>)_twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
 
         if (t != null)
         {

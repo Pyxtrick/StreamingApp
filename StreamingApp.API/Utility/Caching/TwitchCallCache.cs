@@ -109,6 +109,7 @@ public class TwitchCallCache : ITwitchCallCache
 
     public IList<Object> GetAllMessagesFromTo(DateTime from, DateTime to, CallCacheEnum callCacheEnum)
     {
+        /**
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
@@ -131,6 +132,8 @@ public class TwitchCallCache : ITwitchCallCache
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();
         }
+        **/
+        return new List<Object>();
     }
 
     public void RemoveMessages(IList<Object> messages, CallCacheEnum callCacheEnum)

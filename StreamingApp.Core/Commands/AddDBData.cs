@@ -116,6 +116,7 @@ public class AddDBData : IAddDBData
             {
                 new SpecialWords() { Name = "https", Comment = "url", Type = SpecialWordEnum.Delete },
                 new SpecialWords() { Name = "http", Comment = "url", Type = SpecialWordEnum.Delete },
+                new SpecialWords() { Name = "Best and Cheap Viewers on", Comment = "ban", Type = SpecialWordEnum.Banned },
 
                 new SpecialWords() { Name = "https://7tv.app", Comment = "url", Type = SpecialWordEnum.Allowed },
 
