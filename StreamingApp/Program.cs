@@ -30,6 +30,8 @@ builder.Services.AddSwaggerDocument(swagger =>
     swagger.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
+builder.Services.AddCors(options => { options.AddPolicy("StreamingAppCors", builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); }); });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,6 +53,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("StreamingAppCors");
 
 app.MapControllers();
 

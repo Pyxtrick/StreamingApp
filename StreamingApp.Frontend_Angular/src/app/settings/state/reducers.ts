@@ -11,7 +11,7 @@ export const initialState: SettingsState = {
 };
 
 export const settingsFeature = createFeature({
-  name: 'masterdata',
+  name: 'settings',
   reducer: createReducer(
     initialState,
     //Technologie relevant action

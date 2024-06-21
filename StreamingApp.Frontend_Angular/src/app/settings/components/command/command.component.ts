@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
@@ -14,7 +14,7 @@ import { settingsFeature } from './../../state/reducers';
   templateUrl: './command.component.html',
   styleUrl: './command.component.scss',
 })
-export class CommandComponent {
+export class CommandComponent implements OnInit {
   private store = inject(Store);
   public commands$!: Observable<CommandAndResponseDto[]>;
   public commands!: CommandAndResponseDto[];
@@ -40,6 +40,6 @@ export class CommandComponent {
       )
       .subscribe();
 
-    console.log(this.commands);
+    console.log('command', this.commands);
   }
 }

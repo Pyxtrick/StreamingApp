@@ -5,12 +5,13 @@ import {
   Injector,
   LOCALE_ID,
   importProvidersFrom,
+  isDevMode,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 import {
   TranslateLoader,
   TranslateModule,
@@ -18,6 +19,7 @@ import {
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { lastValueFrom } from 'rxjs';
+import { API_BASE_URL } from 'src/api/api.service';
 import { routes } from './app.routes';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -25,7 +27,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 export function getBaseUrl(): string {
-  return '/api';
+  return 'https://localhost:7033';
 }
 
 export const appConfig: ApplicationConfig = {
@@ -56,7 +58,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideAnimationsAsync(),
     provideStore(),
-    provideEffects(),
+    isDevMode() ? provideStoreDevtools() : [],
+    { provide: API_BASE_URL, useFactory: getBaseUrl },
   ],
 };
 
