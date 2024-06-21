@@ -40,6 +40,7 @@ public class MessageDto(
 
     public EmoteSet? EmoteSet { get; set; } = emoteSet;
 
+    // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
 
     public ChatOriginEnum ChatOrigin { get; set; } = chatOrigin;

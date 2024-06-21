@@ -57,10 +57,10 @@ Able to Manage Responses, Alerts, Activities and more
 
 #### Fronetnd
 
-- [Vue.js (Learning)](https://vuejs.org/)
 - [Angular](https://angular.io/)
-- [Vuex](https://vuex.vuejs.org/)
-- [Vuetify](https://vuetifyjs.com/en/)
+- [Material](https://material.angular.io/)
+- [RxJS](https://rxjs.dev/)
+- [Ngrx](https://ngrx.io/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -72,15 +72,28 @@ To get started feel free to clone this repository to your local machine.
 
 ### Prerequisites
 
-For .net 7 "Visual Studio 2022" or higher is needed to run the Backend
+Backend
+For .net 8 "Visual Studio 2022" or higher is needed to run the Backend
 
-### Installation
+Frontend
+npm version 20.12.2 is used.
 
-## Usage
+## Installation
 
 ### Backend
 
+Use Visual Studio 2022
+
+DB will automatically be created / updated but no data will be added.
+NSwag will automatically create "api.service.ts" when backend is started.
+
+Manage User secrets and add "ClientId" and "ClientSecret" for Connecting it with Twitch
+
 ### Frontend
+
+run "npm install" and start Frontend by "npm run start"
+
+backend Needs to be run with "Visual Studio" no run backend from frontend implemented jet.
 
 ## Roadmap
 

@@ -16,7 +16,7 @@ public enum EffectEnum
     randamise,
     // translates the message with translate a lot of times
     translatehell,
-    // Gigantify an Emote (twitch)
+    // Gigantify / enlarge an Emote (twitch)
     gigantify,
     // Message Effect (twitch)
     messageEffect,

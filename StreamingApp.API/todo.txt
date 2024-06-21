@@ -6,25 +6,25 @@ TODO: mute allerts
 TODO: delay allerts that they are not overlayed
 TODO: Speed up TTS / allerts when to long
 
+	//CHAT
+TODO: Show badges like Prediction / Sub in chat bysides name
+TODO: update View if message in the backend has been deleted / banded / timeout
+TODO: implement funny effect in chat
+TODO: use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
+
+
 TODO: reset list / view
 
 TODO: authorice users in frontend using twitch auth
-TODO: have an frontend for users for polls / votes / Comunity day queue / forms (ticket / "job application")
+TODO: have an frontend for users for polls / votes / Comunity day queue / forms (ticket / "mod application")
 
 TODO: Show statistics in Frontend
 
 TODO: Raid rains or move across the screen the raiders mascot / emotes
 
-TODO: update View if message in the backend has been deleted / banded / timeout
-
 TODO: update data in forntend / upload images / audio / video
 
-TODO: implement funny effect in chat
-
-TODO: use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
-
-TODO: main view over the etire screen so tings can be placed anywhere on the screen
-that certain tings can go over the etire screen
+TODO: main view over the etire screen so tings can be placed anywhere on the screen that certain tings can go over the etire screen
 TODO: place things on screen at specific locations with x and y axies
 
 // Backend
