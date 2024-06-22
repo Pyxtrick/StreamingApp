@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Twitch.Interfaces;
+using StreamingApp.API.Utility;
 using StreamingApp.API.Utility.Caching;
 using StreamingApp.API.Utility.Caching.CacheData;
 using StreamingApp.API.Utility.Caching.Interface;
@@ -12,6 +13,8 @@ public static class Registrar
     public static void AddApiOptions(this IServiceCollection services)
     {
         //utility
+        services.AddAutoMapper(typeof(TwitchMappingProfile));
+
         services.AddScoped<ITwitchCache, TwitchCache>();
         services.AddSingleton<TwitchCacheData>();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
@@ -6,7 +7,6 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.HypeTrain;
 using TwitchLib.Client.Events;
-using TwitchLib.Client.Models;
 
 namespace StreamingApp.API.Twitch;
 
@@ -15,12 +15,14 @@ public class TwitchApiRequest : ITwitchApiRequest
     private readonly ITwitchCache _twitchCache;
     private readonly IConfiguration _configuration;
     private readonly ITwitchCallCache _twitchCallCache;
+    private readonly IMapper _mapper;
 
-    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache)
+    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper)
     {
         _twitchCache = twitchCache;
         _configuration = configuration;
         _twitchCallCache = twitchCallCache;
+        _mapper = mapper;
     }
 
     //English only please | bitte nur englisch | solo inglés por favor | solo inglese per favore | apenas inglês por favor | anglais seulement s'il vous plait | alleen engels alstublieft | proszę tylko po angielsku | только английский пожалуйста | 英語のみお願いします | 请只说英语 | 영어만 쓰시길 바랍니다
@@ -60,8 +62,6 @@ public class TwitchApiRequest : ITwitchApiRequest
         string pointRediam = e.ChatMessage.CustomRewardId;
         int bits = e.ChatMessage.Bits;
 
-        ChatMessage t = e.ChatMessage;
-
         List<KeyValuePair<string, string>> badges = e.ChatMessage.Badges;
 
         List<AuthEnum> auths = new List<AuthEnum>()
@@ -82,10 +82,13 @@ public class TwitchApiRequest : ITwitchApiRequest
             e.ChatMessage.IsSkippingSubMode ? SpecialMessgeEnum.SkippSubMode : 0,
         }.Where(a => a != 0).ToList();
 
+        //TODO: Check if this works on its own
+        MessageDto messageDto1 = _mapper.Map<MessageDto>(e.ChatMessage);
+
         MessageDto messageDto = new(e.ChatMessage.Id, false, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
 
         //TODO: only save chat messages
-        _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
+        _twitchCallCache.AddMessage(messageDto1, CallCacheEnum.CachedMessageData);
     }
 
     public void Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
@@ -104,6 +107,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             e.Command.ChatMessage.IsPartner ? AuthEnum.Partner : AuthEnum.undefined,
         }.Where(a => a != 0).ToList();
 
+        //TODO: CommandDto commandDto = _mapper.Map<CommandDto>(e.ChatMessage);
+
         CommandDto commandDto = new(e.Command.ChatMessage.Id, e.Command.ChatMessage.UserId, e.Command.ChatMessage.DisplayName, e.Command.CommandText.ToLower(), auths, DateTime.UtcNow, ChatOriginEnum.Twtich);
 
         //TODO: Save commandDto to Cache
@@ -119,6 +124,8 @@ public class TwitchApiRequest : ITwitchApiRequest
         string emoteMessage;
 
         TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan.ToString());
+
+        //TODO: SubscriptionDto mess = _mapper.Map<SubscriptionDto>(e.GiftedSubscription);
         SubscriptionDto subscriptionDto = new SubscriptionDto(e.GiftedSubscription.Id, userName, true, 1, tier, null);
 
         // TODO: Save Giffted Sub to Cache to be able to count amount of subs
@@ -139,6 +146,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             //await UpdateSub(e.Subscriber, null);
 
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
+
+            //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.Subscriber);
             SubscriptionDto subscriptionDto = new SubscriptionDto(e.Subscriber.Id, userName, true, 1, tier, null);
 
             try
@@ -180,6 +189,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             //await UpdateSub(null, e.PrimePaidSubscriber);
 
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
+
+            //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.PrimePaidSubscriber);
             SubscriptionDto subscriptionDto = new SubscriptionDto(e.PrimePaidSubscriber.Id, userName, true, 1, tier, null);
 
             try
@@ -235,6 +246,9 @@ public class TwitchApiRequest : ITwitchApiRequest
             SpecialMessgeEnum.SubMessage
         };
 
+        //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
+        //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.ReSubscriber);
+
         ChatDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
         SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, true, 1, tier, chatDto);
 
@@ -274,12 +288,16 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         // TODO: Show emote
 
+        //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
+
         throw new NotImplementedException();
     }
 
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
         // TODO: Save to DB
+
+        //TODO: BannedUserDto subscriptionDto = _mapper.Map<BannedUserDto>(e.ReSubscriber);
         BannedUserDto subscriptionDto = new(e.UserBan.Username, "test", DateTime.Now);
         throw new NotImplementedException();
     }
