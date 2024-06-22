@@ -21,8 +21,8 @@ public class TwitchController : ControllerBase
     }**/
 
     [HttpGet]
-    public void GetTwitchChatData([FromServices] IAddDBData getTwitchDataQuery)
+    public void GetTwitchChatData([FromServices] IAddDBData addDBData)
     {
-        getTwitchDataQuery.Execute();
+        addDBData.Execute();
     }
 }
