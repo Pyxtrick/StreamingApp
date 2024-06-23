@@ -9,4 +9,5 @@ public enum CategoryEnum
     streamupdate,
     fun,
     Subathon,
+    Logic,
 }

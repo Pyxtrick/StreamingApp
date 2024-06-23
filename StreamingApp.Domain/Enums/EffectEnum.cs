@@ -18,6 +18,4 @@ public enum EffectEnum
     translatehell,
     // Gigantify / enlarge an Emote (twitch)
     gigantify,
-    // Message Effect (twitch)
-    messageEffect,
 }

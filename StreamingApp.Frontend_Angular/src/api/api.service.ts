@@ -364,6 +364,7 @@ export enum CategoryEnum {
     Streamupdate = 4,
     Fun = 5,
     Subathon = 6,
+    Logic = 7,
 }
 
 export class ApiException extends Error {

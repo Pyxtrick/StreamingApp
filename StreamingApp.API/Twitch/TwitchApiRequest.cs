@@ -25,8 +25,6 @@ public class TwitchApiRequest : ITwitchApiRequest
         _mapper = mapper;
     }
 
-    //English only please | bitte nur englisch | solo inglés por favor | solo inglese per favore | apenas inglês por favor | anglais seulement s'il vous plait | alleen engels alstublieft | proszę tylko po angielsku | только английский пожалуйста | 英語のみお願いします | 请只说英语 | 영어만 쓰시길 바랍니다
-
     public void Client_OnConnected(object sender, OnConnectedArgs e)
     {
         Log($"User {e.BotUsername} connected (bot access)");

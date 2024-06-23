@@ -25,4 +25,6 @@ public class CommandAndResponse : EntityBase
 
     // Category to easier disdinguish | search between commands
     public CategoryEnum Category { get; set; }
+
+    public bool HasLogic { get; set; }
 }

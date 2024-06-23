@@ -7,7 +7,6 @@ namespace StreamingApp.Core.Commands;
 public class AddDBData : IAddDBData
 {
     private readonly UnitOfWorkContext _unitOfWork;
-    //private readonly UnitOfWorkContext _unitOfWork;
 
     public AddDBData(UnitOfWorkContext unitOfWork)
     {
@@ -22,86 +21,95 @@ public class AddDBData : IAddDBData
         {
             List<CommandAndResponse> commandsStaticResponse = new List<CommandAndResponse>
             {
-                new CommandAndResponse() {Command = "about", Response = "Pyxtrick is a stramer From Switzerland who loves Gaming and Programming", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "links", Response = "All links are found here: https://pyxtrick.carrd.co/", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "socials", Response = "All my Socials https://x.com/Pyxtrick | https://www.youtube.com/@Pyxtrick", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "discord", Response = "Discord is currenty under constuction 🛠️", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "donate", Response = "If you want to support the stream, you can donate using the following link: XYZ", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "collab", Response = "There is currenty no Collab going on", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "streamtime", Response = "next stream will be on Friday or Saturday", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "raidsub", Response = "There is currenty no Twitch Raid message with Sub Emotes use raid command instead", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "raidbit", Response = "There is currenty no Twitch Raid message with Bit Emotes use raid command instead", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "raid", Response = "<3 Pyxtrick twitchRaid", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "emotes", Response = "Cannot see Emotes like hiii get 7tv browser addon from https://7tv.app/", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "statistics", Response = "Currenty no statistics can be found :(", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "language", Response = "The Stream is Primarly Englisch only that includes the chat.", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "language2", Response = "The Stream is Primarly Englisch only that includes the chat. But in rare acations it can be in Schweizer Deutch.", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "uptime", Response = "Online since HH:MM:SS DD.MM.YYYY Live for XD Xh Xm Xs", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "about", Response = "Pyxtrick is a stramer From Switzerland who loves Gaming and Programming", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "links", Response = "All links are found here: https://pyxtrick.carrd.co/", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "lurk", Response = "XXX coes udercover. Have fun Lurking ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "socials", Response = "All my Socials https://x.com/Pyxtrick | https://www.youtube.com/@Pyxtrick", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "discord", Response = "Discord is currenty under constuction 🛠️", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "donate", Response = "If you want to support the stream, you can donate using the following link: XYZ", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "collab", Response = "There is currenty no Collab going on", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                
+                new CommandAndResponse() {Command = "raidsub", Response = "There is currenty no Twitch Raid message with Sub Emotes use raid command instead", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "raidbit", Response = "There is currenty no Twitch Raid message with Bit Emotes use raid command instead", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "raid", Response = "<3 Pyxtrick twitchRaid", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                
+                new CommandAndResponse() {Command = "emotes", Response = "Cannot see Emotes like hiii get 7tv browser addon from https://7tv.app/", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "statistics", Response = "Currenty no statistics can be found :(", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                
+                new CommandAndResponse() {Command = "language", Response = "English only please | bitte nur englisch | solo inglés por favor | solo inglese per favore | apenas inglês por favor | anglais seulement s'il vous plait | alleen engels alstublieft | proszę tylko po angielsku | только английский пожалуйста | 英語のみお願いします | 请只说英语 | 영어만 쓰시길 바랍니다", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "english", Response = "The Stream is Primarly Englisch only that includes the chat.", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "english2", Response = "The Stream is Primarly Englisch only that includes the chat. But in rare acations it can be in Schweizer Deutch.", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = false },
 
-                new CommandAndResponse() {Command = "updategame", Response = "Stream Game has been updated to: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate },
-                new CommandAndResponse() {Command = "updatetitle", Response = "Stream Title has been updated to: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate },
+                new CommandAndResponse() {Command = "streamtime", Response = "next stream will be on Friday or Saturday", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "uptime", Response = "Online since HH:MM:SS DD.MM.YYYY Live for XD Xh Xm Xs", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "updategame", Response = "Stream Game has been updated to: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+                new CommandAndResponse() {Command = "updatetitle", Response = "Stream Title has been updated to: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
 
-                new CommandAndResponse() {Command = "lurk", Response = "XXX coes udercover. Have fun Lurking ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "time", Response = "current time is: XX.XX", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                // Adds timer for x time
+                new CommandAndResponse() {Command = "timer", Response = "Timer has been set for X minutes", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+
+                // in CEST / UTC
+                new CommandAndResponse() {Command = "time", Response = "current time is: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
                 
                 // TOOD: change time when time zone is used (live est)
                 // TODO: Dynamicly change time on time change CEST / CET
-                new CommandAndResponse() {Command = "live", Response = "Use the TZ identifier for this command !live https://en.wikipedia.org/wiki/List_of_tz_database_time_zones", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "live", Response = "Use the TZ identifier for this command !live https://en.wikipedia.org/wiki/List_of_tz_database_time_zones", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
 
                 // TODO: so @fufu gets link from db and shows them with text
                 // Soudout to a User / Twitch Channel
-                new CommandAndResponse() {Command = "so", Response = "", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "so", Response = "", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
                 
                 // TODO: have an immage for showing all command and Platformn ID's for
                 // For steam join the Group XXX | EA: XXX | Battlenet: XXX | XBOX for PC: XXX
                 // If you are in Discord join the waiting room so we can pull you wen it is your turn
-                new CommandAndResponse() {Command = "cday", Response = "if you want to join the Que use !joinq", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cinfo", Response = "if you want to join the Que use !joinq", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cjoin", Response = "Has have Joined the Queue on Possition", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cleve", Response = "Has have Left the Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cwho", Response = "Current users are: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cnext", Response = "Next users are: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cremove", Response = "Users have been Removed from the Active Queue", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cqueue", Response = "You are in the Active Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue},
-                new CommandAndResponse() {Command = "clast", Response = "Has Been moved to last place in Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cstart", Response = "Queue is now open to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue },
-                new CommandAndResponse() {Command = "cend", Response = "Queue is closed and no one is able to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue },
+                new CommandAndResponse() {Command = "cday", Response = "if you want to join the Que use !joinq", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cinfo", Response = "if you want to join the Que use !joinq", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cjoin", Response = "Has have Joined the Queue on Possition", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cleve", Response = "Has have Left the Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cwho", Response = "Current users are: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cnext", Response = "Next users are: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cremove", Response = "Users have been Removed from the Active Queue", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cqueue", Response = "You are in the Active Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "clast", Response = "Has Been moved to last place in Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cstart", Response = "Queue is now open to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cend", Response = "Queue is closed and no one is able to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
 
-                new CommandAndResponse() {Command = "rules", Response = "", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "cc", Response = "Crowd Controll Links:", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "vote", Response = "If you want to vote for me Here is the Link: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "modpack", Response = "There is no Modpack about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game },
-                new CommandAndResponse() {Command = "gameinfo", Response = "There is no Info about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game },
-                new CommandAndResponse() {Command = "gameprogress", Response = "There is no Progress about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game },
-                new CommandAndResponse() {Command = "song", Response = "There is no Info about this Song", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Song },
+                new CommandAndResponse() {Command = "rules", Response = "", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "vote", Response = "If you want to vote for me Here is the Link: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
 
-                // Adds timer for x time
-                new CommandAndResponse() {Command = "timer", Response = "Timer has been set for X minutes", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "cc", Response = "Crowd Controll Links:", Description = "", Active = false, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "modpack", Response = "There is no Modpack about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game, HasLogic = true },
+                new CommandAndResponse() {Command = "gameinfo", Response = "There is no Info about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game, HasLogic = true },
+                new CommandAndResponse() {Command = "gameprogress", Response = "There is no Progress about this Category: ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Game, HasLogic = true },
+                
+                new CommandAndResponse() {Command = "song", Response = "There is no Info about this Song", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Song, HasLogic = true },
+                
+                // Subathon
+                new CommandAndResponse() {Command = "sstart", Response = "Subathon timer has been started", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon, HasLogic = true },
+                new CommandAndResponse() {Command = "sstop", Response = "Subathon timer has been stoped", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon, HasLogic = true },
+                new CommandAndResponse() {Command = "sset", Response = "Subathon timer has been set to: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon, HasLogic = true },
 
-                new CommandAndResponse() {Command = "sstart", Response = "Subathon timer has been started", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon },
-                new CommandAndResponse() {Command = "sstop", Response = "Subathon timer has been stoped", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon },
-                new CommandAndResponse() {Command = "sset", Response = "Subathon timer has been set to XXX", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon },
-
-                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
 
                 // creates a twitch clip
-                new CommandAndResponse() {Command = "clip", Response = "clips the last X Seconds", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
-                new CommandAndResponse() {Command = "clip2", Response = "Creates a time stamp of the current recording", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "clip", Response = "clips the last X Seconds", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "clip2", Response = "Creates a time stamp of the current recording", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
 
                 //TODO: Fun chat things
                 // flips chat message around
-                new CommandAndResponse() {Command = "flip", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "random", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "rainbow", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "revert", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "bounce", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "random", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
-                new CommandAndResponse() {Command = "translatehell", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun },
+                new CommandAndResponse() {Command = "flip", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "random", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "rainbow", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "revert", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "bounce", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "random", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "translatehell", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "gigantify", Response = "", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
 
-                new CommandAndResponse() {Command = "clipper", Response = "Send some love to all the Clipper's ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "clipper", Response = "Send some love to all the Clipper's ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
 
-                new CommandAndResponse() {Command = "update", Response = "Chat Emotes have been updated", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined },
+                new CommandAndResponse() {Command = "update", Response = "Chat Emotes have been updated", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
             };
             _unitOfWork.CommandAndResponse.AddRange(commandsStaticResponse);
 
