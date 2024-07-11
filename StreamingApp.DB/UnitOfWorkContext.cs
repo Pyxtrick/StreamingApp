@@ -37,6 +37,8 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<StreamHistory> StreamHistory { get; set; } = null!;
 
+    public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
+
     public DbSet<Sub> Sub { get; set; } = null!;
 
     public DbSet<User> User { get; set; } = null!;

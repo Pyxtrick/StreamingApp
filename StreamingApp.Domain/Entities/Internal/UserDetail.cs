@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StreamingApp.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StreamingApp.Domain.Entities.Internal;
 
@@ -16,4 +17,7 @@ public class UserDetail
 
     // Url | defined internal
     public string? Url { get; set; }
+
+    // Gives Autherisation for the App / Backend and Frontend
+    public AppAuthEnum AppAuthEnum { get; set; }
 }

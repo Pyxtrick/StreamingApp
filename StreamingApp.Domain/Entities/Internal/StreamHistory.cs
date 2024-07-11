@@ -11,7 +11,6 @@ public class StreamHistory
     public string StreamTitle { get; set; }
 
     public int GameStreamId { get; set; }
-
     [NotMapped]
     public GameStream? GameCategories { get; set; }
 }

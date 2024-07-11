@@ -25,9 +25,12 @@ public class Status
     // Is Currenty Verified / Streamer | defined externaly
     public bool IsVerified { get; set; }
 
+    // Is Currenty a moderator on Twitch or Yoututbe
+    public bool IsMod { get; set; }
+
     // What is that person default: Viewer | defined internal
     public UserTypeEnum UserType { get; set; }
 
     // time zone for other streamers | defined internal
-    public int TimeZoneUTC { get; set; }
+    public string TimeZone { get; set; }
 }
