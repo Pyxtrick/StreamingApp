@@ -11,5 +11,6 @@ public class StatusConfiguration : IEntityTypeConfiguration<Status>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.UserType).HasConversion<string>();
     }
 }

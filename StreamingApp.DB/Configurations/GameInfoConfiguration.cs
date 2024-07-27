@@ -11,5 +11,6 @@ public class GameInfoConfiguration : IEntityTypeConfiguration<GameInfo>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.GameCategory).HasConversion<string>();
     }
 }

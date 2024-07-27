@@ -11,5 +11,6 @@ public class SpecialWordsConfiguration : IEntityTypeConfiguration<SpecialWords>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Type).HasConversion<string>();
     }
 }

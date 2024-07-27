@@ -12,6 +12,8 @@ public class CommandAndResponseConfiguration : IEntityTypeConfiguration<CommandA
 
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Command).HasMaxLength(100);
-        builder.Property(a => a.Response).HasMaxLength(200);
+        builder.Property(a => a.Response).HasMaxLength(300);
+        builder.Property(a => a.Auth).HasConversion<string>();
+        builder.Property(a => a.Category).HasConversion<string>();
     }
 }

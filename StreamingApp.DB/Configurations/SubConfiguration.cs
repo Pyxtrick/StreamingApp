@@ -11,5 +11,6 @@ public class SubConfiguration : IEntityTypeConfiguration<Sub>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.CurrentTier).HasConversion<string>();
     }
 }

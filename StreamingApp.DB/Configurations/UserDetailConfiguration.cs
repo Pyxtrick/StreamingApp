@@ -13,5 +13,6 @@ public class UserDetailConfiguration : IEntityTypeConfiguration<UserDetail>
         builder.HasKey(a => a.Id);
         builder.Property(a => a.UserName).HasMaxLength(100);
         builder.Property(a => a.UserId).HasMaxLength(100);
+        builder.Property(a => a.AppAuthEnum).HasConversion<string>();
     }
 }
