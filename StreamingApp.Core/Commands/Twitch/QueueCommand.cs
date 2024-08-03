@@ -1,5 +1,6 @@
 ﻿using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Enums;
@@ -10,16 +11,40 @@ public class QueueCommand : IQueueCommand
 {
     private readonly ITwitchCache _twitchCache;
     private readonly IQueueCache _queueCache;
+    private readonly UnitOfWorkContext _unitOfWork;
 
-    public QueueCommand(ITwitchCache twitchCache, IQueueCache queueCache)
+    public QueueCommand(ITwitchCache twitchCache, IQueueCache queueCache, UnitOfWorkContext unitOfWork)
     {
         _twitchCache = twitchCache;
         _queueCache = queueCache;
+        _unitOfWork = unitOfWork;
     }
 
     public void Execute(CommandAndResponse commandAndResponse, string message, string userName, ChatOriginEnum origin)
     {
         int ammount = int.Parse(message.Split(" ")[1]);
+
+        Settings settings = _unitOfWork.Settings.First();
+
+        switch (commandAndResponse.Command)
+        {
+            case "cstart": // Starts the queue for every one
+                settings.ComunityDayActive = true;
+
+                _unitOfWork.Update(settings);
+                _unitOfWork.SaveChanges();
+
+                SendMessage(commandAndResponse.Response, origin);
+                break;
+            case "cend": // Stops the queue but not removes the data
+                settings.ComunityDayActive = true;
+
+                _unitOfWork.Update(settings);
+                _unitOfWork.SaveChanges();
+
+                SendMessage(commandAndResponse.Response, origin);
+                break;
+        }
 
         switch (commandAndResponse.Command)
         {
@@ -30,11 +55,14 @@ public class QueueCommand : IQueueCommand
                 SendMessage(commandAndResponse.Response, origin);
                 break;
             case "cjoin": // able to join the queue once
-                UserQueueDto userQueueDto = new(userName, true, 0, Domain.Enums.ChatOriginEnum.Twtich);
-                var possition = _queueCache.AddUserToQueue(userQueueDto);
-                // @User Has have Joined the Queue on Possition X
-                // Even if the user has allready joined previously
-                SendMessage($"@{userName} {commandAndResponse.Response} {possition}", origin);
+                if (settings.ComunityDayActive)
+                {
+                    UserQueueDto userQueueDto = new(userName, true, 0, ChatOriginEnum.Twtich);
+                    var possition = _queueCache.AddUserToQueue(userQueueDto);
+                    // @User Has have Joined the Queue on Possition X
+                    // Even if the user has allready joined previously
+                    SendMessage($"@{userName} {commandAndResponse.Response} {possition}", origin);
+                }
                 break;
             case "cleve": // leves the queue but not when the user was already its turn
                 var t = _queueCache.RemoveQueueUser(userName);
@@ -91,22 +119,27 @@ public class QueueCommand : IQueueCommand
                     SendMessage(commandAndResponse.Response, origin);
                 }
                 break;
-            case "cstart": // Starts the queue for every one
-                // TODO: create an check in the db or somewere else for enabling the Queue
-                break;
-            case "cend": // Stops the queue but not removes the data
-                // TODO: create an check in the db or somewere else for disabling the Queue
+
+            case "crandom":
+                // TOOD: Save user to specific location so it will be tracked / higlitet in chat
+                var randomUser = _queueCache.ChooseRandomFromQueue();
+
+                if (randomUser != null)
+                {
+                    SendMessage($"@{randomUser.UserName} {commandAndResponse.Response}", origin);
+                }
                 break;
         }
     }
 
     private void SendMessage(string response, ChatOriginEnum origin)
     {
-        if (origin == ChatOriginEnum.Twtich) {
+        if (origin == ChatOriginEnum.Twtich)
+        {
 
             _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), response);
         }
-        else if(origin == ChatOriginEnum.Youtube)
+        else if (origin == ChatOriginEnum.Youtube)
         {
 
         }

@@ -12,4 +12,5 @@ public interface IQueueCache
     bool MoveUserQueue(string userName);
     IList<UserQueueDto> MoveQueue(int number);
     int GetQueuePosition(string userName);
+    UserQueueDto ChooseRandomFromQueue();
 }

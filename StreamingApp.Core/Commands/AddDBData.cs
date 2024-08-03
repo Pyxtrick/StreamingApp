@@ -1,6 +1,7 @@
 ﻿using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Enums;
+using System;
 
 namespace StreamingApp.Core.Commands;
 
@@ -71,6 +72,7 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "cremove", Response = "Users have been Removed from the Active Queue", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cqueue", Response = "You are in the Active Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "clast", Response = "Has Been moved to last place in Queue", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "crandom", Response = "Has Been Choosen", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cstart", Response = "Queue is now open to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cend", Response = "Queue is closed and no one is able to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
 
@@ -166,6 +168,20 @@ public class AddDBData : IAddDBData
                 new GameInfo() { Game = "Palworld", GameId = "Palworld", Message = "2 Towers beeten Level 40+", GameCategory = GameCategoryEnum.Progress },
             };
             await _unitOfWork.AddRangeAsync(gameInfoList);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        var settings = _unitOfWork.Settings.ToList();
+
+        if (settings.Count() == 0)
+        {
+            List<Settings> settingsList = new List<Settings>
+            {
+                new Settings() { Origin = ChatOriginEnum.Undefined, AllChat = AuthEnum.undefined, MuteAllerts = false, ComunityDayActive = false, Delay = "*/10 * * * *", AllertDelayS = 2, TimeOutSeconds = 60, SpamAmmount = 5}
+            };
+
+            await _unitOfWork.AddRangeAsync(settingsList);
 
             await _unitOfWork.SaveChangesAsync();
         }

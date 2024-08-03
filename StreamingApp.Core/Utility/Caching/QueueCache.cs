@@ -154,6 +154,21 @@ public class QueueCache : IQueueCache
         return _chatQueueData.CachedQueueData.First(t => t.UserName == userName).Queue;
     }
 
+    public UserQueueDto ChooseRandomFromQueue()
+    {
+        IList<UserQueueDto> userQueues = _chatQueueData.CachedQueueData;
+
+        userQueues = userQueues.Where(t => t.IsActive).ToList();
+
+        var randomUser = userQueues[new Random().Next(userQueues.Count)];
+
+        randomUser.IsActive = false;
+
+        _chatQueueData.CachedQueueData.Add(randomUser);
+
+        return randomUser;
+    }
+
     private void moveQueueNumber()
     {
         int queueNumber = 1;
