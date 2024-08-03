@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StreamingApp.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StreamingApp.Domain.Entities.Internal;
 
@@ -6,10 +7,11 @@ public class Settings
 {
     public int Id { get; set; }
 
+    public ChatOriginEnum Origin { get; set; }
+
     // Changes who is shown in the the "All" chat
-    // Default "All"
     [Required]
-    public string AllChat { get; set; }
+    public AuthEnum AllChat { get; set; }
 
     // Mutes Allets in the frontend
     public bool MuteAllerts { get; set; }

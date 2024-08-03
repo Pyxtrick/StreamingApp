@@ -6,8 +6,9 @@ public enum AuthEnum
     Mod = 1,
     Staff = 2,
     Vip = 3,
-    Subscriber = 4,
-    Turbo = 5,
-    Partner = 6,
-    undefined = 7, // Everyone
+    Partner = 4,
+    Subscriber = 5,
+    Prime = 6,
+    Turbo = 7,
+    undefined = 8, // Everyone
 }

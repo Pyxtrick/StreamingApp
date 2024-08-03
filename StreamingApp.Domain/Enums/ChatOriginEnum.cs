@@ -4,4 +4,5 @@ public enum ChatOriginEnum
 {
     Twtich,
     Youtube,
+    Undefined,
 }
