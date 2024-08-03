@@ -18,4 +18,19 @@ public class VTubeStudioApiRequest
     {
 
     }
+
+    public void ChangeLocaton() 
+    {
+        // TODO: change position of the Character / Model
+    }
+
+    public void AddItem()
+    {
+        // TODO: add Item with a timer
+    }
+
+    public void ChangeColour()
+    {
+        // TODO: change colour of the Character / Model
+    }
 }
