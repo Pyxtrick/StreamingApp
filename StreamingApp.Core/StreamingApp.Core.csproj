@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Logic\Interfaces\" />
     <Folder Include="Queries\Interfaces\" />
   </ItemGroup>
 
