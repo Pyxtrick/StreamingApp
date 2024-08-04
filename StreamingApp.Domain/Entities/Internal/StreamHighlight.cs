@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StreamingApp.Domain.Entities.Internal;
+
 public class StreamHighlight
 {
     public int Id { get; set; }

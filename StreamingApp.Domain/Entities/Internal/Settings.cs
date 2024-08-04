@@ -7,6 +7,7 @@ public class Settings
 {
     public int Id { get; set; }
 
+    // Applies settings for specific platform
     public ChatOriginEnum Origin { get; set; }
 
     // Changes who is shown in the the "All" chat

@@ -28,6 +28,12 @@ TODO: main view over the etire screen so tings can be placed anywhere on the scr
 TODO: place things on screen at specific locations with x and y axies
 
 // Backend
+TODO: morse code de/encode
+
+TOOD: Emotes play sound
+
+TOOD: create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
+
 TODO: have a counter for like things that happend multiple times
 TODO: have a counter for how many times a sound has been played
 

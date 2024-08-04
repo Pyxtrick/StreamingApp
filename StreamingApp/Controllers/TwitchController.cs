@@ -14,12 +14,6 @@ public class TwitchController : ControllerBase
         startTwitchApi.Execute();
     }
 
-    /**[HttpGet]
-    public IReadOnlyList<ChatDto> GetTwitchChatData([FromServices] IGetTwitchDataQuery getTwitchDataQuery)
-    {
-        return getTwitchDataQuery.GetAllTwitchCacheData();
-    }**/
-
     [HttpGet]
     public void GetTwitchChatData([FromServices] IAddDBData addDBData)
     {
