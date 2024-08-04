@@ -102,4 +102,3 @@ public class Morsecode
         return decodedMessage.Trim();
     }
 }
-}

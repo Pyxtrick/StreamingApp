@@ -3,5 +3,5 @@
 namespace StreamingApp.Core.Queries.Web.Interfaces;
 public interface IUpdateCommands
 {
-    List<CommandAndResponseDto> UpdtateAll(List<CommandAndResponseDto> commands);
+    List<CommandAndResponseDto> CreateOrUpdtateAll(List<CommandAndResponseDto> commands);
 }

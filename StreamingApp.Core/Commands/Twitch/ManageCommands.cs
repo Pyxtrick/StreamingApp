@@ -23,6 +23,15 @@ public class ManageCommands : IManageCommands
     public async Task Execute(CommandDto commandDto)
     {
         CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandDto.Message) && t.Active);
+        SpecialWords? specialWords = _unitOfWork.SpecialWords.FirstOrDefault(s => s.Name.Contains(commandDto.Message) && s.Type == SpecialWordEnum.Count);
+
+        if (specialWords != null) 
+        {
+            specialWords.TimesUsed++;
+
+            _unitOfWork.SpecialWords.Update(specialWords);
+            _unitOfWork.SaveChanges();
+        }
 
         var splitMessage = commandDto.Message.Split(' ');
 

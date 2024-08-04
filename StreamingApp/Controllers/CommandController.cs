@@ -23,7 +23,7 @@ public class CommandController : ControllerBase
     [HttpPost]
     public CommandRespose UpdateCommands([FromServices] IUpdateCommands updateCommands, List<CommandAndResponseDto> commandAndResponses)
     {
-        var commands = updateCommands.UpdtateAll(commandAndResponses);
+        var commands = updateCommands.CreateOrUpdtateAll(commandAndResponses);
 
         return new CommandRespose()
         {

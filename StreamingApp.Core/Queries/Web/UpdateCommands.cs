@@ -16,10 +16,31 @@ public class UpdateCommands : IUpdateCommands
         _mapper = mapper;
     }
 
-    public List<CommandAndResponseDto> UpdtateAll(List<CommandAndResponseDto> commands)
+    public List<CommandAndResponseDto> CreateOrUpdtateAll(List<CommandAndResponseDto> commands)
     {
-        List<CommandAndResponse> foundCommands = _unitOfWork.CommandAndResponse.ToList();
+        List<CommandAndResponse> allCommands = _unitOfWork.CommandAndResponse.ToList();
 
-        return commands.Select(command => _mapper.Map<CommandAndResponseDto>(command)).ToList();
+        foreach (CommandAndResponseDto specialWord in commands)
+        {
+            var foundCommands = allCommands.FirstOrDefault(t => t.Id == specialWord.Id);
+
+            if (foundCommands != null)
+            {
+                var combinedData = _mapper.Map(foundCommands, _mapper.Map<CommandAndResponseDto>(specialWord));
+
+                _unitOfWork.Update(combinedData);
+            }
+            else
+            {
+                var mappedData = _mapper.Map<CommandAndResponse>(specialWord);
+
+                _unitOfWork.Add(mappedData);
+                allCommands.Add(mappedData);
+            }
+        }
+
+        _unitOfWork.SaveChanges();
+
+        return allCommands.Select(command => _mapper.Map<CommandAndResponseDto>(command)).ToList();
     }
 }
