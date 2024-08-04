@@ -107,7 +107,7 @@ public class QueueCommand : IQueueCommand
                 int queuePosition = _queueCache.GetQueuePosition(userName);
 
                 // @User You are in Queue X
-                SendMessage($"@{userName} {commandAndResponse.Response} {queuePosition}", origin);
+                SendMessage($"{userName} {commandAndResponse.Response} {queuePosition}", origin);
                 break;
             case "clast": // Moves the user to last place in the queue
                 // TODO: move user XXX to last place
@@ -129,18 +129,30 @@ public class QueueCommand : IQueueCommand
                     SendMessage($"@{randomUser.UserName} {commandAndResponse.Response}", origin);
                 }
                 break;
+            case "ccount":
+                var count = _queueCache.GetQueueCount();
+
+                if (count != 0)
+                {
+                    SendMessage($"{commandAndResponse.Response.Replace('X', char.Parse(count.ToString()))}", origin);
+                }
+                else
+                {
+                    SendMessage($"There are no Users in the list", origin);
+                }
+                break;
         }
     }
 
     private void SendMessage(string response, ChatOriginEnum origin)
     {
-        if (origin == ChatOriginEnum.Twtich)
-        {
-
-            _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), response);
-        }
-        else if (origin == ChatOriginEnum.Youtube)
-        {
+        switch (origin)
+        { 
+            case ChatOriginEnum.Twtich:
+                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), response);
+                break;
+            case ChatOriginEnum.Youtube:
+                break;
 
         }
     }
