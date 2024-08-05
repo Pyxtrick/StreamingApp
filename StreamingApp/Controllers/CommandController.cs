@@ -32,7 +32,7 @@ public class CommandController : ControllerBase
         };
     }
 
-    [HttpPost]
+    [HttpDelete]
     public CommandRespose DeleteCommands([FromServices] IDeleteCommands deleteCommands, List<CommandAndResponseDto> commandAndResponses)
     {
         var sucsess = deleteCommands.Delete(commandAndResponses);

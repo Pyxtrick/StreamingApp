@@ -32,7 +32,7 @@ public class SpecialWordController : ControllerBase
         };
     }
 
-    [HttpPost]
+    [HttpDelete]
     public SpecialWordRespose DeletespecialWords([FromServices] IDeleteSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
     {
         var sucsess = deleteSpecialWords.Delete(commandAndResponses);
