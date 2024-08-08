@@ -1,3 +1,4 @@
+using CvTool.Api.Core.Authorizations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
@@ -12,6 +13,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationPolicies.Authenticated, policy => policy.RequireAuthenticatedUser());
+
+    // TODO: Switch to a role-based policy when roles are implemented
+    options.AddPolicy(AuthorizationPolicies.Admin, policy => policy.RequireAuthenticatedUser());
+    options.AddPolicy(AuthorizationPolicies.Contributor, policy => policy.RequireAuthenticatedUser());
+});
 
 // API Services
 builder.Services.AddApiOptions();
