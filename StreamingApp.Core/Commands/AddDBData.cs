@@ -43,10 +43,23 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "english", Response = "The Stream is Primarly Englisch only that includes the chat.", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "english2", Response = "The Stream is Primarly Englisch only that includes the chat. But in rare acations it can be in Schwizer Dütsch.", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = false },
 
+                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
                 new CommandAndResponse() {Command = "streamtime", Response = "next stream will be on Friday or Saturday", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "uptime", Response = "Online since HH:MM:SS DD.MM.YYYY Live for XD Xh Xm Xs", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "updategame", Response = "Stream Game has been updated to: ", Description = "updategame [game]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+                new CommandAndResponse() {Command = "updategame", Response = "Stream Game / Category has been updated to: ", Description = "updategame [gameId] [twitch:true]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
                 new CommandAndResponse() {Command = "updatetitle", Response = "Stream Title has been updated to: ", Description = "updatetitle [title]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+
+                // TODO: allow user to post links (twitch)
+                new CommandAndResponse() {Command = "permit", Response = "allows user to post links for 60 seconds", Description = "permit [user]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+
+                new CommandAndResponse() {Command = "clipper", Response = "Send some love to all the Clipper's ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+
+                new CommandAndResponse() {Command = "update", Response = "Chat Emotes have been updated", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
+
+                // TODO: chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
+                // can also be one of the other Achievements
+                new CommandAndResponse() {Command = "randomuser", Response = "chooses a random user who has chatted in the current stream", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
 
                 // Adds timer for x time
                 new CommandAndResponse() {Command = "timer", Response = "Timer has been set for X minutes", Description = "timer [minutes]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
@@ -61,7 +74,8 @@ public class AddDBData : IAddDBData
                 // TODO: so @fufu gets link from db and shows them with text
                 // Soudout to a User / Twitch Channel
                 new CommandAndResponse() {Command = "so", Response = "", Description = "so [user1]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "pole", Response = "", Description = "pole [title] [time] [option1] [option2] [option3]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "pole", Response = "", Description = "pole [title] [time] [option1] [option2] [option3] [option3]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "prediction", Response = "", Description = "prediction [title] [time] [option1] [option2] [option3] [option3]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
                 
                 // TODO: have an immage for showing all command and Platformn ID's for
                 // For steam join the Group XXX | EA: XXX | Battlenet: XXX | XBOX for PC: XXX
@@ -95,9 +109,6 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "sstop", Response = "Subathon timer has been stoped", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon, HasLogic = true },
                 new CommandAndResponse() {Command = "sset", Response = "Subathon timer has been set to: ", Description = "sset [time(HH:MM:SS)]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Subathon, HasLogic = true },
 
-                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-
                 // creates a twitch clip
                 new CommandAndResponse() {Command = "clip", Response = "clips the last X Seconds", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
                 new CommandAndResponse() {Command = "clip2", Response = "Creates a time stamp of the current recording", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
@@ -114,14 +125,14 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "revert", Response = "", Description = "revert [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
                 // makes the text bounce
                 new CommandAndResponse() {Command = "bounce", Response = "", Description = "bounce [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                //https://modrinth.com/mod/text-animator
+                new CommandAndResponse() {Command = "shake", Response = "", Description = "shake [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "wave", Response = "", Description = "wave [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "wiggle", Response = "", Description = "wiggle [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
                 // translates the text multiple times
                 new CommandAndResponse() {Command = "translatehell", Response = "", Description = "translatehell [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
                 // changes the size of the text and emotes
                 new CommandAndResponse() {Command = "gigantify", Response = "", Description = "gigantify [message]", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.fun, HasLogic = true },
-
-                new CommandAndResponse() {Command = "clipper", Response = "Send some love to all the Clipper's ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
-
-                new CommandAndResponse() {Command = "update", Response = "Chat Emotes have been updated", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = true },
             };
             _unitOfWork.CommandAndResponse.AddRange(commandsStaticResponse);
 
@@ -166,6 +177,9 @@ public class AddDBData : IAddDBData
                 new GameInfo() { Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.ModPack },
                 new GameInfo() { Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.Server },
                 new GameInfo() { Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.Progress },
+
+                new GameInfo() { Game = "TF 2", GameId = "Team Fortress 2", Message = "", GameCategory = GameCategoryEnum.Info },
+                new GameInfo() { Game = "TF 2", GameId = "Team Fortress 2", Message = "", GameCategory = GameCategoryEnum.Server },
 
                 new GameInfo() { Game = "Lethal Company", GameId = "Lethal Company", Message = "Make Quota and be a gread Asset", GameCategory = GameCategoryEnum.Info },
                 new GameInfo() { Game = "Lethal Company", GameId = "Lethal Company", Message = "Modpack Code: 018d26ca-ecd1-661a-a3ee-3a7afeef1098", GameCategory = GameCategoryEnum.ModPack },

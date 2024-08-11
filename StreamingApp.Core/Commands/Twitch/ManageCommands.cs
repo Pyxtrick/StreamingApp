@@ -221,13 +221,13 @@ public class ManageCommands : IManageCommands
             {
                 // shows statistics of the user
             }
-            else if (commandAndResponse.Command.Contains("updategame"))
+            else if (commandAndResponse.Command.Contains("permit"))
             {
-                // update twitch category
+                // permit user to post links for 60 seconds (twitch)
             }
-            else if (commandAndResponse.Command.Contains("updatetitle"))
+            else if (commandAndResponse.Command.Contains("randomuser"))
             {
-                // update Stream title on twitch and (Youtube)
+                // chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
             }
         }
         else if (commandAndResponse != null && commandAndResponse.Active == false)
