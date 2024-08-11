@@ -2,18 +2,18 @@
 
 namespace StreamingApp.Domain.Entities.Internal;
 
-public class GameStream
+/// <summary>
+/// games / categorys played durring a stream
+/// </summary>
+public class StreamGame
 {
     public int GameCategoryId { get; set; }
+    public GameInfo? GameCategory { get; set; }
 
     public int StreamId { get; set; }
+    public Stream? Stream { get; set; }
 
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
-
-    public string? VodUrl { get; set; }
-
-    [NotMapped]
-    public GameInfo? GameCategory { get; set; }
 }

@@ -7,13 +7,13 @@ public class GameInfo
 {
     public int Id { get; set; }
 
+    public List<StreamGame> GameCategories { get; set; }
+
     [Required]
     public string Game { get; set; }
 
-    [Required]
     public string GameId { get; set; }
 
-    [Required]
     public string Message { get; set; }
 
     public GameCategoryEnum GameCategory { get; set; }

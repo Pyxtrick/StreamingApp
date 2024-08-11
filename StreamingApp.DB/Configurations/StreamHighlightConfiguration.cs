@@ -11,5 +11,6 @@ public class StreamHighlightConfiguration : IEntityTypeConfiguration<StreamHighl
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.HasOne(a => a.Stream).WithMany(user => user.StreamHighlights).HasForeignKey(a => a.StreamId).IsRequired();
     }
 }

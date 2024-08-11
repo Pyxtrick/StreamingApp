@@ -27,7 +27,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<GameInfo> GameInfo { get; set; } = null!;
 
-    public DbSet<GameStream> GameStream { get; set; } = null!;
+    public DbSet<StreamGame> GameStream { get; set; } = null!;
 
     public DbSet<Settings> Settings { get; set; } = null!;
 
@@ -35,7 +35,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<Status> Status { get; set; } = null!;
 
-    public DbSet<StreamHistory> StreamHistory { get; set; } = null!;
+    public DbSet<Domain.Entities.Internal.Stream> StreamHistory { get; set; } = null!;
 
     public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
 

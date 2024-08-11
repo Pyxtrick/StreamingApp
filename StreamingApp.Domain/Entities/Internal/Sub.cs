@@ -6,6 +6,8 @@ public class Sub
 {
     public int Id { get; set; }
 
+    public Status Status { get; set; }
+
     // Sub has been gifted to person
     public bool SubGiffted { get; set; }
 

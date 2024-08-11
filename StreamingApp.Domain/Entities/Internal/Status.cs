@@ -8,6 +8,9 @@ public class Status
 
     public int TwitchSubId { get; set; }
 
+    public User User { get; set; }
+
+    public int MyProperty { get; set; }
     public Sub? TwitchSub { get; set; }
 
     //public int YoutubeSubId { get; set; }

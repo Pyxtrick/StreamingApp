@@ -11,5 +11,6 @@ public class AchievementsConfiguration : IEntityTypeConfiguration<Achievements>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
+        builder.HasOne(a => a.User).WithOne(user => user.TwitchAchievements).HasForeignKey<User>(a => a.TwitchAchievementsId).IsRequired();
     }
 }

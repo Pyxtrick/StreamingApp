@@ -4,6 +4,8 @@ public class Achievements
 {
     public int Id { get; set; }
 
+    public User User { get; set; }
+
     // Giffted Subs Amount
     public int GiftedSubsCount { get; set; }
 

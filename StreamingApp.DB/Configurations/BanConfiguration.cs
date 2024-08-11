@@ -12,5 +12,6 @@ public class BanConfiguration : IEntityTypeConfiguration<Ban>
 
         builder.HasKey(a => a.Id);
         builder.Property(a => a.LastMessage).HasMaxLength(200);
+        builder.HasOne(a => a.User).WithOne(user => user.Ban).HasForeignKey<User>(a => a.BanId);
     }
 }

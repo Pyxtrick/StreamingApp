@@ -14,5 +14,6 @@ public class UserDetailConfiguration : IEntityTypeConfiguration<UserDetail>
         builder.Property(a => a.UserName).HasMaxLength(100);
         builder.Property(a => a.UserId).HasMaxLength(100);
         builder.Property(a => a.AppAuthEnum).HasConversion<string>();
+        builder.HasOne(a => a.User).WithOne(user => user.TwitchDetail).HasForeignKey<User>(a => a.TwitchDetailId).IsRequired();
     }
 }

@@ -6,6 +6,8 @@ public class Ban
 {
     public int Id { get; set; }
 
+    public User User { get; set; }
+
     // Is Currenty Baned
     public bool IsBaned { get; set; }
 
