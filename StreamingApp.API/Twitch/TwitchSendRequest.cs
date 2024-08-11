@@ -92,7 +92,7 @@ public class TwitchSendRequest : ISendRequest
             {
                 BroadcasterId = _twitchCache.GetTwitchChannelName(),
                 Title = title ?? null,
-                Choices = options.Select(option => { return new Choice() { Title = option }; }).ToList().ToArray(),
+                Choices = options.Select(option => { return new TwitchLib.Api.Helix.Models.Polls.CreatePoll.Choice() { Title = option }; }).ToList().ToArray(),
                 BitsVotingEnabled = false,
                 ChannelPointsVotingEnabled = false,
                 DurationSeconds = time,
@@ -155,7 +155,7 @@ public class TwitchSendRequest : ISendRequest
                 IsPole = pole,
                 Title = data.Title,
                 StartedAt = data.StartedAt,
-                Choices = data.Choices.Select(option => { return new Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
+                Choices = data.Choices.Select(option => { return new Domain.Entities.Internal.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
             };
         }
         else
