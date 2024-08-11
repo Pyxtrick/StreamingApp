@@ -5,7 +5,7 @@ namespace StreamingApp.Domain.Entities.Dtos;
 
 public class ChatDto
 {
-    public ChatDto(string id, string userName, string colorHex, string replayMessage, string message, string emoteReplacedMessage, EmoteSet emoteSet, List<KeyValuePair<string, string>> badges, ChatOriginEnum chatOrigin, List<AuthEnum> auth, List<SpecialMessgeEnum> specialMessage, EffectEnum effect, DateTime utcNow)
+    public ChatDto(string id, string userName, string colorHex, string replayMessage, string message, string emoteReplacedMessage, EmoteSet? emoteSet, List<KeyValuePair<string, string>> badges, ChatOriginEnum chatOrigin, List<AuthEnum> auth, List<SpecialMessgeEnum> specialMessage, EffectEnum effect, DateTime utcNow)
     {
         Id = id;
         UserName = userName;

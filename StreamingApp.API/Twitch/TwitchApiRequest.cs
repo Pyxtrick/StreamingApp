@@ -45,7 +45,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         Bot_OnMessageReceived(sender, e);
     }
 
-    public async Task Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
+    public void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
         string userId = e.ChatMessage.UserId;
         string userName = e.ChatMessage.DisplayName;

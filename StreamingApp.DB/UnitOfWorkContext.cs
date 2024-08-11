@@ -45,6 +45,10 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<UserDetail> UserDetail { get; set; } = null!;
 
+    public DbSet<Pole> Pole { get; set; } = null!;
+
+    public DbSet<Choice> Choice { get; set; }
+
     public override int SaveChanges()
     {
         OnBeforeSaving();

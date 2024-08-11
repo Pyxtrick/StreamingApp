@@ -32,9 +32,9 @@ public class TwitchInitialise : ITwitchInitialise
 
     public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration)
     {
-        _configuration = configuration;
-        _twitchCache = twitchCache;
         _twichApiRequest = twichApiRequest;
+        _twitchCache = twitchCache;
+        _configuration = configuration;
     }
 
     public void StartTwitchBot()
@@ -58,7 +58,7 @@ public class TwitchInitialise : ITwitchInitialise
             if (e.Request.QueryString.AllKeys.Any("code".Contains))
             {
                 var code = e.Request.QueryString["code"];
-                var ownerOfChannelAccessAndRefresh = await GetAccessAndRefreshToken(code);
+                var ownerOfChannelAccessAndRefresh = await GetAccessAndRefreshToken(code!);
                 CachedOwnerOfChanelAccessToken = ownerOfChannelAccessAndRefresh.Item1;
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
@@ -138,6 +138,8 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
         OwnerOfChannelConnection.OnUserBanned += _twichApiRequest.Bot_OnUserBanned;
         OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined;
+        //OwnerOfChannelConnection.OnDuplicate
+
 
         OwnerOfChannelConnection.Connect();
 

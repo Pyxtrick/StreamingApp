@@ -1,8 +1,11 @@
-﻿using StreamingApp.Core.Commands.Twitch.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.Interfaces;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Enums;
+using TwitchLib.Api.Helix.Models.Games;
 
 namespace StreamingApp.Core.Commands.Twitch;
 public class ManageCommands : IManageCommands
@@ -11,13 +14,15 @@ public class ManageCommands : IManageCommands
     private readonly ICheck _checkAuth;
     private readonly IQueueCommand _queueCommand;
     private readonly IGameCommand _gameCommand;
+    private readonly Func<string, ISendRequest> _sendRequest;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ICheck checkAuth, IQueueCommand queueCommand, IGameCommand gameCommand)
+    public ManageCommands(UnitOfWorkContext unitOfWork, ICheck checkAuth, IQueueCommand queueCommand, IGameCommand gameCommand, Func<string, ISendRequest> sendRequest)
     {
         _unitOfWork = unitOfWork;
         _checkAuth = checkAuth;
         _queueCommand = queueCommand;
         _gameCommand = gameCommand;
+        _sendRequest = sendRequest;
     }
 
     public async Task Execute(CommandDto commandDto)
@@ -145,13 +150,150 @@ public class ManageCommands : IManageCommands
                     // lgic to add time to Timer
                 }
             }
+            else if (commandAndResponse.Command.Contains("pole"))
+            {
+                // lgic to create a pole with multiple options
+
+                var title = splitMessage[1];
+                var time = splitMessage[2];
+                List<string> options = [];
+
+                for (int i = 3; i < splitMessage.Length; i++)
+                {
+                    options.Add(splitMessage[i]);
+                }
+
+                // TODO: send to twich, Other Platform and (youtube)
+            }
+            else if (commandAndResponse.Command.Contains("prediction"))
+            {
+                // lgic to create prediction with multiple options
+
+                var title = splitMessage[1];
+                var time = splitMessage[2];
+                List<string> options = [];
+
+                for (int i = 3; i < splitMessage.Length; i++)
+                {
+                    options.Add(splitMessage[i]);
+                }
+
+                // TODO: send to twich
+            }
             else if (commandAndResponse.Command.Contains("streamstart"))
             {
-                // lgic to create DB entry for when the stream has started
+                // TODO: Get title and category
+                var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                if (chanelInfo != null)
+                {
+                    var title = chanelInfo.Title;
+                    var category = chanelInfo.GameName;
+                    var game = _unitOfWork.GameInfo.FirstOrDefault(g => g.Game == category && g.GameCategory == GameCategoryEnum.Info);
+
+                    if (game == null)
+                    {
+                        game = new GameInfo()
+                        {
+                            Game = category,
+                            GameId = category,
+                            Message = $"needs Message {category}",
+                            GameCategory = GameCategoryEnum.Info,
+                        };
+                    }
+
+                    var gs = new StreamGame()
+                    {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now, // needst to be changed at the end of category / stream
+                        GameCategory = game
+                    };
+
+                    var streamHistory = new Domain.Entities.Internal.Stream()
+                    {
+                        StreamTitle = title,
+                        StreamStart = DateTime.Now,
+                        GameCategories = new List<StreamGame> { gs }
+                    };
+
+                    _unitOfWork.Add(streamHistory);
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("streamstart", "error getting channel Info from Twtich");
+                }
             }
             else if (commandAndResponse.Command.Contains("streamstop"))
             {
-                // lgic to create DB entry for when the stream has ended
+                // get newest element
+                var stream = _unitOfWork.StreamHistory.Include(t => t.GameCategories).ThenInclude(g => g.GameCategory).ToList().Last();
+                
+                stream.StreamEnd = DateTime.Now;
+                stream.GameCategories.Last().EndDate = DateTime.Now;
+
+                _unitOfWork.Update(stream);
+                _unitOfWork.SaveChanges();
+            }
+            else if (commandAndResponse.Command.Contains("updategame"))
+            {
+                // update twitch category
+                
+                if (splitMessage[2].Any() && splitMessage[2].Contains("true"))
+                {
+                    // TODO: Send (youtube) category change
+                    bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(splitMessage[1], null);
+
+                    if (!success)
+                    {
+                        Console.WriteLine("error sending setting cannel info Category");
+                    }
+                }
+
+                var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                if (chanelInfo != null) {
+                    var stream = _unitOfWork.StreamHistory.Include(t => t.GameCategories).ThenInclude(g => g.GameCategory).ToList().Last();
+                    var game = _unitOfWork.GameInfo.FirstOrDefault(g => g.Game == chanelInfo.GameName && g.GameCategory == GameCategoryEnum.Info);
+
+                    if (game == null)
+                    {
+                        game = new GameInfo()
+                        {
+                            Game = chanelInfo.GameName,
+                            GameId = chanelInfo.GameId,
+                            Message = $"needs Message {chanelInfo.GameName}",
+                            GameCategory = GameCategoryEnum.Info,
+                        };
+                    }
+
+                    var gs = new StreamGame()
+                    {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now,
+                        GameCategory = game
+                    };
+
+                    stream.GameCategories.Last().EndDate = DateTime.Now;
+                    stream.GameCategories.Add(gs);
+
+                    _unitOfWork.Update(stream);
+                    _unitOfWork.SaveChanges();
+
+                    _sendRequest("TwitchSendRequest").SendChatMessage($"Category has been updated to: {game.Game}");
+                }
+            }
+            else if (commandAndResponse.Command.Contains("updatetitle"))
+            {
+                bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(null, splitMessage[1]);
+
+                if (success)
+                {
+                    _sendRequest("TwitchSendRequest").SendChatMessage($"Title has been updated to: {splitMessage[1]}");
+                    return;
+                }
+
+                Console.WriteLine("error sending setting cannel info Title");
+
+                // update Stream title on twitch and (Youtube)
             }
             else if (commandAndResponse.Command.Contains("uptime"))
             {
@@ -233,6 +375,8 @@ public class ManageCommands : IManageCommands
         else if (commandAndResponse != null && commandAndResponse.Active == false)
         {
             string reponse = $"{commandAndResponse.Command} is currenty not active";
+
+            _sendRequest("TwitchSendRequest").SendChatMessage(reponse);
 
             // TODO: make a Class for this in API.Twitch
             //_twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), $"the command '{commandAndResponse.Command}' is currently under consturcion 🛠️");

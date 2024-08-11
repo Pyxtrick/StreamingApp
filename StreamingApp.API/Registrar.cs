@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StreamingApp.API.Interfaces;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility;
@@ -24,5 +25,9 @@ public static class Registrar
         //twitch
         services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();
         services.AddScoped<ITwitchInitialise, TwitchInitialise>();
+
+        // TODO: Check if works
+        services.AddScoped<ISendRequest, TwitchSendRequest>();
+        services.AddScoped<ISendRequest, YoutubeSendRequest>();
     }
 }
