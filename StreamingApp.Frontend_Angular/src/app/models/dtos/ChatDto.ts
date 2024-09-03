@@ -5,9 +5,9 @@ import { SpecialMessgeEnum } from '../enums/SpecialMessgeEnum';
 import { EmoteSet } from '../external/EmoteSet';
 
 export interface ChatDto {
-  id: string;
-  userName: string;
-  colorHex: string;
+  Id: string;
+  UserName: string;
+  ColorHex: string;
   ReplayMessage: string;
   Message: string;
   EmoteReplacedMessage: string;

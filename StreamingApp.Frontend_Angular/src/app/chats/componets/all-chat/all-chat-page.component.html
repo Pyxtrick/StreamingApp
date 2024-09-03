@@ -1,8 +1,17 @@
 <div class="info-box">
   <!--<ng-container [ngSwitch]="selectedFormType$ | async"> </ng-container>-->
-  <mat-list>
-    <mat-list-item *ngFor="let shoe of typesOfShoes">
-      <div>{{ shoe }}</div>
-    </mat-list-item>
-  </mat-list>
+  <div>
+    <button (click)="addData()">Add</button>
+    <button (click)="removeData()">Remove</button>
+    <div class="list frame" (scroll)="scrolled($event)" #scrollframe>
+      <mat-list>
+        @for (shoe of chatMessages; track shoe) {
+        <mat-list-item class="item" #item>
+          <div matListItemTitle [innerHTML]="shoe.SaveName"></div>
+          <div matListItemLine [innerHTML]="shoe.SaveMessage"></div>
+        </mat-list-item>
+        }
+      </mat-list>
+    </div>
+  </div>
 </div>

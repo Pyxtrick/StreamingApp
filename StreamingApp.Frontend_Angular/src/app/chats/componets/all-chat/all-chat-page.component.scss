@@ -1,1 +1,42 @@
 @import '../../../../styles.scss';
+
+.mdc-list-item {
+  padding-left: 5px !important;
+}
+
+.list {
+  max-height: 700px;
+  overflow: scroll;
+}
+
+.mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
+.mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
+.mdc-list-item__secondary-text::before {
+  //height: 0px !important;
+  content: none !important;
+}
+
+.mdc-list-item.mdc-list-item--with-two-lines {
+  //height: 40px !important;
+  height: initial !important;
+}
+
+/**::ng-deep .mat-list .mat-list-item .mat-line {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}**/
+
+::ng-deep .mat-line {
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+::ng-deep .mat-list .mat-list-item {
+  height: initial !important;
+}
+
+@media (max-height: 800px) {
+  .list {
+    max-height: 300px;
+  }
+}

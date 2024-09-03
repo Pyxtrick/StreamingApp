@@ -1,0 +1,17 @@
+.col {
+  display: flex;
+  overflow-x: scroll;
+}
+.col div {
+  flex: 1;
+  min-width: 500px;
+  border-radius: solid 3px;
+  border: solid;
+  border-color: wheat;
+  margin-right: 5px;
+}
+.col1 {
+}
+.col2 {
+  color: white;
+}
