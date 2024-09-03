@@ -31,6 +31,8 @@ TODO: place things on screen at specific locations with x and y axies
 	TOOD: Show special / fun chat animations
 
 // Backend
+TODO: activate and deactivate channel rewards
+
 TODO: morse code de/encode
 
 TOOD: Emotes play sound
@@ -100,3 +102,9 @@ TODO: create a screenshot of the current Stream using bits or point rediam
  * max viewers count
  * stream time
  */
+
+
+ Lua code (create logic in frontend)
+
+ event lissener (every message in cache)
+ Lissener on commands

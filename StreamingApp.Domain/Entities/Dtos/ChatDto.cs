@@ -28,7 +28,6 @@ public class ChatDto
 
     public string ColorHex { get; set; }
 
-    // TODO: implement
     public string ReplayMessage { get; set; }
 
     public string Message { get; set; }

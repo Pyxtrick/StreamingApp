@@ -187,4 +187,46 @@ public class TwitchSendRequest : ISendRequest
         // https://dev.twitch.tv/docs/api/reference/#warn-chat-user
         // POST https://api.twitch.tv/helix/moderation/warnings
     }
+
+    public void GetEmotes()
+    {
+        var emotes = _twitchCache.GetOwnerOfChannelConnection().ChannelEmotes;
+    }
+
+    public async Task RaidChannel()
+    {
+        string fromBroadcasterId = _twitchCache.GetTwitchChannelName();
+        string toBroadcasterId = "";
+
+        var t = _twitchCache.GetTheTwitchAPI().Helix.Search.SearchChannelsAsync(toBroadcasterId, true);
+
+        await _twitchCache.GetTheTwitchAPI().Helix.Raids.StartRaidAsync(fromBroadcasterId, toBroadcasterId);
+    }
+
+    public async Task GetHypeTrain()
+    {
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_twitchCache.GetTwitchChannelName());
+    }
+
+    public async Task SendAnnouncement()
+    {
+        //Send Chat Announcement
+    }
+
+    public async Task SendShoutout()
+    {
+        //Send a Shoutout
+    }
+
+    public async Task AdSchedule()
+    {
+        //GET https://api.twitch.tv/helix/channels/ads
+        // https://dev.twitch.tv/docs/api/reference/#get-ad-schedule
+        //_twitchCache.GetTheTwitchAPI().Helix.Channels.ads
+    }
+
+    public async Task UpdateCustomReward()
+    {
+        //var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.UpdateCustomRewardAsync();
+    }
 }

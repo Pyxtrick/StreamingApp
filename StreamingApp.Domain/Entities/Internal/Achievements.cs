@@ -1,6 +1,6 @@
 ﻿namespace StreamingApp.Domain.Entities.Internal;
 
-public class Achievements
+public class Achievements // TODO: Change all DB to AchievementsEntity
 {
     public int Id { get; set; }
 

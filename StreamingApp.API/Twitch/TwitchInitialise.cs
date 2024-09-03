@@ -140,6 +140,7 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined;
         //OwnerOfChannelConnection.OnDuplicate
 
+        // check for add's / advertisements
 
         OwnerOfChannelConnection.Connect();
 
