@@ -15,7 +15,7 @@ export const settingsFeature = createFeature({
   reducer: createReducer(
     initialState,
     //Technologie relevant action
-    //#Region
+    //#region
     on(SettingsActions.loadCommands, (state): any => ({
       ...state,
       commandLoading: true,
@@ -32,6 +32,6 @@ export const settingsFeature = createFeature({
       updateCommandsSuccess: false,
     }))
 
-    //#Endregion
+    //#endregion
   ),
 });
