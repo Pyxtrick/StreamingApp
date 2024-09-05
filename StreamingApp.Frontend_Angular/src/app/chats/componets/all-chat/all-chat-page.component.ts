@@ -11,6 +11,7 @@ import {
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AppSignalRService } from 'src/app/services/app-signalr.services';
 import { ChatDto } from '../../models/chatDto';
 //import { MasterDataActions } from '../../state/actions';
 //import { masterdataFeature } from '../../state/reducers';
@@ -23,7 +24,10 @@ import { ChatDto } from '../../models/chatDto';
   standalone: true,
 })
 export class AllChatPageComponent implements OnInit, AfterViewInit {
-  constructor(private _sanitizer: DomSanitizer) {}
+  constructor(
+    private _sanitizer: DomSanitizer,
+    private signalRService: AppSignalRService
+  ) {}
 
   @ViewChild('scrollframe') scrollFrame!: ElementRef;
 
@@ -112,7 +116,20 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
       
      */
 
+    this.signalRService.startConnection();
+
+    this.signalRService.startConnection().subscribe(() => {
+      this.signalRService.receiveMessage().subscribe((message) => {
+        //this.receivedMessage = message;
+        console.log('message ', message);
+      });
+    });
+
     this.convertData();
+  }
+
+  sendMessage(message: string): void {
+    this.signalRService.sendMessage(message);
   }
 
   ngAfterViewInit(): void {
@@ -211,6 +228,8 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
       this.chatMessages.shift();
     }
     this.convertData();
+
+    this.sendMessage('hello');
   }
 
   removeData() {

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
     <PackageReference Include="NSwag.MSBuild" Version="14.1.0">
@@ -27,6 +27,7 @@
     <PropertyGroup>
       <_BackendWebDllExists>.\bin\$(Configuration)\$(TargetFramework)\StreamingApp.Web.dll</_BackendWebDllExists>
     </PropertyGroup>
+    
     <Exec Command="$(NSwagExe_Net80) run Properties/nswag.json /variables:Configuration=$(Configuration)" Condition="Exists('$(_BackendWebDllExists)')" />
   </Target>
 </Project>
