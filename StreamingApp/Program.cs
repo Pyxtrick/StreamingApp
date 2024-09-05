@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using StreamingApp.API;
 using StreamingApp.Core;
+using StreamingApp.Core.Hubs;
 using StreamingApp.DB;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +19,9 @@ builder.Services.AddApiOptions();
 // Core Services
 builder.Services.AddCoreOptions();
 
+// SignalR
+builder.Services.AddSignalR();
+
 // DB Services
 bool enableDataLogging = builder.Configuration.GetValue("Logging:EnableDataLogging", false);
 builder.Services.AddDataBaseFeature(builder.Configuration["ConnectionString"]!);
@@ -30,7 +33,9 @@ builder.Services.AddSwaggerDocument(swagger =>
     swagger.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
-builder.Services.AddCors(options => { options.AddPolicy("StreamingAppCors", builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); }); });
+builder.Services.AddCors(options => {
+    options.AddPolicy("CorsPolicy", builder => { builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials(); });
+});
 
 var app = builder.Build();
 
@@ -50,12 +55,13 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors("StreamingAppCors");
-
+app.MapHub<RealTimeHub>("/realtimehub");
 app.MapControllers();
 
 app.Run();
