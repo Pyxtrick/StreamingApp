@@ -5,7 +5,6 @@ using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Enums;
-using TwitchLib.Api.Helix.Models.Games;
 
 namespace StreamingApp.Core.Commands.Twitch;
 public class ManageCommands : IManageCommands
@@ -14,9 +13,10 @@ public class ManageCommands : IManageCommands
     private readonly ICheck _checkAuth;
     private readonly IQueueCommand _queueCommand;
     private readonly IGameCommand _gameCommand;
-    private readonly Func<string, ISendRequest> _sendRequest;
+    // TODO: private readonly Func<string, ISendRequest> _sendRequest;
+    private readonly ISendRequest _sendRequest;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ICheck checkAuth, IQueueCommand queueCommand, IGameCommand gameCommand, Func<string, ISendRequest> sendRequest)
+    public ManageCommands(UnitOfWorkContext unitOfWork, ICheck checkAuth, IQueueCommand queueCommand, IGameCommand gameCommand, ISendRequest sendRequest)
     {
         _unitOfWork = unitOfWork;
         _checkAuth = checkAuth;
@@ -183,7 +183,8 @@ public class ManageCommands : IManageCommands
             else if (commandAndResponse.Command.Contains("streamstart"))
             {
                 // TODO: Get title and category
-                var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                //var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                var chanelInfo = await _sendRequest.GetChannelInfo();
                 if (chanelInfo != null)
                 {
                     var title = chanelInfo.Title;
@@ -241,7 +242,8 @@ public class ManageCommands : IManageCommands
                 if (splitMessage[2].Any() && splitMessage[2].Contains("true"))
                 {
                     // TODO: Send (youtube) category change
-                    bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(splitMessage[1], null);
+                    //bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(splitMessage[1], null);
+                    bool success = _sendRequest.SetChannelInfo(splitMessage[1], null);
 
                     if (!success)
                     {
@@ -249,7 +251,8 @@ public class ManageCommands : IManageCommands
                     }
                 }
 
-                var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                //var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
+                var chanelInfo = await _sendRequest.GetChannelInfo();
                 if (chanelInfo != null) {
                     var stream = _unitOfWork.StreamHistory.Include(t => t.GameCategories).ThenInclude(g => g.GameCategory).ToList().Last();
                     var game = _unitOfWork.GameInfo.FirstOrDefault(g => g.Game == chanelInfo.GameName && g.GameCategory == GameCategoryEnum.Info);
@@ -278,16 +281,19 @@ public class ManageCommands : IManageCommands
                     _unitOfWork.Update(stream);
                     _unitOfWork.SaveChanges();
 
-                    _sendRequest("TwitchSendRequest").SendChatMessage($"Category has been updated to: {game.Game}");
+                    //_sendRequest("TwitchSendRequest").SendChatMessage($"Category has been updated to: {game.Game}");
+                    _sendRequest.SendChatMessage($"Category has been updated to: {game.Game}");
                 }
             }
             else if (commandAndResponse.Command.Contains("updatetitle"))
             {
-                bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(null, splitMessage[1]);
+                //bool success = _sendRequest("TwitchSendRequest").SetChannelInfo(null, splitMessage[1]);
+                bool success = _sendRequest.SetChannelInfo(null, splitMessage[1]);
 
                 if (success)
                 {
-                    _sendRequest("TwitchSendRequest").SendChatMessage($"Title has been updated to: {splitMessage[1]}");
+                    //_sendRequest("TwitchSendRequest").SendChatMessage($"Title has been updated to: {splitMessage[1]}");
+                    _sendRequest.SendChatMessage($"Title has been updated to: {splitMessage[1]}");
                     return;
                 }
 
@@ -376,7 +382,8 @@ public class ManageCommands : IManageCommands
         {
             string reponse = $"{commandAndResponse.Command} is currenty not active";
 
-            _sendRequest("TwitchSendRequest").SendChatMessage(reponse);
+            //_sendRequest("TwitchSendRequest").SendChatMessage(reponse);
+            _sendRequest.SendChatMessage(reponse);
 
             // TODO: make a Class for this in API.Twitch
             //_twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), $"the command '{commandAndResponse.Command}' is currently under consturcion 🛠️");

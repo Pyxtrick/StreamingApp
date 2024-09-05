@@ -28,6 +28,6 @@ public static class Registrar
 
         // TODO: Check if works
         services.AddScoped<ISendRequest, TwitchSendRequest>();
-        services.AddScoped<ISendRequest, YoutubeSendRequest>();
+        //services.AddScoped<ISendRequest, YoutubeSendRequest>("");
     }
 }

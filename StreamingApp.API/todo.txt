@@ -33,6 +33,8 @@ TODO: place things on screen at specific locations with x and y axies
 // Backend
 TODO: activate and deactivate channel rewards
 
+TODO: ManageCommands mulitple ISendRequest
+
 TODO: morse code de/encode
 
 TOOD: Emotes play sound
