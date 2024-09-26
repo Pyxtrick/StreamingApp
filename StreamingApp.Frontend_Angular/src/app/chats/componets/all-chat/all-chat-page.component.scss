@@ -1,4 +1,5 @@
 @import '../../../../styles.scss';
+@import '../../styles/ChatStyle.scss';
 
 .mdc-list-item {
   padding-left: 5px !important;
@@ -12,19 +13,27 @@
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
 .mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
 .mdc-list-item__secondary-text::before {
-  //height: 0px !important;
   content: none !important;
 }
 
-.mdc-list-item.mdc-list-item--with-two-lines {
-  //height: 40px !important;
-  height: initial !important;
+.mdc-list-item.mdc-list-item--with-three-lines {
+  height: auto !important;
 }
 
-/**::ng-deep .mat-list .mat-list-item .mat-line {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}**/
+.mat-mdc-list-item.mdc-list-item--with-three-lines
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+  white-space: wrap !important;
+  word-break: break-word;
+  color: #ffffff;
+}
+
+.mat-typography p {
+  margin: 0 0 0px;
+}
+
+.mdc-list-item.mdc-list-item--with-two-lines {
+  height: initial !important;
+}
 
 ::ng-deep .mat-line {
   word-wrap: break-word !important;
@@ -39,4 +48,34 @@
   .list {
     max-height: 300px;
   }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  margin-right: 5px;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.item {
+  border-bottom: solid;
+  border-color: rgb(255, 255, 255);
 }

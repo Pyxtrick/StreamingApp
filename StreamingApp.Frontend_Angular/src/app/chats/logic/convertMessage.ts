@@ -1,0 +1,86 @@
+import { DomSanitizer } from '@angular/platform-browser';
+import { ChatDto } from 'src/app/models/dtos/ChatDto';
+import { SpecialMessgeEnum } from 'src/app/models/enums/SpecialMessgeEnum';
+
+// TODO: can be done in the backend except bypassSecurityTrustHtml
+// check for the other view (display on Stream)
+
+export class ConvertMessage {
+  public static convertMessage(sanitizer: DomSanitizer, chatMessage: ChatDto) {
+    let badges = '';
+
+    chatMessage.Badges.forEach((badge) => {
+      console.log(badge);
+      badges +=
+        '<div class="tooltip bottom">' +
+        '<img class="badges-image" src="' +
+        badge[1] +
+        '" /> <span class="tooltiptext"><p>' +
+        badge[0] +
+        '</p></span></div>';
+    });
+
+    badges += '';
+
+    const finalName =
+      '<p class="name-date">' +
+      this.formatDate(chatMessage.Date!) +
+      '</p>' +
+      badges +
+      '<p class="name-text" style="color: ' +
+      chatMessage.ColorHex +
+      ' !important;">' +
+      chatMessage.UserName +
+      '</p>';
+
+    const isFirstMessage =
+      chatMessage.SpecialMessage.find(
+        (t) =>
+          t === SpecialMessgeEnum.FirstStreamMessage ||
+          t === SpecialMessgeEnum.FirstMessage
+      ) != undefined
+        ? chatMessage.SpecialMessage.find(
+            (t) => t === SpecialMessgeEnum.FirstMessage
+          ) != undefined
+          ? 'background-color: blue'
+          : 'background-color: green'
+        : '';
+
+    const finalReply =
+      '<p class="message-reply">' + chatMessage.ReplayMessage + '</p>';
+
+    let finalMessage = isFirstMessage;
+
+    chatMessage.Message?.split(' ').forEach((element) => {
+      const foundData = chatMessage.EmoteSetdata.emotes?.find(
+        (m) => m.Name === element
+      );
+      if (foundData != null) {
+        finalMessage +=
+          '<div class="tooltip bottom">' +
+          '<img class="badges-image" src="' +
+          foundData.ImageUrl +
+          '" /> <span class="tooltiptext"><p>' +
+          foundData.Name +
+          '</p></span></div>';
+      } else {
+        finalMessage = finalMessage + ' ' + element + '';
+      }
+    });
+    finalMessage += '</p>';
+
+    return {
+      Id: chatMessage.Id,
+      SaveName: sanitizer.bypassSecurityTrustHtml(finalName), // This needs to be done that style is correctly implemented,
+      SaveReply: sanitizer.bypassSecurityTrustHtml(finalReply),
+      SaveMessage: sanitizer.bypassSecurityTrustHtml(finalMessage), // This needs to be done that style is correctly implemented,
+      Date: chatMessage.Date,
+    };
+  }
+
+  private static formatDate(date: Date): string {
+    return `${date.toLocaleDateString(
+      'ch-DE'
+    )} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  }
+}
