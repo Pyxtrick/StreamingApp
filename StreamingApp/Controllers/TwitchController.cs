@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreamingApp.Core.Commands;
 using StreamingApp.Core.Commands.Interfaces;
+using StreamingApp.Core.Queries;
+using StreamingApp.Domain.Entities.Dtos;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -14,9 +16,15 @@ public class TwitchController : ControllerBase
         startTwitchApi.Execute();
     }
 
-    [HttpGet]
-    public void GetTwitchChatData([FromServices] IAddDBData addDBData)
+    [HttpPost]
+    public void AddDBData([FromServices] IAddDBData addDBData)
     {
         addDBData.Execute();
+    }
+
+    [HttpGet]
+    public List<ChatDto> GetTwitchChatData([FromServices] IGetTwitchChatData getTwitchChatData)
+    {
+        return getTwitchChatData.Execute();
     }
 }

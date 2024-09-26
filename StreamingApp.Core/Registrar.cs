@@ -6,6 +6,7 @@ using StreamingApp.Core.Commands.DB;
 using StreamingApp.Core.Commands.Interfaces;
 using StreamingApp.Core.Commands.Twitch;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Queries;
 using StreamingApp.Core.Queries.Web;
 using StreamingApp.Core.Queries.Web.Interfaces;
 using StreamingApp.Core.Utility;
@@ -18,6 +19,8 @@ public static class Registrar
 {
     public static void AddCoreOptions(this IServiceCollection services)
     {
+        services.AddScoped<IGetTwitchChatData, GetTwitchChatData>();
+
         //Utility
         services.AddAutoMapper(typeof(CoreMappingProfile));
 

@@ -3,25 +3,21 @@ using TwitchLib.Client.Models;
 
 namespace StreamingApp.Domain.Entities.Dtos;
 
-public class ChatDto
+public class ChatDto(
+    string id,
+    string userName,
+    string colorHex,
+    string replayMessage,
+    string message,
+    string emoteReplacedMessage,
+    EmoteSet? emoteSet,
+    List<KeyValuePair<string, string>> badges,
+    ChatOriginEnum chatOrigin,
+    List<AuthEnum> auth,
+    List<SpecialMessgeEnum> specialMessage,
+    EffectEnum effect,
+    DateTime utcNow)
 {
-    public ChatDto(string id, string userName, string colorHex, string replayMessage, string message, string emoteReplacedMessage, EmoteSet? emoteSet, List<KeyValuePair<string, string>> badges, ChatOriginEnum chatOrigin, List<AuthEnum> auth, List<SpecialMessgeEnum> specialMessage, EffectEnum effect, DateTime utcNow)
-    {
-        Id = id;
-        UserName = userName;
-        ColorHex = colorHex;
-        ReplayMessage = replayMessage;
-        Message = message;
-        EmoteReplacedMessage = emoteReplacedMessage;
-        EmoteSet = emoteSet;
-        Badges = badges;
-        ChatOrigin = chatOrigin;
-        Auth = auth;
-        SpecialMessage = specialMessage;
-        Effect = effect;
-        Date = utcNow;
-    }
-
     public string Id { get; set; }
 
     public string UserName { get; set; }

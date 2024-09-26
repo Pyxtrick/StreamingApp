@@ -14,5 +14,6 @@ public class SubConfiguration : IEntityTypeConfiguration<Sub>
         builder.Property(a => a.CurrentTier).HasConversion<string>();
 
         builder.HasOne(a => a.Status).WithOne(user => user.TwitchSub).HasForeignKey<Status>(a => a.TwitchSubId).IsRequired();
+        //builder.HasOne(a => a.Status).WithOne(user => user.YouTubeSub).HasForeignKey<Status>(a => a.YouTubeSubId).IsRequired();
     }
 }
