@@ -31,6 +31,9 @@ TODO: place things on screen at specific locations with x and y axies
 	TOOD: Show special / fun chat animations
 
 // Backend
+TODO: Save UserName as Important / streamer that the person will be highlighted for reading messages better
+TODO: Save every Raid User and Number (for now only in a file / Later maybe in the DB)
+
 TODO: activate and deactivate channel rewards
 
 TODO: ManageCommands mulitple ISendRequest

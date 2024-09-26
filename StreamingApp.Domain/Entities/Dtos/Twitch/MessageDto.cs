@@ -2,6 +2,10 @@
 using TwitchLib.Client.Models;
 
 namespace StreamingApp.Domain.Entities.Dtos.Twitch;
+
+/// <summary>
+/// Message with all Inortant information comming from Twitch / (Youtube)
+/// </summary>
 public class MessageDto(
     string messageId,
     bool isCommand,
