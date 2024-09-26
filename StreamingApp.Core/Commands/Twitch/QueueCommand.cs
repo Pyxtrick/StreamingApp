@@ -2,7 +2,8 @@
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.Settings;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;

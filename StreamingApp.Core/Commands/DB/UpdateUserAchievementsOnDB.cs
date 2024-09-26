@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.User;
 
 namespace StreamingApp.Core.Commands.DB;
 

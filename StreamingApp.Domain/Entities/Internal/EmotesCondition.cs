@@ -1,6 +1,8 @@
-﻿namespace StreamingApp.Domain.Entities.Internal;
+﻿using StreamingApp.Domain.Entities.Internal.Trigger;
 
-public class EmotesCondition : EntityBase
+namespace StreamingApp.Domain.Entities.Internal;
+
+public class EmotesCondition : EntityBase //TODO Remove
 {
     public int Id { get; set; }
 
@@ -26,7 +28,7 @@ public class EmotesCondition : EntityBase
 
     public bool UseTTS { get; set; }
 
-    public Emotes Emote { get; set; }
+    public Emote Emote { get; set; }
 
     public int EmoteId { get; set; }
 }

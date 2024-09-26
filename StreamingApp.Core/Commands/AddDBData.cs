@@ -1,5 +1,6 @@
 ﻿using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.Settings;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
 using System;
 using TwitchLib.Api.Helix.Models.Clips.GetClips;

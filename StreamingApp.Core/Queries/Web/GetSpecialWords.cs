@@ -2,6 +2,7 @@
 using StreamingApp.Core.Queries.Web.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.Core.Queries.Web;
 public class GetSpecialWords : IGetSpecialWords

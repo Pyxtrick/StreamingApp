@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 

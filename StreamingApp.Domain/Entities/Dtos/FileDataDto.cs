@@ -1,4 +1,4 @@
-﻿using StreamingApp.Domain.Entities.Internal;
+﻿using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Domain.Entities.Dtos;

@@ -1,5 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Internal;
 using AutoMapper;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.Core.Utility;
 public class CoreMappingProfile : Profile

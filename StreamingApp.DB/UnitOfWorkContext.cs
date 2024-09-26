@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.Settings;
+using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.Internal.User;
 using System.Reflection;
 
 namespace StreamingApp.DB;
@@ -21,9 +25,9 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<CommandAndResponse> CommandAndResponse { get; set; } = null!;
 
-    public DbSet<Emotes> Emotes { get; set; } = null!;
+    public DbSet<Emote> Emotes { get; set; } = null!;
 
-    public DbSet<EmotesCondition> EmotesCondition { get; set; } = null!;
+    //public DbSet<EmotesCondition> EmotesCondition { get; set; } = null!;
 
     public DbSet<GameInfo> GameInfo { get; set; } = null!;
 
@@ -35,7 +39,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<Status> Status { get; set; } = null!;
 
-    public DbSet<Domain.Entities.Internal.Stream> StreamHistory { get; set; } = null!;
+    public DbSet<Domain.Entities.Internal.Stream.Stream> StreamHistory { get; set; } = null!;
 
     public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
 

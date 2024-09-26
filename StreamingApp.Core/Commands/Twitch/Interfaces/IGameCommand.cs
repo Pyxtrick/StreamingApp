@@ -1,4 +1,4 @@
-﻿using StreamingApp.Domain.Entities.Internal;
+﻿using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.Core.Commands.Twitch.Interfaces;
 
