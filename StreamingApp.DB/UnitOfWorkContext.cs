@@ -19,39 +19,47 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
     // for entity type already been tracked
     //_dbContext.Achievements.AttachRange(modified.Where(r => r.Id > 0));
 
-    public DbSet<Achievements> Achievements { get; set; } = null!;
+    //Settings
+    public DbSet<Settings> Settings { get; set; } = null!;
 
-    public DbSet<Ban> Ban { get; set; } = null!;
+    //Stream
+    public DbSet<Choice> Choice { get; set; }
+    
+    public DbSet<GameInfo> GameInfo { get; set; } = null!;
 
+    public DbSet<Pole> Pole { get; set; } = null!;
+
+    public DbSet<Domain.Entities.Internal.Stream.Stream> StreamHistory { get; set; } = null!;
+
+    public DbSet<StreamGame> StreamGame { get; set; } = null!;
+
+    public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
+
+    //Trigger
     public DbSet<CommandAndResponse> CommandAndResponse { get; set; } = null!;
 
     public DbSet<Emote> Emotes { get; set; } = null!;
 
-    //public DbSet<EmotesCondition> EmotesCondition { get; set; } = null!;
-
-    public DbSet<GameInfo> GameInfo { get; set; } = null!;
-
-    public DbSet<StreamGame> GameStream { get; set; } = null!;
-
-    public DbSet<Settings> Settings { get; set; } = null!;
-
     public DbSet<SpecialWords> SpecialWords { get; set; } = null!;
 
+    public DbSet<Target> Target { get; set; }
+
+    public DbSet<TargetData> TargetData { get; set; }
+
+    public DbSet<Trigger> Trigger { get; set; }
+
+    //User
+    public DbSet<Achievements> Achievements { get; set; } = null!;
+
+    public DbSet<Ban> Ban { get; set; } = null!;
+
     public DbSet<Status> Status { get; set; } = null!;
-
-    public DbSet<Domain.Entities.Internal.Stream.Stream> StreamHistory { get; set; } = null!;
-
-    public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
 
     public DbSet<Sub> Sub { get; set; } = null!;
 
     public DbSet<User> User { get; set; } = null!;
 
     public DbSet<UserDetail> UserDetail { get; set; } = null!;
-
-    public DbSet<Pole> Pole { get; set; } = null!;
-
-    public DbSet<Choice> Choice { get; set; }
 
     public override int SaveChanges()
     {
