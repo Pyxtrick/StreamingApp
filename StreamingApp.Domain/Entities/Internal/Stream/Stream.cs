@@ -21,5 +21,5 @@ public class Stream
 
     public DateTime StreamStart { get; set; }
 
-    public DateTime StreamEnd { get; set; }
+    public DateTime? StreamEnd { get; set; }
 }

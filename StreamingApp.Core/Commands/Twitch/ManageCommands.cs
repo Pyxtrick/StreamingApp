@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Interfaces;
+using StreamingApp.Core.Commands.Logic;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -16,6 +17,8 @@ public class ManageCommands : IManageCommands
     private readonly IGameCommand _gameCommand;
     // TODO: private readonly Func<string, ISendRequest> _sendRequest;
     private readonly ISendRequest _sendRequest;
+
+    //private readonly ISaveDataToFiles _saveDataToFiles;
 
     public ManageCommands(UnitOfWorkContext unitOfWork, ICheck checkAuth, IQueueCommand queueCommand, IGameCommand gameCommand, ISendRequest sendRequest)
     {
@@ -210,15 +213,18 @@ public class ManageCommands : IManageCommands
                         GameCategory = game
                     };
 
-                    var streamHistory = new Domain.Entities.Internal.Stream()
+                    var streamHistory = new Domain.Entities.Internal.Stream.Stream()
                     {
                         StreamTitle = title,
                         StreamStart = DateTime.Now,
+                        StreamEnd = null,
                         GameCategories = new List<StreamGame> { gs }
                     };
 
                     _unitOfWork.Add(streamHistory);
                     _unitOfWork.SaveChanges();
+
+                    //_saveDataToFiles.CreateFile(FileNamesEnum.Achievements.ToString());
                 }
                 else
                 {

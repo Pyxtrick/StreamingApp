@@ -13,6 +13,7 @@ public class ChatDto(
     EmoteSet? emoteSet,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
+    ChatDisplayEnum chatDisplay,
     List<AuthEnum> auth,
     List<SpecialMessgeEnum> specialMessage,
     EffectEnum effect,
@@ -35,6 +36,8 @@ public class ChatDto(
     public List<KeyValuePair<string, string>>? Badges { get; set; }
 
     public ChatOriginEnum ChatOrigin { get; set; }
+
+    public ChatDisplayEnum ChatDisplay { get; set; }
 
     public List<AuthEnum> Auth { get; set; }
 

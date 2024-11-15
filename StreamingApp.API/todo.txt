@@ -28,7 +28,9 @@ TODO: place things on screen at specific locations with x and y axies
 
 	TODO: reset list / view
 
-	TOOD: Show special / fun chat animations
+	TODO: Show special / fun chat animations
+
+	TODO: Horizontal chat For Stream That it can switched betwen vertical and Horizontal
 
 // Backend
 TODO: Save UserName as Important / streamer that the person will be highlighted for reading messages better
@@ -37,6 +39,10 @@ TODO: Save every Raid User and Number (for now only in a file / Later maybe in t
 TODO: activate and deactivate channel rewards
 
 TODO: ManageCommands mulitple ISendRequest
+
+TODO: Save Queue to a file (for next time)
+
+TODO: Ads check (for myself and on screen display)
 
 TODO: morse code de/encode
 
