@@ -61,7 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapHub<RealTimeHub>("/realtimehub");
+app.MapHub<AllChatHub>("/allchathub");
+app.MapHub<ClientHub>("/clienthub");
 app.MapControllers();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Chat;

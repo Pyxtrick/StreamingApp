@@ -8,4 +8,5 @@ public enum SpecialMessgeEnum
     SkippSubMode,
     SubMessage,
     FirstStreamMessage,
+    RaidMessage,
 }
