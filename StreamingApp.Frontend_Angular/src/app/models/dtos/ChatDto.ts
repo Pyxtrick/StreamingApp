@@ -1,3 +1,4 @@
+import { ChatDisplay } from '../enums/ChatDisplay';
 import { ChatOriginEnum } from '../enums/ChatOriginEnum';
 import { ChatUserEnum } from '../enums/ChatUserEnum';
 import { EffectEnum } from '../enums/EffectEnum';
@@ -14,6 +15,7 @@ export interface ChatDto {
   EmoteSetdata: EmoteSet;
   Badges: string[][];
   ChatOrigin: ChatOriginEnum;
+  ChatDisplay: ChatDisplay;
   Auth: ChatUserEnum[];
   SpecialMessage: SpecialMessgeEnum[];
   Effect: EffectEnum;

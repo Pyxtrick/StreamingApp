@@ -2,7 +2,8 @@ export enum SpecialMessgeEnum {
   Undefined,
   FirstMessage,
   Highlighted,
-  SkippSubMode,
+  SkipSubMode,
   SubMessage,
   FirstStreamMessage,
+  RaidMessage,
 }

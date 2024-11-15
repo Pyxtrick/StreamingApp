@@ -23,15 +23,15 @@ export class ConvertMessage {
     badges += '';
 
     const finalName =
-      '<p class="name-date">' +
+      '<span class="name-date">' +
       this.formatDate(chatMessage.Date!) +
-      '</p>' +
+      '</span>' +
       badges +
-      '<p class="name-text" style="color: ' +
+      '<span class="name-text" style="color: ' +
       chatMessage.ColorHex +
       ' !important;">' +
       chatMessage.UserName +
-      '</p>';
+      '</span>';
 
     const isFirstMessage =
       chatMessage.SpecialMessage.find(
@@ -47,7 +47,7 @@ export class ConvertMessage {
         : '';
 
     const finalReply =
-      '<p class="message-reply">' + chatMessage.ReplayMessage + '</p>';
+      '<span class="message-reply">' + chatMessage.ReplayMessage + '</span>';
 
     let finalMessage = isFirstMessage;
 
@@ -60,14 +60,14 @@ export class ConvertMessage {
           '<div class="tooltip bottom">' +
           '<img class="badges-image" src="' +
           foundData.ImageUrl +
-          '" /> <span class="tooltiptext"><p>' +
+          '" /> <span class="tooltiptext"><span>' +
           foundData.Name +
-          '</p></span></div>';
+          '</span></span></div>';
       } else {
         finalMessage = finalMessage + ' ' + element + '';
       }
     });
-    finalMessage += '</p>';
+    finalMessage += '</span>';
 
     return {
       Id: chatMessage.Id,

@@ -13,6 +13,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
+import { ChatDisplay } from 'src/app/models/enums/ChatDisplay';
 import { ChatOriginEnum } from 'src/app/models/enums/ChatOriginEnum';
 import { ChatUserEnum } from 'src/app/models/enums/ChatUserEnum';
 import { EffectEnum } from 'src/app/models/enums/EffectEnum';
@@ -53,7 +54,7 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
       ColorHex: '#FFFFF',
       ReplayMessage: 'NO YOU',
       Message:
-        'hello test kappa kappa kldsafkl ajdshfk ajhdsfkjahsdfkljahsdf kljashdflkj asdh fkljasdhfkljasdhfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh  hello test kappa kappa kldsafkl ajdshfk ajhdsfkj ahsdfkljahsdf kljashdflkj asdh fkljasdh fkljasd hfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh',
+        'hello test kappa kappa kldsafkl ajdshfk ajhdsfkjahsdfkljahsdf kljashdflkj asdh fkljasdhfkljasdhfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh  hello test dlsakfjöla kappa kappa kldsafkl ajdshfk ajhdsfkj ahsdfkljahsdf kljashdflkj asdh fkljasdh fkljasd hfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh',
       EmoteReplacedMessage: 'hello test kappa',
       EmoteSetdata: {
         emotes: [
@@ -72,6 +73,7 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
         ['2,1', 'assets/3x.webp'],
       ], // Check if correct
       ChatOrigin: ChatOriginEnum.Twtich,
+      ChatDisplay: ChatDisplay.allChat,
       Auth: [ChatUserEnum.Streamer],
       SpecialMessage: [SpecialMessgeEnum.Undefined],
       Effect: EffectEnum.none,
@@ -159,6 +161,7 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
       },
       Badges: [],
       ChatOrigin: ChatOriginEnum.Twtich,
+      ChatDisplay: ChatDisplay.allChat,
       Auth: [ChatUserEnum.Streamer],
       SpecialMessage: [SpecialMessgeEnum.Undefined],
       Effect: EffectEnum.none,
