@@ -247,7 +247,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
         //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.ReSubscriber);
 
-        ChatDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
+        ChatDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twtich, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
         SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, true, 1, tier, chatDto);
 
         try

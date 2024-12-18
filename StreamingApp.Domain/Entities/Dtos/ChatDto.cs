@@ -13,7 +13,7 @@ public class ChatDto(
     EmoteSet? emoteSet,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
-    ChatDisplayEnum chatDisplay,
+    ChatDisplayEnum? chatDisplay,
     List<AuthEnum> auth,
     List<SpecialMessgeEnum> specialMessage,
     EffectEnum effect,
