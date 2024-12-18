@@ -1,10 +1,11 @@
 ﻿
-namespace StreamingApp.Core.Commands.Logic;
+namespace StreamingApp.Core.Commands.FileLogic;
+
 public class Achievements
 {
     private readonly IManageFile _manageFile;
 
-    private Achievements(IManageFile manageFile)
+    public Achievements(IManageFile manageFile)
     {
         _manageFile = manageFile;
     }

@@ -1,7 +1,7 @@
 ﻿using StreamingApp.DB;
 using System.Text;
 
-namespace StreamingApp.Core.Commands.Logic;
+namespace StreamingApp.Core.Commands.FileLogic;
 public class ManageFile : IManageFile
 {
     private string DocPath { get; set; }

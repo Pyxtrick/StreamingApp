@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Core.Commands.Logic;
+﻿namespace StreamingApp.Core.Commands.FileLogic;
 
 public interface IManageFile
 {
