@@ -8,7 +8,7 @@ public class Target
 
     public TargetCondition TargetCondition { get; set; }
 
-    public string TriggerId { get; set; }
+    public int TriggerId { get; set; }
     public Trigger Trigger { get; set; }
 
     public string TargetDataId { get; set; }

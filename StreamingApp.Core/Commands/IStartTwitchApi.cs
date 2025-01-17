@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Core.Commands.Interfaces;
+﻿namespace StreamingApp.Core.Commands;
 
 public interface IStartTwitchApi
 {

@@ -9,6 +9,7 @@ namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 public class MessageDto(
     string messageId,
     bool isCommand,
+    string channel,
     string userId,
     string userName,
     string colorHex,
@@ -29,6 +30,8 @@ public class MessageDto(
     : TwitchBase(messageId, userId, userName, utcNow)
 {
     public bool IsCommand { get; set; } = isCommand;
+
+    public string Channel { get; set; } = channel;
 
     public string ColorHex { get; set; } = colorHex;
 

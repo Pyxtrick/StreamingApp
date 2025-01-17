@@ -10,4 +10,5 @@ public enum CategoryEnum
     fun,
     Subathon,
     Logic,
+    Basic,
 }

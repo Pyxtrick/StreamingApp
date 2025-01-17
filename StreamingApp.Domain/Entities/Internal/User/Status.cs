@@ -29,6 +29,9 @@ public class Status
     // Is Currenty Verified / Streamer | defined externaly
     public bool IsVerified { get; set; }
 
+    // If the user Is a Streamer (has previsously Raided the channel)
+    public bool IsRaider { get; set; }
+
     // Is Currenty a moderator on Twitch or Yoututbe
     public bool IsMod { get; set; }
 

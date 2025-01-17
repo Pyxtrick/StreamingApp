@@ -6,5 +6,6 @@ export enum ChatUserEnum {
   Subscriber = 4,
   Turbo = 5,
   Partner = 6,
-  undefined = 7, // Everyone
+  Raider = 7, // Streamer who Raided the channel
+  undefined = 8, // Everyone
 }

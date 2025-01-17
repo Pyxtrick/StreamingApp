@@ -2,6 +2,7 @@
 using StreamingApp.Domain.Entities.Internal.Settings;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
+using StreamingApp.Domain.Entities.Internal.Stream;
 using System;
 using TwitchLib.Api.Helix.Models.Clips.GetClips;
 using TwitchLib.Api.Helix.Models.Soundtrack;

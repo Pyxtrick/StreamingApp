@@ -63,6 +63,7 @@ app.UseAuthorization();
 
 app.MapHub<AllChatHub>("/allchathub");
 app.MapHub<ClientHub>("/clienthub");
+app.MapHub<EventHub>("/eventHub");
 app.MapControllers();
 
 app.Run();

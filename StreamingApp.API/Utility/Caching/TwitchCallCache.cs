@@ -2,6 +2,7 @@
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
+using System.Linq;
 
 namespace StreamingApp.API.Utility.Caching;
 public class TwitchCallCache : ITwitchCallCache
@@ -81,26 +82,27 @@ public class TwitchCallCache : ITwitchCallCache
         }
     }
 
-    public IList<Object> GetAllMessages(CallCacheEnum callCacheEnum)
+    public List<Object> GetAllMessages(CallCacheEnum callCacheEnum)
     {
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
-                return (IList<Object>)_twitchCallCacheData.CachedMessageData;
+                var t = _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
+                return t;
             case CallCacheEnum.CachedCommandData:
-                return (IList<Object>)_twitchCallCacheData.CachedCommandData;
+                return _twitchCallCacheData.CachedCommandData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedGiftedSubData:
-                return (IList<Object>)_twitchCallCacheData.CachedGiftedSubData;
+                return _twitchCallCacheData.CachedGiftedSubData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedNewSubData:
-                return (IList<Object>)_twitchCallCacheData.CachedNewSubData;
+                return _twitchCallCacheData.CachedNewSubData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedPrimeSubData:
-                return (IList<Object>)_twitchCallCacheData.CachedPrimeSubData;
+                return _twitchCallCacheData.CachedPrimeSubData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedReSubData:
-                return (IList<Object>)_twitchCallCacheData.CachedReSubData;
+                return _twitchCallCacheData.CachedReSubData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedRaidData:
-                return (IList<Object>)_twitchCallCacheData.CachedRaidData;
+                return _twitchCallCacheData.CachedRaidData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedUserJoinData:
-                return (IList<Object>)_twitchCallCacheData.CachedUserJoinData;
+                return _twitchCallCacheData.CachedUserJoinData.ConvertAll(s => (Object)s);
             default:
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();

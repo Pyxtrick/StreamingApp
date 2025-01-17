@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Interfaces;
-using StreamingApp.Core.Commands.Logic;
+//using StreamingApp.Core.Commands.Logic;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Stream;
 using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
@@ -383,6 +384,27 @@ public class ManageCommands : IManageCommands
             else if (commandAndResponse.Command.Contains("randomuser"))
             {
                 // chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
+            }
+            else if (commandAndResponse.Category == CategoryEnum.Basic)
+            {
+                // TODO: replace responce message with
+                // first chat | stream streak | 
+
+                DateTime firstMessage = DateTime.Now; // get first message sent date
+                DateTime fallowdSince = DateTime.Now; // get fallowed since date
+                int streamStrak = 0; // TODO: read from DB
+                int bits = 0; // get bits / hypechat count
+                int subs = 0; // get gifted sub count
+                int streamCount = 0; // get count of streams
+
+
+                string[] parts = commandAndResponse.Response.Split('-');
+                /**if (contains)
+                {
+                    replace
+                }**/
+
+
             }
         }
         else if (commandAndResponse != null && commandAndResponse.Active == false)

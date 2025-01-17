@@ -155,7 +155,7 @@ public class TwitchSendRequest : ISendRequest
                 IsPole = pole,
                 Title = data.Title,
                 StartedAt = data.StartedAt,
-                Choices = data.Choices.Select(option => { return new Domain.Entities.Internal.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
+                Choices = data.Choices.Select(option => { return new Domain.Entities.Internal.Stream.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
             };
         }
         else
@@ -170,22 +170,9 @@ public class TwitchSendRequest : ISendRequest
                 IsPole = pole,
                 Title = data.Title,
                 StartedAt = DateTime.Parse(data.CreatedAt),
-                Choices = data.Outcomes.Select(option => { return new Domain.Entities.Internal.Choice() { Title = option.Title, Votes = option.ChannelPointsVotes, VotesPoints = option.ChannelPointsVotes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
+                Choices = data.Outcomes.Select(option => { return new Domain.Entities.Internal.Stream.Choice() { Title = option.Title, Votes = option.ChannelPointsVotes, VotesPoints = option.ChannelPointsVotes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
             };
         }
-    }
-
-    /// <summary>
-    /// Warn user with reason
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="reason"></param>
-    /// <returns></returns>
-    public async Task WarnUser(string userId, string reason)
-    {
-        // TODO: Warn Chat User
-        // https://dev.twitch.tv/docs/api/reference/#warn-chat-user
-        // POST https://api.twitch.tv/helix/moderation/warnings
     }
 
     public void GetEmotes()
@@ -228,5 +215,47 @@ public class TwitchSendRequest : ISendRequest
     public async Task UpdateCustomReward()
     {
         //var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.UpdateCustomRewardAsync();
+    }
+
+    /// <summary>
+    /// Warn user with reason
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="reason"></param>
+    /// <returns></returns>
+    public async Task WarnUser(string userId, string reason)
+    {
+        // TODO: Warn Chat User
+        // https://dev.twitch.tv/docs/api/reference/#warn-chat-user
+        // POST https://api.twitch.tv/helix/moderation/warnings
+    }
+
+    /// <summary>
+    /// Delete Chat Message
+    /// </summary>
+    /// <returns></returns>
+    public async Task DeleteMessage()
+    {
+        // TODO: Delete Message (maybe with Reason)
+    }
+
+    /// <summary>
+    /// Timeout User for x Seconds
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public async Task TimeoutUser(int time)
+    {
+        // TODO: Timeout user with amount in Seconds (maybe with Reson)
+    }
+
+    /// <summary>
+    /// Ban User with Reson
+    /// </summary>
+    /// <param name="reson"></param>
+    /// <returns></returns>
+    public async Task BanUser(string reson)
+    {
+        // TODO: Ban User with a specific Reson
     }
 }

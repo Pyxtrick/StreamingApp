@@ -9,7 +9,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 
 namespace StreamingApp.API;
 
-public static class Registrar
+public static class APIRegistrar
 {
     public static void AddApiOptions(this IServiceCollection services)
     {

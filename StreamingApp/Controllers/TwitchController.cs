@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreamingApp.Core.Commands;
-using StreamingApp.Core.Commands.Interfaces;
 using StreamingApp.Core.Queries;
 using StreamingApp.Domain.Entities.Dtos;
 

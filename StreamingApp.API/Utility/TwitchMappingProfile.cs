@@ -9,16 +9,28 @@ public class TwitchMappingProfile : Profile
     public TwitchMappingProfile()
     {
         CreateMap<ChatMessage, MessageDto>()
-            .ForMember(dest => dest.IsCommand, opt => opt.MapFrom(src => false))
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.DisplayName))
-            .ForMember(dest => dest.PointRediam, opt => opt.MapFrom(src => src.CustomRewardId))
-            .ForMember(dest => dest.ChatOrigin, opt => opt.MapFrom(src => ChatOriginEnum.Twtich))
-            .ForMember(dest => dest.Auth, opt => opt.MapFrom(src => MappAuth(src)))
-            .ForMember(dest => dest.SpecialMessage, opt => opt.MapFrom(src => MappMessage(src)))
-            .ForMember(dest => dest.Effect, opt => opt.MapFrom(src => EffectEnum.none))
-            .ForMember(dest => dest.ReplayMessage, opt => opt.MapFrom(src => ""))
-            .ForMember(dest => dest.IsSub, opt => opt.MapFrom(src => src.IsSubscriber))
-            .ReverseMap();
+            .ConstructUsing(x => new MessageDto(
+                x.Id,
+                false,
+                x.Channel,
+                x.UserId,
+                x.DisplayName,
+                x.ColorHex,
+                "replayMessage",
+                x.Message,
+                x.EmoteReplacedMessage,
+                "pointRediam",
+                x.Bits,
+                x.EmoteSet,
+                x.Badges,
+                ChatOriginEnum.Twtich,
+                MappAuth(x),
+                MappSpecialMessage(x),
+                EffectEnum.none,
+                x.IsSubscriber,
+                x.SubscribedMonthCount,
+                DateTime.Now
+                ));
     }
 
     private List<AuthEnum> MappAuth(ChatMessage chatMessage)
@@ -35,7 +47,7 @@ public class TwitchMappingProfile : Profile
         }.Where(a => a != 0).ToList();
     }
 
-    private List<SpecialMessgeEnum> MappMessage(ChatMessage chatMessage)
+    private List<SpecialMessgeEnum> MappSpecialMessage(ChatMessage chatMessage)
     {
         return new List<SpecialMessgeEnum>()
         {

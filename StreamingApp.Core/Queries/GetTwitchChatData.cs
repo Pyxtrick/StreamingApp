@@ -19,7 +19,7 @@ public class GetTwitchChatData : IGetTwitchChatData
 
     public List<ChatDto> Execute()
     {
-        List<MessageDto>? t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData) as List<MessageDto>;
+        var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
 
         List<ChatDto> chatDtos = _mapper.Map<List<ChatDto>>(t);
 

@@ -138,7 +138,7 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  //TODO: Remove
+  //TODO: Remove and check how it comes from the backend
   addData() {
     this.chatMessages.push({
       Id: '1',

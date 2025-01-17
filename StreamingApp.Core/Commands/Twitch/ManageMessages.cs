@@ -4,7 +4,6 @@ using StreamingApp.Core.Commands.DB;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
 
@@ -30,7 +29,7 @@ public class ManageMessages : IManageMessages
     public async Task Execute()
     {
         //TODO: Check if 1 second is enouth for this
-        IList<MessageDto> t = new List<MessageDto>(); // (IList<MessageDto>)_twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+        IList<MessageDto> t = new List<MessageDto>();// (IList<MessageDto>)_twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(60), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
 
         if (t != null)
         {
@@ -94,27 +93,28 @@ public class ManageMessages : IManageMessages
         {
             if (messageDto.Bits != 0)
             {
-                List<EmotesCondition> data = _unitOfWork.EmotesCondition.ToList();
+                List<Trigger> data = _unitOfWork.Trigger.ToList();
 
                 int found = 0;
 
                 for (int i = 0; i < data.Count; i++)
                 {
-                    if (messageDto.Bits == data[i].BitAmmount)
+                    data = ((List<Trigger>)data.Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits)).OrderBy(t => t.Ammount).ToList();
+
+                    if (messageDto.Bits == data[i].Ammount)
                     {
                         // TODO: Show emote
                     }
                     else
                     {
-
-                        if (messageDto.Bits < data[i].BitAmmount)
+                        if (messageDto.Bits < data[i].Ammount)
                         {
                             if (data[i].Active && data[i].ExactAmmount == false)
                             {
                                 found = i;
                             }
                         }
-                        else if (messageDto.Bits > data[i].BitAmmount)
+                        else if (messageDto.Bits > data[i].Ammount)
                         {
                             // TODO: Show emote
                         }

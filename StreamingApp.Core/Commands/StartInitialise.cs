@@ -1,5 +1,4 @@
 ﻿using StreamingApp.API.Twitch.Interfaces;
-using StreamingApp.Core.Commands.Interfaces;
 
 namespace StreamingApp.Core.Commands;
 
