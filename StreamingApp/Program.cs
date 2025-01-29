@@ -20,7 +20,7 @@ builder.Services.AddApiOptions();
 builder.Services.AddCoreOptions();
 
 // SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(cfg => cfg.EnableDetailedErrors = true);
 
 // DB Services
 bool enableDataLogging = builder.Configuration.GetValue("Logging:EnableDataLogging", false);
@@ -34,7 +34,7 @@ builder.Services.AddSwaggerDocument(swagger =>
 });
 
 builder.Services.AddCors(options => {
-    options.AddPolicy("CorsPolicy", builder => { builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials(); });
+    options.AddPolicy("CorsPolicy", builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200"); });
 });
 
 var app = builder.Build();
@@ -61,9 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapHub<AllChatHub>("/allchathub");
-app.MapHub<ClientHub>("/clienthub");
-app.MapHub<EventHub>("/eventHub");
+app.MapHub<ChatHub>("/chathub");
+
 app.MapControllers();
 
 app.Run();

@@ -1,20 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using StreamingApp.Domain.Entities.Dtos;
 
 namespace StreamingApp.Core.Hubs;
 
 // Class for sending Chat messages
-public class AllChatHub : Hub
+public class ChatHub : Hub
 {
-    public async Task SendMessage(ChatDto message)
-    {
-        await Clients.All.SendAsync("ReceiveAllChat", message);
-    }
-
     public override async Task OnConnectedAsync()
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, "chat");
-        await Clients.Caller.SendAsync("UserConnectedAllChat");
+        await Clients.Caller.SendAsync("ReceiveChatMessage");
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)

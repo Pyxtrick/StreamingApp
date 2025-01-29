@@ -15,7 +15,7 @@ export class AppSignalRService {
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7033/realtimehub') // SignalR hub URL
+      .withUrl('https://localhost:7033/chathub') // SignalR hub URL
       // TODO: Change to get url from somewhere else (security)
       .build();
   }
@@ -36,18 +36,33 @@ export class AppSignalRService {
     });
   }
 
-  receiveMessage(): Observable<ChatDto> {
+  receiveChatMessage(): Observable<ChatDto> {
     return new Observable<ChatDto>((observer) => {
-      this.hubConnection.on('ReceiveMessage', (message: ChatDto) => {
+      this.hubConnection.on('ReceiveChatMessage', (message: ChatDto) => {
         observer.next(message);
         this.saveMessage(message);
       });
     });
   }
 
-  sendMessage(message: ChatDto): void {
-    this.hubConnection.invoke('SendMessage', message);
+  //#region Just for Debugging / testing
+  receiveMessage(): Observable<string> {
+    return new Observable<string>((observer) => {
+      this.hubConnection.on('ReceiveMessage', (message: string) => {
+        observer.next(message);
+      });
+    });
   }
+  //#endregion
+
+  //#region Not working currently
+  sendMessage(message: string): void {
+    this.hubConnection
+      .invoke('SendMessage', message)
+      .catch((err) => console.log(err));
+    //this.hubConnection.send('SendMessage', 'test').catch((err) => console.log(err));
+  }
+  //#endregion
 
   saveMessage(message: ChatDto) {
     // TODO: Save to the diffrent ngrx store locations

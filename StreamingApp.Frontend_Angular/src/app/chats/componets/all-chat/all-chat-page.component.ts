@@ -18,7 +18,7 @@ import { ChatOriginEnum } from 'src/app/models/enums/ChatOriginEnum';
 import { ChatUserEnum } from 'src/app/models/enums/ChatUserEnum';
 import { EffectEnum } from 'src/app/models/enums/EffectEnum';
 import { SpecialMessgeEnum } from 'src/app/models/enums/SpecialMessgeEnum';
-import { AppSignalRService } from 'src/app/services/app-signalr.services';
+import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from '../../models/DisplayChat';
 
@@ -84,11 +84,16 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
   displayChatMessages: DisplayChat[] = [];
 
   ngOnInit(): void {
-    this.convertAllData();
-  }
+    this.signalRService.startConnection();
 
-  sendMessage(message: string): void {
-    this.signalRService.sendMessage(message);
+    this.signalRService.startConnection().subscribe(() => {
+      this.signalRService.receiveMessage().subscribe((message) => {
+        //this.receivedMessage = message;
+        console.log('message ', message);
+      });
+    });
+
+    this.convertAllData();
   }
 
   ngAfterViewInit(): void {

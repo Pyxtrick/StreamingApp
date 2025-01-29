@@ -21,8 +21,6 @@ public static class Registrar
     {
         services.AddCoreCommandOptions();
 
-
-
         services.AddCoreQueryOptions();
     }
 }
