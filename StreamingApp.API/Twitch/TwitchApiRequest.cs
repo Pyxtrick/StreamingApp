@@ -54,6 +54,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         string emoteReplacedMessage = e.ChatMessage.EmoteReplacedMessage;
         string replayMessage = "";
         var emoteSet = e.ChatMessage.EmoteSet;
+        string channel = e.ChatMessage.Channel;
 
         var sub = e.ChatMessage.IsSubscriber;
 
@@ -83,7 +84,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         //TODO: Check if this works on its own
         MessageDto messageDto1 = _mapper.Map<MessageDto>(e.ChatMessage);
 
-        MessageDto messageDto = new(e.ChatMessage.Id, false, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
+        MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
 
         //TODO: only save chat messages
         _twitchCallCache.AddMessage(messageDto1, CallCacheEnum.CachedMessageData);
