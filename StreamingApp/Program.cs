@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using StreamingApp.API;
 using StreamingApp.Core;
-using StreamingApp.Core.Hubs;
+using StreamingApp.API.SignalRHub;
 using StreamingApp.DB;
 
 var builder = WebApplication.CreateBuilder(args);
