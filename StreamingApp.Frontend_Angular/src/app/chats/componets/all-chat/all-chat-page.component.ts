@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   OnInit,
-  Pipe,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -13,11 +12,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
-import { ChatDisplay } from 'src/app/models/enums/ChatDisplay';
-import { ChatOriginEnum } from 'src/app/models/enums/ChatOriginEnum';
-import { ChatUserEnum } from 'src/app/models/enums/ChatUserEnum';
-import { EffectEnum } from 'src/app/models/enums/EffectEnum';
-import { SpecialMessgeEnum } from 'src/app/models/enums/SpecialMessgeEnum';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from '../../models/DisplayChat';
@@ -43,62 +37,28 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
   private scrollContainer: any;
   private isNearBottom = true;
 
-  @Pipe({
-    name: 'sanitizeHtml',
-  })
-  //TODO: Change
-  chatMessages: ChatDto[] = [
-    {
-      Id: '1',
-      UserName: 'name',
-      ColorHex: '#FFFFF',
-      ReplayMessage: 'NO YOU',
-      Message:
-        'hello test kappa kappa kldsafkl ajdshfk ajhdsfkjahsdfkljahsdf kljashdflkj asdh fkljasdhfkljasdhfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh  hello test dlsakfjöla kappa kappa kldsafkl ajdshfk ajhdsfkj ahsdfkljahsdf kljashdflkj asdh fkljasdh fkljasd hfklj ahsd flk jahsd flk jhasd lkfj hasdlkfjh',
-      EmoteReplacedMessage: 'hello test kappa',
-      EmoteSetdata: {
-        emotes: [
-          {
-            Id: '1',
-            Name: 'kappa',
-            StartIndex: 1,
-            EndIndex: 2,
-            ImageUrl: 'assets/3x.webp',
-          },
-        ],
-        rawEmoteSetString: '',
-      },
-      Badges: [
-        ['kappa', 'assets/3x.webp'],
-        ['2,1', 'assets/3x.webp'],
-      ], // Check if correct
-      ChatOrigin: ChatOriginEnum.Twtich,
-      ChatDisplay: ChatDisplay.allChat,
-      Auth: [ChatUserEnum.Streamer],
-      SpecialMessage: [SpecialMessgeEnum.Undefined],
-      Effect: EffectEnum.none,
-      Date: new Date(),
-    },
-  ];
-
   displayChatMessages: DisplayChat[] = [];
-
-  ngOnInit(): void {
-    this.signalRService.startConnection();
-
-    this.signalRService.startConnection().subscribe(() => {
-      this.signalRService.receiveMessage().subscribe((message) => {
-        //this.receivedMessage = message;
-        console.log('message ', message);
-      });
-    });
-
-    this.convertAllData();
-  }
 
   ngAfterViewInit(): void {
     this.scrollContainer = this.scrollFrame.nativeElement;
     this.itemElements.changes.subscribe((_) => this.onItemElementsChanged());
+  }
+
+  ngOnInit(): void {
+    this.signalRService.startConnection().subscribe(() => {
+      this.signalRService.receiveChatMessage().subscribe((message) => {
+        if (this.displayChatMessages.length >= 100) {
+          this.displayChatMessages.shift();
+        }
+        this.convertMessageData(message);
+      });
+    });
+  }
+
+  convertMessageData(chatMesssage: ChatDto) {
+    this.displayChatMessages.push(
+      ConvertMessage.convertMessage(this._sanitizer, chatMesssage, false)
+    );
   }
 
   //#region Auto Scroll to Bottom when at bottom
@@ -127,59 +87,5 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
   scrolled(event: any): void {
     this.isNearBottom = this.isUserNearBottom();
   }
-
-  formatDate(date: Date): string {
-    return `${date.toLocaleDateString(
-      'ch-DE'
-    )} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-  }
   //#endregion
-
-  convertAllData() {
-    this.chatMessages.forEach((chatMessage) => {
-      this.displayChatMessages.push(
-        ConvertMessage.convertMessage(this._sanitizer, chatMessage)
-      );
-    });
-  }
-
-  //TODO: Remove and check how it comes from the backend
-  addData() {
-    this.chatMessages.push({
-      Id: '1',
-      UserName: 'name',
-      ColorHex: '#FFFFF',
-      ReplayMessage: 'NO YOU',
-      Message: 'hello test kappa kappa',
-      EmoteReplacedMessage: 'hello test kappa',
-      EmoteSetdata: {
-        emotes: [
-          {
-            Id: '1',
-            Name: 'kappa',
-            StartIndex: 1,
-            EndIndex: 2,
-            ImageUrl: 'assets/3x.webp',
-          },
-        ],
-        rawEmoteSetString: '',
-      },
-      Badges: [],
-      ChatOrigin: ChatOriginEnum.Twtich,
-      ChatDisplay: ChatDisplay.allChat,
-      Auth: [ChatUserEnum.Streamer],
-      SpecialMessage: [SpecialMessgeEnum.Undefined],
-      Effect: EffectEnum.none,
-      Date: new Date(),
-    });
-    if (this.chatMessages.length >= 100) {
-      this.chatMessages.shift();
-    }
-    this.convertAllData();
-  }
-
-  //TODO: Remove
-  removeData() {
-    this.chatMessages.shift();
-  }
 }

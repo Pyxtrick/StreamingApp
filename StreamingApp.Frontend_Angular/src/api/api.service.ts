@@ -685,7 +685,8 @@ export enum AuthEnum {
     Subscriber = 6,
     Prime = 7,
     Turbo = 8,
-    Undefined = 9,
+    Raider = 9,
+    Undefined = 10,
 }
 
 export enum CategoryEnum {
@@ -822,7 +823,7 @@ export class ChatDto implements IChatDto {
     id!: string;
     userName!: string;
     colorHex!: string;
-    replayMessage!: string;
+    replayMessage?: string | null;
     message!: string;
     emoteReplacedMessage!: string;
     emoteSet?: EmoteSet | null;
@@ -930,7 +931,7 @@ export interface IChatDto {
     id: string;
     userName: string;
     colorHex: string;
-    replayMessage: string;
+    replayMessage?: string | null;
     message: string;
     emoteReplacedMessage: string;
     emoteSet?: EmoteSet | null;

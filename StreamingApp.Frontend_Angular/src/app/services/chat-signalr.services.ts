@@ -2,16 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ChatsActions } from '../chats/state/action';
 import { ChatDto } from '../models/dtos/ChatDto';
-import { ChatDisplay } from '../models/enums/ChatDisplay';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppSignalRService {
   private store = inject(Store);
-  private hubConnection: signalR.HubConnection;
+  public hubConnection: signalR.HubConnection;
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -40,7 +38,6 @@ export class AppSignalRService {
     return new Observable<ChatDto>((observer) => {
       this.hubConnection.on('ReceiveChatMessage', (message: ChatDto) => {
         observer.next(message);
-        this.saveMessage(message);
       });
     });
   }
@@ -49,6 +46,7 @@ export class AppSignalRService {
   receiveMessage(): Observable<string> {
     return new Observable<string>((observer) => {
       this.hubConnection.on('ReceiveMessage', (message: string) => {
+        console.log(message);
         observer.next(message);
       });
     });
@@ -63,46 +61,4 @@ export class AppSignalRService {
     //this.hubConnection.send('SendMessage', 'test').catch((err) => console.log(err));
   }
   //#endregion
-
-  saveMessage(message: ChatDto) {
-    // TODO: Save to the diffrent ngrx store locations
-    switch (message.ChatDisplay) {
-      case ChatDisplay.allChat: {
-        console.log('allChat');
-        this.store.dispatch(ChatsActions.addAllChat(message));
-        ChatsActions.loadAllChat;
-        break;
-      }
-      case ChatDisplay.twitchChat: {
-        console.log('allChat');
-        this.store.dispatch(ChatsActions.addTwitchChat(message));
-        break;
-      }
-      case ChatDisplay.youtubeChat: {
-        console.log('allChat');
-        this.store.dispatch(ChatsActions.addTwitchChat(message));
-        break;
-      }
-      case ChatDisplay.modChat: {
-        console.log('allChat');
-        break;
-      }
-      case ChatDisplay.friendChat: {
-        console.log('allChat');
-        break;
-      }
-      case ChatDisplay.event: {
-        console.log('allChat');
-        break;
-      }
-      case ChatDisplay.modEvent: {
-        console.log('allChat');
-        break;
-      }
-      default: {
-        console.log('nothing found');
-        break;
-      }
-    }
-  }
 }

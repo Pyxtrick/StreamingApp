@@ -1,8 +1,5 @@
 <div class="info-box">
-  <!--<ng-container [ngSwitch]="selectedFormType$ | async"> </ng-container>-->
   <div>
-    <button (click)="addData()">Add</button>
-    <button (click)="removeData()">Remove</button>
     <div class="list frame" (scroll)="scrolled($event)" #scrollframe>
       <mat-list>
         @for (message of displayChatMessages; track message) {

@@ -1,0 +1,88 @@
+.badges-image {
+  height: 20px;
+}
+
+.name-date {
+  font-size: smaller;
+  margin-bottom: 0px !important;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.name-text {
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 0px !important;
+  display: inline-block;
+}
+
+.message-reply {
+  font-size: smaller;
+  font-style: oblique;
+  color: white;
+  margin-bottom: 0px;
+}
+
+.message-text {
+  color: white;
+  margin-bottom: 0px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  display: inline-block;
+}
+
+.mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
+.mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
+.mdc-list-item__secondary-text::before {
+  content: none !important;
+}
+
+.mdc-list-item.mdc-list-item--with-three-lines {
+  height: auto !important;
+}
+
+.mat-mdc-list-item.mdc-list-item--with-three-lines
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+  white-space: wrap !important;
+  word-break: break-word;
+  color: #ffffff;
+}
+
+.mdc-list-item.mdc-list-item--with-two-lines {
+  height: initial !important;
+}
+
+::ng-deep .mat-line {
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  margin-right: 5px;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.item {
+  border-bottom: solid;
+  border-color: rgba(255, 255, 255, 0);
+}

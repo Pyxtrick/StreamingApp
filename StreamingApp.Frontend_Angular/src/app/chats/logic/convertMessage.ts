@@ -6,75 +6,99 @@ import { SpecialMessgeEnum } from 'src/app/models/enums/SpecialMessgeEnum';
 // check for the other view (display on Stream)
 
 export class ConvertMessage {
-  public static convertMessage(sanitizer: DomSanitizer, chatMessage: ChatDto) {
+  public static convertMessage(
+    sanitizer: DomSanitizer,
+    chatMessage: ChatDto,
+    isOnScreen: boolean
+  ) {
     let badges = '';
 
-    chatMessage.Badges.forEach((badge) => {
-      console.log(badge);
+    chatMessage.badges.forEach((badge) => {
       badges +=
         '<div class="tooltip bottom">' +
         '<img class="badges-image" src="' +
-        badge[1] +
+        badge.value +
         '" /> <span class="tooltiptext"><p>' +
-        badge[0] +
+        badge.key +
         '</p></span></div>';
     });
 
     badges += '';
 
-    const finalName =
-      '<span class="name-date">' +
-      this.formatDate(chatMessage.Date!) +
-      '</span>' +
-      badges +
-      '<span class="name-text" style="color: ' +
-      chatMessage.ColorHex +
-      ' !important;">' +
-      chatMessage.UserName +
-      '</span>';
+    let finalName = '';
+
+    if (isOnScreen) {
+      finalName =
+        badges +
+        '<span class="name-text" style="color: ' +
+        chatMessage.colorHex +
+        ' !important;">' +
+        chatMessage.userName +
+        '</span>';
+    } else {
+      finalName =
+        '<span class="name-date" style="color: white">' +
+        this.formatDate(new Date(Date.parse(chatMessage.date))) +
+        '</span>' +
+        badges +
+        '<span class="name-text" style="color: ' +
+        chatMessage.colorHex +
+        ' !important;">' +
+        chatMessage.userName +
+        '</span>';
+    }
 
     const isFirstMessage =
-      chatMessage.SpecialMessage.find(
+      chatMessage.specialMessage.find(
         (t) =>
           t === SpecialMessgeEnum.FirstStreamMessage ||
           t === SpecialMessgeEnum.FirstMessage
       ) != undefined
-        ? chatMessage.SpecialMessage.find(
+        ? chatMessage.specialMessage.find(
             (t) => t === SpecialMessgeEnum.FirstMessage
           ) != undefined
           ? 'background-color: blue'
           : 'background-color: green'
         : '';
 
-    const finalReply =
-      '<span class="message-reply">' + chatMessage.ReplayMessage + '</span>';
+    let finalReply = '';
+    if (chatMessage.replayMessage != null) {
+      finalReply =
+        '<span class="message-reply">' + chatMessage.replayMessage + '</span>';
+    }
 
-    let finalMessage = isFirstMessage;
+    let finalMessage = isFirstMessage + '<span>';
 
-    chatMessage.Message?.split(' ').forEach((element) => {
-      const foundData = chatMessage.EmoteSetdata.emotes?.find(
-        (m) => m.Name === element
-      );
-      if (foundData != null) {
-        finalMessage +=
-          '<div class="tooltip bottom">' +
-          '<img class="badges-image" src="' +
-          foundData.ImageUrl +
-          '" /> <span class="tooltiptext"><span>' +
-          foundData.Name +
-          '</span></span></div>';
+    chatMessage.message?.split(' ').forEach((element) => {
+      if (chatMessage.emoteSetdata != null) {
+        const foundData = chatMessage.emoteSetdata.emotes?.find(
+          (m) => m.Name === element
+        );
+        if (foundData != null) {
+          finalMessage +=
+            '<div class="tooltip bottom">' +
+            '<img class="badges-image" src="' +
+            foundData.ImageUrl +
+            '" /> <span class="tooltiptext"><span>' +
+            foundData.Name +
+            '</span></span></div>';
+        } else {
+          finalMessage = finalMessage + ' ' + element + '';
+        }
       } else {
         finalMessage = finalMessage + ' ' + element + '';
       }
     });
     finalMessage += '</span>';
 
+    console.log(finalName);
+
     return {
-      Id: chatMessage.Id,
+      Id: chatMessage.id,
       SaveName: sanitizer.bypassSecurityTrustHtml(finalName), // This needs to be done that style is correctly implemented,
       SaveReply: sanitizer.bypassSecurityTrustHtml(finalReply),
       SaveMessage: sanitizer.bypassSecurityTrustHtml(finalMessage), // This needs to be done that style is correctly implemented,
-      Date: chatMessage.Date,
+      Date: new Date(chatMessage.date),
     };
   }
 
