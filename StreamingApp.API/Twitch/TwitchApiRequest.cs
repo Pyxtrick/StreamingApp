@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
@@ -16,13 +18,15 @@ public class TwitchApiRequest : ITwitchApiRequest
     private readonly IConfiguration _configuration;
     private readonly ITwitchCallCache _twitchCallCache;
     private readonly IMapper _mapper;
+    private readonly IHubContext<ChatHub> _hubContext;
 
-    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper)
+    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper, IHubContext<ChatHub> hubContext)
     {
         _twitchCache = twitchCache;
         _configuration = configuration;
         _twitchCallCache = twitchCallCache;
         _mapper = mapper;
+        _hubContext = hubContext;
     }
 
     public void Client_OnConnected(object sender, OnConnectedArgs e)
@@ -85,6 +89,9 @@ public class TwitchApiRequest : ITwitchApiRequest
         MessageDto messageDto1 = _mapper.Map<MessageDto>(e.ChatMessage);
 
         MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
+
+        _hubContext.Clients.All.SendAsync("ReceiveMessage", "test").Wait();
+        _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto1).Wait();
 
         //TODO: only save chat messages
         _twitchCallCache.AddMessage(messageDto1, CallCacheEnum.CachedMessageData);
@@ -288,6 +295,8 @@ public class TwitchApiRequest : ITwitchApiRequest
         // TODO: Show emote
 
         //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
+
+        Console.WriteLine($"New Raid by {userName} with {amount} Users");
 
         throw new NotImplementedException();
     }

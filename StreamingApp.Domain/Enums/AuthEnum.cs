@@ -10,5 +10,6 @@ public enum AuthEnum
     Subscriber = 6,
     Prime = 7,
     Turbo = 8,
-    undefined = 9, // Everyone
+    Raider = 9,
+    undefined = 10, // Everyone
 }
