@@ -139,6 +139,7 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnUserBanned += _twichApiRequest.Bot_OnUserBanned;
         OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined;
         //OwnerOfChannelConnection.OnDuplicate
+        //OwnerOfChannelConnection.OnNewFollower
 
         // check for add's / advertisements
 
