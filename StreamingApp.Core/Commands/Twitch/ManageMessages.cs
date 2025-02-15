@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Commands.Chat;
 using StreamingApp.Core.Commands.DB;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
@@ -18,12 +20,15 @@ public class ManageMessages : IManageMessages
 
     private readonly ITwitchCallCache _twitchCallCache;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache)
+    private readonly ISendSignalRMessage _sendSignalRMessage;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
         _updateUserAchievementsOnDb = updateUserAchievementsOnDb;
         _twitchCallCache = twitchCallCache;
+        _sendSignalRMessage = sendSignalRMessage;
     }
 
     /// <summary>
@@ -40,7 +45,6 @@ public class ManageMessages : IManageMessages
             List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
             foreach (MessageDto message in messages)
             {
-                //await Execute(item);
                 await ExecuteOne(message);
             }
         }
@@ -93,8 +97,8 @@ public class ManageMessages : IManageMessages
         var internalUserId = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
         await _updateUserAchievementsOnDb.UpdateAchievements(internalUserId);
 
-        var t = _unitOfWork.User.FirstOrDefault(u => u.TwitchAchievements.LastStreamSeen > DateTime.Now.AddHours(24));
-        if (t != null)
+        User user = _unitOfWork.User.FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+
         {
             // TODO: make backend check if this is the first message during the stream
             messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
@@ -116,6 +120,7 @@ public class ManageMessages : IManageMessages
                     if (messageDto.Bits == data[i].Ammount)
                     {
                         // TODO: Show emote
+                        //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
                     }
                     else
                     {
@@ -142,12 +147,14 @@ public class ManageMessages : IManageMessages
                 // TODO: Show emote
             }
 
+            await _sendSignalRMessage.SendChatMessage(user, messageDto);
+
             //_chatCache.AddOneChatData(messageDto);
         }
-        /** Check if the Bot_OnChatCommandRecived is working as intended
-        else if (!message[0].ToString().Contains("!") && pointRediam == null)
+        // Check if the Bot_OnChatCommandRecived is working as intended
+        /**else if (!messageDto.Message[0].ToString().Contains("!"))// && pointRediam == null)
         {
-            string commandText = message.Split(' ').ToList()[0].Trim('!');
+            string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
             List<AuthEnum> authEnums = (from auth in auths select (AuthEnum)Enum.Parse(typeof(AuthEnum), auth.ToString())).ToList();
 
@@ -158,7 +165,7 @@ public class ManageMessages : IManageMessages
             {
                 if (commandAndResponse.Category == CategoryEnum.Queue)
                 {
-                    _queueCommand.Execute(commandAndResponse, message, userName);
+                    _queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName);
                 }
                 else if (commandAndResponse.Category == CategoryEnum.Game)
                 {
@@ -182,6 +189,8 @@ public class ManageMessages : IManageMessages
             // Use EmotesCondition.ChannelPoints
             // TODO: Check id for rediam 
             // TODO: Do what ever the rediam is
+
+            //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
         }
     }
 }

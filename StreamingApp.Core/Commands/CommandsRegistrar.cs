@@ -8,6 +8,7 @@ using StreamingApp.Core.Commands.Twitch;
 using StreamingApp.Core.Queries;
 using StreamingApp.Core.Utility.Caching.CacheData;
 using StreamingApp.Core.Utility;
+using StreamingApp.Core.Commands.Chat;
 
 namespace StreamingApp.Core.Commands;
 
@@ -16,6 +17,8 @@ public static class QueriesRegistrar
     public static void AddCoreCommandOptions(this IServiceCollection services)
     {
         // Chat
+        services.AddScoped<ISendSignalRMessage, SendSignalRMessage>();
+        services.AddScoped<ITranslate, Translate>();
 
         // DB
         services.AddScoped<IAddUserToDB, AddUserToDB>();
