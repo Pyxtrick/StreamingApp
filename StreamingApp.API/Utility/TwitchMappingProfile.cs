@@ -29,7 +29,7 @@ public class TwitchMappingProfile : Profile
                 EffectEnum.none,
                 x.IsSubscriber,
                 x.SubscribedMonthCount,
-                DateTime.Now
+                DateTime.UtcNow
                 ));
     }
 

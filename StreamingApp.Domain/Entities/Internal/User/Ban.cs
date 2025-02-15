@@ -32,7 +32,7 @@ public class Ban
     public int BanedAmount { get; set; }
 
     // Has been banned at Date
-    public DateTime BanedDate { get; set; }
+    public DateTime? BanedDate { get; set; }
 
     // Message for the message
     [Required]

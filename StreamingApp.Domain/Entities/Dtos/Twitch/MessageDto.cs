@@ -13,12 +13,12 @@ public class MessageDto(
     string userId,
     string userName,
     string colorHex,
-    string replayMessage,
+    string? replayMessage,
     string message,
     string emoteReplacedMessage,
-    string pointRediam,
+    string? pointRediam,
     int bits,
-    EmoteSet emoteSet,
+    EmoteSet? emoteSet,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
     List<AuthEnum> auth,
@@ -35,13 +35,13 @@ public class MessageDto(
 
     public string ColorHex { get; set; } = colorHex;
 
-    public string ReplayMessage { get; set; } = replayMessage;
+    public string? ReplayMessage { get; set; } = replayMessage;
 
     public string Message { get; set; } = message;
 
     public string EmoteReplacedMessage { get; set; } = emoteReplacedMessage;
 
-    public string PointRediam { get; set; } = pointRediam;
+    public string? PointRediam { get; set; } = pointRediam;
 
     public int Bits { get; set; } = bits;
 

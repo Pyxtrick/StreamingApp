@@ -9,8 +9,6 @@ public class Status
     public int UserId { get; set; }
     public User User { get; set; }
 
-    public int MyProperty { get; set; }
-
     public int TwitchSubId { get; set; }
     public Sub? TwitchSub { get; set; }
 

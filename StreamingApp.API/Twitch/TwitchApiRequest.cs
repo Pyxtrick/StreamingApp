@@ -90,7 +90,6 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
 
-        _hubContext.Clients.All.SendAsync("ReceiveMessage", "test").Wait();
         _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto1).Wait();
 
         //TODO: only save chat messages

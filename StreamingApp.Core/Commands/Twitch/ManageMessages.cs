@@ -26,23 +26,35 @@ public class ManageMessages : IManageMessages
         _twitchCallCache = twitchCallCache;
     }
 
+    /// <summary>
+    /// Get All Chached Twitch Messages from the past second
+    /// </summary>
+    /// <returns></returns>
     public async Task Execute()
     {
-        //TODO: Check if 1 second is enouth for this
-        IList<MessageDto> t = new List<MessageDto>();// (IList<MessageDto>)_twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(60), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+        // TODO: get Seconds from appsettings | _configuration["RefreshDelay:ChatRefresh"]
+        List<object> value = _twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
 
-        if (t != null)
+        if (value.Count != 0)
         {
-            foreach (var item in t)
+            List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
+            foreach (MessageDto message in messages)
             {
-                Console.WriteLine(item.Message);
-                //TODO: Uncomments this
                 //await Execute(item);
+                await ExecuteOne(message);
             }
         }
     }
 
-    public async Task Execute(MessageDto messageDto)
+    public async Task ExecuteMultiple(List<MessageDto> messages)
+    {
+        foreach (var message in messages)
+        {
+            await ExecuteOne(message);
+        }
+    }
+
+    public async Task ExecuteOne(MessageDto messageDto)
     {
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
@@ -52,7 +64,7 @@ public class ManageMessages : IManageMessages
         var s = _unitOfWork.SpecialWords.ToList();
         var newdata = await _unitOfWork.SpecialWords.ToListAsync();
 
-        SpecialWords? specialWords = _unitOfWork.SpecialWords.First(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.Banned);
+        SpecialWords? specialWords = _unitOfWork.SpecialWords.FirstOrDefault(t => messageDto.Message.Contains(t.Name) && t.Type == SpecialWordEnum.Banned);
 
         // if it is a banned word and not the Broadcaster, Moderator or Staff
         if (specialWords != null && !isBroadcaster && !isModerator && !isStaff)

@@ -87,8 +87,7 @@ public class TwitchCallCache : ITwitchCallCache
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
-                var t = _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
-                return t;
+                return _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedCommandData:
                 return _twitchCallCacheData.CachedCommandData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedGiftedSubData:

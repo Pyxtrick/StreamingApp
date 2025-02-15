@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Core.Utility.Scheduler;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.API.Utility.Caching.Interface;
+using YamlDotNet.Core.Tokens;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -21,5 +25,27 @@ public class TestController : ControllerBase
         Console.WriteLine($"message {chatMessage.UserName}");
 
         await clientHub.Clients.All.SendAsync("ReceiveChatMessage", chatMessage);
+    }
+
+    [HttpPut]
+    public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
+    {
+        MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, 0, null, new() { new("kekw", "assets/3x.webp") },
+            ChatOriginEnum.Twtich, new() { AuthEnum.undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.UtcNow);
+
+        _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
+    }
+
+    [HttpGet]
+    public async void GetChachedData([FromServices] ITwitchCallCache _twitchCallCache)
+    {
+        var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
+
+        List<MessageDto> messages = t.ConvertAll(s => (MessageDto)s);
+
+        foreach (var message in messages)
+        {
+            Console.WriteLine(message.Date);
+        }
     }
 }

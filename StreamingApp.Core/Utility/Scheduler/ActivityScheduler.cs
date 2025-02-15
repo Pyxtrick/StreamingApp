@@ -1,8 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StreamingApp.API.SignalRHub;
+using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 
@@ -14,8 +19,6 @@ public class ActivityScheduler : BackgroundService
 
     private readonly IServiceProvider _serviceProvider;
 
-    //private readonly ITwitchCallCache _twitchCallCache;
-
     private Timer _timer;
 
     public ActivityScheduler(IOptions<ActivitySchedulerOptions> options, IServiceProvider serviceProvider, ILogger<ActivityScheduler> logger)
@@ -25,8 +28,6 @@ public class ActivityScheduler : BackgroundService
 
         ArgumentNullException.ThrowIfNull(options);
         _options = options.Value;
-
-        //_twitchCallCache = twitchCallCache;
     }
 
     public override Task StopAsync(CancellationToken cancellationToken)
@@ -38,7 +39,7 @@ public class ActivityScheduler : BackgroundService
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // change if needed to a better system
-        var time = 1;
+        var time = 1; //_configuration["RefreshDelay:ChatRefresh"]
         _timer = new Timer(RefreshAsync, null, TimeSpan.Zero, TimeSpan.FromSeconds(time));
 
         return Task.CompletedTask;
@@ -48,7 +49,16 @@ public class ActivityScheduler : BackgroundService
     {
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
-            await scope.ServiceProvider.GetRequiredService<IManageMessages>().Execute();
+            //TODO: Check if 1 second is enouth for this
+            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-3), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+            if (value.Count != 0)
+            {
+                List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
+
+                Console.WriteLine(messages.Count);
+
+                await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
+            }
         }
     }
 }
