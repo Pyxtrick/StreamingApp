@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.User;
 
@@ -13,16 +14,29 @@ public class UpdateUserAchievementsOnDB : IUpdateUserAchievementsOnDB
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// Add WatchStream streak if stream is active / Live
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task UpdateAchievements(int userId)
     {
-        User data = _unitOfWork.User.Where(u => u.Id == userId).Include("TwitchAchievements").ToList().First();
+        var stream = await _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).LastAsync();
 
-        Achievements? achievements = data.TwitchAchievements;
+        if (stream.StreamEnd == stream.StreamStart)
+        {
+            User data = _unitOfWork.User.Where(u => u.Id == userId).Include("TwitchAchievements").ToList().First();
 
-        achievements.LastStreamSeen = DateTime.Now;
-        achievements.WachedStreams++;
+            Achievements? achievements = data.TwitchAchievements;
 
-        _unitOfWork.Achievements.Add(achievements);
-        await _unitOfWork.SaveChangesAsync();
+            if (achievements.LastStreamSeen < stream.StreamStart)
+            {
+                achievements.LastStreamSeen = DateTime.UtcNow;
+                achievements.WachedStreams++;
+
+                //_unitOfWork.Achievements.Add(achievements);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
     }
 }

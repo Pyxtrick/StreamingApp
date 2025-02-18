@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Core.Commands.DB;
+﻿namespace StreamingApp.Core.Commands.DB.Interfaces;
 
 public interface IUpdateUserAchievementsOnDB
 {

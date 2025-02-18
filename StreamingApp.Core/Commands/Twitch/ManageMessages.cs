@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Chat;
-using StreamingApp.Core.Commands.DB;
+using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;

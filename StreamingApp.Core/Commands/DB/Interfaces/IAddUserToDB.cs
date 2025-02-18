@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Enums;
 
-namespace StreamingApp.Core.Commands.DB;
+namespace StreamingApp.Core.Commands.DB.Interfaces;
 
 public interface IAddUserToDB
 {

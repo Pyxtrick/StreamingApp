@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace StreamingApp.Core.Commands.DB;
 
