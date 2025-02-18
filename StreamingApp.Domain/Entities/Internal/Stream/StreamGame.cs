@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StreamingApp.Domain.Entities.Internal.Stream;
 
@@ -7,6 +8,7 @@ namespace StreamingApp.Domain.Entities.Internal.Stream;
 /// </summary>
 public class StreamGame
 {
+    public int StreamGameId { get; set; }
     public int GameCategoryId { get; set; }
     public GameInfo? GameCategory { get; set; }
 

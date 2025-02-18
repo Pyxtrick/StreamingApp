@@ -9,6 +9,7 @@ using StreamingApp.Core.Queries;
 using StreamingApp.Core.Utility.Caching.CacheData;
 using StreamingApp.Core.Utility;
 using StreamingApp.Core.Commands.Chat;
+using StreamingApp.Core.Commands.DB.Interfaces;
 
 namespace StreamingApp.Core.Commands;
 
@@ -22,6 +23,7 @@ public static class QueriesRegistrar
 
         // DB
         services.AddScoped<IAddUserToDB, AddUserToDB>();
+        services.AddScoped<IUpdateStream, UpdateStream>();
         services.AddScoped<IUpdateUserAchievementsOnDB, UpdateUserAchievementsOnDB>();
 
         // FileLogic
