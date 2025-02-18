@@ -1,3 +1,20 @@
+Stream 21.02
+
+Backend
+	Watch for the new console logs (folower)
+
+Fronted
+	create each chat (Firiend, Mod, Streamer, Special, Bot, Twitch)
+	Update On screen chat
+
+	Settings Stream (Start / end / category)
+		Show List of old streams with what was played during those
+
+	Modify Commands
+
+
+
+
 // Frontnend
 TODO: 2 Skip allerts
 TODO: 2 stop allerts from playing
