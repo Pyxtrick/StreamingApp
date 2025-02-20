@@ -3,9 +3,6 @@ using StreamingApp.Domain.Entities.Internal.Settings;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Entities.Internal.Stream;
-using System;
-using TwitchLib.Api.Helix.Models.Clips.GetClips;
-using TwitchLib.Api.Helix.Models.Soundtrack;
 
 namespace StreamingApp.Core.Commands;
 
@@ -26,7 +23,7 @@ public class AddDBData : IAddDBData
         {
             List<CommandAndResponse> commandsStaticResponse = new List<CommandAndResponse>
             {
-                new CommandAndResponse() {Command = "about", Response = "Pyxtrick is a stramer From Switzerland who loves Gaming and Programming", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
+                new CommandAndResponse() {Command = "about", Response = "Pyxtrick is a Streamer From Switzerland who loves Gaming and Programming", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "links", Response = "All links are found here: https://pyxtrick.carrd.co/", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "lurk", Response = "XXX coes udercover. Have fun Lurking ", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = true },
                 new CommandAndResponse() {Command = "socials", Response = "All my Socials https://x.com/Pyxtrick | https://www.youtube.com/@Pyxtrick", Description = "", Active = true, Auth = AuthEnum.undefined, Category = CategoryEnum.Undefined, HasLogic = false },

@@ -1028,7 +1028,7 @@ export class ChatDto implements IChatDto {
     replayMessage?: string | null;
     message!: string;
     emoteReplacedMessage!: string;
-    emoteSet?: EmoteSet | null;
+    emoteSet?: EmoteSet[] | null;
     badges?: KeyValuePairOfStringAndString[] | null;
     chatOrigin!: ChatOriginEnum;
     chatDisplay!: ChatDisplayEnum;
@@ -1058,7 +1058,14 @@ export class ChatDto implements IChatDto {
             this.replayMessage = _data["replayMessage"] !== undefined ? _data["replayMessage"] : <any>null;
             this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
             this.emoteReplacedMessage = _data["emoteReplacedMessage"] !== undefined ? _data["emoteReplacedMessage"] : <any>null;
-            this.emoteSet = _data["emoteSet"] ? EmoteSet.fromJS(_data["emoteSet"]) : <any>null;
+            if (Array.isArray(_data["emoteSet"])) {
+                this.emoteSet = [] as any;
+                for (let item of _data["emoteSet"])
+                    this.emoteSet!.push(EmoteSet.fromJS(item));
+            }
+            else {
+                this.emoteSet = <any>null;
+            }
             if (Array.isArray(_data["badges"])) {
                 this.badges = [] as any;
                 for (let item of _data["badges"])
@@ -1105,7 +1112,11 @@ export class ChatDto implements IChatDto {
         data["replayMessage"] = this.replayMessage !== undefined ? this.replayMessage : <any>null;
         data["message"] = this.message !== undefined ? this.message : <any>null;
         data["emoteReplacedMessage"] = this.emoteReplacedMessage !== undefined ? this.emoteReplacedMessage : <any>null;
-        data["emoteSet"] = this.emoteSet ? this.emoteSet.toJSON() : <any>null;
+        if (Array.isArray(this.emoteSet)) {
+            data["emoteSet"] = [];
+            for (let item of this.emoteSet)
+                data["emoteSet"].push(item.toJSON());
+        }
         if (Array.isArray(this.badges)) {
             data["badges"] = [];
             for (let item of this.badges)
@@ -1136,7 +1147,7 @@ export interface IChatDto {
     replayMessage?: string | null;
     message: string;
     emoteReplacedMessage: string;
-    emoteSet?: EmoteSet | null;
+    emoteSet?: EmoteSet[] | null;
     badges?: KeyValuePairOfStringAndString[] | null;
     chatOrigin: ChatOriginEnum;
     chatDisplay: ChatDisplayEnum;
@@ -1146,12 +1157,10 @@ export interface IChatDto {
     date: Date;
 }
 
-/** Object representing emote set from a chat message. */
 export class EmoteSet implements IEmoteSet {
-    /** List containing all emotes in the message. */
-    emotes?: Emote[] | null;
-    /** The raw emote set string obtained from Twitch, for legacy purposes. */
-    rawEmoteSetString?: string | null;
+    name!: string;
+    animatedURL!: string;
+    staticURL!: string;
 
     constructor(data?: IEmoteSet) {
         if (data) {
@@ -1164,15 +1173,9 @@ export class EmoteSet implements IEmoteSet {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["emotes"])) {
-                this.emotes = [] as any;
-                for (let item of _data["emotes"])
-                    this.emotes!.push(Emote.fromJS(item));
-            }
-            else {
-                this.emotes = <any>null;
-            }
-            this.rawEmoteSetString = _data["rawEmoteSetString"] !== undefined ? _data["rawEmoteSetString"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.animatedURL = _data["animatedURL"] !== undefined ? _data["animatedURL"] : <any>null;
+            this.staticURL = _data["staticURL"] !== undefined ? _data["staticURL"] : <any>null;
         }
     }
 
@@ -1185,86 +1188,17 @@ export class EmoteSet implements IEmoteSet {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.emotes)) {
-            data["emotes"] = [];
-            for (let item of this.emotes)
-                data["emotes"].push(item.toJSON());
-        }
-        data["rawEmoteSetString"] = this.rawEmoteSetString !== undefined ? this.rawEmoteSetString : <any>null;
-        return data;
-    }
-}
-
-/** Object representing emote set from a chat message. */
-export interface IEmoteSet {
-    /** List containing all emotes in the message. */
-    emotes?: Emote[] | null;
-    /** The raw emote set string obtained from Twitch, for legacy purposes. */
-    rawEmoteSetString?: string | null;
-}
-
-/** Object representing an emote in an EmoteSet in a chat message. */
-export class Emote implements IEmote {
-    /** Twitch-assigned emote Id. */
-    id?: string | null;
-    /** The name of the emote. For example, if the message was "This is Kappa test.", the name would be 'Kappa'. */
-    name?: string | null;
-    /** Character starting index. For example, if the message was "This is Kappa test.", the start index would be 8 for 'Kappa'. */
-    startIndex!: number;
-    /** Character ending index. For example, if the message was "This is Kappa test.", the start index would be 12 for 'Kappa'. */
-    endIndex!: number;
-    /** URL to Twitch hosted emote image. */
-    imageUrl?: string | null;
-
-    constructor(data?: IEmote) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.startIndex = _data["startIndex"] !== undefined ? _data["startIndex"] : <any>null;
-            this.endIndex = _data["endIndex"] !== undefined ? _data["endIndex"] : <any>null;
-            this.imageUrl = _data["imageUrl"] !== undefined ? _data["imageUrl"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): Emote {
-        data = typeof data === 'object' ? data : {};
-        let result = new Emote();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["startIndex"] = this.startIndex !== undefined ? this.startIndex : <any>null;
-        data["endIndex"] = this.endIndex !== undefined ? this.endIndex : <any>null;
-        data["imageUrl"] = this.imageUrl !== undefined ? this.imageUrl : <any>null;
+        data["animatedURL"] = this.animatedURL !== undefined ? this.animatedURL : <any>null;
+        data["staticURL"] = this.staticURL !== undefined ? this.staticURL : <any>null;
         return data;
     }
 }
 
-/** Object representing an emote in an EmoteSet in a chat message. */
-export interface IEmote {
-    /** Twitch-assigned emote Id. */
-    id?: string | null;
-    /** The name of the emote. For example, if the message was "This is Kappa test.", the name would be 'Kappa'. */
-    name?: string | null;
-    /** Character starting index. For example, if the message was "This is Kappa test.", the start index would be 8 for 'Kappa'. */
-    startIndex: number;
-    /** Character ending index. For example, if the message was "This is Kappa test.", the start index would be 12 for 'Kappa'. */
-    endIndex: number;
-    /** URL to Twitch hosted emote image. */
-    imageUrl?: string | null;
+export interface IEmoteSet {
+    name: string;
+    animatedURL: string;
+    staticURL: string;
 }
 
 export class KeyValuePairOfStringAndString implements IKeyValuePairOfStringAndString {

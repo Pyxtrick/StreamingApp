@@ -4,7 +4,7 @@ using StreamingApp.API;
 using StreamingApp.Core;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.DB;
-using StreamingApp.Core.Utility.Scheduler;
+using StreamingApp.Core.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,5 +67,11 @@ app.UseAuthorization();
 app.MapHub<ChatHub>("/chathub");
 
 app.MapControllers();
+
+// Start Connection To Twitch at Startup
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<IStartTwitchApi>().Execute();
+}
 
 app.Run();

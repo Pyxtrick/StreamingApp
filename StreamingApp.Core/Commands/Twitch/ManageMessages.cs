@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Chat;
 using StreamingApp.Core.Commands.DB.Interfaces;
@@ -8,6 +9,7 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
+using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
 public class ManageMessages : IManageMessages
@@ -22,13 +24,16 @@ public class ManageMessages : IManageMessages
 
     private readonly ISendSignalRMessage _sendSignalRMessage;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage)
+    private readonly ISendRequest _twitchSendRequest;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
         _updateUserAchievementsOnDb = updateUserAchievementsOnDb;
         _twitchCallCache = twitchCallCache;
         _sendSignalRMessage = sendSignalRMessage;
+        _twitchSendRequest = twitchSendRequest;
     }
 
     /// <summary>
@@ -97,15 +102,16 @@ public class ManageMessages : IManageMessages
         var internalUserId = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
         await _updateUserAchievementsOnDb.UpdateAchievements(internalUserId);
 
-        User user = _unitOfWork.User.FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+        User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
 
+        if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
-            messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
+            //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
         }
 
-        // Check for beeing an command / Rediam
-        if (!messageDto.Message[0].ToString().Contains("!") && messageDto.PointRediam == null)
+        // Check for beeing not an command or Rediam
+        if (messageDto.IsCommand != true && messageDto.PointRediam.IsNullOrEmpty())
         {
             if (messageDto.Bits != 0)
             {
@@ -152,35 +158,34 @@ public class ManageMessages : IManageMessages
             //_chatCache.AddOneChatData(messageDto);
         }
         // Check if the Bot_OnChatCommandRecived is working as intended
-        /**else if (!messageDto.Message[0].ToString().Contains("!"))// && pointRediam == null)
+        else if (messageDto.IsCommand && messageDto.PointRediam == null)
         {
             string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
-            List<AuthEnum> authEnums = (from auth in auths select (AuthEnum)Enum.Parse(typeof(AuthEnum), auth.ToString())).ToList();
+            //List<AuthEnum> authEnums = (from auth in messageDto.Auth select (AuthEnum)Enum.Parse(typeof(AuthEnum), auth.ToString())).ToList();
 
-            CommandAndResponse? commandAndResponse = CommandsStaticResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active && authEnums.Contains(t.Auth));
+            CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active);
 
+            messageDto.Auth.Sort();
 
             if (commandAndResponse != null && commandAndResponse.Active == true)
             {
                 if (commandAndResponse.Category == CategoryEnum.Queue)
                 {
-                    _queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName);
+                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName);
+                    Console.WriteLine("Command Queue");
                 }
                 else if (commandAndResponse.Category == CategoryEnum.Game)
                 {
-                    _gameCommand.Execute(commandAndResponse);
+                    //_gameCommand.Execute(commandAndResponse);
+                    Console.WriteLine("Command Game");
                 }
-                else
+                else if (messageDto.Auth.First() <= commandAndResponse.Auth)
                 {
-                    if (CheckIfAvalibleToUse(message, authEnums)) {
-                        _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), commandAndResponse.Response);
-                    }
+                    _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
                 }
             }
-        }**/
-
-        // TODO: hydrate
+        }
         else if (messageDto.PointRediam != null)
         {
             // TODO: make a Class for this in API.Twitch

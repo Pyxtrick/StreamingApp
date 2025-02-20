@@ -51,72 +51,24 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
-        string userId = e.ChatMessage.UserId;
-        string userName = e.ChatMessage.DisplayName;
-        string colorHex = e.ChatMessage.ColorHex;
-        string message = e.ChatMessage.Message;
-        string emoteReplacedMessage = e.ChatMessage.EmoteReplacedMessage;
-        string replayMessage = "";
-        var emoteSet = e.ChatMessage.EmoteSet;
-        string channel = e.ChatMessage.Channel;
-
-        var sub = e.ChatMessage.IsSubscriber;
-
-        string pointRediam = e.ChatMessage.CustomRewardId;
-        int bits = e.ChatMessage.Bits;
-
-        List<KeyValuePair<string, string>> badges = e.ChatMessage.Badges;
-
-        List<AuthEnum> auths = new List<AuthEnum>()
+        if (e.ChatMessage.Bits != 0)
         {
-            e.ChatMessage.IsBroadcaster ? AuthEnum.Streamer : AuthEnum.undefined,
-            e.ChatMessage.IsModerator ? AuthEnum.Mod : AuthEnum.undefined,
-            e.ChatMessage.IsStaff ? AuthEnum.Staff : AuthEnum.undefined,
-            e.ChatMessage.IsVip ? AuthEnum.Vip : AuthEnum.undefined,
-            e.ChatMessage.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.undefined,
-            e.ChatMessage.IsTurbo ? AuthEnum.Turbo : AuthEnum.undefined,
-            e.ChatMessage.IsPartner ? AuthEnum.Partner : AuthEnum.undefined,
-        }.Where(a => a != 0).ToList();
+            OnHypeTrain();
+        }
 
-        List<SpecialMessgeEnum> specialMessage = new List<SpecialMessgeEnum>()
-        {
-            e.ChatMessage.IsFirstMessage ? SpecialMessgeEnum.FirstMessage : 0,
-            e.ChatMessage.IsHighlighted ? SpecialMessgeEnum.Highlighted : 0,
-            e.ChatMessage.IsSkippingSubMode ? SpecialMessgeEnum.SkippSubMode : 0,
-        }.Where(a => a != 0).ToList();
+        MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
+        messageDto.IsCommand = messageDto.Message.ToString().Contains("!");
 
-        //TODO: Check if this works on its own
-        MessageDto messageDto1 = _mapper.Map<MessageDto>(e.ChatMessage);
-
-        MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
-
-        _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto1).Wait();
-
-        //TODO: only save chat messages
-        _twitchCallCache.AddMessage(messageDto1, CallCacheEnum.CachedMessageData);
+        _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
     }
 
     public void Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
     {
-        string commandText = e.Command.CommandText.ToLower();
-        string userName = e.Command.ChatMessage.DisplayName;
+        MessageDto commandDto = _mapper.Map<MessageDto>(e.Command.ChatMessage);
+        commandDto.IsCommand = true;
 
-        List<AuthEnum> auths = new List<AuthEnum>()
-        {
-            e.Command.ChatMessage.IsBroadcaster ? AuthEnum.Streamer : AuthEnum.undefined,
-            e.Command.ChatMessage.IsModerator ? AuthEnum.Mod : AuthEnum.undefined,
-            e.Command.ChatMessage.IsStaff ? AuthEnum.Staff : AuthEnum.undefined,
-            e.Command.ChatMessage.IsVip ? AuthEnum.Vip : AuthEnum.undefined,
-            e.Command.ChatMessage.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.undefined,
-            e.Command.ChatMessage.IsTurbo ? AuthEnum.Turbo : AuthEnum.undefined,
-            e.Command.ChatMessage.IsPartner ? AuthEnum.Partner : AuthEnum.undefined,
-        }.Where(a => a != 0).ToList();
-
-        //TODO: CommandDto commandDto = _mapper.Map<CommandDto>(e.ChatMessage);
-
-        CommandDto commandDto = new(e.Command.ChatMessage.Id, e.Command.ChatMessage.UserId, e.Command.ChatMessage.DisplayName, e.Command.CommandText.ToLower(), auths, DateTime.UtcNow, ChatOriginEnum.Twtich);
-
-        //TODO: Save commandDto to Cache
+        Console.WriteLine("Command Called");
+        //_twitchCallCache.AddMessage(commandDto, CallCacheEnum.CachedCommandData);
     }
 
     public async void Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)

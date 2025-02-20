@@ -19,7 +19,7 @@ public class CoreMappingProfile : Profile
             x.ReplayMessage,
             x.Message,
             x.EmoteReplacedMessage,
-            x.EmoteSet,
+            x.Emotes,
             x.Badges,
             x.ChatOrigin,
             Domain.Enums.ChatDisplayEnum.twitchChat,

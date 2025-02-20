@@ -1,5 +1,5 @@
-﻿using StreamingApp.Domain.Enums;
-using TwitchLib.Client.Models;
+﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Domain.Entities.Dtos;
 
@@ -10,7 +10,7 @@ public class ChatDto(
     string? replayMessage,
     string message,
     string emoteReplacedMessage,
-    EmoteSet? emoteSet,
+    List<EmoteSet>? emoteSet,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
     ChatDisplayEnum? chatDisplay,
@@ -31,7 +31,7 @@ public class ChatDto(
 
     public string EmoteReplacedMessage { get; set; } = emoteReplacedMessage;
 
-    public EmoteSet? EmoteSet { get; set; } = emoteSet;
+    public List<EmoteSet>? EmoteSet { get; set; } = emoteSet;
 
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
 

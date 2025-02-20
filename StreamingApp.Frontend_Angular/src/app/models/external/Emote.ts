@@ -3,5 +3,6 @@ export interface Emote {
   Name: string;
   StartIndex: number;
   EndIndex: number;
-  ImageUrl: string;
+  AnimatedURL: string;
+  StaticURL: string;
 }

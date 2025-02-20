@@ -78,7 +78,7 @@ export class ConvertMessage {
           finalMessage +=
             '<div class="tooltip bottom">' +
             '<img class="badges-image" src="' +
-            foundData.ImageUrl +
+            foundData.StaticURL +
             '" /> <span class="tooltiptext"><span>' +
             foundData.Name +
             '</span></span></div>';

@@ -41,10 +41,11 @@ public class SendSignalRMessage : ISendSignalRMessage
     /// <returns></returns>
     public async Task SendChatMessage(User user, MessageDto messageDto)
     {
+        /** TODO Implement Translate
         if (_translate.GetLanguage(messageDto.Message) != "eng" && _translate.GetLanguage(messageDto.Message) != "de")
         {
             await TranslateMessage(messageDto);
-        }
+        }**/
 
         // Display chat with out Bots
         if (user.Status.UserType != UserTypeEnum.Bot || user.Ban.IsExcludeChat)

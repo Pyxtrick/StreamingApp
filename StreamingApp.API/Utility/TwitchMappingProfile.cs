@@ -16,12 +16,12 @@ public class TwitchMappingProfile : Profile
                 x.UserId,
                 x.DisplayName,
                 x.ColorHex,
-                "replayMessage",
+                x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
                 x.Message,
                 x.EmoteReplacedMessage,
-                "pointRediam",
+                x.CustomRewardId,
                 x.Bits,
-                x.EmoteSet,
+                MappEmotes(x),
                 x.Badges,
                 ChatOriginEnum.Twtich,
                 MappAuth(x),
@@ -31,6 +31,17 @@ public class TwitchMappingProfile : Profile
                 x.SubscribedMonthCount,
                 DateTime.UtcNow
                 ));
+    }
+
+    private List<Domain.Entities.Dtos.Twitch.EmoteSet> MappEmotes(ChatMessage chatMessage)
+    {
+        return new(from emote in chatMessage.EmoteSet.Emotes
+                   select new Domain.Entities.Dtos.Twitch.EmoteSet()
+                   {
+                       Name = emote.Name,
+                       AnimatedURL = $"https://static-cdn.jtvnw.net/emoticons/v2/{emote.Id}/animated/light/4.0",
+                       StaticURL = $"https://static-cdn.jtvnw.net/emoticons/v2/{emote.Id}/static/light/4.0"
+                   });
     }
 
     private List<AuthEnum> MappAuth(ChatMessage chatMessage)

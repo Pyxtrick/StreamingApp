@@ -20,6 +20,8 @@ public class Emote
 
     public byte[]? Video { get; set; }
 
+    public int videoLeght { get; set; }
+
     public int TimesUsed { get; set; }
 
     public bool IsActive { get; set; }

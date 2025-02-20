@@ -1,5 +1,4 @@
 ﻿using StreamingApp.Domain.Enums;
-using TwitchLib.Client.Models;
 
 namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 
@@ -18,7 +17,7 @@ public class MessageDto(
     string emoteReplacedMessage,
     string? pointRediam,
     int bits,
-    EmoteSet? emoteSet,
+    List<EmoteSet> emotes,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
     List<AuthEnum> auth,
@@ -45,7 +44,7 @@ public class MessageDto(
 
     public int Bits { get; set; } = bits;
 
-    public EmoteSet? EmoteSet { get; set; } = emoteSet;
+    public List<EmoteSet> Emotes { get; set; } = emotes;
 
     // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
