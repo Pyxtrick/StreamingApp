@@ -13,79 +13,120 @@ Fronted
 	Modify Commands
 
 
+Between Streams
+	Combine Sub/gifts/prime
+
+	Maybe combine Chat and commands
+
+
 
 
 // Frontnend
+TODO: 1 Show statistics in Frontend
+
+TODO: 1 Display Stream statistics | Credits for the end of the stream
+
+TODO: 2 update data in forntend / upload images / audio / video
+
+TODO: 2 Ideas Wheel / Randomiser (Data from Backend / or temporary in frontend) maybe even multiple Lists.
+
 TODO: 2 Skip allerts
 TODO: 2 stop allerts from playing
 TODO: 2 mute allerts
 TODO: 2 delay allerts that they are not overlayed
 TODO: 2 Speed up TTS / allerts when to long
 
-TODO: 1 Show statistics in Frontend
-
-TODO: 1 Display Stream statistics | Credits for the end of the stream
-
 TODO: 5 authorice users in frontend using twitch or youtube auth
 TODO: 5 have an frontend for users for polls / votes / Comunity day queue / forms (ticket / "mod application")
 
 TODO: 3 Raid rains or move across the screen the raiders mascot / emotes
 
-TODO: 2 update data in forntend / upload images / audio / video
 
-TODO: 2 Ideas Wheel / Randomiser (Data from Backend / or temporary in frontend) maybe even multiple Lists.
 
 TODO: main view over the etire screen so tings can be placed anywhere on the screen that certain tings can go over the etire screen
 TODO: place things on screen at specific locations with x and y axies
 
 	//CHAT
-	TODO: 2 Show badges like Prediction / Sub in chat bysides name
 	TODO: 1 update View if message in the backend has been deleted / banded / timeout
+	TODO: 2 Show badges like Prediction / Sub in chat bysides name
+	
+	TODO: 2 reset list / view
+
 	TODO: 3 implement funny effect in chat
-	TODO: 4 use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
-
-	TODO: reset list / view
-
+	
 	TODO: 3 Show special / fun chat animations
+
+	TODO: 4 use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
 
 	TODO: 4 Horizontal chat For Stream That it can switched betwen vertical and Horizontal
 
+
+// Client
+TODO: 1 Create Recording Breackpoint
+
+TODO: 3 Trigger Vtube Studio Events
+
+
 // Backend
+TOOD: 0 Manage Live Messages in Backend (DB / Send Message Live)
+
+TODO: 1 Add 
+
 TODO: 1 Save UserName as Important / streamer that the person will be highlighted for reading messages better
 TODO: 1 Save every Raid User and Number (for now only in a file / Later maybe in the DB)
 
-TODO: 2 activate and deactivate channel rewards
+TOOD: 1 respond to messages
 
-TODO: 1 ManageCommands mulitple ISendRequest
-
-TOOD: 0 Manage Live Messages in Backend (DB / Send Message Live)
-
-TODO: 2 Save Queue to a file (for next time)
-
-TODO: 2 Ads check (for myself and on screen display)
-
-TODO: 6 morse code de/encode
-
-TOOD: ? Emotes play sound
+TODO: 1  able to get the new 7ttv or betterttv emtoes when they are added / Refresch emotes
 
 TOOD: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
+
+TODO: 1 ManageCommands mulitple ISendRequest
 
 TODO: 1 have a counter for like things that happend multiple times
 TODO: 1 have a counter for how many times a sound has been played
 TODO: 1 able to respond to good "spam" (Dance Emojis)
 TODO: 2 respond with sound
 
-TOOD: 1 respond to messages
+TODO: 2 create TTS or alert queue
 
-TODO: 1  able to get the new 7ttv or betterttv emtoes when they are added / Refresch emotes
+TODO: 1 send Chat Message every x minutes
+TODO: 1 every x minutes: https://crontab.cronhub.io/
+
+TODO: 1 Spam protection for Commands / use Cache for checking when it was last used
+TODO: 2 Same for Bot Spam with fallower
+TODO: 2 Able to disable it for a x time or reset some data / Cache
+
+TODO: 2 clip creates twitch clip of the last x seconds
+TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
+
+TODO: 2 update Twitch Title / Game
+	update Youtube Title / Game if possible
+
+TODO: 2 activate and deactivate channel rewards
+
+TODO: 2 Save Queue to a file (for next time)
+
+TODO: 2 Ads check (for myself and on screen display)
+
+TODO: 3 create a screenshot of the current Stream using bits or point rediam
+
+TODO: 3 auto delete message if there are in a diffrent language
 
 TODO: 4 make some parts of it "inactive" when offline
 	Allerts
 	Sound
 	Controll OBS / Vtube Studio / Games
 
-TODO: 2 update Twitch Title / Game
-	update Youtube Title / Game if possible
+TODO: 4 Things can be tracked from things outside this Programm
+	APP 1 Backend on cloud 
+	APP 2 Frontend on cloud
+	APP 3 Local APP's controll OBS / Vtube studio / Games
+
+TODO: 5 Create a Discord crawler to get Images / and other tings
+	Send Discord notification for stram start
+
+TODO: 5 Send Twitter / Youtube Community message for Stream start
 
 TODO: 5 Subathon timer
 	sstart
@@ -95,29 +136,10 @@ TODO: 5 Subathon timer
 TODO: 5 able to Ban users with specific message in the chat message in a specific time area | the Saved Chat messages needs to be able to go back at least 5 - 10 min to catch all Bot accounts
 TODO: 5 able to detect Spam messages from one or multiple users / Bots | needs to avoid Raids or other specific events | show affected Users and there message/s on a new View that has the capability to Ban, Timeout or Delete the message
 
-TODO: 1 send Chat Message every x minutes
-TODO: 1 every x minutes: https://crontab.cronhub.io/
+TODO: 6 morse code de/encode
 
-TODO: 2 clip creates twitch clip of the last x seconds
-TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
+TODO: ? Emotes play sound
 
-TODO: 4 Things can be tracked from things outside this Programm
-	APP 1 Backend on cloud 
-	APP 2 Frontend on cloud
-	APP 3 Local APP's controll OBS / Vtube studio / Games
-
-TODO: 1 Spam protection for Commands / use Cache for checking when it was last used
-TODO: 2 Same for Bot Spam with fallower
-TODO: 2 Able to disable it for a x time or reset some data / Cache
-
-TODO: 5 Create a Discord crawler to get Images / and other tings
-	Send Discord notification for stram start
-
-TODO: 5 Send Twitter / Youtube Community message for Stream start
-
-TODO: 3 auto delete message if there are in a diffrent language
-
-TODO: 2 create a screenshot of the current Stream using bits or point rediam
 
 /** TODO: 1 Stream statistics | Create Credits for the end of the stream
  * gifted Subs
