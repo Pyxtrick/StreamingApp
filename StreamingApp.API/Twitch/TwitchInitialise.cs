@@ -114,7 +114,7 @@ public class TwitchInitialise : ITwitchInitialise
         TwitchChannelId = outhedUser.Users[0].Id;
         TwitchChannelName = outhedUser.Users[0].Login;
 
-        _twitchCache.AddTwitchChannelName(TwitchChannelName);
+        _twitchCache.AddTwitchChannelName(_configuration["Twitch:Channel"]);
     }
 
     private void InitializeOwnerOfChannelConnection(string username, string accessToken)
@@ -144,6 +144,7 @@ public class TwitchInitialise : ITwitchInitialise
         // check for add's / advertisements
 
         OwnerOfChannelConnection.Connect();
+        OwnerOfChannelConnection.JoinChannel(_configuration["Twitch:Channel"]);
 
         _twitchCache.AddData(OwnerOfChannelConnection, TheTwitchAPI);
     }
