@@ -190,10 +190,10 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         List<AuthEnum> auths = new List<AuthEnum>()
         {
-            e.ReSubscriber.IsModerator ? AuthEnum.Mod : AuthEnum.undefined,
-            e.ReSubscriber.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.undefined,
-            e.ReSubscriber.IsTurbo ? AuthEnum.Turbo : AuthEnum.undefined,
-            e.ReSubscriber.IsPartner ? AuthEnum.Partner : AuthEnum.undefined,
+            e.ReSubscriber.IsModerator ? AuthEnum.Mod : AuthEnum.Undefined,
+            e.ReSubscriber.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.Undefined,
+            e.ReSubscriber.IsTurbo ? AuthEnum.Turbo : AuthEnum.Undefined,
+            e.ReSubscriber.IsPartner ? AuthEnum.Partner : AuthEnum.Undefined,
         }.Where(a => a != 0).ToList();
 
         TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan.ToString());

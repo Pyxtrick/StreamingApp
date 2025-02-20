@@ -48,13 +48,13 @@ public class TwitchMappingProfile : Profile
     {
         return new List<AuthEnum>()
         {
-            chatMessage.IsBroadcaster ? AuthEnum.Streamer : AuthEnum.undefined,
-            chatMessage.IsModerator ? AuthEnum.Mod : AuthEnum.undefined,
-            chatMessage.IsStaff ? AuthEnum.Staff : AuthEnum.undefined,
-            chatMessage.IsVip ? AuthEnum.Vip : AuthEnum.undefined,
-            chatMessage.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.undefined,
-            chatMessage.IsTurbo ? AuthEnum.Turbo : AuthEnum.undefined,
-            chatMessage.IsPartner ? AuthEnum.Partner : AuthEnum.undefined,
+            chatMessage.IsBroadcaster ? AuthEnum.Streamer : AuthEnum.Undefined,
+            chatMessage.IsModerator ? AuthEnum.Mod : AuthEnum.Undefined,
+            chatMessage.IsStaff ? AuthEnum.Staff : AuthEnum.Undefined,
+            chatMessage.IsVip ? AuthEnum.Vip : AuthEnum.Undefined,
+            chatMessage.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.Undefined,
+            chatMessage.IsTurbo ? AuthEnum.Turbo : AuthEnum.Undefined,
+            chatMessage.IsPartner ? AuthEnum.Partner : AuthEnum.Undefined,
         }.Where(a => a != 0).ToList();
     }
 

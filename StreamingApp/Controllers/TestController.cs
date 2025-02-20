@@ -18,7 +18,7 @@ public class TestController : ControllerBase
     public async void TestLogic([FromServices] IHubContext<ChatHub> clientHub)
     {
         ChatDto chatMessage = new("1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich, ChatDisplayEnum.allChat,
-            new() { AuthEnum.undefined }, new() { SpecialMessgeEnum.Undefined } , EffectEnum.none, DateTime.Now);
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined } , EffectEnum.none, DateTime.Now);
 
         //MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
 
@@ -31,7 +31,7 @@ public class TestController : ControllerBase
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, 0, null, new() { new("kekw", "assets/3x.webp") },
-            ChatOriginEnum.Twtich, new() { AuthEnum.undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.UtcNow);
+            ChatOriginEnum.Twtich, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }

@@ -11,5 +11,5 @@ public enum AuthEnum
     Prime = 7,
     Turbo = 8,
     Raider = 9,
-    undefined = 10, // Everyone
+    Undefined = 10, // Everyone
 }
