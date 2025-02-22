@@ -33,7 +33,7 @@ export class CommandComponent implements OnInit {
   AuthEnum: any = AuthEnum;
   CategoryEnum: any = CategoryEnum;
 
-  //ng g c chats/componets/on-screen-chat
+  //ng g c chats/components/on-screen-chat
   ngOnInit(): void {
     this.store.dispatch(SettingsActions.loadCommands());
     this.commands$ = this.store.select(settingsFeature.selectCommands);

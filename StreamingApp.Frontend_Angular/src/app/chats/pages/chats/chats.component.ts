@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AllChatPageComponent } from '../../componets/all-chat/all-chat-page.component';
+import { AllChatPageComponent } from '../../components/all-chat/all-chat-page.component';
 
 @Component({
   selector: 'app-chats',
