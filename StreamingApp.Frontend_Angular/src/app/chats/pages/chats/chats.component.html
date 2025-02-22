@@ -3,51 +3,86 @@
   <div class="col1">
     <!-- All Chat (no event Chat) -->
     <p class="title">All Chat</p>
-    <app-all-chat-page></app-all-chat-page>
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveChatMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col2">
     <p class="title">Event Chat</p>
     <!-- Events Chat (sub, follow, Raid, Bits) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveEventMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col3">
     <p class="title">Friend Chat</p>
     <!-- Friend Chat (Verified, VIP, Friends) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveFriendMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col4">
     <p class="title">Mod Chat</p>
     <!-- Mod Chat (mods, Twitch dev / Staff) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveModMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col5">
     <p class="title">Streamer Chat</p>
-    <!-- Streamer Chat -->
+    <!-- Streamer Chat (Streamer who raided me) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveVipViewerMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col6">
     <p class="title">Special Chat</p>
     <!--Special Chat (First Message, First Stream Message, Highlighted Message)-->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveSpecialMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col7">
     <p class="title">Translated Chat</p>
     <!-- Translated Chat (all messages that are not in english or german) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveTranslatedMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col8">
     <p class="title">Users to be watched</p>
     <!-- User review / to be watched -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveWatchUserMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col9">
     <p class="title">Bot Chat</p>
     <!-- Bot Messages -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveBotMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col10">
     <p class="title">Mod Actions</p>
     <!-- Mod Events (timeout, delete, ban) -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveModActionMessage'"
+    ></app-all-chat-page>
   </div>
 
   <div class="col11">
     <p class="title">Twitch Chat</p>
     <!-- Twitch Chat -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveChatMessage'"
+    ></app-all-chat-page>
   </div>
   <div class="col12">
     <p class="title">Youtube Chat</p>
     <!-- Youtube Chat -->
+    <app-all-chat-page
+      [signalrRecive]="'ReceiveYoutubeMessage'"
+    ></app-all-chat-page>
   </div>
 </div>

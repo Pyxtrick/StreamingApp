@@ -69,18 +69,19 @@ export class ConvertMessage {
 
     let finalMessage = isFirstMessage + '<span>';
 
+    console.log(chatMessage);
     chatMessage.message?.split(' ').forEach((element) => {
-      if (chatMessage.emoteSetdata != null) {
-        const foundData = chatMessage.emoteSetdata.emotes?.find(
-          (m) => m.Name === element
-        );
+      if (chatMessage.emotes != null) {
+        console.log(element, chatMessage.emotes);
+        const foundData = chatMessage.emotes.find((m) => m.name === element);
+
         if (foundData != null) {
           finalMessage +=
             '<div class="tooltip bottom">' +
             '<img class="badges-image" src="' +
-            foundData.StaticURL +
+            foundData.staticURL +
             '" /> <span class="tooltiptext"><span>' +
-            foundData.Name +
+            foundData.name +
             '</span></span></div>';
         } else {
           finalMessage = finalMessage + ' ' + element + '';
@@ -91,7 +92,7 @@ export class ConvertMessage {
     });
     finalMessage += '</span>';
 
-    console.log(finalName);
+    //console.log(finalName);
 
     return {
       Id: chatMessage.id,

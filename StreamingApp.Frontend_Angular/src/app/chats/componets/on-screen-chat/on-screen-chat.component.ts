@@ -44,12 +44,14 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.signalRService.startConnection().subscribe(() => {
-      this.signalRService.receiveChatMessage().subscribe((message) => {
-        if (this.displayChatMessages.length >= 100) {
-          this.displayChatMessages.shift();
-        }
-        this.convertMessageData(message);
-      });
+      this.signalRService
+        .receiveChatMessage('ReceiveChatMessage')
+        .subscribe((message) => {
+          if (this.displayChatMessages.length >= 100) {
+            this.displayChatMessages.shift();
+          }
+          this.convertMessageData(message);
+        });
     });
   }
 

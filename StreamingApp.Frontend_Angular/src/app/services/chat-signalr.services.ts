@@ -34,9 +34,17 @@ export class AppSignalRService {
     });
   }
 
-  receiveChatMessage(): Observable<ChatDto> {
+  receiveSpecificChatMessage(): Observable<ChatDto> {
     return new Observable<ChatDto>((observer) => {
       this.hubConnection.on('ReceiveChatMessage', (message: ChatDto) => {
+        observer.next(message);
+      });
+    });
+  }
+
+  receiveChatMessage(method: string): Observable<ChatDto> {
+    return new Observable<ChatDto>((observer) => {
+      this.hubConnection.on(method, (message: ChatDto) => {
         observer.next(message);
       });
     });

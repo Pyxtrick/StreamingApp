@@ -8,10 +8,9 @@ describe('OnScreenChatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OnScreenChatComponent]
-    })
-    .compileComponents();
-    
+      imports: [OnScreenChatComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(OnScreenChatComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

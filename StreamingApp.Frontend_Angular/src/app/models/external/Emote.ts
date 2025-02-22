@@ -1,6 +1,6 @@
 export interface Emote {
   Id: string;
-  Name: string;
+  name: string;
   StartIndex: number;
   EndIndex: number;
   AnimatedURL: string;

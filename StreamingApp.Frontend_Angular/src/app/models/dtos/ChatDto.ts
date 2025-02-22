@@ -13,7 +13,7 @@ export interface ChatDto {
   replayMessage: string;
   message: string;
   emoteReplacedMessage: string;
-  emoteSetdata: EmoteSet;
+  emotes: EmoteSet[];
   badges: KeyValue<string, string>[];
   chatOrigin: ChatOriginEnum;
   chatDisplay: ChatDisplay;

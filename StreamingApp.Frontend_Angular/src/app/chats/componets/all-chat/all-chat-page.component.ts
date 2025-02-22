@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnInit,
   QueryList,
   ViewChild,
@@ -18,10 +19,10 @@ import { DisplayChat } from '../../models/DisplayChat';
 
 @Component({
   selector: 'app-all-chat-page',
+  standalone: true,
   templateUrl: './all-chat-page.component.html',
   styleUrls: ['./all-chat-page.component.scss'],
   imports: [MatListModule, MatTooltipModule],
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
 })
 export class AllChatPageComponent implements OnInit, AfterViewInit {
@@ -33,6 +34,8 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollframe') scrollFrame!: ElementRef;
 
   @ViewChildren('item') itemElements!: QueryList<any>;
+
+  @Input() signalrRecive = '';
 
   private scrollContainer: any;
   private isNearBottom = true;
@@ -46,12 +49,14 @@ export class AllChatPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.signalRService.startConnection().subscribe(() => {
-      this.signalRService.receiveChatMessage().subscribe((message) => {
-        if (this.displayChatMessages.length >= 100) {
-          this.displayChatMessages.shift();
-        }
-        this.convertMessageData(message);
-      });
+      this.signalRService
+        .receiveChatMessage(this.signalrRecive)
+        .subscribe((message) => {
+          if (this.displayChatMessages.length >= 100) {
+            this.displayChatMessages.shift();
+          }
+          this.convertMessageData(message);
+        });
     });
   }
 
