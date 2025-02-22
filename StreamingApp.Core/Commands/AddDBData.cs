@@ -42,15 +42,15 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "english", Response = "The Stream is Primarly Englisch only that includes the chat.", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "english2", Response = "The Stream is Primarly Englisch only that includes the chat. But in rare acations it can be in Schwizer Dütsch.", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = false },
 
-                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "streamstart", Response = "defines the start time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.StreamUpdate, HasLogic = true },
+                new CommandAndResponse() {Command = "streamstop", Response = "defines the end time of the stream in the db", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.StreamUpdate, HasLogic = true },
                 new CommandAndResponse() {Command = "streamtime", Response = "next stream will be on Friday or Saturday", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
-                new CommandAndResponse() {Command = "uptime", Response = "Online since HH:MM:SS DD.MM.YYYY Live for XD Xh Xm Xs", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "updategame", Response = "Stream Game / Category has been updated to: ", Description = "updategame [gameId] [twitch:true]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
-                new CommandAndResponse() {Command = "updatetitle", Response = "Stream Title has been updated to: ", Description = "updatetitle [title]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+                new CommandAndResponse() {Command = "uptime", Response = "Online since [StreamStartTime] Live for [StreamLiveTime]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
+                new CommandAndResponse() {Command = "updategame", Response = "Stream Game / Category has been updated to: [Game]", Description = "updategame [gameId] [twitch:true]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.StreamUpdate, HasLogic = true },
+                new CommandAndResponse() {Command = "updatetitle", Response = "Stream Title has been updated to: [Title]", Description = "updatetitle [title]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.StreamUpdate, HasLogic = true },
 
                 // TODO: allow user to post links (twitch)
-                new CommandAndResponse() {Command = "permit", Response = "allows user to post links for 60 seconds", Description = "permit [user]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.streamupdate, HasLogic = true },
+                new CommandAndResponse() {Command = "permit", Response = "allows user to post links for 60 seconds", Description = "permit [user]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.StreamUpdate, HasLogic = true },
 
                 new CommandAndResponse() {Command = "clipper", Response = "Send some love to all the Clipper's ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
 
@@ -81,15 +81,15 @@ public class AddDBData : IAddDBData
                 // If you are in Discord join the waiting room so we can pull you wen it is your turn
                 new CommandAndResponse() {Command = "cday", Response = "if you want to join the Queue use !cjoin", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cinfo", Response = "if you want to join the Queue use !cjoin", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "cjoin", Response = "Has have Joined the Queue on Possition", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "cleve", Response = "Has have Left the Queue", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cjoin", Response = "[User] Has have Joined the Queue on Possition", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cleve", Response = "[User] Has have Left the Queue", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cwho", Response = "Current users are: ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cnext", Response = "Next users are: ", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "cremove", Response = "Users have been Removed from the Active Queue", Description = "cremove [user]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "cqueue", Response = "You are in the Active Queue", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "clast", Response = "Has Been moved to last place in Queue", Description = "clast [user]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "crandom", Response = "Has Been Choosen", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
-                new CommandAndResponse() {Command = "ccount", Response = "There are currenty X users in", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cremove", Response = "[User] User have been Removed from the Active Queue", Description = "cremove [user]", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "cqueue", Response = "[User] You are in the Active Queue Position [Position]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "clast", Response = "[User] Has Been moved to last place in Queue", Description = "clast [user]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
+                new CommandAndResponse() {Command = "crandom", Response = "[User] Has Been Choosen", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
+                //new CommandAndResponse() {Command = "ccount", Response = "There are currenty [Position] users in", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cstart", Response = "Queue is now open to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
                 new CommandAndResponse() {Command = "cend", Response = "Queue is closed and no one is able to join", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Queue, HasLogic = true },
 
@@ -97,9 +97,9 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "vote", Response = "If you want to vote for me Here is the Link: ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
 
                 new CommandAndResponse() {Command = "cc", Response = "Crowd Controll Links:", Description = "", Active = false, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                new CommandAndResponse() {Command = "modpack", Response = "There is no Modpack about this Category: ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
-                new CommandAndResponse() {Command = "gameinfo", Response = "There is no Info about this Category: ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
-                new CommandAndResponse() {Command = "gameprogress", Response = "There is no Progress about this Category: ", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
+                new CommandAndResponse() {Command = "modpack", Response = "There is no Modpack about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
+                new CommandAndResponse() {Command = "gameinfo", Response = "There is no Info about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
+                new CommandAndResponse() {Command = "gameprogress", Response = "There is no Progress about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
                 
                 new CommandAndResponse() {Command = "song", Response = "There is no Info about this Song", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Song, HasLogic = true },
                 
@@ -113,25 +113,25 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "clip2", Response = "Creates a time stamp of the current recording", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
 
                 //TODO: Fun chat things
-                new CommandAndResponse() {Command = "fun", Response = "to use fun chat messages use one of the fallowing commands with the message: flip, random, rainbow, revert, bounce, random, translatehell, gigantify", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "fun", Response = "to use fun chat messages use one of the fallowing commands with the message: flip, random, rainbow, revert, bounce, random, translatehell, gigantify", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // flips chat message around
-                new CommandAndResponse() {Command = "flip", Response = "", Description = "flip [degree] [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "flip", Response = "", Description = "flip [degree] [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // displayes the text in a random order
-                new CommandAndResponse() {Command = "random", Response = "", Description = "random [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "random", Response = "", Description = "random [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // changes the color of the text
-                new CommandAndResponse() {Command = "rainbow", Response = "", Description = "rainbow [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "rainbow", Response = "", Description = "rainbow [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // reverts the text from back to front (front to back from text the reverts)
-                new CommandAndResponse() {Command = "revert", Response = "", Description = "revert [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "revert", Response = "", Description = "revert [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // makes the text bounce
-                new CommandAndResponse() {Command = "bounce", Response = "", Description = "bounce [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "bounce", Response = "", Description = "bounce [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 //https://modrinth.com/mod/text-animator
-                new CommandAndResponse() {Command = "shake", Response = "", Description = "shake [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
-                new CommandAndResponse() {Command = "wave", Response = "", Description = "wave [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
-                new CommandAndResponse() {Command = "wiggle", Response = "", Description = "wiggle [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "shake", Response = "", Description = "shake [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
+                new CommandAndResponse() {Command = "wave", Response = "", Description = "wave [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
+                new CommandAndResponse() {Command = "wiggle", Response = "", Description = "wiggle [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // translates the text multiple times
-                new CommandAndResponse() {Command = "translatehell", Response = "", Description = "translatehell [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "translatehell", Response = "", Description = "translatehell [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
                 // changes the size of the text and emotes
-                new CommandAndResponse() {Command = "gigantify", Response = "", Description = "gigantify [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.fun, HasLogic = true },
+                new CommandAndResponse() {Command = "gigantify", Response = "", Description = "gigantify [message]", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Fun, HasLogic = true },
             };
             _unitOfWork.CommandAndResponse.AddRange(commandsStaticResponse);
 

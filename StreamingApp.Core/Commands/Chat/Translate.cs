@@ -32,6 +32,7 @@ public class Translate : ITranslate
     {
         // TODO: Implement Translate Logic
         // TODO: Use https://www.youtube.com/watch?v=04HfJvGSIks for translation
+        // TODO: OR https://github.com/DeepLcom/deepl-dotnet
 
         return "not be able to translate";
     }

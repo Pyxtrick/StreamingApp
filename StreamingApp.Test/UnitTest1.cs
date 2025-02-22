@@ -1,5 +1,4 @@
 namespace StreamingApp.Test;
-
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
@@ -84,7 +83,8 @@ public class Tests : DataBaseFixture
         Assert.Equal("", reponse);
     }
 
-    /**private IManageCommands CreateCommand()
+    /** for Mocking classes
+    private IManageCommands CreateCommand()
     {
         Mock<ManageCommands> loggerMock = new();
 

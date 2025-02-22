@@ -23,7 +23,7 @@ public class TwitchSendRequest : ISendRequest
     /// <returns>ChannelInfo</returns>
     public async Task<ChannelInfo?> GetChannelInfo()
     {
-        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync("broadcasterId");
+        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(_twitchCache.GetTwitchChannelName());
 
         if (channel != null)
         {

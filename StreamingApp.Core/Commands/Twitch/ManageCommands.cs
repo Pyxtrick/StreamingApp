@@ -129,7 +129,7 @@ public class ManageCommands : IManageCommands
                 //_twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), $"{commandAndResponse.Response} {reponse}");
             }
             // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
-            else if (commandAndResponse.Category == CategoryEnum.fun)
+            else if (commandAndResponse.Category == CategoryEnum.Fun)
             {
                 //_gameCommand.Execute(commandAndResponse);
             }

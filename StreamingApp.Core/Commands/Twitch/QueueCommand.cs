@@ -107,8 +107,18 @@ public class QueueCommand : IQueueCommand
             case "cqueue":
                 int queuePosition = _queueCache.GetQueuePosition(userName);
 
-                // @User You are in Queue X
-                SendMessage($"{userName} {commandAndResponse.Response} {queuePosition}", origin);
+                if (queuePosition > 0)
+                {
+
+                    // @User You are in Queue X
+                    commandAndResponse.Response.Replace("[User]", userName);
+                    commandAndResponse.Response.Replace("[Position]", queuePosition.ToString());
+                    SendMessage(commandAndResponse.Response, origin);
+                }
+                else
+                {
+                    SendMessage($"You are not in the Queue {userName}", origin);
+                }
                 break;
             case "clast": // Moves the user to last place in the queue
                 // TODO: move user XXX to last place
@@ -130,7 +140,7 @@ public class QueueCommand : IQueueCommand
                     SendMessage($"@{randomUser.UserName} {commandAndResponse.Response}", origin);
                 }
                 break;
-            case "ccount":
+            /**case "ccount":
                 var count = _queueCache.GetQueueCount();
 
                 if (count != 0)
@@ -141,7 +151,7 @@ public class QueueCommand : IQueueCommand
                 {
                     SendMessage($"There are no Users in the list", origin);
                 }
-                break;
+                break;**/
         }
     }
 

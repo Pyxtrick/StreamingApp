@@ -4,7 +4,6 @@ Backend
 	Watch for the new console logs (folower)
 
 Fronted
-	create each chat (Firiend, Mod, Streamer, Special, Bot, Twitch)
 	Update On screen chat
 
 	Settings Stream (Start / end / category)
@@ -14,6 +13,8 @@ Fronted
 
 
 Between Streams
+	ManamgeMessages: Replace parts in the message
+
 	Combine Sub/gifts/prime
 
 	Maybe combine Chat and commands
@@ -89,6 +90,9 @@ TODO: 1 able to respond to good "spam" (Dance Emojis)
 TODO: 2 respond with sound
 
 TODO: 2 create TTS or alert queue
+
+TODO: 2 detect bot attack and ad anti mesures
+	disable some logic for follow / chat bots
 
 TODO: 1 send Chat Message every x minutes
 TODO: 1 every x minutes: https://crontab.cronhub.io/

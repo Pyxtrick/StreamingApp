@@ -26,7 +26,9 @@ public class ManageMessages : IManageMessages
 
     private readonly ISendRequest _twitchSendRequest;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest)
+    private readonly IUpdateStream _updateStream;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IUpdateStream updateStream)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
@@ -34,6 +36,7 @@ public class ManageMessages : IManageMessages
         _twitchCallCache = twitchCallCache;
         _sendSignalRMessage = sendSignalRMessage;
         _twitchSendRequest = twitchSendRequest;
+        _updateStream = updateStream;
     }
 
     /// <summary>
@@ -180,8 +183,44 @@ public class ManageMessages : IManageMessages
                     //_gameCommand.Execute(commandAndResponse);
                     Console.WriteLine("Command Game");
                 }
+                else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
+                {
+                    if (messageDto.Message.Contains("streamstart") || messageDto.Message.Contains("streamstop"))
+                    {
+                        var channelInfo = await _twitchSendRequest.GetChannelInfo();
+
+                        await _updateStream.StartOrEndStream(channelInfo.Title, channelInfo.GameName);
+                    }
+                    else if (messageDto.Message.Contains("updategame"))
+                    {
+                        // TODO: Update Twitch Stream Game
+                        var category = messageDto.Message.Replace("!updategame", "");
+                        await _updateStream.ChangeCategory(category);
+                    }
+                    else if (messageDto.Message.Contains("updatetitle"))
+                    {
+                        // TODO: Update Twitch Stream Title
+                    }
+                    else if (messageDto.Message.Contains("so"))
+                    {
+                        // TODO: Twitch Shouout user
+                    }
+                }
+                else if (commandAndResponse.Category == CategoryEnum.Subathon)
+                {
+                    Console.WriteLine("Command Subathon");
+                    commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
+                }
                 else if (messageDto.Auth.First() <= commandAndResponse.Auth)
                 {
+                    // TODO: Replace parts in the message
+                    commandAndResponse.Response.Replace("[User]", messageDto.UserName);
+                    commandAndResponse.Response.Replace("[Time]", DateTime.Now.ToString());
+
+                    var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
+                    commandAndResponse.Response.Replace("[StreamStartTime]", stream.StreamStart.ToString());
+                    commandAndResponse.Response.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
+
                     _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
                 }
             }

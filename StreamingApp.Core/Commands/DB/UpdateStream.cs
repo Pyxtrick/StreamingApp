@@ -24,7 +24,7 @@ public class UpdateStream : IUpdateStream
     /// <returns></returns>
     public async Task StartOrEndStream(string streamTitle, string categoryName)
     {
-        var stream = await _unitOfWork.StreamHistory.LastAsync();
+        var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).Last();
 
         // For a new Stream
         if (stream == null || stream.StreamEnd != stream.StreamStart)
@@ -47,7 +47,7 @@ public class UpdateStream : IUpdateStream
         // For editing a Stream for ending it
         else if (stream.StreamEnd == stream.StreamStart)
         {
-            var streamGame = await _unitOfWork.StreamGame.LastAsync();
+            var streamGame = _unitOfWork.StreamGame.OrderBy(sg => sg.StreamId).Last();
             streamGame.EndDate = DateTime.UtcNow;
 
             stream.StreamEnd = DateTime.UtcNow;
@@ -67,9 +67,9 @@ public class UpdateStream : IUpdateStream
     /// <returns></returns>
     public async Task ChangeCategory(string categoryName)
     {
-        var stream = await _unitOfWork.StreamHistory.LastAsync();
-        var gameInfo = await _unitOfWork.GameInfo.FirstOrDefaultAsync(gi => gi.Game.Equals(categoryName));
-        var streamGame = await _unitOfWork.StreamGame.LastAsync();
+        var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).Last();
+        var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(gi => gi.Game.Equals(categoryName));
+        var streamGame = _unitOfWork.StreamGame.OrderBy(sh => sh.StreamGameId).Last();
 
         if (gameInfo == null)
         {
@@ -86,12 +86,14 @@ public class UpdateStream : IUpdateStream
         //if(User.auth == Streamer)
         // TODO: Send info to obs to make a breakpoint if the user is Admin / Streamer
 
+        DateTime timeNow = DateTime.UtcNow;
+
         StreamGame newStreamGame = new()
         {
             GameCategory = gameInfo,
             Stream = stream,
-            StartDate = DateTime.UtcNow,
-            EndDate = DateTime.UtcNow
+            StartDate = timeNow,
+            EndDate = timeNow
         };
 
         // For ending last StreamGame

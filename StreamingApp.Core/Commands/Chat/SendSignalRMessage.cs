@@ -19,6 +19,9 @@ public class SendSignalRMessage : ISendSignalRMessage
         _hubContext = hubContext;
     }
 
+    // ReceiveSpecialMessage
+    // ReceiveWatchUserMessage
+
     // ReceiveChatMessage
 
     // ReceiveVipViewerMessage
@@ -26,12 +29,16 @@ public class SendSignalRMessage : ISendSignalRMessage
     // ReceiveFriendMessage
     // ReceiveBotMessage
 
+    // ReceiveModActionMessage
+
     // ReceiveWatchUserMessage
 
     // ReceiveAllert
     // ReceiveEventMessage
 
-    // ReceiveTranslateMessage
+    // ReceiveTranslatedMessage
+
+    // ReceiveYoutubeMessage
 
     /// <summary>
     /// Uses SignalR to send the message to the correct chat in the Frontend
@@ -96,6 +103,6 @@ public class SendSignalRMessage : ISendSignalRMessage
     {
         messageDto.Message = await _translate.TranslateMessage(messageDto.Message);
 
-        await _hubContext.Clients.All.SendAsync("ReceiveTranslateMessage", messageDto);
+        await _hubContext.Clients.All.SendAsync("ReceiveTranslatedMessage", messageDto);
     }
 }
