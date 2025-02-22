@@ -3,7 +3,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
-import { CommandAndResponseDto } from 'src/api/api.service';
+import {
+  AuthEnum,
+  CategoryEnum,
+  CommandAndResponseDto,
+} from 'src/api/api.service';
 import { SettingsActions } from '../../state/action';
 import { settingsFeature } from './../../state/reducers';
 
@@ -26,7 +30,10 @@ export class CommandComponent implements OnInit {
     'auth',
     'category',
   ];
+  AuthEnum: any = AuthEnum;
+  CategoryEnum: any = CategoryEnum;
 
+  //ng g c chats/componets/on-screen-chat
   ngOnInit(): void {
     this.store.dispatch(SettingsActions.loadCommands());
     this.commands$ = this.store.select(settingsFeature.selectCommands);
@@ -39,7 +46,5 @@ export class CommandComponent implements OnInit {
         })
       )
       .subscribe();
-
-    console.log('command', this.commands);
   }
 }

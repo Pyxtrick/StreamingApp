@@ -9,7 +9,7 @@ namespace StreamingApp.Web.Controllers;
 public class SpecialWordController : ControllerBase
 {
     [HttpGet]
-    public SpecialWordRespose GetAllspecialWords([FromServices] IGetSpecialWords getSpecialWords)
+    public SpecialWordRespose GetAllspecialWords([FromServices] ICRUDSpecialWords getSpecialWords)
     {
         var specialWords = getSpecialWords.GetAll();
 
@@ -21,7 +21,7 @@ public class SpecialWordController : ControllerBase
     }
 
     [HttpPost]
-    public SpecialWordRespose UpdatespecialWords([FromServices] IUpdateSpecialWords updateSpecialWords, List<SpecialWordDto> commandAndResponses)
+    public SpecialWordRespose UpdatespecialWords([FromServices] ICRUDSpecialWords updateSpecialWords, List<SpecialWordDto> commandAndResponses)
     {
         var specialWords = updateSpecialWords.CreateOrUpdtateAll(commandAndResponses);
 
@@ -33,7 +33,7 @@ public class SpecialWordController : ControllerBase
     }
 
     [HttpDelete]
-    public SpecialWordRespose DeletespecialWords([FromServices] IDeleteSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
+    public SpecialWordRespose DeletespecialWords([FromServices] ICRUDSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
     {
         var sucsess = deleteSpecialWords.Delete(commandAndResponses);
 

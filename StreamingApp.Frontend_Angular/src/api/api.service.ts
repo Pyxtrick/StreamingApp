@@ -18,7 +18,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
-export class CommandClient {
+export class DataContollerClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -29,7 +29,7 @@ export class CommandClient {
     }
 
     getAllCommands(): Observable<CommandRespose> {
-        let url_ = this.baseUrl + "/api/Command";
+        let url_ = this.baseUrl + "/api/DataContoller/Commands";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -77,7 +77,7 @@ export class CommandClient {
     }
 
     updateCommands(commandAndResponses: CommandAndResponseDto[]): Observable<CommandRespose> {
-        let url_ = this.baseUrl + "/api/Command";
+        let url_ = this.baseUrl + "/api/DataContoller/Commands";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(commandAndResponses);
@@ -129,7 +129,7 @@ export class CommandClient {
     }
 
     deleteCommands(commandAndResponses: CommandAndResponseDto[]): Observable<CommandRespose> {
-        let url_ = this.baseUrl + "/api/Command";
+        let url_ = this.baseUrl + "/api/DataContoller/Commands";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(commandAndResponses);
@@ -170,6 +170,206 @@ export class CommandClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CommandRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllStreams(): Observable<StreamRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/Streams";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllStreams(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllStreams(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StreamRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StreamRespose>;
+        }));
+    }
+
+    protected processGetAllStreams(response: HttpResponseBase): Observable<StreamRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StreamRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllGameInfos(): Observable<GameInfoRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/GameInfos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllGameInfos(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllGameInfos(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GameInfoRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GameInfoRespose>;
+        }));
+    }
+
+    protected processGetAllGameInfos(response: HttpResponseBase): Observable<GameInfoRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GameInfoRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateGameInfos(gameInfoDtos: GameInfoDto[]): Observable<GameInfoRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/GameInfos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(gameInfoDtos);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateGameInfos(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateGameInfos(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GameInfoRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GameInfoRespose>;
+        }));
+    }
+
+    protected processUpdateGameInfos(response: HttpResponseBase): Observable<GameInfoRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GameInfoRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteGameInfos(gameInfoDtos: GameInfoDto[]): Observable<GameInfoRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/GameInfos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(gameInfoDtos);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteGameInfos(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteGameInfos(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GameInfoRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GameInfoRespose>;
+        }));
+    }
+
+    protected processDeleteGameInfos(response: HttpResponseBase): Observable<GameInfoRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GameInfoRespose.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -605,6 +805,54 @@ export class TestClient {
         }
         return _observableOf(null as any);
     }
+
+    translate(test: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test/Translate?";
+        if (test === null)
+            throw new Error("The parameter 'test' cannot be null.");
+        else if (test !== undefined)
+            url_ += "test=" + encodeURIComponent("" + test) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTranslate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTranslate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTranslate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable({
@@ -765,7 +1013,7 @@ export class TwitchClient {
 }
 
 export class CommandRespose implements ICommandRespose {
-    cads!: CommandAndResponseDto[];
+    commandAndResponses!: CommandAndResponseDto[];
     isSucsess!: boolean;
 
     constructor(data?: ICommandRespose) {
@@ -776,19 +1024,19 @@ export class CommandRespose implements ICommandRespose {
             }
         }
         if (!data) {
-            this.cads = [];
+            this.commandAndResponses = [];
         }
     }
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["cads"])) {
-                this.cads = [] as any;
-                for (let item of _data["cads"])
-                    this.cads!.push(CommandAndResponseDto.fromJS(item));
+            if (Array.isArray(_data["commandAndResponses"])) {
+                this.commandAndResponses = [] as any;
+                for (let item of _data["commandAndResponses"])
+                    this.commandAndResponses!.push(CommandAndResponseDto.fromJS(item));
             }
             else {
-                this.cads = <any>null;
+                this.commandAndResponses = <any>null;
             }
             this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
         }
@@ -803,10 +1051,10 @@ export class CommandRespose implements ICommandRespose {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.cads)) {
-            data["cads"] = [];
-            for (let item of this.cads)
-                data["cads"].push(item.toJSON());
+        if (Array.isArray(this.commandAndResponses)) {
+            data["commandAndResponses"] = [];
+            for (let item of this.commandAndResponses)
+                data["commandAndResponses"].push(item.toJSON());
         }
         data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
         return data;
@@ -814,7 +1062,7 @@ export class CommandRespose implements ICommandRespose {
 }
 
 export interface ICommandRespose {
-    cads: CommandAndResponseDto[];
+    commandAndResponses: CommandAndResponseDto[];
     isSucsess: boolean;
 }
 
@@ -896,11 +1144,277 @@ export enum CategoryEnum {
     Queue = 1,
     Game = 2,
     Song = 3,
-    Streamupdate = 4,
+    StreamUpdate = 4,
     Fun = 5,
     Subathon = 6,
     Logic = 7,
     Basic = 8,
+}
+
+export class StreamRespose implements IStreamRespose {
+    streams!: StreamDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: IStreamRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.streams = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["streams"])) {
+                this.streams = [] as any;
+                for (let item of _data["streams"])
+                    this.streams!.push(StreamDto.fromJS(item));
+            }
+            else {
+                this.streams = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): StreamRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new StreamRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.streams)) {
+            data["streams"] = [];
+            for (let item of this.streams)
+                data["streams"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface IStreamRespose {
+    streams: StreamDto[];
+    isSucsess: boolean;
+}
+
+export class StreamDto implements IStreamDto {
+    id!: number;
+    streamTitle!: string;
+    streamStart!: Date;
+    streamEnd!: Date;
+    gameHistoryDtos!: GameHistoryDto[];
+
+    constructor(data?: IStreamDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.gameHistoryDtos = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.streamTitle = _data["streamTitle"] !== undefined ? _data["streamTitle"] : <any>null;
+            this.streamStart = _data["streamStart"] ? new Date(_data["streamStart"].toString()) : <any>null;
+            this.streamEnd = _data["streamEnd"] ? new Date(_data["streamEnd"].toString()) : <any>null;
+            if (Array.isArray(_data["gameHistoryDtos"])) {
+                this.gameHistoryDtos = [] as any;
+                for (let item of _data["gameHistoryDtos"])
+                    this.gameHistoryDtos!.push(GameHistoryDto.fromJS(item));
+            }
+            else {
+                this.gameHistoryDtos = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): StreamDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StreamDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["streamTitle"] = this.streamTitle !== undefined ? this.streamTitle : <any>null;
+        data["streamStart"] = this.streamStart ? this.streamStart.toISOString() : <any>null;
+        data["streamEnd"] = this.streamEnd ? this.streamEnd.toISOString() : <any>null;
+        if (Array.isArray(this.gameHistoryDtos)) {
+            data["gameHistoryDtos"] = [];
+            for (let item of this.gameHistoryDtos)
+                data["gameHistoryDtos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IStreamDto {
+    id: number;
+    streamTitle: string;
+    streamStart: Date;
+    streamEnd: Date;
+    gameHistoryDtos: GameHistoryDto[];
+}
+
+export class GameInfoDto implements IGameInfoDto {
+    id!: number;
+    game!: string;
+    message!: string;
+    gameCategory!: GameCategoryEnum;
+
+    constructor(data?: IGameInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.game = _data["game"] !== undefined ? _data["game"] : <any>null;
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
+            this.gameCategory = _data["gameCategory"] !== undefined ? _data["gameCategory"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): GameInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["game"] = this.game !== undefined ? this.game : <any>null;
+        data["message"] = this.message !== undefined ? this.message : <any>null;
+        data["gameCategory"] = this.gameCategory !== undefined ? this.gameCategory : <any>null;
+        return data;
+    }
+}
+
+export interface IGameInfoDto {
+    id: number;
+    game: string;
+    message: string;
+    gameCategory: GameCategoryEnum;
+}
+
+export class GameHistoryDto extends GameInfoDto implements IGameHistoryDto {
+    startDate?: Date | null;
+    endDate?: Date | null;
+
+    constructor(data?: IGameHistoryDto) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>null;
+            this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : <any>null;
+        }
+    }
+
+    static override fromJS(data: any): GameHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>null;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>null;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IGameHistoryDto extends IGameInfoDto {
+    startDate?: Date | null;
+    endDate?: Date | null;
+}
+
+export enum GameCategoryEnum {
+    Info = 0,
+    ModPack = 1,
+    Server = 2,
+    Progress = 3,
+}
+
+export class GameInfoRespose implements IGameInfoRespose {
+    gameInfos!: GameInfoDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: IGameInfoRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.gameInfos = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["gameInfos"])) {
+                this.gameInfos = [] as any;
+                for (let item of _data["gameInfos"])
+                    this.gameInfos!.push(GameInfoDto.fromJS(item));
+            }
+            else {
+                this.gameInfos = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): GameInfoRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameInfoRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.gameInfos)) {
+            data["gameInfos"] = [];
+            for (let item of this.gameInfos)
+                data["gameInfos"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface IGameInfoRespose {
+    gameInfos: GameInfoDto[];
+    isSucsess: boolean;
 }
 
 export class SpecialWordRespose implements ISpecialWordRespose {

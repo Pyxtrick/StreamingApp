@@ -15,12 +15,9 @@ public static class QueriesRegistrar
         services.AddHostedService<ActivityScheduler>();
 
         // Web
-        services.AddScoped<IDeleteCommands, DeleteCommands>();
-        services.AddScoped<IDeleteSpecialWords, DeleteSpecialWords>();
-        services.AddScoped<IGetCommands, GetCommands>();
-        services.AddScoped<IGetSpecialWords, GetSpecialWords>();
-        services.AddScoped<IUpdateCommands, UpdateCommands>();
-        services.AddScoped<IUpdateSpecialWords, UpdateSpecialWords>();
-
+        services.AddScoped<ICRUDCommands, CRUDCommands>();
+        services.AddScoped<ICRUDGameInfos, CRUDGameInfos>();
+        services.AddScoped<ICRUDSpecialWords, CRUDSpecialWords>();
+        services.AddScoped<ICRUDStreams, CRUDStreams>();
     }
 }

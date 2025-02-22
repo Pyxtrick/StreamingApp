@@ -5,16 +5,23 @@ using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.Core.Queries.Web;
-public class UpdateCommands : IUpdateCommands
+public class CRUDCommands : ICRUDCommands
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
     private readonly IMapper _mapper;
 
-    public UpdateCommands(UnitOfWorkContext unitOfWork, IMapper mapper)
+    public CRUDCommands(UnitOfWorkContext unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+    }
+
+    public List<CommandAndResponseDto> GetAll()
+    {
+        List<CommandAndResponse> commands = _unitOfWork.CommandAndResponse.ToList();
+
+        return commands.Select(_mapper.Map<CommandAndResponseDto>).ToList();
     }
 
     public List<CommandAndResponseDto> CreateOrUpdtateAll(List<CommandAndResponseDto> commands)
@@ -42,6 +49,30 @@ public class UpdateCommands : IUpdateCommands
 
         _unitOfWork.SaveChanges();
 
-        return allCommands.Select(command => _mapper.Map<CommandAndResponseDto>(command)).ToList();
+        return allCommands.Select(_mapper.Map<CommandAndResponseDto>).ToList();
+    }
+
+    public bool Delete(List<CommandAndResponseDto> commands)
+    {
+        try
+        {
+            foreach (CommandAndResponseDto command in commands)
+            {
+                var removeData = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Id == command.Id);
+
+                if (removeData != null)
+                {
+                    _unitOfWork.Remove(removeData);
+                }
+            }
+
+            _unitOfWork.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }
