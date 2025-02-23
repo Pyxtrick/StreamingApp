@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StreamingApp.API.SignalRHub;
+using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
@@ -55,8 +56,9 @@ public class SendSignalRMessage : ISendSignalRMessage
         }**/
 
         // Display chat with out Bots
-        if (user.Status.UserType != UserTypeEnum.Bot || user.Ban.IsExcludeChat)
+        if (user.Status.UserType != UserTypeEnum.Bot || user.Ban.IsExcludeChat == false)
         {
+            // TODO: do someting about when Stream Together is Active
             await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);
         }
 
@@ -81,17 +83,42 @@ public class SendSignalRMessage : ISendSignalRMessage
         }
 
         // Watch List Users
-        if (user.Ban.IsExcludeChat)
+        if (user.Ban.IsWatchList && user.Ban.IsExcludeChat && user.Ban.IsExcludeQueue && user.Ban.IsBaned)
         {
+            string messageAdon = "";
+            if (user.Ban.IsWatchList)
+            {
+                messageAdon += " WatchList ";
+            }
+            if (user.Ban.IsExcludeChat)
+            {
+                messageAdon += " ExcludeChat ";
+            }
+            if (user.Ban.IsExcludeQueue)
+            {
+                messageAdon += " ExcludeQueue ";
+            }
+            if (user.Ban.IsBaned)
+            {
+                messageAdon += " Banned ";
+            }
+            messageDto.ReplayMessage = messageAdon;
+
             await _hubContext.Clients.All.SendAsync("ReceiveWatchUserMessage", messageDto);
         }
     }
 
     // TODO: to Be Implemented Send Allert and Event Message
-    public async Task SendAllertAndEventMessage(User user, MessageDto messageDto, Trigger trigger)
+    public async Task SendAllertAndEventMessage(User user, MessageDto messageDto, AlertDto alert)
     {
-        await _hubContext.Clients.All.SendAsync("ReceiveAllert");
-        await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", messageDto);
+        await _hubContext.Clients.All.SendAsync("ReceiveAlert", alert);
+        //await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", messageDto);
+    }
+
+    public async Task SendBannedEventMessage(BannedUserDto bannedUser)
+    {
+        // This can differ for Banned, TimeOut and Deleted Message
+        await _hubContext.Clients.All.SendAsync("ReceiveBanned", bannedUser);
     }
 
     /// <summary>

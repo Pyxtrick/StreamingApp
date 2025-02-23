@@ -1,7 +1,8 @@
-﻿namespace StreamingApp.API.Utility;
+﻿namespace StreamingApp.Domain.Static;
 
 public class BadgesData
 {
+    // TODO: move to DB
     public static List<KeyValuePair<string, string>> GetAllBadges()
     {
         return new List<KeyValuePair<string, string>>()

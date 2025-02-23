@@ -7,6 +7,7 @@ using StreamingApp.Core.Utility.Scheduler;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using YamlDotNet.Core.Tokens;
+using StreamingApp.Core.Commands.Chat;
 
 namespace StreamingApp.Web.Controllers;
 

@@ -9,9 +9,9 @@ using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 
-public class ActivityScheduler : BackgroundService
+public class AlertScheduler : BackgroundService
 {
-    private readonly ILogger<ActivityScheduler> _logger;
+    private readonly ILogger<AlertScheduler> _logger;
 
     private readonly IServiceProvider _serviceProvider;
 
@@ -21,7 +21,7 @@ public class ActivityScheduler : BackgroundService
 
     private int timer = 0;
 
-    public ActivityScheduler(IServiceProvider serviceProvider, ILogger<ActivityScheduler> logger, IConfiguration configuration)
+    public AlertScheduler(IServiceProvider serviceProvider, ILogger<AlertScheduler> logger, IConfiguration configuration)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -48,15 +48,20 @@ public class ActivityScheduler : BackgroundService
     {
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
-            //TODO: Check if 1 second is enouth for this
-            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+            //TODO: Combine all Three into one AlertDto
+            List<object> fallow = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedUserFollowData);
+            List<object> sub = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedSubData);
+            List<object> raid = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedRaidData);
 
-            if (value.Count != 0)
+            /**if (value.Count != 0)
             {
+
                 List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
 
+                Console.WriteLine(messages.Count);
+
                 await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
-            }
+            }**/
         }
     }
 }

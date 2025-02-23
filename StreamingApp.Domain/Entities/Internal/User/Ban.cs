@@ -11,6 +11,9 @@ public class Ban
     // Is Currenty Baned
     public bool IsBaned { get; set; }
 
+    // Watch User
+    public bool IsWatchList { get; set; }
+
     // Not add user into any Game Queue
     public bool IsExcludeQueue { get; set; }
 
@@ -35,6 +38,5 @@ public class Ban
     public DateTime? BanedDate { get; set; }
 
     // Message for the message
-    [Required]
     public string LastMessage { get; set; }
 }

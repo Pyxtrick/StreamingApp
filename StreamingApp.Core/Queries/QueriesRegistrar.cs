@@ -11,9 +11,6 @@ public static class QueriesRegistrar
     {
         //services.AddScoped<IGetTwitchDataQuery, GetTwitchDataQuery>();
 
-        // Schedulars
-        services.AddHostedService<ActivityScheduler>();
-
         // Web
         services.AddScoped<ICRUDCommands, CRUDCommands>();
         services.AddScoped<ICRUDGameInfos, CRUDGameInfos>();

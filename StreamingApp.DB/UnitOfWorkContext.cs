@@ -36,9 +36,9 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
     public DbSet<StreamHighlight> StreamHighlights { get; set; } = null!;
 
     //Trigger
-    public DbSet<CommandAndResponse> CommandAndResponse { get; set; } = null!;
+    public DbSet<Alert> Alert { get; set; } = null!;
 
-    public DbSet<Emote> Emotes { get; set; } = null!;
+    public DbSet<CommandAndResponse> CommandAndResponse { get; set; } = null!;
 
     public DbSet<SpecialWords> SpecialWords { get; set; } = null!;
 

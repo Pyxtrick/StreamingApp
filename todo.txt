@@ -1,4 +1,4 @@
-Stream 21.02
+Stream 28.02
 
 Backend
 	Watch for the new console logs (folower)
@@ -112,6 +112,8 @@ TODO: 2 activate and deactivate channel rewards
 TODO: 2 Save Queue to a file (for next time)
 
 TODO: 2 Ads check (for myself and on screen display)
+
+TODO: 3 Move Badges and Emote List to DB
 
 TODO: 3 create a screenshot of the current Stream using bits or point rediam
 

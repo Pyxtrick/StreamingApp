@@ -3,15 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StreamingApp.API.Utility.Caching.Interface;
-using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 
-public class ActivityScheduler : BackgroundService
+public class BannedScheduler : BackgroundService
 {
-    private readonly ILogger<ActivityScheduler> _logger;
+    private readonly ILogger<BannedScheduler> _logger;
 
     private readonly IServiceProvider _serviceProvider;
 
@@ -21,7 +20,7 @@ public class ActivityScheduler : BackgroundService
 
     private int timer = 0;
 
-    public ActivityScheduler(IServiceProvider serviceProvider, ILogger<ActivityScheduler> logger, IConfiguration configuration)
+    public BannedScheduler(IServiceProvider serviceProvider, ILogger<BannedScheduler> logger, IConfiguration configuration)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -49,13 +48,16 @@ public class ActivityScheduler : BackgroundService
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
             //TODO: Check if 1 second is enouth for this
-            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedBannedData);
 
             if (value.Count != 0)
             {
-                List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
 
-                await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
+                List<BannedUserDto> messages = value.ConvertAll(s => (BannedUserDto)s);
+
+                Console.WriteLine(messages.Count);
+
+                //await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
             }
         }
     }

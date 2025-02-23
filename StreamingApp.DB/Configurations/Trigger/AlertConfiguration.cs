@@ -4,9 +4,9 @@ using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.DB.Configurations.Trigger;
 
-public class EmotesConfiguration : IEntityTypeConfiguration<Emote>
+public class AlertConfiguration : IEntityTypeConfiguration<Alert>
 {
-    public void Configure(EntityTypeBuilder<Emote> builder)
+    public void Configure(EntityTypeBuilder<Alert> builder)
     {
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 

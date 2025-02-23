@@ -2,7 +2,7 @@
 
 namespace StreamingApp.Domain.Entities.Internal.Trigger;
 
-public class Emote
+public class Alert
 {
     public int Id { get; set; }
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreamingApp.DB;
 
@@ -11,9 +12,11 @@ using StreamingApp.DB;
 namespace StreamingApp.DB.Migrations
 {
     [DbContext(typeof(UnitOfWorkContext))]
-    partial class UnitOfWorkContextModelSnapshot : ModelSnapshot
+    [Migration("20250223103711_updateBanTable")]
+    partial class updateBanTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,54 +238,6 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("StreamHighlights");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Alert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMute")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Sound")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("TimesUsed")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Video")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("Volume")
-                        .HasColumnType("int");
-
-                    b.Property<int>("videoLeght")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Alert");
-                });
-
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.CommandAndResponse", b =>
                 {
                     b.Property<int>("Id")
@@ -330,6 +285,54 @@ namespace StreamingApp.DB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommandAndResponse");
+                });
+
+            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Emote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMute")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Sound")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("TimesUsed")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Video")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("Volume")
+                        .HasColumnType("int");
+
+                    b.Property<int>("videoLeght")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Emotes");
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.SpecialWords", b =>
@@ -750,7 +753,7 @@ namespace StreamingApp.DB.Migrations
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.TargetData", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Trigger.Alert", "Emote")
+                    b.HasOne("StreamingApp.Domain.Entities.Internal.Trigger.Emote", "Emote")
                         .WithMany("TargetData")
                         .HasForeignKey("EmoteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -830,7 +833,7 @@ namespace StreamingApp.DB.Migrations
                     b.Navigation("StreamHighlights");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Alert", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Emote", b =>
                 {
                     b.Navigation("TargetData");
                 });

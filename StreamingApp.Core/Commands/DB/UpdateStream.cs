@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StreamingApp.Core.Commands.DB.Interfaces;
+﻿using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.Stream;
-using StreamingApp.Domain.Entities.Internal.User;
-using TwitchLib.Api.Auth;
 
 namespace StreamingApp.Core.Commands.DB;
 public class UpdateStream : IUpdateStream

@@ -34,6 +34,14 @@ public class Translate : ITranslate
         // TODO: Use https://www.youtube.com/watch?v=04HfJvGSIks for translation
         // TODO: OR https://github.com/DeepLcom/deepl-dotnet
 
+        // TODO: Fix this as it is not working reliably
+        var t = GetLanguage(message);
+
+        if(t != null)
+        {
+            return t;
+        }
+
         return "not be able to translate";
     }
 }

@@ -28,7 +28,7 @@ public class EmotesCondition : EntityBase //TODO Remove
 
     public bool UseTTS { get; set; }
 
-    public Emote Emote { get; set; }
+    public Alert Emote { get; set; }
 
     public int EmoteId { get; set; }
 }

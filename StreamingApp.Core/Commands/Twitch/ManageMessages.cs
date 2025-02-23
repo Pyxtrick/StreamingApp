@@ -9,6 +9,7 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
+using StreamingApp.Domain.Static;
 using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
@@ -72,6 +73,22 @@ public class ManageMessages : IManageMessages
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
         var isStaff = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Staff) == AuthEnum.Staff;
 
+
+        if (messageDto.Badges != null)
+        {
+            messageDto.Badges = MappBadges(messageDto.Badges);
+        }
+        else
+        {
+            messageDto.Badges = new();
+        }
+        string userId = messageDto.UserId;
+        //66716756
+
+        messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick")
+            ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
+            : $"https://static-cdn.jtvnw.net/jtv_user_pictures/{userId}-profile_image-70x70.png"));
+        
         //var specialWords2 = await _unitOfWork.SpecialWords.FirstOrDefaultAsync();
         var s = _unitOfWork.SpecialWords.ToList();
         var newdata = await _unitOfWork.SpecialWords.ToListAsync();
@@ -236,5 +253,25 @@ public class ManageMessages : IManageMessages
 
             //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
         }
+    }
+
+    private List<KeyValuePair<string, string>> MappBadges(List<KeyValuePair<string, string>> userBadges)
+    {
+        List<KeyValuePair<string, string>> badges = new();
+
+        foreach (var userBadge in userBadges)
+        {
+            // TODO: Get Badges form DB
+            var allBadges = BadgesData.GetAllBadges();
+
+            var badge = allBadges.FirstOrDefault(b => b.Value == userBadge.Key);
+
+            if (badge.Value != null)
+            {
+                badges.Add(new(badge.Value, $"https://static-cdn.jtvnw.net/badges/v1/{badge.Key}/1"));
+            }
+        }
+
+        return badges;
     }
 }
