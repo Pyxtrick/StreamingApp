@@ -1,27 +1,18 @@
-﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
-using System.Collections.ObjectModel;
+﻿using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.API.Utility.Caching.CacheData;
 public class TwitchCallCacheData
 {
-    public List<MessageDto> CachedMessageData { get; set; } = new List<MessageDto>();
-    //Maybe Combine with Message
-    public List<CommandDto> CachedCommandData { get; set; } = new List<CommandDto>();
+    public List<MessageDto> CachedMessageData { get; set; } = new();
 
-    //Combine
-    public List<SubDto> CachedGiftedSubData { get; set; } = new List<SubDto>();
-    //Combine
-    public List<SubDto> CachedNewSubData { get; set; } = new List<SubDto>();
-    //Combine
-    public List<SubDto> CachedPrimeSubData { get; set; } = new List<SubDto>();
-    //Combine
-    public List<SubDto> CachedReSubData { get; set; } = new List<SubDto>();
+    public List<SubDto> CachedSubData { get; set; } = new();
 
-    public List<RaidDto> CachedRaidData { get; set; } = new List<RaidDto>();
+    public List<RaidDto> CachedRaidData { get; set; } = new();
 
-    // TODO: Change to Folow
-    public List<JoinDto> CachedUserJoinData { get; set; } = new List<JoinDto>();
-    //public List<FolowDto> CachedUserFolowData { get; set; } = new List<FolowDto>();
+    public List<FollowDto> CachedUserFollowData { get; set; } = new();
+
+    public List<BannedUserDto> CachedBannedData { get; set; } = new();
     //public ObservableCollection<JoinDto> CachedUserJoinData { get; set; }
 
     // problebly do not need it

@@ -22,7 +22,7 @@ public class TwitchMappingProfile : Profile
                 x.CustomRewardId,
                 x.Bits,
                 MappEmotes(x),
-                MappBadges(x),
+                x.Badges,
                 ChatOriginEnum.Twtich,
                 MappAuth(x),
                 MappSpecialMessage(x),
@@ -66,24 +66,5 @@ public class TwitchMappingProfile : Profile
             chatMessage.IsHighlighted ? SpecialMessgeEnum.Highlighted : 0,
             chatMessage.IsSkippingSubMode ? SpecialMessgeEnum.SkippSubMode : 0,
         }.Where(a => a != 0).ToList();
-    }
-
-    private List<KeyValuePair<string, string>> MappBadges(ChatMessage chatMessage)
-    {
-        List<KeyValuePair<string, string>> badges = new();
-
-        foreach (var item in chatMessage.Badges)
-        {
-            var allBadges = BadgesData.GetAllBadges();
-
-            var badge = allBadges.FirstOrDefault(b => b.Value == item.Key);
-
-            if (badge.Value != null)
-            {
-                badges.Add(new($"https://static-cdn.jtvnw.net/badges/v1/{badge.Key}/1", badge.Value));
-            }
-        }
-
-        return badges;
     }
 }

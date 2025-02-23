@@ -2,7 +2,7 @@
 
 namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 
-public class JoinDto(
+public class FollowDto(
     string messageId,
     string userId,
     string userName,

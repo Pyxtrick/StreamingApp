@@ -3,11 +3,11 @@
 public enum CallCacheEnum
 {
     CachedMessageData,
-    CachedCommandData,
-    CachedGiftedSubData,
-    CachedNewSubData,
-    CachedPrimeSubData,
-    CachedReSubData,
+    
+    CachedSubData,
+    
     CachedRaidData,
-    CachedUserJoinData,
+    CachedUserFollowData,
+
+    CachedBannedData,
 }

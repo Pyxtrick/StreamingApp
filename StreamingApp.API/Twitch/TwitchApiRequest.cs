@@ -44,9 +44,9 @@ public class TwitchApiRequest : ITwitchApiRequest
         Log($"OnLog: {e.Data}");
     }
 
-    public void Bot_OnMessageReceived2(object sender, OnMessageReceivedArgs e)
+    public void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
     {
-        Bot_OnMessageReceived(sender, e);
+        throw new NotImplementedException();
     }
 
     public void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
@@ -57,7 +57,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         }
 
         MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
-        messageDto.IsCommand = messageDto.Message.ToString().Contains("!");
+        messageDto.IsCommand = messageDto.Message.Split(' ').ToList()[0].Contains("!");
 
         _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
     }
@@ -68,7 +68,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         commandDto.IsCommand = true;
 
         Console.WriteLine("Command Called");
-        //_twitchCallCache.AddMessage(commandDto, CallCacheEnum.CachedCommandData);
+        //_twitchCallCache.AddMessage(commandDto, CallCacheEnum.CachedMessageData);
     }
 
     public async void Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
@@ -84,6 +84,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         //TODO: SubscriptionDto mess = _mapper.Map<SubscriptionDto>(e.GiftedSubscription);
         SubscriptionDto subscriptionDto = new SubscriptionDto(e.GiftedSubscription.Id, userName, true, 1, tier, null);
+
+        _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
         // TODO: Save Giffted Sub to Cache to be able to count amount of subs
         // TODO: Show emote
@@ -127,6 +129,8 @@ public class TwitchApiRequest : ITwitchApiRequest
                 Log($"parse MsgParamCumulativeMonths failed: {e.Subscriber.MsgParamCumulativeMonths}");
             }
 
+            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
         }
@@ -169,6 +173,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
                 Log($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
             }
+
+            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
@@ -230,6 +236,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             Log($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
         }
 
+        _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+
         // TODO: SaveMessage to Cache
         // TODO: Show emote with Message
         // TODO: SaveSubscription to DB
@@ -237,34 +245,54 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e)
     {
-        string? userName = e.Channel;
-        string amount = e.Channel;
+        string? userName = e.RaidNotification.DisplayName;
+        string amount = e.RaidNotification.SystemMsgParsed;
 
         // TODO: Send a Shoutout to POST https://api.twitch.tv/helix/chat/shoutouts
         //https://dev.twitch.tv/docs/api/reference/#send-a-shoutout
 
-        // TODO: Show emote
+        // TODO: Show emote / alert
 
         //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
 
+        // TODO: Set the user who raided in the User.Status.IsRaider to true
+        //userName User.Status.IsRaider == true
+
         Console.WriteLine($"New Raid by {userName} with {amount} Users");
+
+        //RaidDto raidDto = new()
+
+        //_twitchCallCache.AddMessage(raidDto, CallCacheEnum.CachedRaidData);
 
         throw new NotImplementedException();
     }
 
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
-        // TODO: Save to DB
+        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, DateTime.Now);
+        
+        _twitchCallCache.AddMessage(bannedUser, CallCacheEnum.CachedBannedData);
+    }
 
-        //TODO: BannedUserDto subscriptionDto = _mapper.Map<BannedUserDto>(e.ReSubscriber);
-        BannedUserDto subscriptionDto = new(e.UserBan.Username, "test", DateTime.Now);
-        throw new NotImplementedException();
+    public void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
+    {
+        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, DateTime.Now);
+        
+        _twitchCallCache.AddMessage(userTimeOout, CallCacheEnum.CachedBannedData);
+    }
+
+    public void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
+    {
+        BannedUserDto deletedMessage = new(e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, DateTime.Now);
+        
+        _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
     {
         // TODO: Save to DB
-        Console.WriteLine(e);
+        Console.WriteLine("Check this if it also does it when user followed");
+        Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
         //throw new NotImplementedException();
     }
 

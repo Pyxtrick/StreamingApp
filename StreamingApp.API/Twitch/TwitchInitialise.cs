@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.Json.Nodes;
 using TwitchLib.Api;
 using TwitchLib.Client;
+using TwitchLib.Client.Extensions;
 using TwitchLib.Client.Models;
 using WebSocketSharp.Server;
 
@@ -128,18 +129,24 @@ public class TwitchInitialise : ITwitchInitialise
 
         // All messages can be usefull during debug
         //OwnerOfChannelConnection.OnLog = _twichApiRequest.OwnerOfChannelConnection_OnLog;
-        OwnerOfChannelConnection.OnMessageReceived += _twichApiRequest.Bot_OnMessageReceived2;
+        OwnerOfChannelConnection.OnMessageReceived += _twichApiRequest.Bot_OnMessageReceived;
         OwnerOfChannelConnection.OnChatCommandReceived += _twichApiRequest.Bot_OnChatCommandRecived;
 
         OwnerOfChannelConnection.OnGiftedSubscription += _twichApiRequest.Bot_OnGiftedSubscription;
+        //OwnerOfChannelConnection.OnContinuedGiftedSubscription += _twichApiRequest.Bot_OnContinuedGiftedSubscription;
         OwnerOfChannelConnection.OnNewSubscriber += _twichApiRequest.Bot_OnNewSubscriber;
         OwnerOfChannelConnection.OnPrimePaidSubscriber += _twichApiRequest.Bot_OnPrimePaidSubscriber;
         OwnerOfChannelConnection.OnReSubscriber += _twichApiRequest.Bot_OnReSubscriber;
+
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
+        OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined; // TODO: Check on what it is doing if follows also count and other then chatting users
+        OwnerOfChannelConnection.OnChannelStateChanged += _twichApiRequest.Bot_OnChannelStateChanged; // TODO: Check on what it is doing 
+
         OwnerOfChannelConnection.OnUserBanned += _twichApiRequest.Bot_OnUserBanned;
-        OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined;
+        OwnerOfChannelConnection.OnUserTimedout += _twichApiRequest.Bot_OnUserTimedout;
+        OwnerOfChannelConnection.OnMessageCleared += _twichApiRequest.Bot_OnMessageCleared;
         //OwnerOfChannelConnection.OnDuplicate
-        //OwnerOfChannelConnection.OnNewFollower
+        // TODO: Not there jet OwnerOfChannelConnection.OnNewFollower
 
         // check for add's / advertisements
 
