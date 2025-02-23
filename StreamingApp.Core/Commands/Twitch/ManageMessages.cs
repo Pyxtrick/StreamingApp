@@ -204,7 +204,7 @@ public class ManageMessages : IManageMessages
                 {
                     if (messageDto.Message.Contains("streamstart") || messageDto.Message.Contains("streamstop"))
                     {
-                        var channelInfo = await _twitchSendRequest.GetChannelInfo();
+                        var channelInfo = await _twitchSendRequest.GetChannelInfo(null);
 
                         await _updateStream.StartOrEndStream(channelInfo.Title, channelInfo.GameName);
                     }

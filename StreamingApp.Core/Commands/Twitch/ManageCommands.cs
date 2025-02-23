@@ -189,7 +189,7 @@ public class ManageCommands : IManageCommands
             {
                 // TODO: Get title and category
                 //var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
-                var chanelInfo = await _sendRequest.GetChannelInfo();
+                var chanelInfo = await _sendRequest.GetChannelInfo(null);
                 if (chanelInfo != null)
                 {
                     var title = chanelInfo.Title;
@@ -260,7 +260,7 @@ public class ManageCommands : IManageCommands
                 }
 
                 //var chanelInfo = await _sendRequest("TwitchSendRequest").GetChannelInfo();
-                var chanelInfo = await _sendRequest.GetChannelInfo();
+                var chanelInfo = await _sendRequest.GetChannelInfo(null);
                 if (chanelInfo != null) {
                     var stream = _unitOfWork.StreamHistory.Include(t => t.GameCategories).ThenInclude(g => g.GameCategory).ToList().Last();
                     var game = _unitOfWork.GameInfo.FirstOrDefault(g => g.Game == chanelInfo.GameName && g.GameCategory == GameCategoryEnum.Info);

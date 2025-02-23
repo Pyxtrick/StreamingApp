@@ -5,6 +5,7 @@ using StreamingApp.Domain.Entities.Internal.Stream;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Polls.CreatePoll;
 using TwitchLib.Api.Helix.Models.Predictions.CreatePrediction;
+using WebSocketSharp;
 
 namespace StreamingApp.API.Twitch;
 
@@ -20,10 +21,16 @@ public class TwitchSendRequest : ISendRequest
     /// <summary>
     /// Channel Info with GameId, GameName, Title
     /// </summary>
+    /// <param name="broadcasterId">null for using _twitchCache.ChannelId</param>
     /// <returns>ChannelInfo</returns>
-    public async Task<ChannelInfo?> GetChannelInfo()
+    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId)
     {
-        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(_twitchCache.GetTwitchChannelId());
+        if (broadcasterId.IsNullOrEmpty())
+        {
+            broadcasterId = _twitchCache.GetTwitchChannelId();
+        }
+
+        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(broadcasterId);
 
         if (channel != null)
         {

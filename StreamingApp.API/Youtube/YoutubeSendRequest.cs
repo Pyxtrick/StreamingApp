@@ -9,7 +9,7 @@ public class YoutubeSendRequest : ISendRequest
     /// Channel Info with GameId, GameName, Title
     /// </summary>
     /// <returns>ChannelInfo</returns>
-    public async Task<ChannelInfo?> GetChannelInfo()
+    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId)
     {
         return null;
     }
