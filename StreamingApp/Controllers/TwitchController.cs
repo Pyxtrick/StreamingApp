@@ -9,7 +9,7 @@ namespace StreamingApp.Web.Controllers;
 [ApiController]
 public class TwitchController : ControllerBase
 {
-    [HttpPut]
+    [HttpPut("StartTwichConnection")]
     public void StartTwitchRequest([FromServices] IStartTwitchApi startTwitchApi)
     {
         startTwitchApi.Execute();

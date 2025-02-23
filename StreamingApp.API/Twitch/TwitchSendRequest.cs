@@ -23,7 +23,7 @@ public class TwitchSendRequest : ISendRequest
     /// <returns>ChannelInfo</returns>
     public async Task<ChannelInfo?> GetChannelInfo()
     {
-        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(_twitchCache.GetTwitchChannelName());
+        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(_twitchCache.GetTwitchChannelId());
 
         if (channel != null)
         {
@@ -66,7 +66,7 @@ public class TwitchSendRequest : ISendRequest
                 Delay = null,
             };
 
-            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_twitchCache.GetTwitchChannelName(), t);
+            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_twitchCache.GetTwitchChannelId(), t);
 
             return true;
         }
@@ -90,7 +90,7 @@ public class TwitchSendRequest : ISendRequest
         {
             var pollRequest = new CreatePollRequest()
             {
-                BroadcasterId = _twitchCache.GetTwitchChannelName(),
+                BroadcasterId = _twitchCache.GetTwitchChannelId(),
                 Title = title ?? null,
                 Choices = options.Select(option => { return new TwitchLib.Api.Helix.Models.Polls.CreatePoll.Choice() { Title = option }; }).ToList().ToArray(),
                 BitsVotingEnabled = false,
@@ -115,7 +115,7 @@ public class TwitchSendRequest : ISendRequest
         {
             var predictionRequest = new CreatePredictionRequest()
             {
-                BroadcasterId = _twitchCache.GetTwitchChannelName(),
+                BroadcasterId = _twitchCache.GetTwitchChannelId(),
                 Title=title ?? null,
                 Outcomes = options.Select(option => { return new Outcome() { Title = option }; }).ToList().ToArray(),
                 PredictionWindowSeconds = time,
@@ -145,7 +145,7 @@ public class TwitchSendRequest : ISendRequest
     {
         if (pole)
         {
-            var t = await _twitchCache.GetTheTwitchAPI().Helix.Polls.GetPollsAsync(_twitchCache.GetTwitchChannelName(), new List<string>() { id });
+            var t = await _twitchCache.GetTheTwitchAPI().Helix.Polls.GetPollsAsync(_twitchCache.GetTwitchChannelId(), new List<string>() { id });
 
             var data = t.Data.Last();
 
@@ -160,7 +160,7 @@ public class TwitchSendRequest : ISendRequest
         }
         else
         {
-            var t = await _twitchCache.GetTheTwitchAPI().Helix.Predictions.EndPredictionAsync(_twitchCache.GetTwitchChannelName(), id, TwitchLib.Api.Core.Enums.PredictionEndStatus.RESOLVED);
+            var t = await _twitchCache.GetTheTwitchAPI().Helix.Predictions.EndPredictionAsync(_twitchCache.GetTwitchChannelId(), id, TwitchLib.Api.Core.Enums.PredictionEndStatus.RESOLVED);
 
             var data = t.Data.Last();
 
@@ -182,7 +182,7 @@ public class TwitchSendRequest : ISendRequest
 
     public async Task RaidChannel()
     {
-        string fromBroadcasterId = _twitchCache.GetTwitchChannelName();
+        string fromBroadcasterId = _twitchCache.GetTwitchChannelId();
         string toBroadcasterId = "";
 
         var t = _twitchCache.GetTheTwitchAPI().Helix.Search.SearchChannelsAsync(toBroadcasterId, true);
@@ -192,7 +192,7 @@ public class TwitchSendRequest : ISendRequest
 
     public async Task GetHypeTrain()
     {
-        var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_twitchCache.GetTwitchChannelName());
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_twitchCache.GetTwitchChannelId());
     }
 
     public async Task SendAnnouncement()

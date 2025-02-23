@@ -13,5 +13,8 @@ public class TwitchCacheData
     [Required]
     public string TwitchChannelName { get; set; }
 
+    [Required]
+    public string TwitchChannelID { get; set; }
+
     public IList<Object> UnusedData { get; set; } = new List<Object>();
 }

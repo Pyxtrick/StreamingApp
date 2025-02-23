@@ -45,7 +45,9 @@ public class TwitchInitialise : ITwitchInitialise
         // open browser to Authenticate Bot
         // TODO: update ClientId and ClientSecret in UserSecrets to use the PyxtrickBot Account and not the Pyxtrick Account
         var authUrl = $"https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={_configuration["Twitch:ClientId"]}&redirect_uri={_configuration["Twitch:RedirectUrl"]}&scope={String.Join("+", Scopes)}";
-        Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
+        //For Default Browser:
+        //Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "chrome.exe", Arguments = authUrl });
     }
 
     public void InitializeWebServer()
@@ -115,7 +117,7 @@ public class TwitchInitialise : ITwitchInitialise
         TwitchChannelId = outhedUser.Users[0].Id;
         TwitchChannelName = outhedUser.Users[0].Login;
 
-        _twitchCache.AddTwitchChannelName(_configuration["Twitch:Channel"]);
+        _twitchCache.AddTwitchChannelName(_configuration["Twitch:Channel"], _configuration["Twitch:ChannelId"]);
     }
 
     private void InitializeOwnerOfChannelConnection(string username, string accessToken)
@@ -161,5 +163,6 @@ public class TwitchInitialise : ITwitchInitialise
         TheTwitchAPI = new TwitchAPI();
         TheTwitchAPI.Settings.ClientId = _configuration["Twitch:ClientId"];
         TheTwitchAPI.Settings.AccessToken = accessToken;
+        _twitchCache.AddData(null, TheTwitchAPI);
     }
 }
