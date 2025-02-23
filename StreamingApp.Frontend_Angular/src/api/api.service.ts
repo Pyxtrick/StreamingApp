@@ -821,7 +821,7 @@ export class TwitchClient {
     }
 
     startTwitchRequest(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Twitch";
+        let url_ = this.baseUrl + "/api/Twitch/StartTwichConnection";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

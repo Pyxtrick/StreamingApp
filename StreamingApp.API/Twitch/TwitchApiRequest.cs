@@ -46,7 +46,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
@@ -73,6 +73,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async void Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
     {
+        OnHypeTrain();
+
         string? userName = e.GiftedSubscription.DisplayName;
         TwitchLib.Client.Enums.SubscriptionPlan subscriptionPlan = e.GiftedSubscription.MsgParamSubPlan;
         string amount = e.GiftedSubscription.MsgParamMonths;
@@ -95,6 +97,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async void Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
     {
+        OnHypeTrain();
+
         if (!e.Subscriber.SubscriptionPlan.Equals("Prime"))
         {
             string userName = e.Subscriber.DisplayName;
@@ -138,6 +142,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async void Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e)
     {
+        OnHypeTrain();
+
         if (e.PrimePaidSubscriber.SubscriptionPlan.Equals("Prime"))
         {
             string userName = e.PrimePaidSubscriber.DisplayName;
@@ -183,6 +189,8 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnReSubscriber(object sender, OnReSubscriberArgs e)
     {
+        OnHypeTrain();
+
         string userName = e.ReSubscriber.DisplayName;
         int months = e.ReSubscriber.Months;
         string subscriptionPlan = e.ReSubscriber.SubscriptionPlan.ToString();
@@ -264,7 +272,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         //_twitchCallCache.AddMessage(raidDto, CallCacheEnum.CachedRaidData);
 
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)

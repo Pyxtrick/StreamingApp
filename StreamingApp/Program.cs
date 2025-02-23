@@ -5,6 +5,7 @@ using StreamingApp.Core;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.DB;
 using StreamingApp.Core.Commands;
+using StreamingApp.API.BetterTV_7TV;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<IStartTwitchApi>().Execute();
+    //scope.ServiceProvider.GetRequiredService<I_7TVApiRequest>().GetTVEmoteSet();
 }
 
 app.Run();

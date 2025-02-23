@@ -1,6 +1,6 @@
 ﻿namespace StreamingApp.API.BetterTV_7TV;
 
-public class _7TVApiRequest
+public class _7TVApiRequest : I_7TVApiRequest
 {
     private string UriAPI = "https://7tv.io/v3";
     private string UriWS = "";
