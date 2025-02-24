@@ -4,6 +4,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Chat;
 using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Logic;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
@@ -29,7 +30,9 @@ public class ManageMessages : IManageMessages
 
     private readonly IUpdateStream _updateStream;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IUpdateStream updateStream)
+    private readonly IMessageCheck _messageCheck;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IUpdateStream updateStream, IMessageCheck messageCheck)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
@@ -38,6 +41,7 @@ public class ManageMessages : IManageMessages
         _sendSignalRMessage = sendSignalRMessage;
         _twitchSendRequest = twitchSendRequest;
         _updateStream = updateStream;
+        _messageCheck = messageCheck;
     }
 
     /// <summary>
@@ -69,6 +73,10 @@ public class ManageMessages : IManageMessages
 
     public async Task ExecuteOne(MessageDto messageDto)
     {
+        User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+
+        
+
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
         var isStaff = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Staff) == AuthEnum.Staff;
@@ -83,7 +91,6 @@ public class ManageMessages : IManageMessages
             messageDto.Badges = new();
         }
         string userId = messageDto.UserId;
-        //66716756
 
         messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick")
             ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
@@ -102,6 +109,12 @@ public class ManageMessages : IManageMessages
             //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
 
             SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.Allowed);
+
+            // Check Message befor it is sent to the Frontend or anywhere else
+            if (_messageCheck.Execute(messageDto, user) == false)
+            {
+                return;
+            }
 
             if (allowedMessage != null)
             {
@@ -122,8 +135,6 @@ public class ManageMessages : IManageMessages
         var internalUserId = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
         await _updateUserAchievementsOnDb.UpdateAchievements(internalUserId);
 
-        User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
-
         if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
@@ -131,11 +142,11 @@ public class ManageMessages : IManageMessages
         }
 
         // Check for beeing not an command or Rediam
-        if (messageDto.IsCommand != true && messageDto.PointRediam.IsNullOrEmpty())
+        if (messageDto.IsCommand == false && messageDto.PointRediam.IsNullOrEmpty())
         {
             if (messageDto.Bits != 0)
             {
-                List<Trigger> data = _unitOfWork.Trigger.ToList();
+                List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
 
                 int found = 0;
 
@@ -145,8 +156,12 @@ public class ManageMessages : IManageMessages
 
                     if (messageDto.Bits == data[i].Ammount)
                     {
+                        var t = data[i].Targets.First(t => t.TargetCondition == Domain.Enums.Trigger.TargetCondition.Allert).TargetData;
+
+                        //AlertDto alert = t.Alert;
+
                         // TODO: Show emote
-                        //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
+                        //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageDto, t);
                     }
                     else
                     {

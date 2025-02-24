@@ -3,6 +3,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Internal.Stream;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
+using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 using TwitchLib.Api.Helix.Models.Polls.CreatePoll;
 using TwitchLib.Api.Helix.Models.Predictions.CreatePrediction;
 using WebSocketSharp;
@@ -241,9 +242,11 @@ public class TwitchSendRequest : ISendRequest
     /// Delete Chat Message
     /// </summary>
     /// <returns></returns>
-    public async Task DeleteMessage()
+    public async Task DeleteMessage(string messageId)
     {
         // TODO: Delete Message (maybe with Reason)
+
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", messageId);
     }
 
     /// <summary>
@@ -251,9 +254,12 @@ public class TwitchSendRequest : ISendRequest
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
-    public async Task TimeoutUser(int time)
+    public async Task TimeoutUser(string userId, string reson, int time)
     {
         // TODO: Timeout user with amount in Seconds (maybe with Reson)
+
+        // TODO: check if with Duration is a Timeout
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", new BanUserRequest { UserId = userId, Reason = reson, Duration = time });
     }
 
     /// <summary>
@@ -261,8 +267,10 @@ public class TwitchSendRequest : ISendRequest
     /// </summary>
     /// <param name="reson"></param>
     /// <returns></returns>
-    public async Task BanUser(string reson)
+    public async Task BanUser(string userId, string reson)
     {
         // TODO: Ban User with a specific Reson
+
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", new BanUserRequest { UserId = userId, Reason = reson });
     }
 }

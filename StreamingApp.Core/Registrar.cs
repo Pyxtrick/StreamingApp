@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StreamingApp.Core.Commands;
+using StreamingApp.Core.Logic;
 using StreamingApp.Core.Queries;
 using StreamingApp.Core.Utility.Scheduler;
 
@@ -17,5 +18,8 @@ public static class Registrar
         services.AddHostedService<ActivityScheduler>();
         //services.AddHostedService<AlertScheduler>();
         //services.AddHostedService<BannedScheduler>();
+
+        //Logic 
+        services.AddScoped<IMessageCheck, MessageCheck>();
     }
 }
