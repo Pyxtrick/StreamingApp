@@ -1,15 +1,63 @@
-﻿using StreamingApp.Core.Commands.DB.Interfaces;
+﻿using StreamingApp.API.Interfaces;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.Internal.Trigger;
 
-namespace StreamingApp.Core.Commands.DB;
-public class UpdateStream : IUpdateStream
+namespace StreamingApp.Core.Commands.Twitch;
+public class ManageStream : IManageStream
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    public UpdateStream(UnitOfWorkContext unitOfWork)
+    private readonly ISendRequest _twitchSendRequest;
+
+    public ManageStream(UnitOfWorkContext unitOfWork)
     {
         _unitOfWork = unitOfWork;
+    }
+
+    public async Task Execute(MessageDto messageDto)
+    {
+        var channelInfo = await _twitchSendRequest.GetChannelInfo(null);
+
+        // removed first word of string
+        var noCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..];
+
+        var splitMessage = noCommandTextMessage.Split(' ');
+
+        if (messageDto.Message.Contains("streamstart") || messageDto.Message.Contains("streamstop"))
+        {
+            await StartOrEndStream(channelInfo.Title, channelInfo.GameName);
+        }
+        else if (messageDto.Message.Contains("updategame"))
+        {
+            // TODO: Update Twitch Stream Game
+            var category = messageDto.Message.Replace("!updategame", "");
+            await ChangeCategory(category);
+        }
+        else if (messageDto.Message.Contains("updatetitle"))
+        {
+            // TODO: Update Twitch Stream Title
+            //UpdateStreamTitle(splitMessage);
+        }
+        else if (messageDto.Message.Contains("so"))
+        {
+            // TODO: Twitch Shouout user
+            //SoutoutUser(splitMessage);
+        }
+        else if (messageDto.Message.Contains("clip"))
+        {
+            // TODO: Twitch clip Stream for the last x seconds
+            //CreateClip(splitMessage)
+        }
+        else if (messageDto.Message.Contains("pole"))
+        {
+            await CreatePole(splitMessage);
+        }
+        else if (messageDto.Message.Contains("prediction"))
+        {
+            await CreatePrediction(splitMessage);
+        }
     }
 
     /// <summary>
@@ -101,5 +149,37 @@ public class UpdateStream : IUpdateStream
 
         await _unitOfWork.StreamGame.AddAsync(newStreamGame);
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task CreatePole(string[] splitMessage)
+    {
+        // lgic to create a pole with multiple options
+
+        var title = splitMessage[0];
+        var time = splitMessage[1];
+        List<string> options = [];
+
+        for (int i = 2; i < splitMessage.Length; i++)
+        {
+            options.Add(splitMessage[i]);
+        }
+
+        // TODO: send to twich, Other Platform and (youtube)
+    }
+
+    public async Task CreatePrediction(string[] splitMessage)
+    {
+        // lgic to create prediction with multiple options
+
+        var title = splitMessage[0];
+        var time = splitMessage[1];
+        List<string> options = [];
+
+        for (int i = 2; i < splitMessage.Length; i++)
+        {
+            options.Add(splitMessage[i]);
+        }
+
+        // TODO: send to twich
     }
 }

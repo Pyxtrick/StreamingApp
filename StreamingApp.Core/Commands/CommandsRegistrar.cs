@@ -23,7 +23,6 @@ public static class QueriesRegistrar
 
         // DB
         services.AddScoped<IAddUserToDB, AddUserToDB>();
-        services.AddScoped<IUpdateStream, UpdateStream>();
         services.AddScoped<IUpdateUserAchievementsOnDB, UpdateUserAchievementsOnDB>();
 
         // FileLogic
@@ -44,11 +43,11 @@ public static class QueriesRegistrar
 
         services.AddScoped<IAddDBData, AddDBData>();
 
-        services.AddScoped<ICheck, Check>();
-
         // Twitch
         services.AddScoped<IManageMessages, ManageMessages>();
         services.AddScoped<IManageCommands, ManageCommands>();
+
+        services.AddScoped<IManageStream, ManageStream>();
 
         services.AddScoped<IQueueCommand, QueueCommand>();
         services.AddScoped<IGameCommand, GameCommand>();

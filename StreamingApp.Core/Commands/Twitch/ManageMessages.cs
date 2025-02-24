@@ -28,11 +28,15 @@ public class ManageMessages : IManageMessages
 
     private readonly ISendRequest _twitchSendRequest;
 
-    private readonly IUpdateStream _updateStream;
+    private readonly IManageStream _manageStream;
+
+    private readonly IManageCommands _manageCommands;
 
     private readonly IMessageCheck _messageCheck;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IUpdateStream updateStream, IMessageCheck messageCheck)
+    private readonly IGameCommand _gameCommand;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
@@ -40,8 +44,10 @@ public class ManageMessages : IManageMessages
         _twitchCallCache = twitchCallCache;
         _sendSignalRMessage = sendSignalRMessage;
         _twitchSendRequest = twitchSendRequest;
-        _updateStream = updateStream;
+        _manageStream = manageStream;
+        _manageCommands = manageCommands;
         _messageCheck = messageCheck;
+        _gameCommand = gameCommand;
     }
 
     /// <summary>
@@ -74,8 +80,6 @@ public class ManageMessages : IManageMessages
     public async Task ExecuteOne(MessageDto messageDto)
     {
         User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
-
-        
 
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
@@ -203,47 +207,46 @@ public class ManageMessages : IManageMessages
 
             messageDto.Auth.Sort();
 
-            if (commandAndResponse != null && commandAndResponse.Active == true)
+            if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
             {
                 if (commandAndResponse.Category == CategoryEnum.Queue)
                 {
-                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName);
+                    bool queueIsActive = _unitOfWork.Settings.FirstOrDefault().ComunityDayActive;
+
+                    if (queueIsActive || messageDto.Auth.Contains(AuthEnum.Mod) || messageDto.Auth.Contains(AuthEnum.Streamer))
+                    {
+                        //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
+                    }
+
                     Console.WriteLine("Command Queue");
                 }
                 else if (commandAndResponse.Category == CategoryEnum.Game)
                 {
-                    //_gameCommand.Execute(commandAndResponse);
+                    _gameCommand.Execute(commandAndResponse);
                     Console.WriteLine("Command Game");
+                }
+                // sstart, sstop, sset
+                else if (commandAndResponse.Category == CategoryEnum.Subathon)
+                {
+                    //commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
+                    //_subathonCommand.Execute(commandAndResponse);
+                    Console.WriteLine("Command Subathon");
+                }
+                // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
+                else if (commandAndResponse.Category == CategoryEnum.Fun)
+                {
+                    //_ManageFun.Execute(commandAndResponse);
+                }
+                else if (commandAndResponse.HasLogic)
+                {
+                    _manageCommands.Execute(messageDto, commandAndResponse);
+                    Console.WriteLine("Command Has Logic");
                 }
                 else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
                 {
-                    if (messageDto.Message.Contains("streamstart") || messageDto.Message.Contains("streamstop"))
-                    {
-                        var channelInfo = await _twitchSendRequest.GetChannelInfo(null);
-
-                        await _updateStream.StartOrEndStream(channelInfo.Title, channelInfo.GameName);
-                    }
-                    else if (messageDto.Message.Contains("updategame"))
-                    {
-                        // TODO: Update Twitch Stream Game
-                        var category = messageDto.Message.Replace("!updategame", "");
-                        await _updateStream.ChangeCategory(category);
-                    }
-                    else if (messageDto.Message.Contains("updatetitle"))
-                    {
-                        // TODO: Update Twitch Stream Title
-                    }
-                    else if (messageDto.Message.Contains("so"))
-                    {
-                        // TODO: Twitch Shouout user
-                    }
+                    await _manageStream.Execute(messageDto);
                 }
-                else if (commandAndResponse.Category == CategoryEnum.Subathon)
-                {
-                    Console.WriteLine("Command Subathon");
-                    commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
-                }
-                else if (messageDto.Auth.First() <= commandAndResponse.Auth)
+                else
                 {
                     // TODO: Replace parts in the message
                     commandAndResponse.Response.Replace("[User]", messageDto.UserName);

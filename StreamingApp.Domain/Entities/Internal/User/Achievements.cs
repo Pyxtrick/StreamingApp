@@ -20,4 +20,6 @@ public class Achievements // TODO: Change all DB to AchievementsEntity
 
     // Date of the Last Stream Seen / chatted
     public DateTime LastStreamSeen { get; set; }
+
+    public DateTime FirstStreamSeen { get; set; }
 }

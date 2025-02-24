@@ -1,56 +1,36 @@
-﻿using Microsoft.Extensions.Configuration;
-using StreamingApp.API.Utility.Caching.Interface;
+﻿using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
-using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 
 namespace StreamingApp.Core.Commands.Twitch;
 
 public class GameCommand : IGameCommand
 {
-    private readonly ITwitchCache _twitchCache;
-    private readonly IConfiguration _configuration;
+    private readonly ISendRequest _sendRequest;
 
-    public GameCommand(ITwitchCache twitchCache, IConfiguration configuration)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public GameCommand(ISendRequest sendRequest, UnitOfWorkContext unitOfWorkContext)
     {
-        _twitchCache = twitchCache;
-        _configuration = configuration;
+        _sendRequest = sendRequest;
+        _unitOfWork = unitOfWorkContext;
     }
-
-    // TODO: Read from DB
-    List<GameInfo> GameInfoList = new List<GameInfo>
-    {
-        new GameInfo() { Id = 1, Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.Info },
-        new GameInfo() { Id = 2, Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.ModPack },
-        new GameInfo() { Id = 3, Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.Server },
-        new GameInfo() { Id = 4, Game = "Just Chatting", GameId = "Just Chatting", Message = "", GameCategory = GameCategoryEnum.Progress },
-
-        new GameInfo() { Id = 5, Game = "Lethal Company", GameId = "Lethal Company", Message = "Make Quota and be a gread Asset", GameCategory = GameCategoryEnum.Info },
-        new GameInfo() { Id = 6, Game = "Lethal Company", GameId = "Lethal Company", Message = "Modpack Code: 018d26ca-ecd1-661a-a3ee-3a7afeef1098", GameCategory = GameCategoryEnum.ModPack },
-        new GameInfo() { Id = 7, Game = "Lethal Company", GameId = "Lethal Company", Message = "Server Located at: XXXX", GameCategory = GameCategoryEnum.Server },
-        new GameInfo() { Id = 8, Game = "Lethal Company", GameId = "Lethal Company", Message = "There is no Progress in this Game and now go Out and make Quota", GameCategory = GameCategoryEnum.Progress },
-
-        new GameInfo() { Id = 5, Game = "Palworld", GameId = "Palworld", Message = "Get your Pals Mate", GameCategory = GameCategoryEnum.Info },
-        new GameInfo() { Id = 6, Game = "Palworld", GameId = "Palworld", Message = "There is no modpack used in this palythroue", GameCategory = GameCategoryEnum.ModPack },
-        new GameInfo() { Id = 7, Game = "Palworld", GameId = "Palworld", Message = "Server Located at: XXXX", GameCategory = GameCategoryEnum.Server },
-        new GameInfo() { Id = 8, Game = "Palworld", GameId = "Palworld", Message = "2 Towers beeten Level 40+", GameCategory = GameCategoryEnum.Progress },
-    };
 
     public async void Execute(CommandAndResponse commandAndResponse)
     {
-        GetChannelInformationResponse channelInfo = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(_configuration["Twitch:ClientId"]);
+        var channelInfo = await _sendRequest.GetChannelInfo(null);
 
-        string gameId = channelInfo.Data[0].GameId;
-        string gameName = channelInfo.Data[0].GameName;
+        string gameId = channelInfo.GameId;
+        string gameName = channelInfo.GameName;
 
         string responseMessage = "";
 
         switch (commandAndResponse.Command)
         {
             case "gameinfo":
-                var gameInfo = GameInfoList.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Info);
+                var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Info);
 
                 if (gameInfo != null)
                 {
@@ -63,7 +43,7 @@ public class GameCommand : IGameCommand
                 }
                 break;
             case "modpack":
-                var gameModpack = GameInfoList.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.ModPack);
+                var gameModpack = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.ModPack);
 
                 if (gameModpack != null)
                 {
@@ -76,7 +56,7 @@ public class GameCommand : IGameCommand
                 }
                 break;
             case "gameprogress":
-                var gameProgress = GameInfoList.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Progress);
+                var gameProgress = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Progress);
 
                 if (gameProgress != null)
                 {
@@ -89,6 +69,7 @@ public class GameCommand : IGameCommand
                 }
                 break;
         }
-        _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), $"{responseMessage}");
+
+        _sendRequest.SendChatMessage(responseMessage);
     }
 }

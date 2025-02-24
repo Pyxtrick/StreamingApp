@@ -34,6 +34,7 @@ public class AddUserToDB : IAddUserToDB
                 },
                 TwitchAchievements = new()
                 {
+                    FirstStreamSeen = DateTime.Now,
                     LastStreamSeen = DateTime.Now,
                     GiftedSubsCount = 0,
                     GiftedBitsCount = 0,

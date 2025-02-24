@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreamingApp.DB;
 
@@ -11,9 +12,11 @@ using StreamingApp.DB;
 namespace StreamingApp.DB.Migrations
 {
     [DbContext(typeof(UnitOfWorkContext))]
-    partial class UnitOfWorkContextModelSnapshot : ModelSnapshot
+    [Migration("20250224204349_addFirstStreamSeenToAchievements")]
+    partial class addFirstStreamSeenToAchievements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

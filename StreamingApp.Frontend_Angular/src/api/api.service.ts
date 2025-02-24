@@ -718,8 +718,12 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
-    addDataToCache(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Test";
+    addDataToCache(message: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test?";
+        if (message === null)
+            throw new Error("The parameter 'message' cannot be null.");
+        else if (message !== undefined)
+            url_ += "message=" + encodeURIComponent("" + message) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

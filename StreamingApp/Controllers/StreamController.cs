@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreamingApp.Core.Commands.DB.Interfaces;
+using StreamingApp.Core.Commands.Twitch;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -8,13 +8,13 @@ namespace StreamingApp.Web.Controllers;
 public class StreamController : ControllerBase
 {
     [HttpPost("StartOrEndStream")]
-    public void StartOrEndStream([FromServices] IUpdateStream updateStream, string streamTitle, string categoryName)
+    public void StartOrEndStream([FromServices] IManageStream updateStream, string streamTitle, string categoryName)
     {
         updateStream.StartOrEndStream(streamTitle, categoryName);
     }
 
     [HttpPost("ChangeCategory")]
-    public void ChangeCategory([FromServices] IUpdateStream updateStream, string categoryName)
+    public void ChangeCategory([FromServices] IManageStream updateStream, string categoryName)
     {
         updateStream.ChangeCategory(categoryName);
     }
