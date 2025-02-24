@@ -11,8 +11,8 @@ public class TargetData
 
     public int Duration { get; set; }
 
-    public int EmoteId { get; set; }
-    public Alert Emote { get; set; }
+    public int AlertId { get; set; }
+    public Alert Alert { get; set; }
 
     public int Size { get; set; }
 }

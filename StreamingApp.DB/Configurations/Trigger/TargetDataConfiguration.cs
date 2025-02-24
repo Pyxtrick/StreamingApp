@@ -7,6 +7,6 @@ public class TargetDataConfiguration : IEntityTypeConfiguration<TargetData>
 {
     public void Configure(EntityTypeBuilder<TargetData> builder)
     {
-        builder.HasOne(a => a.Emote).WithMany(emote => emote.TargetData).HasForeignKey(a => a.EmoteId).IsRequired();
+        builder.HasOne(a => a.Alert).WithMany(emote => emote.TargetData).HasForeignKey(a => a.AlertId).IsRequired();
     }
 }
