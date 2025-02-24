@@ -5,5 +5,6 @@ export class DisplayChat {
   SaveName?: SafeHtml;
   SaveReply?: SafeHtml;
   SaveMessage?: SafeHtml;
+  Addon?: SafeHtml;
   Date?: Date;
 }

@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
+import { BannedUserDto } from '../models/dtos/BannedUserDto';
 import { ChatDto } from '../models/dtos/ChatDto';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { ChatDto } from '../models/dtos/ChatDto';
 export class AppSignalRService {
   private store = inject(Store);
   public hubConnection: signalR.HubConnection;
+  public observer?: Subscriber<void>;
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -26,6 +28,7 @@ export class AppSignalRService {
           console.log('Connection established with SignalR hub');
           observer.next();
           observer.complete();
+          this.observer = observer;
         })
         .catch((error) => {
           console.error('Error connecting to SignalR hub:', error);
@@ -45,6 +48,14 @@ export class AppSignalRService {
   receiveChatMessage(method: string): Observable<ChatDto> {
     return new Observable<ChatDto>((observer) => {
       this.hubConnection.on(method, (message: ChatDto) => {
+        observer.next(message);
+      });
+    });
+  }
+
+  receiveBannedMessage(method: string): Observable<BannedUserDto> {
+    return new Observable<BannedUserDto>((observer) => {
+      this.hubConnection.on(method, (message: BannedUserDto) => {
         observer.next(message);
       });
     });

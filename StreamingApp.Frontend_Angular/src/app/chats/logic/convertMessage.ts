@@ -67,12 +67,17 @@ export class ConvertMessage {
         '<span class="message-reply">' + chatMessage.replayMessage + '</span>';
     }
 
-    let finalMessage = isFirstMessage + '<span>';
+    let finalMessage = isFirstMessage + '<span class="message-text">';
 
-    console.log(chatMessage);
+    // TODO: Add More XSS Checks later
+    // For any message staring < and ending with >
+    if (new RegExp('(\\<).*([\\w-]).*(\\>)').test(chatMessage.message)) {
+      chatMessage.message = chatMessage.message.replaceAll('<', '');
+      chatMessage.message = chatMessage.message.replaceAll('>', '');
+    }
+
     chatMessage.message?.split(' ').forEach((element) => {
       if (chatMessage.emotes != null) {
-        console.log(element, chatMessage.emotes);
         const foundData = chatMessage.emotes.find((m) => m.name === element);
 
         if (foundData != null) {
@@ -92,13 +97,12 @@ export class ConvertMessage {
     });
     finalMessage += '</span>';
 
-    //console.log(finalName);
-
     return {
       Id: chatMessage.id,
       SaveName: sanitizer.bypassSecurityTrustHtml(finalName), // This needs to be done that style is correctly implemented,
       SaveReply: sanitizer.bypassSecurityTrustHtml(finalReply),
       SaveMessage: sanitizer.bypassSecurityTrustHtml(finalMessage), // This needs to be done that style is correctly implemented,
+      Addon: sanitizer.bypassSecurityTrustHtml(''),
       Date: new Date(chatMessage.date),
     };
   }

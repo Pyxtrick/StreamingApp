@@ -52,13 +52,34 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
           }
           this.convertMessageData(message);
         });
+      this.signalRService
+        .receiveBannedMessage('ReceiveBanned')
+        .subscribe((message) => {
+          const foundMessage = this.displayChatMessages.find(
+            (m) => m.Id == message.id
+          );
+
+          if (foundMessage != undefined) {
+            this.displayChatMessages.splice(
+              this.displayChatMessages.indexOf(foundMessage),
+              1
+            );
+          }
+        });
     });
   }
 
-  convertMessageData(chatMesssage: ChatDto) {
-    this.displayChatMessages.push(
-      ConvertMessage.convertMessage(this._sanitizer, chatMesssage, true)
-    );
+  convertMessageData(chatMessage: ChatDto) {
+    // For Dot Between two Texts (Text.Text)
+    if (
+      new RegExp('([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?').test(
+        chatMessage.message
+      ) != true
+    ) {
+      this.displayChatMessages.push(
+        ConvertMessage.convertMessage(this._sanitizer, chatMessage, true)
+      );
+    }
   }
 
   //#region Auto Scroll to Bottom when at bottom
