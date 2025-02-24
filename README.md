@@ -54,6 +54,7 @@ Able to Manage Responses, Alerts, Activities and more
 - [MSSQL](https://docs.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver16)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 - [NSwag](https://github.com/RicoSuter/NSwag)
+- [SignalR](https://learn.microsoft.com/en-us/aspnet/signalr/overview/getting-started/introduction-to-signalr)
 
 #### Fronetnd
 
@@ -61,6 +62,7 @@ Able to Manage Responses, Alerts, Activities and more
 - [Material](https://material.angular.io/)
 - [RxJS](https://rxjs.dev/)
 - [Ngrx](https://ngrx.io/)
+- [SignalR](https://learn.microsoft.com/en-us/aspnet/signalr/overview/getting-started/introduction-to-signalr)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -87,7 +89,7 @@ Use Visual Studio 2022
 DB will automatically be created / updated but no data will be added.
 NSwag will automatically create "api.service.ts" when backend is started.
 
-Manage User secrets and add "ClientId" and "ClientSecret" for Connecting it with Twitch
+Manage User secrets and add "ClientId", "ClientSecret", "Channel" and "ChannelId" for Connecting it with Twitch
 
 ### Frontend
 
@@ -99,6 +101,6 @@ backend Needs to be run with "Visual Studio" no run backend from frontend implem
 
 ## Contact
 
-Patrick - pyxtrick@gmail.com
+Patrick - pyxtrick.business@gmail.com
 
 <p align="right">(<a href="#top">back to top</a>)</p>
