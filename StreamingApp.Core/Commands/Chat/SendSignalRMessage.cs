@@ -2,7 +2,6 @@
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
@@ -112,7 +111,7 @@ public class SendSignalRMessage : ISendSignalRMessage
     public async Task SendAllertAndEventMessage(User user, MessageDto messageDto, AlertDto alert)
     {
         await _hubContext.Clients.All.SendAsync("ReceiveAlert", alert);
-        //await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", messageDto);
+        await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", messageDto);
     }
 
     public async Task SendBannedEventMessage(BannedUserDto bannedUser)
