@@ -1,9 +1,7 @@
-<p>on-screen-chat works!</p>
 <div class="info-box">
-  <!--<ng-container [ngSwitch]="selectedFormType$ | async"> </ng-container>-->
   <div>
     <div class="list frame" (scroll)="scrolled($event)" #scrollframe>
-      <mat-list>
+      <mat-list #widgetsContent class="list-horizontal">
         @for (message of displayChatMessages; track message) {
         <mat-list-item class="item" #item>
           <div matListItemTitle [innerHTML]="message.SaveName"></div>

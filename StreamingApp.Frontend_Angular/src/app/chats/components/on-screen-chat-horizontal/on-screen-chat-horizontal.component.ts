@@ -2,11 +2,17 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ChatDto } from 'src/app/models/dtos/ChatDto';
+import { AppSignalRService } from 'src/app/services/chat-signalr.services';
+import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from '../../models/DisplayChat';
 
 @Component({
@@ -15,8 +21,13 @@ import { DisplayChat } from '../../models/DisplayChat';
   imports: [MatListModule],
   templateUrl: './on-screen-chat-horizontal.component.html',
   styleUrl: './on-screen-chat-horizontal.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
-export class OnScreenChatHorizontalComponent implements AfterViewInit {
+export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
+  constructor(
+    private _sanitizer: DomSanitizer,
+    private signalRService: AppSignalRService
+  ) {}
   @ViewChild('scrollframe') scrollFrame!: ElementRef;
 
   @ViewChildren('item') itemElements!: QueryList<any>;
@@ -31,6 +42,46 @@ export class OnScreenChatHorizontalComponent implements AfterViewInit {
     this.itemElements.changes.subscribe((_) => this.onItemElementsChanged());
   }
 
+  ngOnInit(): void {
+    this.signalRService.startConnection().subscribe(() => {
+      this.signalRService
+        .receiveChatMessage('ReceiveChatMessage')
+        .subscribe((message) => {
+          if (this.displayChatMessages.length >= 100) {
+            this.displayChatMessages.shift();
+          }
+          this.convertMessageData(message);
+        });
+      this.signalRService
+        .receiveBannedMessage('ReceiveBanned')
+        .subscribe((message) => {
+          const foundMessage = this.displayChatMessages.find(
+            (m) => m.Id == message.id
+          );
+
+          if (foundMessage != undefined) {
+            this.displayChatMessages.splice(
+              this.displayChatMessages.indexOf(foundMessage),
+              1
+            );
+          }
+        });
+    });
+  }
+
+  convertMessageData(chatMessage: ChatDto) {
+    // For Dot Between two Texts (Text.Text)
+    if (
+      new RegExp('([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?').test(
+        chatMessage.message
+      ) != true
+    ) {
+      this.displayChatMessages.push(
+        ConvertMessage.convertMessage(this._sanitizer, chatMessage, true)
+      );
+    }
+  }
+
   //#region Auto Scroll to Bottom when at bottom
   private onItemElementsChanged(): void {
     if (this.isNearBottom) {
@@ -41,7 +92,7 @@ export class OnScreenChatHorizontalComponent implements AfterViewInit {
   private scrollToBottom(): void {
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight,
-      left: 0,
+      left: this.scrollContainer.scrollLeft + 9999,
       behavior: 'smooth',
     });
   }
