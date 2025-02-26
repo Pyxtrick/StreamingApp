@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Twitch.Interfaces;
@@ -22,6 +23,9 @@ public static class APIRegistrar
         services.AddScoped<ITwitchCallCache, TwitchCallCache>();
         services.AddSingleton<TwitchCallCacheData>();
 
+        services.AddScoped<IEmotesCache, EmotesCache>();
+        services.AddSingleton<EmotesCacheData>();
+
         //twitch
         services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();
         services.AddScoped<ITwitchInitialise, TwitchInitialise>();
@@ -29,5 +33,8 @@ public static class APIRegistrar
         // TODO: Check if works
         services.AddScoped<ISendRequest, TwitchSendRequest>();
         //services.AddScoped<ISendRequest, YoutubeSendRequest>("");
+
+        // 7tv
+        services.AddScoped<IEmotesApiRequest, EmotesApiRequest>();
     }
 }

@@ -78,7 +78,7 @@ TODO: 1 Save every Raid User and Number (for now only in a file / Later maybe in
 
 TOOD: 1 respond to messages
 
-TODO: 1  able to get the new 7ttv or betterttv emtoes when they are added / Refresch emotes
+TODO: 1  able to get the new 7tv or betterttv emtoes when they are added / Refresch emotes
 
 TOOD: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
 

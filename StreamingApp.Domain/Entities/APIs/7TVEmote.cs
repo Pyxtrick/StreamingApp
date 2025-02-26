@@ -4,10 +4,7 @@ namespace StreamingApp.Domain.Entities.APIs;
 
 public class _7TVEmote
 {
+    public string size { get; set; }
 
-    [Required]
-    public string Id { get; set; }
-
-    [Required]
-    public string Name { get; set; }
+    public string url { get; set; }
 }

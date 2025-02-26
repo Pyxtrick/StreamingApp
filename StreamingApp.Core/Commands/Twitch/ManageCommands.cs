@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Interfaces;
+using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -13,10 +15,13 @@ public class ManageCommands : IManageCommands
 
     private readonly ISendRequest _twitchSendRequest;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ISendRequest sendRequest)
+    private readonly IEmotesApiRequest _emotesApiRequest;
+
+    public ManageCommands(UnitOfWorkContext unitOfWork, ISendRequest sendRequest, IEmotesApiRequest emotesApiRequest)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = sendRequest;
+        _emotesApiRequest = emotesApiRequest;
     }
 
     public async Task Execute(MessageDto messageDto, CommandAndResponse commandAndResponse)
@@ -25,10 +30,10 @@ public class ManageCommands : IManageCommands
 
         if (commandAndResponse != null && commandAndResponse.Active == true)
         {
-            // Update / Refresh Emotes from 7ttv and Betterttv
+            // Update / Refresh Emotes from 7tv and Betterttv
             if (commandAndResponse.Command.Contains("update"))
             {
-                // TODO: Request new Emote from 7ttv and Betterttv
+                await _emotesApiRequest.GetTVEmoteSet();
             }
             else if (commandAndResponse.Command.Contains("timer"))
             {

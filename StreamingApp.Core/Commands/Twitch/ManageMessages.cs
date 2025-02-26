@@ -24,6 +24,8 @@ public class ManageMessages : IManageMessages
 
     private readonly ITwitchCallCache _twitchCallCache;
 
+    private readonly IEmotesCache _emotesCache;
+
     private readonly ISendSignalRMessage _sendSignalRMessage;
 
     private readonly ISendRequest _twitchSendRequest;
@@ -36,12 +38,13 @@ public class ManageMessages : IManageMessages
 
     private readonly IGameCommand _gameCommand;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
         _updateUserAchievementsOnDb = updateUserAchievementsOnDb;
         _twitchCallCache = twitchCallCache;
+        _emotesCache = emotesCache;
         _sendSignalRMessage = sendSignalRMessage;
         _twitchSendRequest = twitchSendRequest;
         _manageStream = manageStream;
@@ -85,6 +88,7 @@ public class ManageMessages : IManageMessages
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
         var isStaff = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Staff) == AuthEnum.Staff;
 
+        messageDto.Emotes.AddRange(MappBadges(messageDto));
 
         if (messageDto.Badges != null)
         {
@@ -291,5 +295,25 @@ public class ManageMessages : IManageMessages
         }
 
         return badges;
+    }
+
+    private List<EmoteSet>? MappBadges(MessageDto messageDto)
+    {
+        var emotes = _emotesCache.GetEmotes(null);
+
+        var foundEmotes = emotes.Where(e => messageDto.Message.Contains(e.Name)).ToList();
+
+        List<EmoteSet> emoteList = new();
+
+        if (foundEmotes.Any())
+        {
+            foreach (var emote in foundEmotes)
+            {
+                emoteList.Add(new EmoteSet() { Name = emote.Name, AnimatedURL = emote.Url, StaticURL = emote.Url });
+            }
+        }
+
+        return emoteList;
+
     }
 }

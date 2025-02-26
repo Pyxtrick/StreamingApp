@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Domain.Entities.APIs;
 
 public class _7TVEmoteList
 {
-    [Required]
-    public string Id { get; set; }
+    //0: Twitch, 1: 7TV, 2: BetterTTV, 3: FrankerFaceZ
+    public EmoteProviderEnum provider { get; set; }
 
-    [Required]
-    public string name { get; set; }
+    public string code { get; set; }
 
-    public List<_7TVEmote>? emotes { get; set; }
+    public List<_7TVEmote>? urls { get; set; }
 }
