@@ -1,4 +1,5 @@
-﻿using StreamingApp.API.Interfaces;
+﻿using Microsoft.Extensions.Configuration;
+using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Internal.Stream;
@@ -14,9 +15,12 @@ public class TwitchSendRequest : ISendRequest
 {
     private readonly ITwitchCache _twitchCache;
 
-    public TwitchSendRequest(ITwitchCache twitchCache)
+    private readonly IConfiguration _configuration;
+
+    public TwitchSendRequest(ITwitchCache twitchCache, IConfiguration configuration)
     {
         _twitchCache = twitchCache;
+        _configuration = configuration;
     }
 
     /// <summary>
@@ -28,7 +32,7 @@ public class TwitchSendRequest : ISendRequest
     {
         if (broadcasterId.IsNullOrEmpty())
         {
-            broadcasterId = _twitchCache.GetTwitchChannelId();
+            broadcasterId = _configuration["Twitch:ChannelId"];
         }
 
         var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(broadcasterId);
@@ -53,7 +57,26 @@ public class TwitchSendRequest : ISendRequest
     /// <param name="message"></param>
     public void SendChatMessage(string message)
     {
-        _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), message);
+        _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    public void SendAnnouncement(string message)
+    {
+        //ChannelBotId
+        _twitchCache.GetTheTwitchAPI().Helix.Chat.SendChatAnnouncementAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], message);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    public void CreateClip(string message)
+    {
+        _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
     }
 
     /// <summary>
@@ -74,7 +97,7 @@ public class TwitchSendRequest : ISendRequest
                 Delay = null,
             };
 
-            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_twitchCache.GetTwitchChannelId(), t);
+            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_configuration["Twitch:ChannelId"], t);
 
             return true;
         }
@@ -98,7 +121,7 @@ public class TwitchSendRequest : ISendRequest
         {
             var pollRequest = new CreatePollRequest()
             {
-                BroadcasterId = _twitchCache.GetTwitchChannelId(),
+                BroadcasterId = _configuration["Twitch:ChannelId"],
                 Title = title ?? null,
                 Choices = options.Select(option => { return new TwitchLib.Api.Helix.Models.Polls.CreatePoll.Choice() { Title = option }; }).ToList().ToArray(),
                 BitsVotingEnabled = false,
@@ -123,7 +146,7 @@ public class TwitchSendRequest : ISendRequest
         {
             var predictionRequest = new CreatePredictionRequest()
             {
-                BroadcasterId = _twitchCache.GetTwitchChannelId(),
+                BroadcasterId = _configuration["Twitch:ChannelId"],
                 Title=title ?? null,
                 Outcomes = options.Select(option => { return new Outcome() { Title = option }; }).ToList().ToArray(),
                 PredictionWindowSeconds = time,
@@ -153,7 +176,7 @@ public class TwitchSendRequest : ISendRequest
     {
         if (pole)
         {
-            var t = await _twitchCache.GetTheTwitchAPI().Helix.Polls.GetPollsAsync(_twitchCache.GetTwitchChannelId(), new List<string>() { id });
+            var t = await _twitchCache.GetTheTwitchAPI().Helix.Polls.GetPollsAsync(_configuration["Twitch:ChannelId"], new List<string>() { id });
 
             var data = t.Data.Last();
 
@@ -168,7 +191,7 @@ public class TwitchSendRequest : ISendRequest
         }
         else
         {
-            var t = await _twitchCache.GetTheTwitchAPI().Helix.Predictions.EndPredictionAsync(_twitchCache.GetTwitchChannelId(), id, TwitchLib.Api.Core.Enums.PredictionEndStatus.RESOLVED);
+            var t = await _twitchCache.GetTheTwitchAPI().Helix.Predictions.EndPredictionAsync(_configuration["Twitch:ChannelId"], id, TwitchLib.Api.Core.Enums.PredictionEndStatus.RESOLVED);
 
             var data = t.Data.Last();
 
@@ -190,7 +213,7 @@ public class TwitchSendRequest : ISendRequest
 
     public async Task RaidChannel()
     {
-        string fromBroadcasterId = _twitchCache.GetTwitchChannelId();
+        string fromBroadcasterId = _configuration["Twitch:ChannelId"];
         string toBroadcasterId = "";
 
         var t = _twitchCache.GetTheTwitchAPI().Helix.Search.SearchChannelsAsync(toBroadcasterId, true);
@@ -200,7 +223,7 @@ public class TwitchSendRequest : ISendRequest
 
     public async Task GetHypeTrain()
     {
-        var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_twitchCache.GetTwitchChannelId());
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ChannelId"]);
     }
 
     public async Task SendAnnouncement()
@@ -246,7 +269,7 @@ public class TwitchSendRequest : ISendRequest
     {
         // TODO: Delete Message (maybe with Reason)
 
-        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", messageId);
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], messageId);
     }
 
     /// <summary>
@@ -259,7 +282,7 @@ public class TwitchSendRequest : ISendRequest
         // TODO: Timeout user with amount in Seconds (maybe with Reson)
 
         // TODO: check if with Duration is a Timeout
-        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", new BanUserRequest { UserId = userId, Reason = reson, Duration = time });
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], new BanUserRequest { UserId = userId, Reason = reson, Duration = time });
     }
 
     /// <summary>
@@ -271,6 +294,6 @@ public class TwitchSendRequest : ISendRequest
     {
         // TODO: Ban User with a specific Reson
 
-        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_twitchCache.GetTwitchChannelId(), "moderatorId", new BanUserRequest { UserId = userId, Reason = reson });
+        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], new BanUserRequest { UserId = userId, Reason = reson });
     }
 }

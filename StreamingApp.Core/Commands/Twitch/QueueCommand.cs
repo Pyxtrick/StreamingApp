@@ -1,4 +1,5 @@
-﻿using StreamingApp.API.Utility.Caching.Interface;
+﻿using Microsoft.Extensions.Configuration;
+using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
@@ -13,12 +14,14 @@ public class QueueCommand : IQueueCommand
     private readonly ITwitchCache _twitchCache;
     private readonly IQueueCache _queueCache;
     private readonly UnitOfWorkContext _unitOfWork;
+    private readonly IConfiguration _configuration;
 
-    public QueueCommand(ITwitchCache twitchCache, IQueueCache queueCache, UnitOfWorkContext unitOfWork)
+    public QueueCommand(ITwitchCache twitchCache, IQueueCache queueCache, UnitOfWorkContext unitOfWork, IConfiguration configuration)
     {
         _twitchCache = twitchCache;
         _queueCache = queueCache;
         _unitOfWork = unitOfWork;
+        _configuration = configuration;
     }
 
     public void Execute(CommandAndResponse commandAndResponse, string message, string userName, ChatOriginEnum origin)
@@ -160,11 +163,10 @@ public class QueueCommand : IQueueCommand
         switch (origin)
         { 
             case ChatOriginEnum.Twtich:
-                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_twitchCache.GetTwitchChannelName(), response);
+                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], response);
                 break;
             case ChatOriginEnum.Youtube:
                 break;
-
         }
     }
 }

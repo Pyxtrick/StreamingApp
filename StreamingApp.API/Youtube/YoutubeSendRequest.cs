@@ -34,4 +34,9 @@ public class YoutubeSendRequest : ISendRequest
         // TODO: implement
         return false;
     }
+
+    public void SendAnnouncement(string message)
+    {
+        // TODO: implement
+    }
 }

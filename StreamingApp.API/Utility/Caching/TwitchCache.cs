@@ -23,16 +23,6 @@ public class TwitchCache : ITwitchCache
         return _twitchCacheData.TheTwitchAPI;
     }
 
-    public string GetTwitchChannelName()
-    {
-        return _twitchCacheData.TwitchChannelName;
-    }
-
-    public string GetTwitchChannelId()
-    {
-        return _twitchCacheData.TwitchChannelID;
-    }
-
     public void AddData(TwitchClient twitchClient, TwitchAPI TheTwitchAPI)
     {
         if (twitchClient != null)
@@ -40,12 +30,6 @@ public class TwitchCache : ITwitchCache
             _twitchCacheData.OwnerOfChannelConnection = twitchClient;
         }
         _twitchCacheData.TheTwitchAPI = TheTwitchAPI;
-    }
-
-    public void AddTwitchChannelName(string channelName, string channelId)
-    {
-        _twitchCacheData.TwitchChannelName = channelName;
-        _twitchCacheData.TwitchChannelID = channelId;
     }
 
     public void AddUnusedData(object unused)
