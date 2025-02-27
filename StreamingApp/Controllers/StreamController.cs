@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreamingApp.Core.Commands.Twitch;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
 
 namespace StreamingApp.Web.Controllers;
 

@@ -14,19 +14,21 @@ public class ManageSubathon
     {
         string reponse = $"There is currenty no Subathon going on";
 
+        var splitMessage = commandAndResponse.Command.Split(' ');
+
         if (!commandAndResponse.Active)
         {
             return;
         }
-        else if (commandAndResponse.Command.Contains("sstart"))
+        else if(splitMessage[0].Contains("sstart"))
         {
             // lgic to start Timer
         }
-        else if (commandAndResponse.Command.Contains("sstop"))
+        else if(splitMessage[0].Contains("sstop"))
         {
             // lgic to stop Timer
         }
-        else if (commandAndResponse.Command.Contains("sset"))
+        else if(splitMessage[0].Contains("sset"))
         {
             // lgic to add time to Timer
         }

@@ -1,8 +1,8 @@
 ﻿using StreamingApp.API.Interfaces;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Stream;
-using StreamingApp.Domain.Entities.Internal.Trigger;
 
 namespace StreamingApp.Core.Commands.Twitch;
 public class ManageStream : IManageStream
@@ -11,52 +11,55 @@ public class ManageStream : IManageStream
 
     private readonly ISendRequest _twitchSendRequest;
 
-    public ManageStream(UnitOfWorkContext unitOfWork)
+    public ManageStream(UnitOfWorkContext unitOfWork, ISendRequest sendRequest)
     {
         _unitOfWork = unitOfWork;
+        _twitchSendRequest = sendRequest;
     }
 
     public async Task Execute(MessageDto messageDto)
     {
-        var channelInfo = await _twitchSendRequest.GetChannelInfo(null);
+        var channelInfo = await _twitchSendRequest.GetChannelInfo("");
 
         // removed first word of string
         var noCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..];
 
-        var splitMessage = noCommandTextMessage.Split(' ');
+        var splitMessage = messageDto.Message.Split(' ');
 
-        if (messageDto.Message.Contains("streamstart") || messageDto.Message.Contains("streamstop"))
+        var splitNoCommandTextMessage = noCommandTextMessage.Split(' ');
+
+        if (splitMessage[0].Equals("!startStream") || splitMessage[0].Equals("!stopStream"))
         {
             await StartOrEndStream(channelInfo.Title, channelInfo.GameName);
         }
-        else if (messageDto.Message.Contains("updategame"))
+        else if (splitMessage[0].Equals("!updategame"))
         {
             // TODO: Update Twitch Stream Game
             var category = messageDto.Message.Replace("!updategame", "");
             await ChangeCategory(category);
         }
-        else if (messageDto.Message.Contains("updatetitle"))
+        else if (splitMessage[0].Equals("!updatetitle"))
         {
             // TODO: Update Twitch Stream Title
-            //UpdateStreamTitle(splitMessage);
+            //UpdateStreamTitle(splitNoCommandTextMessage);
         }
-        else if (messageDto.Message.Contains("so"))
+        else if (splitMessage[0].Equals("!so"))
         {
             // TODO: Twitch Shouout user
-            //SoutoutUser(splitMessage);
+            _twitchSendRequest.SendAnnouncement(noCommandTextMessage);
         }
-        else if (messageDto.Message.Contains("clip"))
+        else if(splitMessage[0].Equals("!clip"))
         {
             // TODO: Twitch clip Stream for the last x seconds
-            //CreateClip(splitMessage)
+            //CreateClip(splitNoCommandTextMessage)
         }
-        else if (messageDto.Message.Contains("pole"))
+        else if(splitMessage[0].Equals("!pole"))
         {
-            await CreatePole(splitMessage);
+            await CreatePole(splitNoCommandTextMessage);
         }
-        else if (messageDto.Message.Contains("prediction"))
+        else if(splitMessage[0].Equals("!prediction"))
         {
-            await CreatePrediction(splitMessage);
+            await CreatePrediction(splitNoCommandTextMessage);
         }
     }
 

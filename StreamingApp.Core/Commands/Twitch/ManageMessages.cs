@@ -243,7 +243,7 @@ public class ManageMessages : IManageMessages
                 }
                 else if (commandAndResponse.HasLogic)
                 {
-                    _manageCommands.Execute(messageDto, commandAndResponse);
+                    await _manageCommands.Execute(messageDto, commandAndResponse);
                     Console.WriteLine("Command Has Logic");
                 }
                 else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)

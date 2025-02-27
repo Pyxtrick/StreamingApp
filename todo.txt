@@ -13,11 +13,7 @@ Fronted
 
 
 Between Streams
-	ManamgeMessages: Replace parts in the message
-
 	Combine Sub/gifts/prime
-
-	Maybe combine Chat and commands
 
 
 
