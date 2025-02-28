@@ -30,13 +30,11 @@ public class ManageStream : IManageStream
 
         if (splitMessage[0].Equals("!startStream") || splitMessage[0].Equals("!stopStream"))
         {
-            await StartOrEndStream(channelInfo.Title, channelInfo.GameName);
+            await StartOrEndStream();
         }
         else if (splitMessage[0].Equals("!updategame"))
         {
-            // TODO: Update Twitch Stream Game
-            var category = messageDto.Message.Replace("!updategame", "");
-            await ChangeCategory(category);
+            await ChangeCategory();
         }
         else if (splitMessage[0].Equals("!updatetitle"))
         {
@@ -67,21 +65,23 @@ public class ManageStream : IManageStream
     /// Starts or Ends Stream in DB
     /// add DB entry or ads an end Date
     /// </summary>
-    /// <param name="streamTitle"></param>
-    /// <param name="categoryName"></param>
     /// <returns></returns>
-    public async Task StartOrEndStream(string streamTitle, string categoryName)
+    public async Task StartOrEndStream()
     {
-        var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).Last();
+        var channelInfo = await _twitchSendRequest.GetChannelInfo("");
+
+        var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.Id).ToList().Last();
 
         // For a new Stream
         if (stream == null || stream.StreamEnd != stream.StreamStart)
         {
+            var utcNow = DateTime.UtcNow;
+
             Domain.Entities.Internal.Stream.Stream newStream = new()
             {
-                StreamTitle = streamTitle,
-                StreamStart = DateTime.UtcNow,
-                StreamEnd = DateTime.UtcNow,
+                StreamTitle = channelInfo.Title,
+                StreamStart = utcNow,
+                StreamEnd = utcNow,
             };
 
             await _unitOfWork.StreamHistory.AddAsync(newStream);
@@ -90,15 +90,18 @@ public class ManageStream : IManageStream
             //if(User.auth == Streamer)
             // TODO: Send info to obs to start stream and recording if the user is Admin / Streamer
 
-            await ChangeCategory(categoryName);
+            await ChangeCategory();
         }
         // For editing a Stream for ending it
         else if (stream.StreamEnd == stream.StreamStart)
         {
             var streamGame = _unitOfWork.StreamGame.OrderBy(sg => sg.StreamId).Last();
-            streamGame.EndDate = DateTime.UtcNow;
 
-            stream.StreamEnd = DateTime.UtcNow;
+            var utcNow = DateTime.UtcNow;
+
+            streamGame.EndDate = utcNow;
+
+            stream.StreamEnd = utcNow;
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -113,18 +116,22 @@ public class ManageStream : IManageStream
     /// </summary>
     /// <param name="categoryName"></param>
     /// <returns></returns>
-    public async Task ChangeCategory(string categoryName)
+    public async Task ChangeCategory()
     {
+        var channelInfo = await _twitchSendRequest.GetChannelInfo("");
+
         var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).Last();
-        var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(gi => gi.Game.Equals(categoryName));
+        var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(gi => gi.Game.Equals(channelInfo.GameName));
         var streamGame = _unitOfWork.StreamGame.OrderBy(sh => sh.StreamGameId).Last();
 
         if (gameInfo == null)
         {
             gameInfo = new GameInfo()
             {
-                Game = categoryName,
-                GameId = categoryName,
+                Game = channelInfo.GameName,
+                GameId = channelInfo.GameId,
+                Message = "",
+                GameCategory = Domain.Enums.GameCategoryEnum.Info,
             };
 
             await _unitOfWork.GameInfo.AddAsync(gameInfo);
@@ -134,14 +141,14 @@ public class ManageStream : IManageStream
         //if(User.auth == Streamer)
         // TODO: Send info to obs to make a breakpoint if the user is Admin / Streamer
 
-        DateTime timeNow = DateTime.UtcNow;
+        DateTime utcNow = DateTime.UtcNow;
 
         StreamGame newStreamGame = new()
         {
             GameCategory = gameInfo,
             Stream = stream,
-            StartDate = timeNow,
-            EndDate = timeNow
+            StartDate = utcNow,
+            EndDate = utcNow
         };
 
         // For ending last StreamGame

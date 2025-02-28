@@ -8,14 +8,14 @@ namespace StreamingApp.Web.Controllers;
 public class StreamController : ControllerBase
 {
     [HttpPost("StartOrEndStream")]
-    public void StartOrEndStream([FromServices] IManageStream updateStream, string streamTitle, string categoryName)
+    public async Task StartOrEndStream([FromServices] IManageStream updateStream)
     {
-        updateStream.StartOrEndStream(streamTitle, categoryName);
+        await updateStream.StartOrEndStream();
     }
 
     [HttpPost("ChangeCategory")]
-    public void ChangeCategory([FromServices] IManageStream updateStream, string categoryName)
+    public async Task ChangeCategory([FromServices] IManageStream updateStream)
     {
-        updateStream.ChangeCategory(categoryName);
+        await updateStream.ChangeCategory();
     }
 }

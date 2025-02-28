@@ -59,7 +59,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings");
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Choice", b =>
@@ -93,7 +93,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasIndex("PoleId");
 
-                    b.ToTable("Choice");
+                    b.ToTable("Choice", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.GameInfo", b =>
@@ -122,7 +122,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameInfo");
+                    b.ToTable("GameInfo", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Pole", b =>
@@ -149,7 +149,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pole");
+                    b.ToTable("Pole", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Stream", b =>
@@ -175,7 +175,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StreamHistory");
+                    b.ToTable("StreamHistory", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamGame", b =>
@@ -204,7 +204,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasIndex("StreamId");
 
-                    b.ToTable("StreamGame");
+                    b.ToTable("StreamGame", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamHighlight", b =>
@@ -232,7 +232,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasIndex("StreamId");
 
-                    b.ToTable("StreamHighlights");
+                    b.ToTable("StreamHighlights", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Alert", b =>
@@ -280,7 +280,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Alert");
+                    b.ToTable("Alert", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.CommandAndResponse", b =>
@@ -329,7 +329,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CommandAndResponse");
+                    b.ToTable("CommandAndResponse", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.SpecialWords", b =>
@@ -365,7 +365,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpecialWords");
+                    b.ToTable("SpecialWords", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Target", b =>
@@ -397,7 +397,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasIndex("TriggerId");
 
-                    b.ToTable("Target");
+                    b.ToTable("Target", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.TargetData", b =>
@@ -431,7 +431,7 @@ namespace StreamingApp.DB.Migrations
                     b.HasIndex("TargetId")
                         .IsUnique();
 
-                    b.ToTable("TargetData");
+                    b.ToTable("TargetData", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Trigger", b =>
@@ -472,7 +472,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trigger");
+                    b.ToTable("Trigger", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Achievements", b =>
@@ -503,7 +503,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Achievements");
+                    b.ToTable("Achievements", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Ban", b =>
@@ -552,7 +552,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ban");
+                    b.ToTable("Ban", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Status", b =>
@@ -600,7 +600,7 @@ namespace StreamingApp.DB.Migrations
                     b.HasIndex("TwitchSubId")
                         .IsUnique();
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Sub", b =>
@@ -626,7 +626,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sub");
+                    b.ToTable("Sub", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.User", b =>
@@ -666,7 +666,7 @@ namespace StreamingApp.DB.Migrations
                     b.HasIndex("TwitchDetailId")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.UserDetail", b =>
@@ -696,7 +696,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserDetail");
+                    b.ToTable("UserDetail", (string)null);
                 });
 
             modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Choice", b =>
