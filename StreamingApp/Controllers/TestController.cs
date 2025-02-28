@@ -12,14 +12,18 @@ namespace StreamingApp.Web.Controllers;
 [ApiController]
 public class TestController : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("sendChatDto")]
     public async void TestLogic([FromServices] IHubContext<ChatHub> clientHub)
     {
         int t = new Random().Next(1, 50);
 
+        Random random = new Random();
+
         Console.WriteLine($"messageId {t}");
 
-        string mess = "<h1>test</h1>";
+        string mess = "hello test";
+         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         ChatDto chatMessage = new(t.ToString(), "testuser", "#fff", null, mess, "", null, new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich, ChatDisplayEnum.allChat,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined } , EffectEnum.none, DateTime.Now);

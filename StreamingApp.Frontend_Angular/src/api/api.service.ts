@@ -560,16 +560,8 @@ export class StreamClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    startOrEndStream(streamTitle: string | undefined, categoryName: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Stream/StartOrEndStream?";
-        if (streamTitle === null)
-            throw new Error("The parameter 'streamTitle' cannot be null.");
-        else if (streamTitle !== undefined)
-            url_ += "streamTitle=" + encodeURIComponent("" + streamTitle) + "&";
-        if (categoryName === null)
-            throw new Error("The parameter 'categoryName' cannot be null.");
-        else if (categoryName !== undefined)
-            url_ += "categoryName=" + encodeURIComponent("" + categoryName) + "&";
+    startOrEndStream(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Stream/StartOrEndStream";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -612,12 +604,8 @@ export class StreamClient {
         return _observableOf(null as any);
     }
 
-    changeCategory(categoryName: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Stream/ChangeCategory?";
-        if (categoryName === null)
-            throw new Error("The parameter 'categoryName' cannot be null.");
-        else if (categoryName !== undefined)
-            url_ += "categoryName=" + encodeURIComponent("" + categoryName) + "&";
+    changeCategory(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Stream/ChangeCategory";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -675,7 +663,7 @@ export class TestClient {
     }
 
     testLogic(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Test";
+        let url_ = this.baseUrl + "/api/Test/sendChatDto";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
