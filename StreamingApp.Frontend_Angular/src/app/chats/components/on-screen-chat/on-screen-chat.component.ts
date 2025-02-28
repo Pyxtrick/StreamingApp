@@ -90,6 +90,7 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
   }
 
   private scrollToBottom(): void {
+    console.log('scrollToBottom');
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight,
       left: 0,
@@ -98,6 +99,7 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
   }
 
   private isUserNearBottom(): boolean {
+    console.log('isUserNearBottom');
     const threshold = 150;
     const position =
       this.scrollContainer.scrollTop + this.scrollContainer.offsetHeight;

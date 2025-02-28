@@ -1,3 +1,13 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: rgb(14, 14, 14);
+}
+
 .badges-image {
   height: 20px;
 }
@@ -31,6 +41,15 @@
   display: inline-block;
 }
 
+.mdc-list-item {
+  padding-left: 5px !important;
+}
+
+.list {
+  max-height: 600px;
+  overflow: hidden;
+}
+
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
 .mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
 .mdc-list-item__secondary-text::before {
@@ -48,6 +67,10 @@
   color: #ffffff;
 }
 
+.mat-typography p {
+  margin: 0 0 0px;
+}
+
 .mdc-list-item.mdc-list-item--with-two-lines {
   height: initial !important;
 }
@@ -55,6 +78,10 @@
 ::ng-deep .mat-line {
   word-wrap: break-word !important;
   white-space: pre-wrap !important;
+}
+
+::ng-deep .mat-list .mat-list-item {
+  height: initial !important;
 }
 
 .tooltip {
@@ -84,5 +111,6 @@
 
 .item {
   border-bottom: solid;
+  border-width: thin;
   border-color: rgba(255, 255, 255, 0);
 }
