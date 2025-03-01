@@ -165,7 +165,6 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnReSubscriber += _twichApiRequest.Bot_OnReSubscriber;
 
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
-        OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined; // TODO: Check on what it is doing if follows also count and other then chatting users
         OwnerOfChannelConnection.OnChannelStateChanged += _twichApiRequest.Bot_OnChannelStateChanged; // TODO: Check on what it is doing 
 
         OwnerOfChannelConnection.OnUserBanned += _twichApiRequest.Bot_OnUserBanned;
@@ -175,6 +174,12 @@ public class TwitchInitialise : ITwitchInitialise
         // TODO: Not there jet OwnerOfChannelConnection.OnNewFollower
 
         // check for add's / advertisements
+
+        #region toTest
+        OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined; // TODO: Check on what it is doing if follows also count and other then chatting users
+        OwnerOfChannelConnection.OnUnaccountedFor += _twichApiRequest.Bot_OnUnaccountedFor;
+        OwnerOfChannelConnection.OnSendReceiveData += _twichApiRequest.Bot_OnSendReceiveData;
+        #endregion
 
         OwnerOfChannelConnection.Connect();
         OwnerOfChannelConnection.JoinChannel(_configuration["Twitch:Channel"]);

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
@@ -29,24 +27,24 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Client_OnConnected(object sender, OnConnectedArgs e)
     {
-        Log($"User {e.BotUsername} connected (bot access)");
+        Console.WriteLine($"User {e.BotUsername} connected (bot access)");
     }
 
     public void OwnerOfChannel_OnDisconnected(object sender, TwitchLib.Communication.Events.OnDisconnectedEventArgs e)
     {
-        Log($"OnDisconnectet event");
+        Console.WriteLine($"OnDisconnectet event");
     }
 
     public void OwnerOfChannelConnection_OnLog(object sender, OnLogArgs e)
     {
-        Log($"OnLog: {e.Data}");
+        Console.WriteLine($"OnLog: {e.Data}");
     }
 
     public void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
     {
         //TODO: Is this when i go online and offline ?
-        Log($"Chanel state Change: {e.ChannelState}");
-        Log($"R9K: {e.ChannelState.R9K}"); // R9K == avoid users to send same message
+        Console.WriteLine($"Chanel state Change: {e.ChannelState}");
+        Console.WriteLine($"R9K: {e.ChannelState.R9K}"); // R9K == avoid users to send same message
         //throw new NotImplementedException();
     }
 
@@ -131,7 +129,7 @@ public class TwitchApiRequest : ITwitchApiRequest
             {
                 emoteMessage = $"Thank you {userName} for joining us as an {subscriptionPlan} Sub";
 
-                Log($"parse MsgParamCumulativeMonths failed: {e.Subscriber.MsgParamCumulativeMonths}");
+                Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.Subscriber.MsgParamCumulativeMonths}");
             }
 
             _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
@@ -178,7 +176,7 @@ public class TwitchApiRequest : ITwitchApiRequest
             {
                 emoteMessage = $"Thank you {userName} for joining us as an {subscriptionPlan} member";
 
-                Log($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
+                Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
             }
 
             _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
@@ -241,8 +239,8 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             emoteMessage = $"Thank you {userName} for {months} months of {subscriptionPlan} Sub";
 
-            Log($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamCumulativeMonths}");
-            Log($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
+            Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamCumulativeMonths}");
+            Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
         }
 
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
@@ -297,14 +295,6 @@ public class TwitchApiRequest : ITwitchApiRequest
         _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }
 
-    public void Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
-    {
-        // TODO: Save to DB
-        Console.WriteLine("Check this if it also does it when user followed");
-        Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
-        //throw new NotImplementedException();
-    }
-
     public async void OnHypeTrain()
     {
         GetHypeTrainResponse hypeTrain = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ClientId"], 1, null);
@@ -326,20 +316,22 @@ public class TwitchApiRequest : ITwitchApiRequest
         }
     }
 
-    private void Log(string message)
+
+    #region toTest
+    public void Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
     {
-        //Invoke(new MethodInvoker(delegate { Log(message); }));
-        Console.WriteLine(message);
+        // TODO: Save to DB
+        Console.WriteLine("Check this if it also does it when user followed");
+        Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
+        //throw new NotImplementedException();
     }
-
-
-
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
         Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
     }
     public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
     {
-        Console.WriteLine($"OnUnaccountedForArgs {e}");
+        Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
     }
+    #endregion
 }

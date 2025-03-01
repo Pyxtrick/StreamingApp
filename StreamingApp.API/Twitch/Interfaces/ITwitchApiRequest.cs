@@ -23,7 +23,11 @@ public interface ITwitchApiRequest
     void Bot_OnUserBanned(object sender, OnUserBannedArgs e);
     void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e);
     void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e);
-    
-    
+
+
+    #region toTest
     void Bot_OnUserJoined(object sender, OnUserJoinedArgs e);
+    void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e);
+    void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e);
+    #endregion
 }
