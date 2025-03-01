@@ -97,4 +97,41 @@ public class DataContoller : ControllerBase
         };
     }
     #endregion
+
+    #region SpecialWord
+    [HttpGet("SpecialWords")]
+    public SpecialWordRespose GetAllspecialWords([FromServices] ICRUDSpecialWords getSpecialWords)
+    {
+        var specialWords = getSpecialWords.GetAll();
+
+        return new SpecialWordRespose()
+        {
+            sw = specialWords,
+            isSucsess = specialWords.Any(),
+        };
+    }
+
+    [HttpPost("SpecialWords")]
+    public SpecialWordRespose UpdatespecialWords([FromServices] ICRUDSpecialWords updateSpecialWords, List<SpecialWordDto> commandAndResponses)
+    {
+        var specialWords = updateSpecialWords.CreateOrUpdtateAll(commandAndResponses);
+
+        return new SpecialWordRespose()
+        {
+            sw = specialWords,
+            isSucsess = specialWords.Any()
+        };
+    }
+
+    [HttpDelete("SpecialWords")]
+    public SpecialWordRespose DeletespecialWords([FromServices] ICRUDSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
+    {
+        var sucsess = deleteSpecialWords.Delete(commandAndResponses);
+
+        return new SpecialWordRespose()
+        {
+            isSucsess = sucsess
+        };
+    }
+    #endregion
 }

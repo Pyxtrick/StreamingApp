@@ -35,7 +35,7 @@ public class TestController : ControllerBase
         await clientHub.Clients.All.SendAsync("ReceiveChatMessage", chatMessage);
     }
 
-    [HttpPut]
+    [HttpPut("AddTochache")]
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, 0, null, new() { new("kekw", "assets/3x.webp") },
@@ -44,7 +44,7 @@ public class TestController : ControllerBase
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }
 
-    [HttpGet]
+    [HttpGet("GetCacheData")]
     public async void GetChachedData([FromServices] ITwitchCallCache _twitchCallCache)
     {
         var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
@@ -57,7 +57,7 @@ public class TestController : ControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("DeleteMessage")]
     public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string id)
     {
         BannedUserDto bannedUser = new(id, "userName", "message", "Reson", BannedTargetEnum.Message, DateTime.UtcNow);

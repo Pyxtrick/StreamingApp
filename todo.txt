@@ -38,15 +38,10 @@ TODO: 5 have an frontend for users for polls / votes / Comunity day queue / form
 
 TODO: 3 Raid rains or move across the screen the raiders mascot / emotes
 
-
-
 TODO: main view over the etire screen so tings can be placed anywhere on the screen that certain tings can go over the etire screen
 TODO: place things on screen at specific locations with x and y axies
 
 	//CHAT
-	TODO: 1 update View if message in the backend has been deleted / banded / timeout
-	TODO: 2 Show badges like Prediction / Sub in chat bysides name
-	
 	TODO: 2 reset list / view
 
 	TODO: 3 implement funny effect in chat
@@ -63,24 +58,14 @@ TODO: 1 Create Recording Breackpoint
 
 TODO: 3 Trigger Vtube Studio Events
 
+TODO: 3 Trigger OBS Events
+
 
 // Backend
-TOOD: 0 Manage Live Messages in Backend (DB / Send Message Live)
-
-TODO: 1 Add 
-
-TODO: 1 Save UserName as Important / streamer that the person will be highlighted for reading messages better
 TODO: 1 Save every Raid User and Number (for now only in a file / Later maybe in the DB)
 
-TOOD: 1 respond to messages
+TOOD Test: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
 
-TODO: 1  able to get the new 7tv or betterttv emtoes when they are added / Refresch emotes
-
-TOOD: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
-
-TODO: 1 ManageCommands mulitple ISendRequest
-
-TODO: 1 have a counter for like things that happend multiple times
 TODO: 1 have a counter for how many times a sound has been played
 TODO: 1 able to respond to good "spam" (Dance Emojis)
 TODO: 2 respond with sound
@@ -97,6 +82,8 @@ TODO: 1 Spam protection for Commands / use Cache for checking when it was last u
 TODO: 2 Same for Bot Spam with fallower
 TODO: 2 Able to disable it for a x time or reset some data / Cache
 
+TODO: 2 Ads check (for myself and on screen display)
+
 TODO: 2 clip creates twitch clip of the last x seconds
 TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
 
@@ -106,8 +93,6 @@ TODO: 2 update Twitch Title / Game
 TODO: 2 activate and deactivate channel rewards
 
 TODO: 2 Save Queue to a file (for next time)
-
-TODO: 2 Ads check (for myself and on screen display)
 
 TODO: 3 Move Badges and Emote List to DB
 
