@@ -221,6 +221,16 @@ public class TwitchSendRequest : ISendRequest
         await _twitchCache.GetTheTwitchAPI().Helix.Raids.StartRaidAsync(fromBroadcasterId, toBroadcasterId);
     }
 
+    public async Task GetChannelGoals()
+    {
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.Goals.GetCreatorGoalsAsync(_configuration["Twitch:ChannelId"]);
+    }
+
+    public async Task GetChannelPoints()
+    {
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ChannelId"]);
+    }
+
     public async Task GetHypeTrain()
     {
         var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ChannelId"]);

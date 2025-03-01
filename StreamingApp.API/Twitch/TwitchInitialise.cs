@@ -6,8 +6,8 @@ using System.Net;
 using System.Text.Json.Nodes;
 using TwitchLib.Api;
 using TwitchLib.Client;
-using TwitchLib.Client.Extensions;
 using TwitchLib.Client.Models;
+using TwitchLib.PubSub;
 using WebSocketSharp.Server;
 
 namespace StreamingApp.API.Twitch;
@@ -16,6 +16,7 @@ public class TwitchInitialise : ITwitchInitialise
 {
     private readonly ITwitchCache _twitchCache;
     private readonly ITwitchApiRequest _twichApiRequest;
+    private readonly ITwitchPubSubApiRequest _twitchPubSubApiRequest;
     private readonly IConfiguration _configuration;
 
     // Authentication
@@ -24,6 +25,7 @@ public class TwitchInitialise : ITwitchInitialise
 
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;
+    private TwitchPubSub pubsub;
     private TwitchAPI TheTwitchAPI;
 
     // Cached Variables
@@ -31,11 +33,12 @@ public class TwitchInitialise : ITwitchInitialise
     private string TwitchChannelName;
     private string TwitchChannelId;
 
-    public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration)
+    public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
     {
         _twichApiRequest = twichApiRequest;
         _twitchCache = twitchCache;
         _configuration = configuration;
+        _twitchPubSubApiRequest = twitchPubSubApiRequest;
     }
 
     public void StartTwitchBot()
@@ -65,6 +68,7 @@ public class TwitchInitialise : ITwitchInitialise
                 CachedOwnerOfChanelAccessToken = ownerOfChannelAccessAndRefresh.Item1;
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
+                InitalizePubSub(TwitchChannelName, CachedOwnerOfChanelAccessToken);
                 InitializeTwitchAPI(CachedOwnerOfChanelAccessToken);
             }
         };
@@ -75,6 +79,11 @@ public class TwitchInitialise : ITwitchInitialise
 
     public void CloseConntection(object sender, EventArgs e)
     {
+        if(pubsub != null)
+        {
+            pubsub.Disconnect();
+        }
+
         if (OwnerOfChannelConnection != null)
         {
             OwnerOfChannelConnection.Disconnect();
@@ -116,8 +125,23 @@ public class TwitchInitialise : ITwitchInitialise
         var outhedUser = await api.Helix.Users.GetUsersAsync();
         TwitchChannelId = outhedUser.Users[0].Id;
         TwitchChannelName = outhedUser.Users[0].Login;
+    }
 
-        _twitchCache.AddTwitchChannelName(_configuration["Twitch:Channel"], _configuration["Twitch:ChannelId"]);
+    private void InitalizePubSub(string username, string accessToken)
+    {
+        pubsub = new TwitchPubSub();
+
+        pubsub.OnPubSubServiceConnected += _twitchPubSubApiRequest.Bot_OnPubSubServiceConnected;
+        pubsub.OnChannelPointsRewardRedeemed += _twitchPubSubApiRequest.Bot_OnRewardRedeemed;
+        pubsub.OnEmoteOnly += _twitchPubSubApiRequest.Bot_OnEmoteOnly;
+        pubsub.OnLog += _twitchPubSubApiRequest.Bot_OnLog;
+        pubsub.OnFollow += _twitchPubSubApiRequest.Bot_OnFollow;
+        
+        pubsub.Connect();
+        pubsub.ListenToChannelPoints(_configuration["Twitch:ClientId"]);
+        pubsub.ListenToFollows(_configuration["Twitch:ClientId"]);
+        pubsub.ListenToChatModeratorActions(_configuration["Twitch:ClientId"], _configuration["Twitch:ClientId"]);
+        pubsub.ListenToChatModeratorActions("1039826911", _configuration["Twitch:ClientId"]);
     }
 
     private void InitializeOwnerOfChannelConnection(string username, string accessToken)

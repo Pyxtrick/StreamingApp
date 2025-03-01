@@ -18,15 +18,13 @@ public class TwitchApiRequest : ITwitchApiRequest
     private readonly IConfiguration _configuration;
     private readonly ITwitchCallCache _twitchCallCache;
     private readonly IMapper _mapper;
-    private readonly IHubContext<ChatHub> _hubContext;
 
-    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper, IHubContext<ChatHub> hubContext)
+    public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper)
     {
         _twitchCache = twitchCache;
         _configuration = configuration;
         _twitchCallCache = twitchCallCache;
         _mapper = mapper;
-        _hubContext = hubContext;
     }
 
     public void Client_OnConnected(object sender, OnConnectedArgs e)
@@ -46,6 +44,9 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
     {
+        //TODO: Is this when i go online and offline ?
+        Log($"Chanel state Change: {e.ChannelState}");
+        Log($"R9K: {e.ChannelState.R9K}"); // R9K == avoid users to send same message
         //throw new NotImplementedException();
     }
 
@@ -310,8 +311,12 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         var eventData = hypeTrain.HypeTrain[0].EventData;
 
+        Console.WriteLine($"OnHypeTrain ExpiresAt: {eventData.ExpiresAt} Current Time{DateTime.Now}");
+
         if (DateTime.Parse(eventData.ExpiresAt) >= DateTime.Now)
         {
+            Console.WriteLine($"OnHypeTrain Active");
+
             int Level = eventData.Level;
             int total = eventData.Total;
             int goal = eventData.Goal;
@@ -325,5 +330,16 @@ public class TwitchApiRequest : ITwitchApiRequest
     {
         //Invoke(new MethodInvoker(delegate { Log(message); }));
         Console.WriteLine(message);
+    }
+
+
+
+    public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
+    {
+        Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
+    }
+    public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
+    {
+        Console.WriteLine($"OnUnaccountedForArgs {e}");
     }
 }
