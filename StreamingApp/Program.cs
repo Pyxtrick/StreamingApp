@@ -74,7 +74,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<IStartTwitchApi>().Execute();
-    await scope.ServiceProvider.GetRequiredService<IEmotesApiRequest>().GetTVEmoteSet();
+    Task task = scope.ServiceProvider.GetRequiredService<IEmotesApiRequest>().GetTVEmoteSet();
 }
 
 app.Run();
