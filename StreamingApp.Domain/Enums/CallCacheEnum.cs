@@ -7,6 +7,8 @@ public enum CallCacheEnum
     CachedSubData,
     
     CachedRaidData,
+    CachedRaidUserData,
+
     CachedUserFollowData,
 
     CachedBannedData,

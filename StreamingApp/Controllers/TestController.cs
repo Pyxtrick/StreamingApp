@@ -5,6 +5,7 @@ using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Commands.Achievements;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -35,7 +36,7 @@ public class TestController : ControllerBase
         await clientHub.Clients.All.SendAsync("ReceiveChatMessage", chatMessage);
     }
 
-    [HttpPut("AddTochache")]
+    [HttpPut("AddToChache")]
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, 0, null, new() { new("kekw", "assets/3x.webp") },
@@ -45,15 +46,15 @@ public class TestController : ControllerBase
     }
 
     [HttpGet("GetCacheData")]
-    public async void GetChachedData([FromServices] ITwitchCallCache _twitchCallCache)
+    public async void GetChachedData([FromServices] ITwitchCallCache _twitchCallCache, IEmotesCache emotesCache)
     {
-        var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
+        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
 
-        List<MessageDto> messages = t.ConvertAll(s => (MessageDto)s);
+        var emotes = emotesCache.GetEmotes(null);
 
         foreach (var message in messages)
         {
-            Console.WriteLine(message.Date);
+            Console.WriteLine(message.Message);
         }
     }
 
@@ -63,5 +64,11 @@ public class TestController : ControllerBase
         BannedUserDto bannedUser = new(id, "userName", "message", "Reson", BannedTargetEnum.Message, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
+    }
+
+    [HttpGet("StreamAchievements")]
+    public async Task<string> GetStreamAchievements([FromServices] ICreateFinalStreamAchievements createFinalStreamAchievements)
+    {
+        return await createFinalStreamAchievements.Execute();
     }
 }

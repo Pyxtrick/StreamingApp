@@ -1,11 +1,13 @@
 ﻿
+using StreamingApp.Domain.Enums;
+
 namespace StreamingApp.Core.Commands.FileLogic;
 
-public class Achievements
+public class FileAchievements : IFileAchievements
 {
     private readonly IManageFile _manageFile;
 
-    public Achievements(IManageFile manageFile)
+    public FileAchievements(IManageFile manageFile)
     {
         _manageFile = manageFile;
     }
@@ -18,7 +20,7 @@ public class Achievements
     /// <param name="what"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    public async Task Execute(string platform, string user, string what, int count, string contence)
+    public async Task Execute(ChatOriginEnum platform, string user, string what, int count, string contence = "Achievements")
     {
         List<string> lines = _manageFile.ReadFile(contence);
 
@@ -27,7 +29,7 @@ public class Achievements
         // Twitch       UserX   gifted Subs    5
         // Twitch-UserX-gifted Subs-5
 
-        string line = $"{platform}-{user}-{what}";
+        string line = $"{nameof(platform)}-{user}-{what}";
 
         string? foundLine = lines.FirstOrDefault(l => l.Contains(line) && !l.Contains("Hypetrain Level"));
 
@@ -47,7 +49,7 @@ public class Achievements
         }
         else
         {
-            lines = new List<string>(){ $"{line}-{count}" };
+            lines = new List<string>() { $"{line}-{count}" };
 
             _manageFile.WriteFile(lines.ToArray(), true);
         }

@@ -25,6 +25,7 @@ public class TwitchCallCache : ITwitchCallCache
                 {
                     Console.WriteLine($"message date{messageDto.Date}");
                     _twitchCallCacheData.CachedMessageData.Add(messageDto);
+                    _twitchCallCacheData.CachedMessageNumber++;
                 }
                 break;
             case CallCacheEnum.CachedSubData:
@@ -32,6 +33,8 @@ public class TwitchCallCache : ITwitchCallCache
                 if (subDto != null)
                 {
                     _twitchCallCacheData.CachedSubData.Add(subDto);
+
+                    _twitchCallCacheData.CachedSubNumber += subDto.GifftedSubCount > 0 ? subDto.GifftedSubCount : 1;
                 }
                 break;
             case CallCacheEnum.CachedRaidData:
@@ -39,6 +42,8 @@ public class TwitchCallCache : ITwitchCallCache
                 if (raidDto != null)
                 {
                     _twitchCallCacheData.CachedRaidData.Add(raidDto);
+                    _twitchCallCacheData.CachedRaidNumber++;
+                    _twitchCallCacheData.CachedRaidNumber += raidDto.Count;
                 }
                 break;
             case CallCacheEnum.CachedUserFollowData:
@@ -46,6 +51,7 @@ public class TwitchCallCache : ITwitchCallCache
                 if (joinDto != null)
                 {
                     _twitchCallCacheData.CachedUserFollowData.Add(joinDto);
+                    _twitchCallCacheData.CachedUserFollowNumber++;
                 }
                 break;
             case CallCacheEnum.CachedBannedData:
@@ -53,6 +59,7 @@ public class TwitchCallCache : ITwitchCallCache
                 if (bannedDto != null)
                 {
                     _twitchCallCacheData.CachedBannedData.Add(bannedDto);
+                    _twitchCallCacheData.CachedBannedNumber++;
                 }
                 break;
             default:
@@ -77,6 +84,35 @@ public class TwitchCallCache : ITwitchCallCache
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();
         }
+    }
+
+    public int GetChachedNumberCount(CallCacheEnum callCacheEnum)
+    {
+        switch (callCacheEnum)
+        {
+            case CallCacheEnum.CachedMessageData:
+                return _twitchCallCacheData.CachedMessageNumber;
+            case CallCacheEnum.CachedSubData:
+                return _twitchCallCacheData.CachedSubNumber;
+            case CallCacheEnum.CachedRaidData:
+                return _twitchCallCacheData.CachedRaidNumber;
+            case CallCacheEnum.CachedRaidUserData:
+                return _twitchCallCacheData.CachedRaidUserNumber;
+            case CallCacheEnum.CachedUserFollowData:
+                return _twitchCallCacheData.CachedUserFollowNumber;
+            default:
+                Console.WriteLine("Unknown data type.");
+                return 0;
+        }
+    }
+
+    public void ReseetCounts()
+    {
+        _twitchCallCacheData.CachedMessageNumber = 0;
+        _twitchCallCacheData.CachedSubNumber = 0;
+        _twitchCallCacheData.CachedRaidNumber = 0;
+        _twitchCallCacheData.CachedRaidUserNumber = 0;
+        _twitchCallCacheData.CachedUserFollowNumber = 0;
     }
 
     public List<Object> GetAllMessagesFromTo(DateTime from, DateTime to, CallCacheEnum callCacheEnum)

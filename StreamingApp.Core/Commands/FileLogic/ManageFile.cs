@@ -13,14 +13,14 @@ public class ManageFile : IManageFile
         _unitOfWork = unitOfWork;
     }
 
-    public void CreateFile(string contence)
+    public void CreateFile(string contence = "Achievements")
     {
         // File Names
-        // Stream Count     Online      Contence        Data
+        // Stream Id        Online      Contence        Date
         // 4                .0 / .5     Achievements    12.11.2024
         // 4.0-Achievemnts-12.11.2024.txt
 
-        var stream = _unitOfWork.StreamHistory.Last();
+        var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
         string path = $"{stream.Id}.{(stream.StreamEnd != null ? 0 : 5)}-{contence}-{DateOnly.FromDateTime(stream.StreamStart)}.txt";
 
@@ -30,7 +30,7 @@ public class ManageFile : IManageFile
         }
     }
 
-    public List<string> ReadFile(string contence)
+    public List<string> ReadFile(string contence = "Achievements")
     {
         var stream = _unitOfWork.StreamHistory.Last();
 
