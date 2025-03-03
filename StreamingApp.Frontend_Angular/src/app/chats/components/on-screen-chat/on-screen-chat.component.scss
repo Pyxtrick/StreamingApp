@@ -1,3 +1,8 @@
+::ng-deep .cols-link {
+  visibility: hidden !important;
+  height: 0px;
+}
+
 html,
 body {
   height: 100%;

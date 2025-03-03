@@ -1,3 +1,8 @@
+::ng-deep .cols-link {
+  visibility: hidden !important;
+  height: 0px;
+}
+
 mat-list.list-horizontal {
   padding: 0;
   display: inline-flex;
