@@ -6,5 +6,6 @@ public interface IManageStream
 {
     Task Execute(MessageDto messageDto);
     Task ChangeCategory();
-    Task StartOrEndStream();
+    Task StartStream();
+    Task EndStream();
 }

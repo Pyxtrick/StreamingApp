@@ -7,10 +7,16 @@ namespace StreamingApp.Web.Controllers;
 [ApiController]
 public class StreamController : ControllerBase
 {
-    [HttpPost("StartOrEndStream")]
-    public async Task StartOrEndStream([FromServices] IManageStream updateStream)
+    [HttpPost("StartStream")]
+    public async Task StartStream([FromServices] IManageStream updateStream)
     {
-        await updateStream.StartOrEndStream();
+        await updateStream.StartStream();
+    }
+
+    [HttpPost("EndStream")]
+    public async Task EndStream([FromServices] IManageStream updateStream)
+    {
+        await updateStream.EndStream();
     }
 
     [HttpPost("ChangeCategory")]
