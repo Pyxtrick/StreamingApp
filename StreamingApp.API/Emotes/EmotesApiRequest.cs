@@ -33,6 +33,7 @@ public class EmotesApiRequest : IEmotesApiRequest
     {
         string services = "7tv.bttv.ffz";
 
+        //https://adiq.stoplight.io/docs/temotes/a2ff59cc81676-get-channel-emotes
         HttpResponseMessage response = await new HttpClient().GetAsync($"https://emotes.adamcy.pl/v1/channel/{_configuration["Twitch:Channel"]}/emotes/{services}");
         string stringResponse = await response.Content.ReadAsStringAsync();
         List<_7TVEmoteList> convertedResponse = JsonConvert.DeserializeObject<List<_7TVEmoteList>>(stringResponse);

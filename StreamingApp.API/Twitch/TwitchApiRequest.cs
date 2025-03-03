@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
@@ -58,6 +59,12 @@ public class TwitchApiRequest : ITwitchApiRequest
         MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
         messageDto.IsCommand = messageDto.Message.Split(' ').ToList()[0].Contains("!");
 
+        if (!messageDto.Channel.Equals(_configuration["Twitch:Channel"]))
+        {
+            // TODO: Check in chared chat what is the difference
+            Console.WriteLine($"message comes from channel {e.ChatMessage.Channel}, {JsonConvert.SerializeObject(messageDto.Badges)}");
+        }
+        
         _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
     }
 

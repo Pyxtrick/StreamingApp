@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Commands\Interfaces\" />
     <Folder Include="Commands\Stream\" />
-    <Folder Include="Logic\Interfaces\" />
     <Folder Include="Queries\Interfaces\" />
   </ItemGroup>
 

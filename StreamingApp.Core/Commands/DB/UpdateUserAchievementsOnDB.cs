@@ -27,7 +27,7 @@ public class UpdateUserAchievementsOnDB : IUpdateUserAchievementsOnDB
         {
             User data = _unitOfWork.User.Where(u => u.Id == userId).Include("TwitchAchievements").ToList().First();
 
-            Achievements? achievements = data.TwitchAchievements;
+            var achievements = data.TwitchAchievements;
 
             if (achievements.LastStreamSeen < stream.StreamStart)
             {

@@ -3,7 +3,7 @@ using StreamingApp.Domain.Entities.APIs;
 
 namespace StreamingApp.API.Twitch;
 
-public class YoutubeSendRequest : ISendRequest
+public class YoutubeSendRequest
 {
     /// <summary>
     /// Channel Info with GameId, GameName, Title

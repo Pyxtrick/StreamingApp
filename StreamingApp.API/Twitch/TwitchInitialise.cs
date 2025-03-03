@@ -31,7 +31,6 @@ public class TwitchInitialise : ITwitchInitialise
     // Cached Variables
     private string CachedOwnerOfChanelAccessToken = "needsaccesstoken";
     private string TwitchChannelName;
-    private string TwitchChannelId;
 
     public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
     {
@@ -123,7 +122,6 @@ public class TwitchInitialise : ITwitchInitialise
         api.Settings.AccessToken = accessToken;
 
         var outhedUser = await api.Helix.Users.GetUsersAsync();
-        TwitchChannelId = outhedUser.Users[0].Id;
         TwitchChannelName = outhedUser.Users[0].Login;
     }
 

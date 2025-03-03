@@ -10,7 +10,7 @@ public class Settings
     // Applies settings for specific platform
     public ChatOriginEnum Origin { get; set; }
 
-    // Changes who is shown in the the "All" chat
+    // Changes who is shown in the the "OnScreen" chat
     [Required]
     public AuthEnum AllChat { get; set; }
 
