@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using StreamingApp.API.Twitch.Interfaces;
 using TwitchLib.PubSub.Events;
 
 namespace StreamingApp.API.Twitch;

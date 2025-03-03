@@ -53,7 +53,7 @@ public class ManageStream : IManageStream
             {
                 await EndStream();
             }
-            else if (splitMessage[0].Equals("!updategame"))
+            else if (splitMessage[0].Equals("!updateCategory"))
             {
                 await ChangeCategory();
             }
