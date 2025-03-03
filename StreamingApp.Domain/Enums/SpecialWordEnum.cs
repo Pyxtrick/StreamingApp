@@ -7,7 +7,7 @@ public enum SpecialWordEnum
     Timeout,
     Replace,
     Banned, // For banned words
-    Allowed, // Allowing url's to be used 
+    AllowedUrl, // Allowing url's to be used and ignore Delete / timeout
     Count,
     Special,
     Keyword,

@@ -1,4 +1,8 @@
-﻿using StreamingApp.API.Interfaces;
+﻿using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using StreamingApp.API.Interfaces;
+using StreamingApp.API.SignalRHub;
+using StreamingApp.Core.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
@@ -14,19 +18,28 @@ public class MessageCheck : IMessageCheck
 
     private readonly ISendRequest _twitchSendRequest;
 
-    public MessageCheck(UnitOfWorkContext unitOfWork, ISendRequest twitchSendRequest)
+    private readonly IHubContext<ChatHub> _hubContext;
+
+    public MessageCheck(UnitOfWorkContext unitOfWork, ISendRequest twitchSendRequest, IHubContext<ChatHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
+        _hubContext = hubContext;
     }
 
-    public bool Execute(MessageDto messageDto, User user)
+    /// <summary>
+    /// Checks Message if there is any thing that is not to be allowed to show in the Frotnend
+    /// </summary>
+    /// <param name="messageDto"></param>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    public async Task<bool> Execute(MessageDto messageDto, User user)
     {
-        var message = messageDto.Message;
-
         bool isFine = true;
+        
+        List<SpecialWords> foundSpecialWords = _unitOfWork.SpecialWords.Where(s => messageDto.Message.Contains(s.Name)).ToList();
 
-        List<SpecialWords> foundSpecialWords = _unitOfWork.SpecialWords.Where(s => message.Contains(s.Name)).ToList();
+        bool isAllowed = foundSpecialWords.Where(s => messageDto.Message.StartsWith(s.Name)).Any(fsw => fsw.Type == SpecialWordEnum.AllowedUrl);
 
         foreach (var t in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Count))
         {
@@ -35,7 +48,7 @@ public class MessageCheck : IMessageCheck
 
         foreach (var t in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Replace))
         {
-            message.Replace(t.Name, "");
+            messageDto.Message.Replace(t.Name, "");
         }
 
         if (user.Status.UserType != UserTypeEnum.Bot
@@ -43,57 +56,71 @@ public class MessageCheck : IMessageCheck
             && user.Status.UserType != UserTypeEnum.Streamer)
         {
             // For Dot Between two Texts (Text.Text)
-            if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(message).Success)
+            if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(messageDto.Message).Success)
             {
                 isFine = false;
             }
 
             // For any staring < ending with >
-            if(new Regex("(\\<).*([\\w-]).*(\\>)", RegexOptions.IgnoreCase).Match(message).Success)
+            if(new Regex("(\\<).*([\\w-]).*(\\>)", RegexOptions.IgnoreCase).Match(messageDto.Message).Success)
             {
                 isFine = false;
             }
 
             if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Delete))
             {
-                // TODO: allow User for x Seconds to use
-                // TODO: Delete Messate
-
-                //_twitchSendRequest.DeleteMessage(messageDto.MessageId)
-
-                user.Ban.MessagesDeletedAmount++;
+                if (!isAllowed)
+                {
+                    // TODO: allow User for x Seconds to use
+                    // TODO: Delete Messate
+                    await _twitchSendRequest.DeleteMessage(messageDto.MessageId);
+                    
+                    user.Ban.MessagesDeletedAmount++;
+                }
 
                 isFine = false;
             }
 
             if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Timeout))
             {
-                // TODO: Time Out User
+                if (!isAllowed)
+                {
+                    List<string> result = (from word in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Timeout) select word.Name.ToString()).ToList();
 
-                var specialWords = foundSpecialWords.First(f => f.Type == SpecialWordEnum.Timeout);
-                
-                // TODO Use specialWords.Comment to determin timeout time
+                    int timeOutSeconds = _unitOfWork.Settings.FirstOrDefault()!.TimeOutSeconds;
 
-                //_twitchSendRequest.TimeoutUser(messageDto.UserId, $"Used prohibited word {specialWords.Name}", )
+                    // TODO Use specialWords.Comment to determin timeout time
+                    await _twitchSendRequest.TimeoutUser(messageDto.UserId, $"Used prohibited word {JsonConvert.SerializeObject(result)}", timeOutSeconds);
 
-                user.Ban.TimeOutAmount++;
+                    user.Ban.TimeOutAmount++;
+                }
 
                 isFine = false;
             }
 
             if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Banned))
             {
-                // TODO: Ban User
+                if (!isAllowed)
+                {
+                    // TODO: Ban User
 
-                //_twitchSendRequest.BanUser(messageDto.UserId, $"Used prohibited word {foundSpecialWords.First(f => f.Type == SpecialWordEnum.Banned).Name})
-
-                user.Ban.IsBaned = true;
-                user.Ban.BanedDate = DateTime.Now;
-                user.Ban.LastMessage = message;
-                user.Ban.BanedAmount++;
+                    //_twitchSendRequest.BanUser(messageDto.UserId, $"Used prohibited word {foundSpecialWords.First(f => f.Type == SpecialWordEnum.Banned).Name})
+                    
+                    user.Ban.IsBaned = true;
+                    user.Ban.BanedDate = DateTime.Now;
+                    user.Ban.LastMessage = messageDto.Message;
+                    user.Ban.BanedAmount++;
+                }
 
                 isFine = false;
             }
+        }
+
+        if (isFine == false && isAllowed)
+        {
+            messageDto.Message += "";
+
+            await _hubContext.Clients.All.SendAsync("ReceiveWatchUserMessage", messageDto);
         }
 
         _unitOfWork.SaveChanges();

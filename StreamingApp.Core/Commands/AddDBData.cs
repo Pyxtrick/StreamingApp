@@ -148,11 +148,11 @@ public class AddDBData : IAddDBData
                 new SpecialWords() { Name = "http", Comment = "url", Type = SpecialWordEnum.Delete },
                 new SpecialWords() { Name = "Best and Cheap Viewers on", Comment = "ban", Type = SpecialWordEnum.Banned },
 
-                new SpecialWords() { Name = "https://7tv.app", Comment = "url", Type = SpecialWordEnum.Allowed },
+                new SpecialWords() { Name = "https://7tv.app", Comment = "url", Type = SpecialWordEnum.AllowedUrl },
 
                 // https://cdn.discordapp.com/attachments/1192605544008134666/1214569815705124874/
                 // check if the two numbers at the end is the discord sserver and chanel
-                new SpecialWords() { Name = "https://cdn.discordapp.com", Comment = "url", Type = SpecialWordEnum.Allowed },
+                new SpecialWords() { Name = "https://cdn.discordapp.com", Comment = "url", Type = SpecialWordEnum.AllowedUrl },
             };
 
             List<SpecialWords> SpecialWords = new List<SpecialWords>

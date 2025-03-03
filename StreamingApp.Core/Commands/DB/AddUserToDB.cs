@@ -53,7 +53,8 @@ public class AddUserToDB : IAddUserToDB
                     FallowDate = DateTime.Now, // cannot get data
                     IsVIP = auth.FirstOrDefault(e => e == AuthEnum.Vip) == AuthEnum.Vip,
                     IsVerified = auth.FirstOrDefault(e => e == AuthEnum.Partner) == AuthEnum.Partner,
-                    TimeZone = "waiting"
+                    TimeZone = "waiting",
+                    UserType = UserTypeEnum.Viewer,
                 },
                 Ban = new()
                 {

@@ -2,13 +2,13 @@
 
 public enum UserTypeEnum
 {
-    Viewer, // Default
+    Streamer,
+    Mod,
+    Bot,
+    Friend,
+    VipViewer,
     Clipper,
     Editor,
     Artist,
-    VipViewer,
-    Friend,
-    Bot,
-    Mod,
-    Streamer,
+    Viewer, // Default
 }

@@ -6,6 +6,7 @@ using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Enums;
 using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
@@ -35,11 +36,8 @@ public class ManageCommands : IManageCommands
             string response = "";
 
             // Update / Refresh Emotes from 7tv and Betterttv
-            if(splitMessage[0].Equals("!updateEmotes"))
-            {
-                await _emotesApiRequest.GetTVEmoteSet();
-            }
-            else if(splitMessage[0].Equals("!timer"))
+            
+            if(splitMessage[0].Equals("!timer"))
             {
                 // TODO: create Timer for x seconds or minutes
                 // Countdown
@@ -134,10 +132,22 @@ public class ManageCommands : IManageCommands
                 string peopleLinks = "";
 
                 // get all collab peole from the message
-                foreach (var command in splitNoCommandTextMessage)
+                foreach (var text in splitNoCommandTextMessage)
                 {
-                    // Get DB enty of links for the collab people
-                    peopleLinks += "userLink";
+                    var user = await _unitOfWork.UserDetail.FirstAsync(x => x.UserName == text);
+
+                    if(user != null)
+                    {
+                        string userLink = user.Url != null ? user.Url : $"https://www.twitch.tv/{user.UserName}";
+
+                        peopleLinks += $"{user.UserName}: {user.Url} ";
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User {text} is not in the DB yet");
+
+                        peopleLinks += $"{text}: https://www.twitch.tv/{text} ";
+                    }
                 }
 
                 response = $"Current Collab with {peopleLinks}";
@@ -151,12 +161,25 @@ public class ManageCommands : IManageCommands
 
                 response = $"User {messageDto.UserName} has seen {streamStreak} since {FirstStreamSeen.ToShortDateString()}";
             }
-            else if(splitMessage[0].Equals("!randomuser"))
+            else if (messageDto.Auth.Min() <= AuthEnum.Mod)
             {
-                // chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
-                // Use TwitchCallCache.GetAllMessages
-                // var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
-                //List<MessageDto> messages = t.ConvertAll(s => (MessageDto)s);
+                if (splitMessage[0].Equals("!permit"))
+                {
+                    // TODO: Permit user to send a Link for 2 Minutes
+                }
+                else if (splitMessage[0].Equals("!randomuser"))
+                {
+                    // chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
+                    // Use TwitchCallCache.GetAllMessages
+                    // var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
+                    //List<MessageDto> messages = t.ConvertAll(s => (MessageDto)s);
+                }
+                else if (splitMessage[0].Equals("!updateEmotes"))
+                {
+                    await _emotesApiRequest.GetTVEmoteSet();
+
+                    response = "Emotes have been updated";
+                }
             }
 
             if (!response.IsNullOrEmpty())

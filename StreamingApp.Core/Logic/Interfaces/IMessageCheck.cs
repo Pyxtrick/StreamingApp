@@ -1,8 +1,8 @@
 ﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.User;
 
-namespace StreamingApp.Core.Logic;
+namespace StreamingApp.Core.Logic.Interfaces;
 public interface IMessageCheck
 {
-    bool Execute(MessageDto message, User user);
+    Task<bool> Execute(MessageDto message, User user);
 }

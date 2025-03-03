@@ -4,7 +4,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Chat;
 using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Core.Logic;
+using StreamingApp.Core.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
@@ -116,10 +116,10 @@ public class ManageMessages : IManageMessages
             // TODO: make a Class for this in API.Twitch
             //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
 
-            SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.Allowed);
+            SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.AllowedUrl);
 
             // Check Message befor it is sent to the Frontend or anywhere else
-            if (_messageCheck.Execute(messageDto, user) == false)
+            if (await _messageCheck.Execute(messageDto, user) == false)
             {
                 return;
             }
@@ -253,12 +253,14 @@ public class ManageMessages : IManageMessages
                 else
                 {
                     // TODO: Replace parts in the message
-                    commandAndResponse.Response.Replace("[User]", messageDto.UserName);
-                    commandAndResponse.Response.Replace("[Time]", DateTime.Now.ToString());
+                    string message = commandAndResponse.Response;
 
                     var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
-                    commandAndResponse.Response.Replace("[StreamStartTime]", stream.StreamStart.ToString());
-                    commandAndResponse.Response.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
+
+                    message.Replace("[User]", messageDto.UserName);
+                    message.Replace("[Time]", DateTime.Now.ToString());
+                    message.Replace("[StreamStartTime]", stream.StreamStart.ToString());
+                    message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
 
                     _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
                 }

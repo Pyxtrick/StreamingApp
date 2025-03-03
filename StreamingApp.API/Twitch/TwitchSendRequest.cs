@@ -70,13 +70,18 @@ public class TwitchSendRequest : ISendRequest
         _twitchCache.GetTheTwitchAPI().Helix.Chat.SendChatAnnouncementAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], message);
     }
 
+    public async Task SendShoutout()
+    {
+        //Send a Shoutout
+    }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="message"></param>
-    public void CreateClip(string message)
+    public async Task CreateClip(string message)
     {
-        _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
     }
 
     /// <summary>
@@ -234,16 +239,6 @@ public class TwitchSendRequest : ISendRequest
     public async Task GetHypeTrain()
     {
         var t = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ChannelId"]);
-    }
-
-    public async Task SendAnnouncement()
-    {
-        //Send Chat Announcement
-    }
-
-    public async Task SendShoutout()
-    {
-        //Send a Shoutout
     }
 
     public async Task AdSchedule()

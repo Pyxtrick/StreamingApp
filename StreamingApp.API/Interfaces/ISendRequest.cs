@@ -8,4 +8,8 @@ public interface ISendRequest
     bool SetChannelInfo(string? gameId, string? title);
 
     void SendAnnouncement(string message);
+
+    Task DeleteMessage(string messageId);
+
+    Task TimeoutUser(string userId, string reson, int time);
 }
