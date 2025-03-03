@@ -29,6 +29,17 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./settings/settings.routes').then((m) => m.CHAT_ROUTES),
   },
+  {
+    // lasy loading (gets sites when changing to path)
+    path: 'alert',
+    // TODO: providers: [provideState(chatFeature)],
+    providers: [
+      //provideState(ChatFeature),
+      //provideEffects(ChatEffect),
+    ],
+    loadChildren: () =>
+      import('./alert/alert.routes').then((m) => m.CHAT_ROUTES),
+  },
   /**{
     // not lasy loading (loads all paths form the beginning)
     path: 'chats',

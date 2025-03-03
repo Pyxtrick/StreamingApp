@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using StreamingApp.API.SignalRHub;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
+using System.Text.RegularExpressions;
 
 namespace StreamingApp.Core.Commands.Chat;
 
@@ -13,10 +16,16 @@ public class SendSignalRMessage : ISendSignalRMessage
 
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public SendSignalRMessage(IHubContext<ChatHub> hubContext, ITranslate translate)
+    private readonly IConfiguration _configuration;
+
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public SendSignalRMessage(IHubContext<ChatHub> hubContext, ITranslate translate, IConfiguration configuration, UnitOfWorkContext unitOfWorkContext)
     {
         _translate = translate;
         _hubContext = hubContext;
+        _configuration = configuration;
+        _unitOfWork = unitOfWorkContext;
     }
 
     // ReceiveSpecialMessage
@@ -59,6 +68,20 @@ public class SendSignalRMessage : ISendSignalRMessage
         {
             // TODO: do someting about when Stream Together is Active
             await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);
+
+            // DO not allow to show links of any kink on the OnScreenChat
+            if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(messageDto.Message).Success == false
+                && messageDto.Channel.Equals(_configuration["Twitch:Channel"]))
+            {
+                var settings = _unitOfWork.Settings.First(s => s.Origin == messageDto.ChatOrigin);
+
+                // Limit OnScreenChatters using settings.AllChat without limiting the Twitch Chat
+                if (settings != null && messageDto.Auth.Min() <= settings.AllChat)
+                {
+                    // TODO: Change Send Location when messageDto.ChatOrigin is not Twitch
+                    await _hubContext.Clients.All.SendAsync("ReceiveOnScreenChatMessage", messageDto);
+                }
+            }
         }
 
         // Chat specific UserType
