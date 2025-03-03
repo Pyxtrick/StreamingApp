@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using StreamingApp.API.Interfaces;
+using StreamingApp.API.Utility.Caching;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 using TwitchLib.Api.Helix.Models.Polls.CreatePoll;
@@ -14,13 +17,18 @@ namespace StreamingApp.API.Twitch;
 public class TwitchSendRequest : ISendRequest
 {
     private readonly ITwitchCache _twitchCache;
+    private readonly ITwitchCallCache _twitchCallCache;
 
     private readonly IConfiguration _configuration;
 
-    public TwitchSendRequest(ITwitchCache twitchCache, IConfiguration configuration)
+    private readonly Logger<TwitchSendRequest> _logger;
+
+    public TwitchSendRequest(ITwitchCache twitchCache, ITwitchCallCache twitchCallCache, IConfiguration configuration, Logger<TwitchSendRequest> logger)
     {
         _twitchCache = twitchCache;
+        _twitchCallCache = twitchCallCache;
         _configuration = configuration;
+        _logger = logger;
     }
 
     /// <summary>
@@ -273,8 +281,11 @@ public class TwitchSendRequest : ISendRequest
     public async Task DeleteMessage(string messageId)
     {
         // TODO: Delete Message (maybe with Reason)
+        
+        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (string)s);
 
-        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], messageId);
+        _logger.LogCritical(messages.FirstOrDefault(m => m.Contains(messageId)));
+        //await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], messageId);
     }
 
     /// <summary>
@@ -286,8 +297,9 @@ public class TwitchSendRequest : ISendRequest
     {
         // TODO: Timeout user with amount in Seconds (maybe with Reson)
 
+        _logger.LogCritical($"UserId {userId} Reson: {reson} Time: {time}");
         // TODO: check if with Duration is a Timeout
-        await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], new BanUserRequest { UserId = userId, Reason = reson, Duration = time });
+        //await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], new BanUserRequest { UserId = userId, Reason = reson, Duration = time });
     }
 
     /// <summary>
