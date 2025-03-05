@@ -32,11 +32,13 @@ public class ManageFile : IManageFile
 
     public List<string> ReadFile(string contence = "Achievements")
     {
-        var stream = _unitOfWork.StreamHistory.Last();
+        var stream = _unitOfWork.StreamHistory.OrderBy(t => t.Id).Last();
 
         DateOnly dateOnly = DateOnly.FromDateTime(stream.StreamStart);
 
-        DocPath = $"{stream.Id}.{(stream.StreamEnd != null ? 0 : 5)}-{contence}-{dateOnly}.txt";
+        var t = stream.StreamStart.ToString("dd-MM-yyyy");
+
+        DocPath = $"NewFolder/{stream.Id}.{(stream.StreamEnd != null ? 0 : 5)}-{contence}-{t}.txt";
 
         bool noWalidPathFound = true;
 
@@ -53,7 +55,7 @@ public class ManageFile : IManageFile
                     }
                     else
                     {
-                        DocPath = $"{stream.Id}.5-{contence}-{dateOnly}.txt";
+                        DocPath = $"{stream.Id}.5-{contence}-{t}.txt";
                         dateOnly.AddDays(1);
                         noWalidPathFound = true;
                     }

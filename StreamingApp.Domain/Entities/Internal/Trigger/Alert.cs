@@ -20,6 +20,8 @@ public class Alert
 
     public byte[]? Video { get; set; }
 
+    public byte[]? Html { get; set; }
+
     public int videoLeght { get; set; }
 
     public int TimesUsed { get; set; }

@@ -131,7 +131,7 @@ public class SendSignalRMessage : ISendSignalRMessage
     }
 
     // TODO: to Be Implemented Send Allert and Event Message
-    public async Task SendAllertAndEventMessage(User user, MessageDto messageDto, AlertDto alert)
+    public async Task SendAlertAndEventMessage(User user, MessageDto messageDto, AlertDto alert)
     {
         await _hubContext.Clients.All.SendAsync("ReceiveAlert", alert);
         await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", messageDto);

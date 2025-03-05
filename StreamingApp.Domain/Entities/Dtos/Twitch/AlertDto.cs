@@ -3,12 +3,7 @@
 namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 public class AlertDto
 {
-    public TriggerCondition TriggerCondition { get; set; }
-
-    public string Name { get; set; }
-
-    public string Message { get; set; }
-
+    // Volume at with the audio is played at 100 is default
     public int Volume { get; set; } = 100;
 
     public byte[]? Image { get; set; }
@@ -17,7 +12,13 @@ public class AlertDto
 
     public byte[]? Video { get; set; }
 
+    public string Html { get; set; }
+
     public int videoLeght { get; set; }
 
     public bool IsMute { get; set; }
+
+    public int Duration { get; set; }
+
+    public bool IsSameTime { get; set; }
 }
