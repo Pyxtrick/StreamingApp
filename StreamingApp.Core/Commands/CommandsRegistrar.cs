@@ -23,7 +23,7 @@ public static class QueriesRegistrar
 
         // DB
         services.AddScoped<IAddUserToDB, AddUserToDB>();
-        services.AddScoped<IUpdateUserAchievementsOnDB, UpdateUserAchievementsOnDB>();
+        services.AddScoped<IUpdateUserOnDB, UpdateUserOnDB>();
 
         // FileLogic
         services.AddScoped<IManageFile, ManageFile>();

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StreamingApp.Core.Commands.DB.Interfaces;
+﻿using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
@@ -15,9 +14,9 @@ public class AddUserToDB : IAddUserToDB
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<int> AddUser(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth)
+    public async Task<User> AddUser(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth)
     {
-        User user = _unitOfWork.User.Include("TwitchDetail").Where(t => t.TwitchDetail.UserId == twitchUserId).ToList().FirstOrDefault();
+        User user = _unitOfWork.User.Where(t => t.TwitchDetail.UserId == twitchUserId).ToList().FirstOrDefault();
 
         if (user == null)
         {
@@ -26,6 +25,7 @@ public class AddUserToDB : IAddUserToDB
 
             User newUser = new User()
             {
+                UserText = userName,
                 TwitchDetail = new()
                 {
                     UserId = twitchUserId,
@@ -47,12 +47,14 @@ public class AddUserToDB : IAddUserToDB
                     {
                         CurrentySubscribed = isSub,
                         SubscribedTime = subTime,
-                        CurrentTier = isSub ? TierEnum.Tier1 : TierEnum.None, // cannot get data
+                        CurrentTier = isSub ? TierEnum.Tier1 : TierEnum.None, // cannot get data ATM
                     },
                     FirstChatDate = DateTime.Now,
-                    FallowDate = DateTime.Now, // cannot get data
-                    IsVIP = auth.FirstOrDefault(e => e == AuthEnum.Vip) == AuthEnum.Vip,
-                    IsVerified = auth.FirstOrDefault(e => e == AuthEnum.Partner) == AuthEnum.Partner,
+                    FallowDate = DateTime.Now, // cannot get data ATM
+                    IsVIP = auth.Contains(AuthEnum.Vip),
+                    IsVerified = auth.Contains(AuthEnum.Partner),
+                    IsMod = auth.Contains(AuthEnum.Mod),
+                    IsRaider = auth.Contains(AuthEnum.Raider),
                     TimeZone = "waiting",
                     UserType = UserTypeEnum.Viewer,
                 },
@@ -74,9 +76,9 @@ public class AddUserToDB : IAddUserToDB
             _unitOfWork.User.Add(newUser);
             await _unitOfWork.SaveChangesAsync();
 
-            return newUser.Id;
+            return newUser;
         }
 
-        return user.Id;
+        return user;
     }
 }
