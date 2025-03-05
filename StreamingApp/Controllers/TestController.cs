@@ -6,6 +6,7 @@ using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Achievements;
+using TwitchLib.PubSub.Models.Responses.Messages;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -34,6 +35,7 @@ public class TestController : ControllerBase
         Console.WriteLine($"message {chatMessage.UserName}");
 
         await clientHub.Clients.All.SendAsync("ReceiveChatMessage", chatMessage);
+        await clientHub.Clients.All.SendAsync("ReceiveOnScreenChatMessage", chatMessage);
     }
 
     [HttpPut("AddToChache")]
@@ -67,8 +69,10 @@ public class TestController : ControllerBase
     }
 
     [HttpGet("StreamAchievements")]
-    public async Task<string> GetStreamAchievements([FromServices] ICreateFinalStreamAchievements createFinalStreamAchievements)
+    public async Task GetStreamAchievements([FromServices] ICreateFinalStreamAchievements createFinalStreamAchievements, IHubContext<ChatHub> clientHub)
     {
-        return await createFinalStreamAchievements.Execute();
+        AlertDto alert = new AlertDto() { Html = await createFinalStreamAchievements.Execute() };
+
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", alert);
     }
 }

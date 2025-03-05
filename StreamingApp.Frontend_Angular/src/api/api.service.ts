@@ -872,7 +872,7 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
-    getStreamAchievements(): Observable<string> {
+    getStreamAchievements(): Observable<void> {
         let url_ = this.baseUrl + "/api/Test/StreamAchievements";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -880,7 +880,6 @@ export class TestClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/json"
             })
         };
 
@@ -891,14 +890,14 @@ export class TestClient {
                 try {
                     return this.processGetStreamAchievements(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<void>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<void>;
         }));
     }
 
-    protected processGetStreamAchievements(response: HttpResponseBase): Observable<string> {
+    protected processGetStreamAchievements(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -907,11 +906,7 @@ export class TestClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return _observableOf(result200);
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
