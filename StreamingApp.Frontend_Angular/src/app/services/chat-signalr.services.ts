@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { Observable, Subscriber } from 'rxjs';
+import { AlertDto } from '../models/dtos/AlertDto';
 import { BannedUserDto } from '../models/dtos/BannedUserDto';
 import { ChatDto } from '../models/dtos/ChatDto';
 
@@ -56,6 +57,14 @@ export class AppSignalRService {
   receiveBannedMessage(method: string): Observable<BannedUserDto> {
     return new Observable<BannedUserDto>((observer) => {
       this.hubConnection.on(method, (message: BannedUserDto) => {
+        observer.next(message);
+      });
+    });
+  }
+
+  receiveAlertMessage(method: string): Observable<AlertDto> {
+    return new Observable<AlertDto>((observer) => {
+      this.hubConnection.on(method, (message: AlertDto) => {
         observer.next(message);
       });
     });
