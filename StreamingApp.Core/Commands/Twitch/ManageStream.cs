@@ -29,18 +29,19 @@ public class ManageStream : IManageStream
         var thisChannelInfo = await _twitchSendRequest.GetChannelInfo("");
 
         // removed first word of string
-        var noCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..];
+        var noCommandTextMessage = messageDto.Message.Split().Length >= 0 ? messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..] : "";
 
         var splitMessage = messageDto.Message.Split(' ');
 
-        var splitNoCommandTextMessage = noCommandTextMessage.Split(' ');
+        var splitNoCommandTextMessage = noCommandTextMessage.Split(',');
 
-        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(noCommandTextMessage) && t.Active);
+        // TODO: Add Auth Check to the other Get CommandAndResponse to
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(splitMessage[0]) && t.Active);
 
         if (splitMessage[0].Equals("!clip"))
         {
             // TODO: Twitch clip Stream for the last x seconds
-            //CreateClip(splitNoCommandTextMessage)
+            //_twitchSendRequest.CreateClip(noCommandTextMessage)
         }
         // Limit Commands to Mods and Streamer
         else if (messageDto.Auth.Min() <= AuthEnum.Mod)
@@ -60,7 +61,7 @@ public class ManageStream : IManageStream
             else if (splitMessage[0].Equals("!updatetitle"))
             {
                 // TODO: Update Twitch Stream Title
-                //UpdateStreamTitle(splitNoCommandTextMessage);
+                //_twitchSendRequest.UpdateStreamTitle(splitNoCommandTextMessage);
             }
             else if (splitMessage[0].Equals("!so"))
             {
@@ -82,18 +83,31 @@ public class ManageStream : IManageStream
             }
             else if (splitMessage[0].Equals("!pole"))
             {
-                await CreatePole(splitNoCommandTextMessage);
+                if (splitNoCommandTextMessage.Length >= 3)
+                {
+                    await CreatePole(splitNoCommandTextMessage);
+                }
+                else
+                {
+                    _twitchSendRequest.SendChatMessage($"pole needs more information (title, option1, option2)");
+                }
             }
             else if (splitMessage[0].Equals("!prediction"))
             {
-                await CreatePrediction(splitNoCommandTextMessage);
+                if (splitNoCommandTextMessage.Length >= 3)
+                {
+                    await CreatePrediction(splitNoCommandTextMessage);
+                }
+                else
+                {
+                    _twitchSendRequest.SendChatMessage($"prediction needs more information (title, option1, option2)");
+                }
             }
         }
     }
 
     /// <summary>
     /// Starts Stream in DB
-    /// add DB entry or ads an end Date
     /// </summary>
     /// <returns></returns>
     public async Task StartStream()
@@ -119,11 +133,12 @@ public class ManageStream : IManageStream
             await _unitOfWork.StreamHistory.AddAsync(newStream);
             await _unitOfWork.SaveChangesAsync();
 
-            //if(User.auth == Streamer)
-            // TODO: Send info to obs to start stream and recording if the user is Admin / Streamer
-
             await ChangeCategory();
         }
+
+        var newStream2 = _unitOfWork.StreamHistory.OrderBy(s => s.Id).Last();
+
+        _twitchSendRequest.SendChatMessage($"stream Started with Title {newStream2.StreamTitle}");
     }
 
     /// <summary>
@@ -147,8 +162,7 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            //if(User.auth == Streamer)
-            // TODO: Send info to obs to end stream and recording if the user is Admin / Streamer
+            _twitchSendRequest.SendChatMessage($"stream Ended with Title {stream.StreamTitle}");
         }
     }
 

@@ -20,7 +20,7 @@ public class ManageMessages : IManageMessages
 
     private readonly IAddUserToDB _addUserToDb;
 
-    private readonly IUpdateUserAchievementsOnDB _updateUserAchievementsOnDb;
+    private readonly IUpdateUserOnDB _updateUserAchievementsOnDb;
 
     private readonly ITwitchCallCache _twitchCallCache;
 
@@ -38,7 +38,7 @@ public class ManageMessages : IManageMessages
 
     private readonly IGameCommand _gameCommand;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserAchievementsOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
         _addUserToDb = addUserToDB;
@@ -83,6 +83,17 @@ public class ManageMessages : IManageMessages
     public async Task ExecuteOne(MessageDto messageDto)
     {
         User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+        if (user != null)
+        {
+            // TODO: make backend check if this is the first message during the stream
+            //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
+
+            await _updateUserAchievementsOnDb.UpdateAchievements(user.Id);
+        }
+        else
+        {
+            user = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
+        }
 
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;
         var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
@@ -109,174 +120,163 @@ public class ManageMessages : IManageMessages
         var newdata = await _unitOfWork.SpecialWords.ToListAsync();
 
         SpecialWords? specialWords = _unitOfWork.SpecialWords.FirstOrDefault(t => messageDto.Message.Contains(t.Name) && t.Type == SpecialWordEnum.Banned);
+        
+        // TODO: make a Class for this in API.Twitch
+        // TODO: save to cache
+        //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
 
-        // if it is a banned word and not the Broadcaster, Moderator or Staff
-        if (specialWords != null && !isBroadcaster && !isModerator && !isStaff)
+        // Check Message befor it is sent to the Frontend or anywhere else
+        if (await _messageCheck.Execute(messageDto, user) == false)
         {
-            // TODO: make a Class for this in API.Twitch
-            //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
-
-            SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.AllowedUrl);
-
-            // Check Message befor it is sent to the Frontend or anywhere else
-            if (await _messageCheck.Execute(messageDto, user) == false)
-            {
-                return;
-            }
-
-            if (allowedMessage != null)
-            {
-                // Delete Message
-                // TODO: make a Class for this in API.Twitch
-                //await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync("Pyxtrick", "PyxtrickBot", e.ChatMessage.Id);
-
-                //Tiemout User for 60 seconds
-                //await _twitchCache.GetTheTwitchAPI().Helix.Moderation.BanUserAsync("", "", new TwitchLib.Api.Helix.Models.Moderation.BanUser.BanUserRequest() { Duration = 60, Reason = $"Used Internaly Banded Word {allowedMessage.Name}", UserId = e.ChatMessage.UserId });
-
-                // TODO: time out the user / delete message
-                // TODO: maybe have a message displayed / like @User do not send url's in the chat
-
-                return;
-            }
+            //SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.AllowedUrl);
+            return;
         }
 
-        var internalUserId = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
-        await _updateUserAchievementsOnDb.UpdateAchievements(internalUserId);
+        
 
-        if (user != null)
-        {
-            // TODO: make backend check if this is the first message during the stream
-            //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
-        }
+        
 
         // Check for beeing not an command or Rediam
         if (messageDto.IsCommand == false && messageDto.PointRediam.IsNullOrEmpty())
         {
-            if (messageDto.Bits != 0)
-            {
-                List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
-
-                int found = 0;
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    data = ((List<Trigger>)data.Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits)).OrderBy(t => t.Ammount).ToList();
-
-                    if (messageDto.Bits == data[i].Ammount)
-                    {
-                        var t = data[i].Targets.First(t => t.TargetCondition == Domain.Enums.Trigger.TargetCondition.Allert).TargetData;
-
-                        //AlertDto alert = t.Alert;
-
-                        // TODO: Show emote
-                        //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageDto, t);
-                    }
-                    else
-                    {
-                        if (messageDto.Bits < data[i].Ammount)
-                        {
-                            if (data[i].Active && data[i].ExactAmmount == false)
-                            {
-                                found = i;
-                            }
-                        }
-                        else if (messageDto.Bits > data[i].Ammount)
-                        {
-                            // TODO: Show emote
-                        }
-                    }
-                }
-            }
-            if (messageDto.Bits >= 200)
-            {
-                // TODO: Limit Message to a specific lenght
-                // TODO: check for "Spam" or same thing in the message and cut it of at a certan time
-                // TODO: TTS Message Play
-                // TODO: able to skip TTS Message or Mute it
-                // TODO: Show emote
-            }
-
-            await _sendSignalRMessage.SendChatMessage(user, messageDto);
-
-            //_chatCache.AddOneChatData(messageDto);
+            await MessageLogic(messageDto, user);
         }
         // Check if the Bot_OnChatCommandRecived is working as intended
         else if (messageDto.IsCommand && messageDto.PointRediam == null)
         {
-            string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
-
-            //List<AuthEnum> authEnums = (from auth in messageDto.Auth select (AuthEnum)Enum.Parse(typeof(AuthEnum), auth.ToString())).ToList();
-
-            CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active);
-
-            messageDto.Auth.Sort();
-
-            if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
-            {
-                if (commandAndResponse.Category == CategoryEnum.Queue)
-                {
-                    bool queueIsActive = _unitOfWork.Settings.FirstOrDefault().ComunityDayActive;
-
-                    if (queueIsActive || messageDto.Auth.Contains(AuthEnum.Mod) || messageDto.Auth.Contains(AuthEnum.Streamer))
-                    {
-                        //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
-                    }
-
-                    Console.WriteLine("Command Queue");
-                }
-                else if (commandAndResponse.Category == CategoryEnum.Game)
-                {
-                    _gameCommand.Execute(commandAndResponse);
-                    Console.WriteLine("Command Game");
-                }
-                // sstart, sstop, sset
-                else if (commandAndResponse.Category == CategoryEnum.Subathon)
-                {
-                    //commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
-                    //_subathonCommand.Execute(commandAndResponse);
-                    Console.WriteLine("Command Subathon");
-                }
-                // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
-                else if (commandAndResponse.Category == CategoryEnum.Fun)
-                {
-                    //_ManageFun.Execute(commandAndResponse);
-                }
-                else if (commandAndResponse.HasLogic)
-                {
-                    await _manageCommands.Execute(messageDto, commandAndResponse);
-                    Console.WriteLine("Command Has Logic");
-                }
-                else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
-                {
-                    await _manageStream.Execute(messageDto);
-                }
-                else
-                {
-                    // TODO: Replace parts in the message
-                    string message = commandAndResponse.Response;
-
-                    var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
-
-                    message.Replace("[User]", messageDto.UserName);
-                    message.Replace("[Time]", DateTime.Now.ToString());
-                    message.Replace("[StreamStartTime]", stream.StreamStart.ToString());
-                    message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
-
-                    _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
-                }
-            }
+            await CommandLogic(messageDto);
         }
         else if (messageDto.PointRediam != null)
         {
-            // TODO: make a Class for this in API.Twitch
-            //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
-
-            // Use EmotesCondition.ChannelPoints
-            // TODO: Check id for rediam 
-            // TODO: Do what ever the rediam is
-
-            //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
+            await PointRedeamLogic(messageDto, user);
         }
+    }
+
+    private async Task MessageLogic(MessageDto messageDto, User user)
+    {
+        if (messageDto.Bits != 0)
+        {
+            List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
+
+            int found = 0;
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                data = ((List<Trigger>)data.Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits)).OrderBy(t => t.Ammount).ToList();
+
+                if (messageDto.Bits == data[i].Ammount)
+                {
+                    var t = data[i].Targets.First(t => t.TargetCondition == Domain.Enums.Trigger.TargetCondition.Allert).TargetData;
+
+                    //AlertDto alert = t.Alert;
+
+                    // TODO: Show emote
+                    //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageDto, t);
+                }
+                else
+                {
+                    if (messageDto.Bits < data[i].Ammount)
+                    {
+                        if (data[i].Active && data[i].ExactAmmount == false)
+                        {
+                            found = i;
+                        }
+                    }
+                    else if (messageDto.Bits > data[i].Ammount)
+                    {
+                        // TODO: Show emote
+                    }
+                }
+            }
+        }
+        if (messageDto.Bits >= 200)
+        {
+            // TODO: Limit Message to a specific lenght
+            // TODO: check for "Spam" or same thing in the message and cut it of at a certan time
+            // TODO: TTS Message Play
+            // TODO: able to skip TTS Message or Mute it
+            // TODO: Show emote
+        }
+
+        await _sendSignalRMessage.SendChatMessage(user, messageDto);
+
+        //_chatCache.AddOneChatData(messageDto);
+    }
+
+    private async Task CommandLogic(MessageDto messageDto)
+    {
+        string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
+
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active && messageDto.Auth.Min() >= t.Auth);
+
+        if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
+        {
+            if (commandAndResponse.Category == CategoryEnum.Queue)
+            {
+                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault().ComunityDayActive;
+
+                if (queueIsActive)
+                {
+                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
+                }
+
+                Console.WriteLine("Command Queue");
+            }
+            else if (commandAndResponse.Category == CategoryEnum.Game)
+            {
+                _gameCommand.Execute(commandAndResponse);
+                Console.WriteLine("Command Game");
+            }
+            // sstart, sstop, sset
+            else if (commandAndResponse.Category == CategoryEnum.Subathon)
+            {
+                //commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
+                //_subathonCommand.Execute(commandAndResponse);
+                Console.WriteLine("Command Subathon");
+            }
+            // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
+            else if (commandAndResponse.Category == CategoryEnum.Fun)
+            {
+                //_ManageFun.Execute(commandAndResponse);
+            }
+            else if (commandAndResponse.HasLogic)
+            {
+                await _manageCommands.Execute(messageDto, commandAndResponse);
+                Console.WriteLine("Command Has Logic");
+            }
+            else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
+            {
+                await _manageStream.Execute(messageDto);
+            }
+            else
+            {
+                // TODO: Replace parts in the message
+                string message = commandAndResponse.Response;
+
+                var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
+
+                message.Replace("[User]", messageDto.UserName);
+                message.Replace("[Time]", DateTime.Now.ToString());
+                message.Replace("[StreamStartTime]", stream.StreamStart.ToString());
+                message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
+
+                _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
+            }
+        }
+    }
+
+    private async Task PointRedeamLogic(MessageDto messageDto, User user)
+    {
+        Console.WriteLine(messageDto);
+
+        // TODO: make a Class for this in API.Twitch
+        //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
+
+        // Use EmotesCondition.ChannelPoints
+        // TODO: Check id for rediam 
+        // TODO: Do what ever the rediam is
+
+        //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
     }
 
     private List<KeyValuePair<string, string>> MappBadges(List<KeyValuePair<string, string>> userBadges)
