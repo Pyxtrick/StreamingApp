@@ -6,6 +6,7 @@ using StreamingApp.API.SignalRHub;
 using StreamingApp.DB;
 using StreamingApp.Core.Commands;
 using StreamingApp.API.BetterTV_7TV;
+using StreamingApp.Core.Utility.Scheduler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,6 @@ builder.Services.AddSwaggerDocument(swagger =>
 builder.Services.AddCors(options => {
     options.AddPolicy("CorsPolicy", builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200"); });
 });
-
-//builder.Services.AddHostedService<ActivityScheduler>();
 
 var app = builder.Build();
 

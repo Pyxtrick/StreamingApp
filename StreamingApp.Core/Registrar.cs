@@ -19,6 +19,7 @@ public static class Registrar
 
         // Schedulars
         services.AddHostedService<ActivityScheduler>();
+        //services.AddHostedService<SubScheduler>();
         //services.AddHostedService<AlertScheduler>();
         //services.AddHostedService<BannedScheduler>();
 

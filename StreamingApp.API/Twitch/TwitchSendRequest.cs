@@ -21,9 +21,9 @@ public class TwitchSendRequest : ISendRequest
 
     private readonly IConfiguration _configuration;
 
-    private readonly Logger<TwitchSendRequest> _logger;
+    private readonly ILogger<TwitchSendRequest> _logger;
 
-    public TwitchSendRequest(ITwitchCache twitchCache, ITwitchCallCache twitchCallCache, IConfiguration configuration, Logger<TwitchSendRequest> logger)
+    public TwitchSendRequest(ITwitchCache twitchCache, ITwitchCallCache twitchCallCache, IConfiguration configuration, ILogger<TwitchSendRequest> logger)
     {
         _twitchCache = twitchCache;
         _twitchCallCache = twitchCallCache;
