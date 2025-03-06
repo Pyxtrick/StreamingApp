@@ -21,7 +21,9 @@ public class CRUDStreams : ICRUDStreams
     {
         List<Stream> streams = _unitOfWork.StreamHistory.ToList();
 
-        return streams.Select(_mapper.Map<StreamDto>).ToList();
+        //TODO: Fix mapping
+        //return streams.Select(_mapper.Map<StreamDto>).ToList();
+        return new List<StreamDto>();
     }
 
     public List<StreamDto> CreateOrUpdtateAll(List<StreamDto> streams)
