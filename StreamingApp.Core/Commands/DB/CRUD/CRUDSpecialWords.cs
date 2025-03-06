@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using StreamingApp.Core.Queries.Web.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 
-namespace StreamingApp.Core.Queries.Web;
+namespace StreamingApp.Core.Commands.DB.CRUD;
 public class CRUDSpecialWords : ICRUDSpecialWords
 {
     private readonly UnitOfWorkContext _unitOfWork;

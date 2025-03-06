@@ -1,5 +1,4 @@
-﻿
-namespace StreamingApp.Core.Commands.Achievements;
+﻿namespace StreamingApp.Core.Queries.Achievements;
 
 public interface ICreateFinalStreamAchievements
 {

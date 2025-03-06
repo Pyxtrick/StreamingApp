@@ -6,7 +6,6 @@ using StreamingApp.API.SignalRHub;
 using StreamingApp.DB;
 using StreamingApp.Core.Commands;
 using StreamingApp.API.BetterTV_7TV;
-using StreamingApp.Core.Utility.Scheduler;
 
 var builder = WebApplication.CreateBuilder(args);
 

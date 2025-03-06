@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using StreamingApp.Core.Queries.Web.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using Stream = StreamingApp.Domain.Entities.Internal.Stream.Stream;
 
-namespace StreamingApp.Core.Queries.Web;
+namespace StreamingApp.Core.Commands.DB.CRUD;
 public class CRUDStreams : ICRUDStreams
 {
     private readonly UnitOfWorkContext _unitOfWork;
@@ -21,9 +21,7 @@ public class CRUDStreams : ICRUDStreams
     {
         List<Stream> streams = _unitOfWork.StreamHistory.ToList();
 
-        //TODO: Fix mapping
-        //return streams.Select(_mapper.Map<StreamDto>).ToList();
-        return new List<StreamDto>();
+        return streams.Select(_mapper.Map<StreamDto>).ToList();
     }
 
     public List<StreamDto> CreateOrUpdtateAll(List<StreamDto> streams)

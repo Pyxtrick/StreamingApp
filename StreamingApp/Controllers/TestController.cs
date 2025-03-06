@@ -5,7 +5,7 @@ using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
-using StreamingApp.Core.Commands.Achievements;
+using StreamingApp.Core.Queries.Achievements;
 
 namespace StreamingApp.Web.Controllers;
 

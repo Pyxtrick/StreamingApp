@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Core.Logic;
+﻿namespace StreamingApp.Core.Queries.Logic;
 
 // Ascii to text to Ascii
 public class Customcode

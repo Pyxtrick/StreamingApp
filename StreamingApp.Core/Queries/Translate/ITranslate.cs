@@ -1,5 +1,4 @@
-﻿
-namespace StreamingApp.Core.Commands.Chat;
+﻿namespace StreamingApp.Core.Queries.Translate;
 
 public interface ITranslate
 {

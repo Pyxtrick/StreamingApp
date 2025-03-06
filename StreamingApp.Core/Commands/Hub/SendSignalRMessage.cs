@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using StreamingApp.API.SignalRHub;
+using StreamingApp.Core.Queries.Translate;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -8,7 +9,7 @@ using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
 
-namespace StreamingApp.Core.Commands.Chat;
+namespace StreamingApp.Core.Commands.Hub;
 
 public class SendSignalRMessage : ISendSignalRMessage
 {

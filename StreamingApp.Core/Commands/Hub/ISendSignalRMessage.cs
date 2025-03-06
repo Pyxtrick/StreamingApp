@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.User;
 
-namespace StreamingApp.Core.Commands.Chat;
+namespace StreamingApp.Core.Commands.Hub;
 public interface ISendSignalRMessage
 {
     Task SendAlertAndEventMessage(User user, MessageDto messageDto, AlertDto alert);

@@ -1,6 +1,6 @@
 ﻿using LanguageDetection;
 
-namespace StreamingApp.Core.Commands.Chat;
+namespace StreamingApp.Core.Queries.Translate;
 public class Translate : ITranslate
 {
     /// <summary>
@@ -28,7 +28,7 @@ public class Translate : ITranslate
         }**/
     }
 
-    public async Task<String> TranslateMessage(string message)
+    public async Task<string> TranslateMessage(string message)
     {
         // TODO: Implement Translate Logic
         // TODO: Use https://www.youtube.com/watch?v=04HfJvGSIks for translation
@@ -37,7 +37,7 @@ public class Translate : ITranslate
         // TODO: Fix this as it is not working reliably
         var t = GetLanguage(message);
 
-        if(t != null)
+        if (t != null)
         {
             return t;
         }

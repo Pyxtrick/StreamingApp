@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreamingApp.Core.Queries.Web.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Responces;

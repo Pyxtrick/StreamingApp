@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using StreamingApp.Core.Queries.Web.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Internal.Stream;
-namespace StreamingApp.Core.Queries.Web;
+namespace StreamingApp.Core.Commands.DB.CRUD;
 
 public class CRUDGameInfos : ICRUDGameInfos
 {

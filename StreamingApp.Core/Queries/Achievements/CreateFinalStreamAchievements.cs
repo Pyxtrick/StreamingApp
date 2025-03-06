@@ -3,9 +3,8 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.FileLogic;
 using StreamingApp.DB;
 using StreamingApp.Domain.Enums;
-using System.Text;
 
-namespace StreamingApp.Core.Commands.Achievements;
+namespace StreamingApp.Core.Queries.Achievements;
 
 public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 {
@@ -64,7 +63,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         var messageText = messageCount != 0 ? $"<div>Messages Recived: {messageCount} Sent by {userChatted} Users</div>" : "";
         var subText = subCount != 0 ? $"<div>Subs Recived: {subCount}</div>" : "";
         var raidText = raidCount != 0 ? $"<div>{raidCount} Raids with {raidUserCount} Users</div>" : "";
-        var userText = twitchAchievements.Count() != 0 ? $"<div>{String.Join("</a><a>", twitchAchievements)}</div>" : "";
+        var userText = twitchAchievements.Count() != 0 ? $"<div>{string.Join("</a><a>", twitchAchievements)}</div>" : "";
 
         // Decode
         //Encoding.ASCII.GetString(alert.Html);
@@ -82,7 +81,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
                     $"{subText}" +
                     $"{raidText}" +
                     "<div class=\"user-stats\">User Stats</div>" +
-                    $"{userText}" +                    
+                    $"{userText}" +
                     "<div class=\"user-stats\">Next Streams</div>" +
                     "<div>Tuesday 9 PM CET (UTC +1)</div>" +
                     "<div>Wednesday 9 PM CET (UTC +1)</div>" +

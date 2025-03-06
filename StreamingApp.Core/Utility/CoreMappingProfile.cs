@@ -1,7 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Internal;
 using AutoMapper;
 using StreamingApp.Domain.Entities.Internal.Trigger;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Dtos;
 
 namespace StreamingApp.Core.Utility;
@@ -14,5 +13,7 @@ public class CoreMappingProfile : Profile
 
         CreateMap<SpecialWords, SpecialWordDto>().ReverseMap();
         CreateMap<SpecialWords, SpecialWords>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
+
+        CreateMap<Stream, StreamDto>().ReverseMap();
     }
 }

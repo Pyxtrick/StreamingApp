@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.SignalRHub;
-using StreamingApp.Core.Logic.Interfaces;
+using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
@@ -10,7 +10,7 @@ using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
 
-namespace StreamingApp.Core.Logic;
+namespace StreamingApp.Core.Queries.Logic;
 
 public class MessageCheck : IMessageCheck
 {
@@ -36,7 +36,7 @@ public class MessageCheck : IMessageCheck
     public async Task<bool> Execute(MessageDto messageDto, User user)
     {
         bool isFine = true;
-        
+
         List<SpecialWords> foundSpecialWords = _unitOfWork.SpecialWords.Where(s => messageDto.Message.Contains(s.Name)).ToList();
 
         bool isAllowed = foundSpecialWords.Where(s => messageDto.Message.StartsWith(s.Name)).Any(fsw => fsw.Type == SpecialWordEnum.AllowedUrl);
@@ -62,7 +62,7 @@ public class MessageCheck : IMessageCheck
             }
 
             // For any staring < ending with >
-            if(new Regex("(\\<).*([\\w-]).*(\\>)", RegexOptions.IgnoreCase).Match(messageDto.Message).Success)
+            if (new Regex("(\\<).*([\\w-]).*(\\>)", RegexOptions.IgnoreCase).Match(messageDto.Message).Success)
             {
                 isFine = false;
             }
@@ -74,7 +74,7 @@ public class MessageCheck : IMessageCheck
                     // TODO: allow User for x Seconds to use
                     // TODO: Delete Messate
                     await _twitchSendRequest.DeleteMessage(messageDto.MessageId);
-                    
+
                     user.Ban.MessagesDeletedAmount++;
                 }
 
@@ -105,7 +105,7 @@ public class MessageCheck : IMessageCheck
                     // TODO: Ban User
 
                     //_twitchSendRequest.BanUser(messageDto.UserId, $"Used prohibited word {foundSpecialWords.First(f => f.Type == SpecialWordEnum.Banned).Name})
-                    
+
                     user.Ban.IsBaned = true;
                     user.Ban.BanedDate = DateTime.Now;
                     user.Ban.LastMessage = messageDto.Message;

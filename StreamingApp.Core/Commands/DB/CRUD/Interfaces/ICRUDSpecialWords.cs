@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Internal;
 
-namespace StreamingApp.Core.Queries.Web.Interfaces;
+namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDSpecialWords
 {
     List<SpecialWordDto> GetAll();

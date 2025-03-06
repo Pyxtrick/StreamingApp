@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
 
-namespace StreamingApp.Core.Queries.Web.Interfaces;
+namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDGameInfos
 {
     List<GameInfoDto> GetAll();

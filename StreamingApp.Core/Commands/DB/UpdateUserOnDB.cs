@@ -60,11 +60,19 @@ public class UpdateUserOnDB : IUpdateUserOnDB
         User user = _unitOfWork.User.Where(u => u.Id == userId).Include("Status").Include("TwitchSub").ToList().First();
         if (user != null)
         {
-            user.Status.TwitchSub.CurrentySubscribed = isSub;
-            user.Status.TwitchSub.SubscribedTime = subTime;
-            user.Status.TwitchSub.CurrentTier = tier;
-            
-            await _unitOfWork.SaveChangesAsync();
+            if (isSub)
+            {
+                user.Status.TwitchSub.CurrentySubscribed = isSub;
+                user.Status.TwitchSub.SubscribedTime = user.Status.TwitchSub.SubscribedTime <= subTime ? subTime : user.Status.TwitchSub.SubscribedTime++;
+                user.Status.TwitchSub.CurrentTier = tier;
+
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else if(user.Status.TwitchSub.CurrentySubscribed == true)
+            {
+                user.Status.TwitchSub.CurrentySubscribed = isSub;
+                user.Status.TwitchSub.CurrentTier = tier;
+            }
         }
     }
 }
