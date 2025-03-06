@@ -9,7 +9,7 @@ public class FollowDto(
     bool isGifftedSub,
     int gifftedSubCount,
     TierEnum currentTier,
-    ChatDto? chatMessage,
+    MessageDto? chatMessage,
     DateTime utcNow)
     : TwitchBase(messageId, userId, userName, utcNow)
 {
@@ -19,5 +19,5 @@ public class FollowDto(
 
     public TierEnum CurrentTier { get; set; } = currentTier;
 
-    public ChatDto? ChatMessage { get; set; } = chatMessage;
+    public MessageDto? ChatMessage { get; set; } = chatMessage;
 }

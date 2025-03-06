@@ -17,12 +17,10 @@ public class GetTwitchChatData : IGetTwitchChatData
         _mapper = mapper;
     }
 
-    public List<ChatDto> Execute()
+    public List<MessageDto> Execute()
     {
         var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
 
-        List<ChatDto> chatDtos = _mapper.Map<List<ChatDto>>(t);
-
-        return chatDtos;
+        return t;
     }
 }

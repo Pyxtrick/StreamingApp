@@ -6,7 +6,6 @@ using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Achievements;
-using TwitchLib.PubSub.Models.Responses.Messages;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -27,10 +26,9 @@ public class TestController : ControllerBase
          const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
-        ChatDto chatMessage = new(t.ToString(), "testuser", "#fff", null, mess, "", null, new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich, ChatDisplayEnum.allChat,
-            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined } , EffectEnum.none, DateTime.Now);
-
-        //MessageDto messageDto = new(e.ChatMessage.Id, false, channel, userId, userName, colorHex, replayMessage, message, emoteReplacedMessage, pointRediam, bits, emoteSet, badges, ChatOriginEnum.Twtich, auths, specialMessage, EffectEnum.none, e.ChatMessage.IsSubscriber, e.ChatMessage.SubscribedMonthCount, DateTime.UtcNow);
+        MessageDto chatMessage = new("Id", false, "local", "userid", 
+            "testuser", "#fff", "replymessage", mess, "emoteReply", null, 0, new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich,
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
 

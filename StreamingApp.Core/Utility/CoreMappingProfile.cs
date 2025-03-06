@@ -12,23 +12,6 @@ public class CoreMappingProfile : Profile
         CreateMap<CommandAndResponse, CommandAndResponseDto>().ReverseMap();
         CreateMap<CommandAndResponse, CommandAndResponse>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 
-        CreateMap<MessageDto, ChatDto>().ConstructUsing(x => new ChatDto(
-            x.MessageId,
-            x.UserName,
-            x.ColorHex,
-            x.ReplayMessage,
-            x.Message,
-            x.EmoteReplacedMessage,
-            x.Emotes,
-            x.Badges,
-            x.ChatOrigin,
-            Domain.Enums.ChatDisplayEnum.twitchChat,
-            x.Auth,
-            x.SpecialMessage,
-            x.Effect,
-            x.Date
-            ));
-
         CreateMap<SpecialWords, SpecialWordDto>().ReverseMap();
         CreateMap<SpecialWords, SpecialWords>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
     }

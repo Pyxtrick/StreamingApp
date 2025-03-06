@@ -18,6 +18,8 @@ public class TwitchApiRequest : ITwitchApiRequest
     private readonly ITwitchCallCache _twitchCallCache;
     private readonly IMapper _mapper;
 
+    private string RaidUser = "";
+
     public TwitchApiRequest(ITwitchCache twitchCache, IConfiguration configuration, ITwitchCallCache twitchCallCache, IMapper mapper)
     {
         _twitchCache = twitchCache;
@@ -56,6 +58,12 @@ public class TwitchApiRequest : ITwitchApiRequest
             OnHypeTrain();
         }
 
+        // TODO: Test if this is valid
+        if (e.ChatMessage.Username.Equals(RaidUser))
+        {
+            Console.WriteLine($"User {RaidUser} chatted");
+        }
+
         MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
         messageDto.IsCommand = messageDto.Message.Split(' ').ToList()[0].Contains("!");
 
@@ -82,6 +90,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         OnHypeTrain();
 
         string? userName = e.GiftedSubscription.DisplayName;
+        string recipientUserName = e.GiftedSubscription.MsgParamRecipientUserName;
         TwitchLib.Client.Enums.SubscriptionPlan subscriptionPlan = e.GiftedSubscription.MsgParamSubPlan;
         string amount = e.GiftedSubscription.MsgParamMonths;
         string lenght = e.GiftedSubscription.MsgParamMultiMonthGiftDuration;
@@ -91,7 +100,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan.ToString());
 
         //TODO: SubscriptionDto mess = _mapper.Map<SubscriptionDto>(e.GiftedSubscription);
-        SubscriptionDto subscriptionDto = new SubscriptionDto(e.GiftedSubscription.Id, userName, true, 1, tier, null);
+        SubscriptionDto subscriptionDto = new SubscriptionDto(e.GiftedSubscription.Id, userName, recipientUserName, true, 1, tier, null);
 
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
@@ -117,7 +126,7 @@ public class TwitchApiRequest : ITwitchApiRequest
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
 
             //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.Subscriber);
-            SubscriptionDto subscriptionDto = new SubscriptionDto(e.Subscriber.Id, userName, true, 1, tier, null);
+            SubscriptionDto subscriptionDto = new SubscriptionDto(e.Subscriber.Id, userName, null, false, 0, tier, null);
 
             try
             {
@@ -154,6 +163,9 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             string userName = e.PrimePaidSubscriber.DisplayName;
             string subscriptionPlan = e.PrimePaidSubscriber.SubscriptionPlan.ToString();
+            string message = e.PrimePaidSubscriber.ResubMessage;
+
+            MessageDto messageDto = _mapper.Map<MessageDto>(e.PrimePaidSubscriber);
 
             int cumulativeMonths = -1;
 
@@ -164,7 +176,7 @@ public class TwitchApiRequest : ITwitchApiRequest
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
 
             //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.PrimePaidSubscriber);
-            SubscriptionDto subscriptionDto = new SubscriptionDto(e.PrimePaidSubscriber.Id, userName, true, 1, tier, null);
+            SubscriptionDto subscriptionDto = new SubscriptionDto(e.PrimePaidSubscriber.Id, userName, null, false, 0, tier, messageDto);
 
             try
             {
@@ -226,8 +238,10 @@ public class TwitchApiRequest : ITwitchApiRequest
         //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
         //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.ReSubscriber);
 
-        ChatDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twtich, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
-        SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, true, 1, tier, chatDto);
+        //MessageDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twtich, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
+
+        MessageDto messageDto = _mapper.Map<MessageDto>(e.ReSubscriber);
+        //TODO: SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, null, true, 1, tier, chatDto);
 
         try
         {
@@ -250,7 +264,7 @@ public class TwitchApiRequest : ITwitchApiRequest
             Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
         }
 
-        _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+        //TODO: _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
         // TODO: SaveMessage to Cache
         // TODO: Show emote with Message
@@ -261,6 +275,9 @@ public class TwitchApiRequest : ITwitchApiRequest
     {
         string? userName = e.RaidNotification.DisplayName;
         string amount = e.RaidNotification.SystemMsgParsed;
+
+        // TODO: Test if this is valid
+        RaidUser = e.RaidNotification.DisplayName;
 
         // TODO: Send a Shoutout to POST https://api.twitch.tv/helix/chat/shoutouts
         //https://dev.twitch.tv/docs/api/reference/#send-a-shoutout
