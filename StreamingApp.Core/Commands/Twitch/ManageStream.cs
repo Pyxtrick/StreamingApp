@@ -1,5 +1,6 @@
 ﻿using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Commands.FileLogic;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
@@ -17,11 +18,14 @@ public class ManageStream : IManageStream
 
     private readonly ITwitchCallCache _twitchCallCache;
 
-    public ManageStream(UnitOfWorkContext unitOfWork, ISendRequest sendRequest, ITwitchCallCache twitchCallCache)
+    private readonly IManageFile _manageFile;
+
+    public ManageStream(UnitOfWorkContext unitOfWork, ISendRequest sendRequest, ITwitchCallCache twitchCallCache, IManageFile manageFile)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = sendRequest;
         _twitchCallCache = twitchCallCache;
+        _manageFile = manageFile;
     }
 
     public async Task Execute(MessageDto messageDto)
@@ -29,7 +33,7 @@ public class ManageStream : IManageStream
         var thisChannelInfo = await _twitchSendRequest.GetChannelInfo("");
 
         // removed first word of string
-        var noCommandTextMessage = messageDto.Message.Split().Length >= 0 ? messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..] : "";
+        var noCommandTextMessage = messageDto.Message.Split().Length > 1 ? messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..] : "";
 
         var splitMessage = messageDto.Message.Split(' ');
 
@@ -76,6 +80,7 @@ public class ManageStream : IManageStream
 
                         message.Replace("[User]", splitMessage[1]);
                         message.Replace("[GameName]", channelInfo.GameName);
+                        message.Replace("[Url]", $"https://twitch.tv/{splitMessage[1]}");
 
                         _twitchSendRequest.SendAnnouncement(message);
                     }
@@ -121,6 +126,8 @@ public class ManageStream : IManageStream
         // For a new Stream
         if (stream == null || stream.StreamEnd != stream.StreamStart)
         {
+            _manageFile.CreateFile();
+
             var utcNow = DateTime.UtcNow;
 
             Domain.Entities.Internal.Stream.Stream newStream = new()
@@ -138,7 +145,7 @@ public class ManageStream : IManageStream
 
         var newStream2 = _unitOfWork.StreamHistory.OrderBy(s => s.Id).Last();
 
-        _twitchSendRequest.SendChatMessage($"stream Started with Title {newStream2.StreamTitle}");
+        _twitchSendRequest.SendChatMessage($"stream Started with Title '{newStream2.StreamTitle}'");
     }
 
     /// <summary>
@@ -162,7 +169,7 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            _twitchSendRequest.SendChatMessage($"stream Ended with Title {stream.StreamTitle}");
+            _twitchSendRequest.SendChatMessage($"stream Ended with Title '{stream.StreamTitle}'");
         }
     }
 

@@ -59,11 +59,6 @@ public class ManageFile : IManageFile
                         dateOnly.AddDays(1);
                         noWalidPathFound = true;
                     }
-
-                    if (dateOnly == DateOnly.FromDateTime(DateTime.Now))
-                    {
-                        noWalidPathFound = true;
-                    }
                 }
             }
         }
