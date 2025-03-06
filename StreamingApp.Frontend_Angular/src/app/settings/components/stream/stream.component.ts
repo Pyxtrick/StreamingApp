@@ -19,12 +19,6 @@ export class StreamComponent implements OnInit {
   public streams$!: Observable<StreamDto[]>;
   public streams!: StreamDto[];
   displayedColumns: string[] = ['streamTitle', 'streamStart', 'streamEnd'];
-  displayedColumnsSubTable: string[] = [
-    'game',
-    'message',
-    'startDate',
-    'endDate',
-  ];
 
   ngOnInit(): void {
     this.store.dispatch(SettingsActions.loadStreams());

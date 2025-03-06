@@ -1,3 +1,7 @@
-.mat-mdc-tab .mdc-tab__text-label {
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
   color: white !important;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #825aca !important;
 }

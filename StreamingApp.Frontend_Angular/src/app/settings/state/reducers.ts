@@ -9,20 +9,19 @@ import { SettingsActions } from './action';
 export interface SettingsState {
   commands: CommandAndResponseDto[];
   streams: StreamDto[];
-  gameInfo: GameInfoDto[];
+  gameInfos: GameInfoDto[];
 }
 
 export const initialState: SettingsState = {
   commands: [],
   streams: [],
-  gameInfo: [],
+  gameInfos: [],
 };
 
 export const settingsFeature = createFeature({
   name: 'settings',
   reducer: createReducer(
     initialState,
-    //Technologie relevant action
     //#region Command
     on(SettingsActions.loadCommands, (state): any => ({
       ...state,
@@ -67,7 +66,7 @@ export const settingsFeature = createFeature({
     on(SettingsActions.updateGameInfos, (state): any => ({
       ...state,
       updateGameInfosLoading: true,
-      updateGameInofsSuccess: false,
+      updateGameInfosSuccess: false,
     }))
     //#endregion
   ),

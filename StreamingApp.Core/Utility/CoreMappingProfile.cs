@@ -3,6 +3,7 @@ using AutoMapper;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Dtos;
 using Stream = StreamingApp.Domain.Entities.Internal.Stream.Stream;
+using StreamingApp.Domain.Entities.Internal.Stream;
 
 namespace StreamingApp.Core.Utility;
 public class CoreMappingProfile : Profile
@@ -17,5 +18,8 @@ public class CoreMappingProfile : Profile
 
         CreateMap<Stream, StreamDto>().ReverseMap();
         CreateMap<Stream, Stream>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
+
+        CreateMap<GameInfo, GameInfoDto>().ReverseMap();
+        CreateMap<GameInfo, GameInfo>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
     }
 }
