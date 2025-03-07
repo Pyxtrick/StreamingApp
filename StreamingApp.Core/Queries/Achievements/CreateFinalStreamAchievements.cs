@@ -3,6 +3,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.FileLogic;
 using StreamingApp.DB;
 using StreamingApp.Domain.Enums;
+using System.Text;
 
 namespace StreamingApp.Core.Queries.Achievements;
 
@@ -25,12 +26,10 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
     {
         var stream = _unitOfWork.StreamHistory.OrderBy(x => x.Id).Last();
 
-        var usersFound = _unitOfWork.User.Include("TwitchAchievements").Where(u => u.TwitchAchievements.LastStreamSeen >= stream.StreamStart && u.TwitchAchievements.LastStreamSeen <= DateTime.UtcNow);
+        var usersFound = _unitOfWork.User.Include("TwitchAchievements").Where(u => u.TwitchAchievements.LastStreamSeen >= stream.StreamStart && u.TwitchAchievements.LastStreamSeen <= DateTime.UtcNow).Count();
 
         var duration = DateTime.Now - stream.StreamStart.AddHours(1);
         var days = duration.Days > 0 ? $"{duration.Days.ToString()} Days, " : "";
-
-        var streamDuration = $"Stream was from {stream.StreamStart.AddHours(1).ToString("dd.MM.yyyy HH:mm")} to {DateTime.Now.ToString("dd.MM.yyyy HH:mm")} with a duration of {days}{duration.Hours} Hours and {duration.Minutes} Minutes";
 
         var messageCount = _twitchCallCache.GetChachedNumberCount(CallCacheEnum.CachedMessageData);
         var subCount = _twitchCallCache.GetChachedNumberCount(CallCacheEnum.CachedSubData);
@@ -55,33 +54,52 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
             }
         }
 
-        return CreateHdmlFile(streamDuration, messageCount, usersFound.Count(), subCount, raidCount, raidUserCount, bannedCount, twitchAchievements);
+        var streamTimes = (await _unitOfWork.CommandAndResponse.FirstAsync(c => c.Command.Equals("streamtime"))).Response.Split(",").ToList();
+        var streamDuration = $"Stream was from {stream.StreamStart.AddHours(1).ToString("dd.MM.yyyy HH:mm")} to {DateTime.Now.ToString("dd.MM.yyyy HH:mm")} with a duration of {days}{duration.Hours} Hours and {duration.Minutes} Minutes";
+        var messageText = messageCount != 0 ? $"Messages Recived: {messageCount} Sent by {usersFound} Users" : "";
+        var subText = subCount != 0 ? $"Subs Recived: {subCount}" : "";
+        var raidText = raidCount != 0 ? $"{raidCount} Raids with {raidUserCount} Users" : "";
+
+        var lines = new List<string>() { "Final Stream Achievemenst", streamDuration, messageText, subText, raidText };
+
+        // TODO: add back when _manageFile is Fixed
+        //_manageFile.WriteFile(lines.ToArray(), true);
+
+        return await CreateHdmlFile("ScrollText", streamDuration, messageText, subText, raidText, twitchAchievements, streamTimes);
     }
 
-    private string CreateHdmlFile(string streamDuration, int messageCount, int userChatted, int subCount, int raidCount, int raidUserCount, int bannedCount, List<string> twitchAchievements)
+    private async Task<string> CreateHdmlFile(string alertName, string streamDuration, string messageText, string subText, string raidText, List<string> twitchAchievements, List<string> streamTimes)
     {
-        var messageText = messageCount != 0 ? $"<div>Messages Recived: {messageCount} Sent by {userChatted} Users</div>" : "";
-        var subText = subCount != 0 ? $"<div>Subs Recived: {subCount}</div>" : "";
-        var raidText = raidCount != 0 ? $"<div>{raidCount} Raids with {raidUserCount} Users</div>" : "";
-        var userText = twitchAchievements.Count() != 0 ? $"<div>{string.Join("</a><a>", twitchAchievements)}</div>" : "";
+        var alert = await _unitOfWork.Alert.FirstAsync(a => a.Name.Equals(alertName));
 
         // Decode
-        //Encoding.ASCII.GetString(alert.Html);
+        var html = Encoding.ASCII.GetString(alert.Html);
+
+        html.Replace("[StreamDuration]", streamDuration);
+        html.Replace("[MessageText]", messageText);
+        html.Replace("[SubText]", subText);
+        html.Replace("[RaidText]", raidText);
+        html.Replace("[UserText]", twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "");
+        html.Replace("[StreamTimes]", streamTimes.Count() != 0 ? $"{string.Join("</div><div>", streamTimes)}" : "");
+
+        //TODO: use this when ScrollText is in the Alert DB Table
+        //return text;
 
         // Encode
         //Encoding.ASCII.GetBytes(t)
 
         // TODO: Save in backend as byte[]
+        var userText = twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "";
         return "<html lang=\"en\">\r\n <body>" +
             "<div id=\"target\">" +
                 "<div>" +
                     "<div class=\"stats\">Stream Stats</div>" +
                     $"<div>{streamDuration}</div>" +
-                    $"{messageText}" +
-                    $"{subText}" +
-                    $"{raidText}" +
+                    $"<div>{messageText}</div>" +
+                    $"<div>{subText}</div>" +
+                    $"<div>{raidText}</div>" +
                     "<div class=\"user-stats\">User Stats</div>" +
-                    $"{userText}" +
+                    $"<div>{userText}</div>" +
                     "<div class=\"user-stats\">Next Streams</div>" +
                     "<div>Tuesday 9 PM CET (UTC +1)</div>" +
                     "<div>Wednesday 9 PM CET (UTC +1)</div>" +
