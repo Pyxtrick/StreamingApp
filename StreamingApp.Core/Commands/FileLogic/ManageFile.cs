@@ -1,5 +1,6 @@
 ﻿using StreamingApp.DB;
 using System.Text;
+using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.FileLogic;
 public class ManageFile : IManageFile
@@ -22,7 +23,8 @@ public class ManageFile : IManageFile
 
         var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
-        string path = $"{stream.Id}.{(stream.StreamEnd != null ? 0 : 5)}-{contence}-{DateOnly.FromDateTime(stream.StreamStart)}.txt";
+        // TODO: Fix path to a specific file location to D/StreamFiles
+        string path = $"D:/StreamFiles/{stream.Id}.{(stream.StreamEnd != null ? 0 : 5)}-{contence}-{DateOnly.FromDateTime(stream.StreamStart)}.txt";
 
         using (var streamWriter = File.AppendText(path))
         {
@@ -92,7 +94,10 @@ public class ManageFile : IManageFile
         {
             foreach (string line in lines)
             {
-                streamWriter.WriteLine(line);
+                if (!line.IsNullOrEmpty())
+                {
+                    streamWriter.WriteLine(line);
+                }
             }
         }
     }

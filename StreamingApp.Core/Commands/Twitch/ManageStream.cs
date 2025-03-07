@@ -126,7 +126,8 @@ public class ManageStream : IManageStream
         // For a new Stream
         if (stream == null || stream.StreamEnd != stream.StreamStart)
         {
-            _manageFile.CreateFile();
+            // TODO: reactiveate when _manageFile has changed / Fixed
+            //_manageFile.CreateFile();
 
             var utcNow = DateTime.UtcNow;
 
@@ -157,6 +158,7 @@ public class ManageStream : IManageStream
         var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.Id).ToList().Last();
 
         // For editing a Stream for ending it
+        // TODO: Test for Later
         if (stream.StreamEnd == stream.StreamStart)
         {
             var streamGame = _unitOfWork.StreamGame.OrderBy(sg => sg.StreamId).Last();
@@ -219,6 +221,8 @@ public class ManageStream : IManageStream
         {
             streamGame.EndDate = DateTime.UtcNow;
         }
+
+        _twitchSendRequest.SendChatMessage($"stream Category has been Changed to '{gameInfo.Game}'");
 
         await _unitOfWork.StreamGame.AddAsync(newStreamGame);
         await _unitOfWork.SaveChangesAsync();
