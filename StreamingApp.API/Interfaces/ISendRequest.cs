@@ -5,6 +5,8 @@ public interface ISendRequest
 {
     Task<ChannelInfo?> GetChannelInfo(string? broadcasterId);
     void SendChatMessage(string message);
+
+    void SendResplyChatMessage(string message, string replyToId);
     bool SetChannelInfo(string? gameId, string? title);
 
     void SendAnnouncement(string message);

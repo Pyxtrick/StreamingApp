@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using StreamingApp.API.Interfaces;
-using StreamingApp.API.Utility.Caching;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Internal.Stream;
@@ -66,6 +65,17 @@ public class TwitchSendRequest : ISendRequest
     public void SendChatMessage(string message)
     {
         _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+        
+    }
+
+    /// <summary>
+    /// Send Twtich Reply Message
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="replyToId"></param>
+    public void SendResplyChatMessage(string message, string replyToId)
+    {
+        _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
     }
 
     /// <summary>

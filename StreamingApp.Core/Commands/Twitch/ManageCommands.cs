@@ -42,6 +42,8 @@ public class ManageCommands : IManageCommands
         {
             string response = "";
 
+            bool reply = false;
+
             // Update / Refresh Emotes from 7tv and Betterttv
             
             if(splitMessage[0].Equals("!timer"))
@@ -200,7 +202,14 @@ public class ManageCommands : IManageCommands
 
             if (!response.IsNullOrEmpty())
             {
-                _twitchSendRequest.SendChatMessage(response);
+                if (reply)
+                {
+                    _twitchSendRequest.SendResplyChatMessage(response, messageDto.MessageId);
+                }
+                else
+                {
+                    _twitchSendRequest.SendChatMessage(response);
+                }
             }
         }
     }
