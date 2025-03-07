@@ -28,8 +28,15 @@ public class ManageCommands : IManageCommands
     public async Task Execute(MessageDto messageDto, CommandAndResponse commandAndResponse)
     {
         var splitMessage = messageDto.Message.Split(' ');
+        string[] splitNoCommandTextMessage = new List<string>().ToArray();
 
-        var splitNoCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..].Split(' ');
+        if (splitMessage.Length > 1)
+        {
+            if (splitMessage[1].Contains("\U000e0000")) {
+                splitMessage = splitMessage.Where(s => s == splitMessage[1]).ToArray();
+            }
+            splitNoCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..].Split(' ');
+        }
 
         if (commandAndResponse != null && commandAndResponse.Active == true)
         {
@@ -57,36 +64,45 @@ public class ManageCommands : IManageCommands
             // response with the time when stream goes live / with conversion to other time zones
             else if(splitMessage[0].Equals("!live"))
             {
-                var localTime = DateTime.Now.Date + new TimeSpan(10, 00, 0);
+                var timeTexts = _unitOfWork.CommandAndResponse.FirstOrDefault(c => c.Command.Equals("streamTime")).Response.Split(",").ToList();
+
+                var streamTimes = new List<DateTime>();
+
+                foreach (var timeText in timeTexts)
+                {
+                    var split = timeText.Split(" ");
+
+                    var localTime = DateTime.Parse($"{split[1]} {split[2]}");
+
+                    streamTimes.Add(localTime.AddDays(((int)(DayOfWeek)Enum.Parse(typeof(DayOfWeek), split[1]) - (int)localTime.DayOfWeek + 7) % 7));
+                }
+
+                var result = streamTimes.Order().First();
+
+                //https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage.Length > 0 ? splitNoCommandTextMessage[0] : "Europe/Zurich");
+
+                int pFrom = timeZoneInfo.DisplayName.IndexOf("(") + "(".Length;
+                int pTo = timeZoneInfo.DisplayName.LastIndexOf(")");
+                string offset = timeZoneInfo.DisplayName.Substring(pFrom, pTo - pFrom);
 
                 if (splitNoCommandTextMessage.Length > 0)
                 {
                     try
                     {
-                        var result = localTime.AddDays(((int)DayOfWeek.Friday - (int)localTime.DayOfWeek + 7) % 7);
-
                         var timeZone = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
 
-                        var offset = (timeZone - result.ToUniversalTime()).Hours;
-
-                        var offsetText = offset > 0 ? $"+{offset}" : $"{offset}";
-
-                        response = $"Stream will be live on {timeZone.DayOfWeek} and {timeZone.AddDays(1).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitNoCommandTextMessage[1]} / (UTC {offsetText})";
+                        response = $"Stream will be live on {timeZone.DayOfWeek} and {timeZone.AddDays(1).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitNoCommandTextMessage[1]} / {offset}";
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         response = commandAndResponse.Response;
                     }
                 }
                 else
                 {
-                    var result = localTime.AddDays(((int)DayOfWeek.Friday - (int)localTime.DayOfWeek + 7) % 7);
-
-                    response = $"Stream will be live on {result.DayOfWeek} and {result.AddDays(1).DayOfWeek} at {localTime.TimeOfDay.ToString()} {result.Kind} / {result.ToUniversalTime().TimeOfDay} {result.ToUniversalTime().Kind}";
+                    response = $"Stream will be live on {result.DayOfWeek} and {result.AddDays(1).DayOfWeek} at {result.TimeOfDay.ToString()} CET / {offset}";
                 }
-
-                // TODO: make a Class for this in API.Twitch
-                _twitchSendRequest.SendChatMessage(response);
             }
             else if(splitMessage[0].Equals("!currentTime"))
             {
