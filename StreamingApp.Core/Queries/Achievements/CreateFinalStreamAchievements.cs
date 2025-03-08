@@ -26,7 +26,9 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
     {
         var stream = _unitOfWork.StreamHistory.OrderBy(x => x.Id).Last();
 
-        var usersFound = _unitOfWork.User.Include("TwitchAchievements").Where(u => u.TwitchAchievements.LastStreamSeen >= stream.StreamStart && u.TwitchAchievements.LastStreamSeen <= DateTime.UtcNow).Count();
+        var streamChattedViewers = _unitOfWork.User.Include("TwitchAchievements").Include("Ban").Where(u => u.TwitchAchievements.LastStreamSeen >= stream.StreamStart && u.TwitchAchievements.LastStreamSeen <= DateTime.UtcNow);
+
+        var newViewers = streamChattedViewers.Where(u => u.TwitchAchievements.WachedStreams == 1 && u.Ban.IsBaned == false);
 
         var duration = DateTime.Now - stream.StreamStart.AddHours(1);
         var days = duration.Days > 0 ? $"{duration.Days.ToString()} Days, " : "";
@@ -39,6 +41,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
         List<string> twitchAchievements = new List<string>();
 
+        /** TODO: Fix _manageFile
         var fileText = _manageFile.ReadFile();
 
         foreach (var item in fileText)
@@ -52,11 +55,20 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
                     twitchAchievements.Add($"User: {parts[1]} has gifted {parts[3]} {parts[2]}");
                 }
             }
+        }**/
+
+        if (newViewers.Any())
+        {
+            foreach (var viewer in newViewers)
+            {
+                twitchAchievements.Add($"{viewer.UserText} has First Chatted at {viewer.TwitchAchievements.LastStreamSeen.ToLocalTime().ToShortTimeString()}");
+            }
         }
 
         var streamTimes = (await _unitOfWork.CommandAndResponse.FirstAsync(c => c.Command.Equals("streamtime"))).Response.Split(",").ToList();
         var streamDuration = $"Stream was from {stream.StreamStart.AddHours(1).ToString("dd.MM.yyyy HH:mm")} to {DateTime.Now.ToString("dd.MM.yyyy HH:mm")} with a duration of {days}{duration.Hours} Hours and {duration.Minutes} Minutes";
-        var messageText = messageCount != 0 ? $"Messages Recived: {messageCount} Sent by {usersFound} Users" : "";
+        var messageText = messageCount != 0 ? $"Messages Recived: {messageCount} Sent by {streamChattedViewers.Count()} Users" : "";
+        var newViewerText = newViewers.Count() != 0 ? $"{newViewers.Count()} New Viewers have Chatted" : "";
         var subText = subCount != 0 ? $"Subs Recived: {subCount}" : "";
         var raidText = raidCount != 0 ? $"{raidCount} Raids with {raidUserCount} Users" : "";
 
@@ -65,10 +77,10 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         // TODO: add back when _manageFile is Fixed
         //_manageFile.WriteFile(lines.ToArray(), true);
 
-        return await CreateHdmlFile("ScrollText", streamDuration, messageText, subText, raidText, twitchAchievements, streamTimes);
+        return await CreateHdmlFile("ScrollText", streamDuration, messageText, newViewerText, subText, raidText, twitchAchievements, streamTimes);
     }
 
-    private async Task<string> CreateHdmlFile(string alertName, string streamDuration, string messageText, string subText, string raidText, List<string> twitchAchievements, List<string> streamTimes)
+    private async Task<string> CreateHdmlFile(string alertName, string streamDuration, string messageText, string newViewerText, string subText, string raidText, List<string> twitchAchievements, List<string> streamTimes)
     {
         var alert = await _unitOfWork.Alert.FirstAsync(a => a.Name.Equals(alertName));
 
@@ -77,6 +89,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
         html.Replace("[StreamDuration]", streamDuration);
         html.Replace("[MessageText]", messageText);
+        html.Replace("[NewViewerText]", newViewerText);
         html.Replace("[SubText]", subText);
         html.Replace("[RaidText]", raidText);
         html.Replace("[UserText]", twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "");
@@ -96,6 +109,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
                     "<div class=\"stats\">Stream Stats</div>" +
                     $"<div>{streamDuration}</div>" +
                     $"<div>{messageText}</div>" +
+                    $"<div>{newViewerText}</div>" +
                     $"<div>{subText}</div>" +
                     $"<div>{raidText}</div>" +
                     "<div class=\"user-stats\">User Stats</div>" +
