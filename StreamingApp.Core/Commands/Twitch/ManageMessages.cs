@@ -82,13 +82,13 @@ public class ManageMessages : IManageMessages
 
     public async Task ExecuteOne(MessageDto messageDto)
     {
-        User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("TwitchDetail").FirstOrDefault(u => u.TwitchDetail.UserId == messageDto.UserId);
         if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
             //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
 
-            await _updateUserAchievementsOnDb.UpdateAchievements(user.Id);
+            await _updateUserAchievementsOnDb.UpdateAchievements(messageDto.UserId);
         }
         else
         {
@@ -131,10 +131,6 @@ public class ManageMessages : IManageMessages
             //SpecialWords? allowedMessage = _unitOfWork.SpecialWords.FirstOrDefault(t => t.Name.Contains(messageDto.Message) && t.Type == SpecialWordEnum.AllowedUrl);
             return;
         }
-
-        
-
-        
 
         // Check for beeing not an command or Rediam
         if (messageDto.IsCommand == false && messageDto.PointRediam.IsNullOrEmpty())
@@ -316,6 +312,5 @@ public class ManageMessages : IManageMessages
         }
 
         return emoteList;
-
     }
 }
