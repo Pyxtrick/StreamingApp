@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Enums;
 
@@ -52,12 +53,12 @@ public class BannedScheduler : BackgroundService
 
             if (value.Count != 0)
             {
-
                 List<BannedUserDto> messages = value.ConvertAll(s => (BannedUserDto)s);
 
-                Console.WriteLine(messages.Count);
-
-                //await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
+                foreach (var message in messages)
+                {
+                    await scope.ServiceProvider.GetRequiredService<IManageDeleted>().Execute(message);
+                }
             }
         }
     }

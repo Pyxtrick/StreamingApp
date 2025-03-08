@@ -4,9 +4,10 @@ namespace StreamingApp.Domain.Entities.Dtos;
 
 public class BannedUserDto
 {
-    public BannedUserDto(string id, string userName, string lastMessage, string reson, BannedTargetEnum bannedTargetEnum, DateTime date)
+    public BannedUserDto(string userId, string messageId, string userName, string lastMessage, string reson, BannedTargetEnum bannedTargetEnum, DateTime date)
     {
-        Id = id;
+        UserId = userId;
+        MessageId = messageId;
         UserName = userName;
         LastMessage = lastMessage;
         Reson = reson;
@@ -14,7 +15,9 @@ public class BannedUserDto
         Date = date;
     }
 
-    public string Id { get; set; }
+    public string UserId { get; set; }
+
+    public string MessageId { get; set; }
 
     public string UserName { get; set; }
 

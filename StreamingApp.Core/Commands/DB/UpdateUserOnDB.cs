@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.Interfaces;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
@@ -20,13 +21,13 @@ public class UpdateUserOnDB : IUpdateUserOnDB
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task UpdateAchievements(int userId)
+    public async Task UpdateAchievements(string userId)
     {
         var stream = await _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).LastAsync();
 
         if (stream.StreamEnd == stream.StreamStart)
         {
-            User user = _unitOfWork.User.Where(u => u.Id == userId).Include("TwitchAchievements").ToList().First();
+            User user = _unitOfWork.User.Include("TwitchAchievements").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
 
             var achievements = user.TwitchAchievements;
 
@@ -35,15 +36,15 @@ public class UpdateUserOnDB : IUpdateUserOnDB
                 achievements.LastStreamSeen = DateTime.UtcNow;
                 achievements.WachedStreams++;
 
-                //_unitOfWork.Achievements.Add(achievements);
+                //_unitOfWork.Achievements.Update(achievements);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
     }
 
-    public async Task UpdateAuth(int userId, List<AuthEnum> auths)
+    public async Task UpdateAuth(string userId, List<AuthEnum> auths)
     {
-        User user = _unitOfWork.User.Where(u => u.Id == userId).Include("Status").ToList().First();
+        User user = _unitOfWork.User.Include("Status").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
         if (user != null)
         {
             user.Status.IsVIP = auths.Contains(AuthEnum.Vip);
@@ -55,9 +56,9 @@ public class UpdateUserOnDB : IUpdateUserOnDB
         }
     }
 
-    public async Task UpdateSub(int userId, bool isSub, TierEnum tier, int subTime)
+    public async Task UpdateSub(string userId, bool isSub, TierEnum tier, int subTime)
     {
-        User user = _unitOfWork.User.Where(u => u.Id == userId).Include("Status").Include("TwitchSub").ToList().First();
+        User user = _unitOfWork.User.Include("Status").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
         if (user != null)
         {
             if (isSub)
@@ -74,5 +75,34 @@ public class UpdateUserOnDB : IUpdateUserOnDB
                 user.Status.TwitchSub.CurrentTier = tier;
             }
         }
+    }
+
+    public async Task UpdateBan(string userId, BannedUserDto bannedUserDto)
+    {
+        User user = _unitOfWork.User.Include("Ban").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
+
+        if (bannedUserDto.TargetEnum == BannedTargetEnum.Message)
+        {
+            user.Ban.MessagesDeletedAmount++;
+        }
+        else if (bannedUserDto.TargetEnum == BannedTargetEnum.Message || bannedUserDto.TargetEnum == BannedTargetEnum.Message)
+        {
+            user.Ban.BanedDate = bannedUserDto.Date;
+            user.Ban.LastMessage = bannedUserDto.LastMessage;
+            user.Ban.IsWatchList = true;
+            user.Ban.MessagesDeletedAmount++;
+
+            if (bannedUserDto.TargetEnum == BannedTargetEnum.Banned)
+            {
+                user.Ban.BanedAmount++;
+                user.Ban.IsBaned = true;
+            }
+            else if (bannedUserDto.TargetEnum == BannedTargetEnum.TimeOut)
+            {
+                user.Ban.TimeOutAmount++;
+            }
+        }
+
+        await _unitOfWork.SaveChangesAsync();
     }
 }

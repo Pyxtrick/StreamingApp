@@ -59,9 +59,9 @@ public class TestController : ControllerBase
     }
 
     [HttpDelete("DeleteMessage")]
-    public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string id)
+    public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string messageId)
     {
-        BannedUserDto bannedUser = new(id, "userName", "message", "Reson", BannedTargetEnum.Message, DateTime.UtcNow);
+        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
     }

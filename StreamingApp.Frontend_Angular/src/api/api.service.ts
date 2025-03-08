@@ -824,12 +824,12 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
-    deleteMessage(id: string | undefined): Observable<void> {
+    deleteMessage(messageId: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/Test/DeleteMessage?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (messageId === null)
+            throw new Error("The parameter 'messageId' cannot be null.");
+        else if (messageId !== undefined)
+            url_ += "messageId=" + encodeURIComponent("" + messageId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
