@@ -11,7 +11,7 @@ public class TTS
         _manageFile = manageFile;
     }
 
-    public void Execute(string user, string message, TypeEnum type)
+    public void Execute(string user, string message, AlertTypeEnum type)
     {
         string text = $"{user}-{type}-{message}";
 

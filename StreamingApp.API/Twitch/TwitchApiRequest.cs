@@ -8,6 +8,7 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.HypeTrain;
 using TwitchLib.Client.Events;
+using WebSocketSharp;
 
 namespace StreamingApp.API.Twitch;
 
@@ -64,16 +65,26 @@ public class TwitchApiRequest : ITwitchApiRequest
             Console.WriteLine($"User {RaidUser} chatted");
         }
 
-        MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
-        messageDto.IsCommand = messageDto.Message.Split(' ').ToList()[0].Contains("!");
+        if (e.ChatMessage.Bits != 0 || e.ChatMessage.CustomRewardId.IsNullOrEmpty() != false) {
+            MessageAlertDto messageDto = _mapper.Map<MessageAlertDto>(e.ChatMessage);
 
-        if (!messageDto.Channel.Equals(_configuration["Twitch:Channel"]))
-        {
-            // TODO: Check in chared chat what is the difference
-            Console.WriteLine($"message comes from channel {e.ChatMessage.Channel}, {JsonConvert.SerializeObject(messageDto.Badges)}");
+            messageDto.AlertType = e.ChatMessage.Bits != 0 ? AlertTypeEnum.Bits : AlertTypeEnum.PointRedeam;
+
+            _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedAlertData);
         }
-        
-        _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
+        else
+        {
+            MessageDto messageDto = _mapper.Map<MessageDto>(e.ChatMessage);
+            messageDto.IsCommand = messageDto.Message.Split(' ').ToList()[0].Contains("!");
+
+            if (!messageDto.Channel.Equals(_configuration["Twitch:Channel"]))
+            {
+                // TODO: Check in chared chat what is the difference
+                Console.WriteLine($"message comes from channel {e.ChatMessage.Channel}, {JsonConvert.SerializeObject(messageDto.Badges)}");
+            }
+
+            _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedMessageData);
+        }
     }
 
     public void Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
@@ -274,7 +285,7 @@ public class TwitchApiRequest : ITwitchApiRequest
     public void Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e)
     {
         string? userName = e.RaidNotification.DisplayName;
-        string amount = e.RaidNotification.SystemMsgParsed;
+        int amount = 0;
 
         // TODO: Test if this is valid
         RaidUser = e.RaidNotification.DisplayName;
@@ -291,9 +302,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         Console.WriteLine($"New Raid by {userName} with {amount} Users");
 
-        //RaidDto raidDto = new()
-
-        //_twitchCallCache.AddMessage(raidDto, CallCacheEnum.CachedRaidData);
+        RaidDto raidDto = new(userName, amount, "", DateTime.UtcNow);
 
         //throw new NotImplementedException();
     }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -48,20 +49,60 @@ public class AlertScheduler : BackgroundService
     {
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
-            //TODO: Combine all Three into one AlertDto
-            List<object> fallow = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedUserFollowData);
-            List<object> sub = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedSubData);
-            List<object> raid = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedRaidData);
+            List<object> alertObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedAlertData);
+            List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedSubData);
+            List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedRaidData);
 
-            /**if (value.Count != 0)
+            if (alertObject.IsNullOrEmpty() != false)
             {
+                var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
 
-                List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
+                foreach (MessageAlertDto alert in alerts)
+                {
+                    try
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
+                }
+            }
 
-                Console.WriteLine(messages.Count);
+            if (subObject.IsNullOrEmpty() != false)
+            {
+                var subs = subObject.ConvertAll(s => (SubDto)s);
 
-                await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
-            }**/
+                foreach (SubDto sub in subs)
+                {
+                    try
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
+                }
+            }
+
+            if (raidObject.IsNullOrEmpty() != false)
+            {
+                var raids = raidObject.ConvertAll(s => (RaidDto)s);
+
+                foreach (RaidDto raid in raids)
+                {
+                    try
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
+                }
+            }
         }
     }
 }

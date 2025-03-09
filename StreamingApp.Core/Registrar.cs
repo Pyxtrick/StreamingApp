@@ -74,8 +74,8 @@ public static class Registrar
         // Schedulars
         services.AddHostedService<ActivityScheduler>();
         //services.AddHostedService<SubScheduler>();
-        //services.AddHostedService<AlertScheduler>();
         //services.AddHostedService<BannedScheduler>();
+        services.AddHostedService<AlertScheduler>();
 
         //Utility
         services.AddAutoMapper(typeof(CoreMappingProfile));

@@ -9,5 +9,5 @@ public class FileDataDto
 
     public int amount { get; set; }
 
-    public TypeEnum Type { get; set; }
+    public AlertTypeEnum Type { get; set; }
 }

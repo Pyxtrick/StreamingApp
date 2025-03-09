@@ -31,6 +31,26 @@ public class TwitchMappingProfile : Profile
                 x.SubscribedMonthCount,
                 DateTime.UtcNow
                 ));
+
+        CreateMap<ChatMessage, MessageAlertDto>()
+            .ConstructUsing(x => new MessageAlertDto(
+                x.Id,
+                x.Channel,
+                x.UserId,
+                x.DisplayName,
+                x.ColorHex,
+                x.Message,
+                x.EmoteReplacedMessage,
+                x.CustomRewardId,
+                x.Bits,
+                MappEmotes(x),
+                x.Badges,
+                ChatOriginEnum.Twtich,
+                AlertTypeEnum.Undefined,
+                MappAuth(x),
+                x.IsSubscriber,
+                DateTime.UtcNow
+            ));
     }
 
     private List<Domain.Entities.Dtos.Twitch.EmoteSet> MappEmotes(ChatMessage chatMessage)

@@ -27,14 +27,32 @@ public class TwitchCallCache : ITwitchCallCache
                     _twitchCallCacheData.CachedMessageData.Add(messageDto);
                     _twitchCallCacheData.CachedMessageNumber++;
                 }
+                if (_twitchCallCacheData.CachedMessageData.Count > 1000)
+                {
+                    _twitchCallCacheData.CachedMessageData.RemoveRange(0, 10);
+                }
                 break;
             case CallCacheEnum.CachedSubData:
                 var subDto = (SubDto)message;
                 if (subDto != null)
                 {
                     _twitchCallCacheData.CachedSubData.Add(subDto);
-
                     _twitchCallCacheData.CachedSubNumber += subDto.GifftedSubCount > 0 ? subDto.GifftedSubCount : 1;
+                }
+                if(_twitchCallCacheData.CachedSubData.Count > 100)
+                {
+                    _twitchCallCacheData.CachedSubData.RemoveRange(0, 10);
+                }
+                break;
+            case CallCacheEnum.CachedAlertData:
+                var alertDto = (MessageAlertDto)message;
+                if(alertDto != null)
+                {
+                    _twitchCallCacheData.CachedAlertData.Add(alertDto);
+                }
+                if (_twitchCallCacheData.CachedAlertData.Count > 100)
+                {
+                    _twitchCallCacheData.CachedAlertData.RemoveRange(0, 10);
                 }
                 break;
             case CallCacheEnum.CachedRaidData:
@@ -45,6 +63,10 @@ public class TwitchCallCache : ITwitchCallCache
                     _twitchCallCacheData.CachedRaidNumber++;
                     _twitchCallCacheData.CachedRaidNumber += raidDto.Count;
                 }
+                if (_twitchCallCacheData.CachedRaidData.Count > 100)
+                {
+                    _twitchCallCacheData.CachedRaidData.RemoveRange(0, 10);
+                }
                 break;
             case CallCacheEnum.CachedUserFollowData:
                 var joinDto = (FollowDto)message;
@@ -53,6 +75,10 @@ public class TwitchCallCache : ITwitchCallCache
                     _twitchCallCacheData.CachedUserFollowData.Add(joinDto);
                     _twitchCallCacheData.CachedUserFollowNumber++;
                 }
+                if (_twitchCallCacheData.CachedUserFollowData.Count > 100)
+                {
+                    _twitchCallCacheData.CachedUserFollowData.RemoveRange(0, 10);
+                }
                 break;
             case CallCacheEnum.CachedBannedData:
                 var bannedDto = (BannedUserDto)message;
@@ -60,6 +86,10 @@ public class TwitchCallCache : ITwitchCallCache
                 {
                     _twitchCallCacheData.CachedBannedData.Add(bannedDto);
                     _twitchCallCacheData.CachedBannedNumber++;
+                }
+                if (_twitchCallCacheData.CachedBannedData.Count > 100)
+                {
+                    _twitchCallCacheData.CachedBannedData.RemoveRange(0, 10);
                 }
                 break;
             default:
@@ -76,6 +106,8 @@ public class TwitchCallCache : ITwitchCallCache
                 return _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedSubData:
                 return _twitchCallCacheData.CachedSubData.ConvertAll(s => (Object)s);
+            case CallCacheEnum.CachedAlertData:
+                return _twitchCallCacheData.CachedAlertData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedRaidData:
                 return _twitchCallCacheData.CachedRaidData.ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedUserFollowData:
@@ -121,28 +153,19 @@ public class TwitchCallCache : ITwitchCallCache
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
-                var t = _twitchCallCacheData.CachedMessageData.Where(t => t.Date >= from && t.Date <= to).ToList();
-                if (t.Count != 0)
-                {
-                    Console.WriteLine(t.First().UserName);
-                }
-                return t.ConvertAll(s => (Object)s);
-            /**
+                return _twitchCallCacheData.CachedMessageData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedSubData:
-                return (IList<Object>)_twitchCallCacheData.CachedSubData.Where(t => t.Date >= from && t.Date <= to).ToList();
+                return _twitchCallCacheData.CachedSubData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+            case CallCacheEnum.CachedAlertData:
+                return _twitchCallCacheData.CachedRaidData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedRaidData:
-                return (IList<Object>)_twitchCallCacheData.CachedRaidData.Where(t => t.Date >= from && t.Date <= to).ToList();
-            case CallCacheEnum.CachedUserJoinData:
-                return (IList<Object>)_twitchCallCacheData.CachedUserJoinData.Where(t => t.Date >= from && t.Date <= to).ToList();
+                return _twitchCallCacheData.CachedRaidData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
             case CallCacheEnum.CachedBannedData:
-                return (IList<Object>)_twitchCallCacheData.CachedBannedData.Where(t => t.Date >= from && t.Date <= to).ToList();
-            **/
+                return _twitchCallCacheData.CachedBannedData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
             default:
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();
         }
-        //return new List<Object>() { new MessageDto() };
-        return new List<Object>();
     }
 
     public void RemoveMessages(IList<Object> messages, CallCacheEnum callCacheEnum)

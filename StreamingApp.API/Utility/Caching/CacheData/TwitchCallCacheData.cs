@@ -12,6 +12,8 @@ public class TwitchCallCacheData
 
     public int CachedSubNumber = 0;
 
+    public List<MessageAlertDto> CachedAlertData { get; set; } = new();
+
     public List<RaidDto> CachedRaidData { get; set; } = new();
 
     public int CachedRaidNumber = 0;
