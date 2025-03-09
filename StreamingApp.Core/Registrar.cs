@@ -72,9 +72,8 @@ public static class Registrar
         #endregion
 
         // Schedulars
-        services.AddHostedService<ActivityScheduler>();
-        //services.AddHostedService<SubScheduler>();
-        //services.AddHostedService<BannedScheduler>();
+        services.AddHostedService<MessageScheduler>();
+        services.AddHostedService<BannedScheduler>();
         services.AddHostedService<AlertScheduler>();
 
         //Utility

@@ -27,7 +27,7 @@ public class TestController : ControllerBase
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "testuser", "#fff", "replymessage", mess, "emoteReply", null, 0, new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich,
+            "testuser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -39,7 +39,7 @@ public class TestController : ControllerBase
     [HttpPut("AddToChache")]
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
-        MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, 0, null, new() { new("kekw", "assets/3x.webp") },
+        MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") },
             ChatOriginEnum.Twtich, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);

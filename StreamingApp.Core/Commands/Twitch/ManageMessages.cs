@@ -11,7 +11,6 @@ using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Static;
-using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
 public class ManageMessages : IManageMessages
@@ -114,13 +113,7 @@ public class ManageMessages : IManageMessages
         messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick")
             ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
             : $"https://static-cdn.jtvnw.net/jtv_user_pictures/{userId}-profile_image-70x70.png"));
-        
-        //var specialWords2 = await _unitOfWork.SpecialWords.FirstOrDefaultAsync();
-        var s = _unitOfWork.SpecialWords.ToList();
-        var newdata = await _unitOfWork.SpecialWords.ToListAsync();
 
-        SpecialWords? specialWords = _unitOfWork.SpecialWords.FirstOrDefault(t => messageDto.Message.Contains(t.Name) && t.Type == SpecialWordEnum.Banned);
-        
         // TODO: make a Class for this in API.Twitch
         // TODO: save to cache
         //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
@@ -132,71 +125,16 @@ public class ManageMessages : IManageMessages
             return;
         }
 
-        // Check for beeing not an command or Rediam
-        if (messageDto.IsCommand == false && messageDto.PointRediam.IsNullOrEmpty())
+        // Check for beeing not an command
+        if (messageDto.IsCommand == false)
         {
-            await MessageLogic(messageDto, user);
+            await _sendSignalRMessage.SendChatMessage(user, messageDto);
         }
         // Check if the Bot_OnChatCommandRecived is working as intended
-        else if (messageDto.IsCommand && messageDto.PointRediam == null)
+        else if (messageDto.IsCommand)
         {
             await CommandLogic(messageDto);
         }
-        else if (messageDto.PointRediam != null)
-        {
-            await PointRedeamLogic(messageDto, user);
-        }
-    }
-
-    private async Task MessageLogic(MessageDto messageDto, User user)
-    {
-        if (messageDto.Bits != 0)
-        {
-            List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
-
-            int found = 0;
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                data = ((List<Trigger>)data.Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits)).OrderBy(t => t.Ammount).ToList();
-
-                if (messageDto.Bits == data[i].Ammount)
-                {
-                    var t = data[i].Targets.First(t => t.TargetCondition == Domain.Enums.Trigger.TargetCondition.Allert).TargetData;
-
-                    //AlertDto alert = t.Alert;
-
-                    // TODO: Show emote
-                    //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageDto, t);
-                }
-                else
-                {
-                    if (messageDto.Bits < data[i].Ammount)
-                    {
-                        if (data[i].Active && data[i].ExactAmmount == false)
-                        {
-                            found = i;
-                        }
-                    }
-                    else if (messageDto.Bits > data[i].Ammount)
-                    {
-                        // TODO: Show emote
-                    }
-                }
-            }
-        }
-        if (messageDto.Bits >= 200)
-        {
-            // TODO: Limit Message to a specific lenght
-            // TODO: check for "Spam" or same thing in the message and cut it of at a certan time
-            // TODO: TTS Message Play
-            // TODO: able to skip TTS Message or Mute it
-            // TODO: Show emote
-        }
-
-        await _sendSignalRMessage.SendChatMessage(user, messageDto);
-
-        //_chatCache.AddOneChatData(messageDto);
     }
 
     private async Task CommandLogic(MessageDto messageDto)

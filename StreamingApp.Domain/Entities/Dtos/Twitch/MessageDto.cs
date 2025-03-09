@@ -15,8 +15,6 @@ public class MessageDto(
     string? replayMessage,
     string message,
     string emoteReplacedMessage,
-    string? pointRediam,
-    int bits,
     List<EmoteSet> emotes,
     List<KeyValuePair<string, string>> badges,
     ChatOriginEnum chatOrigin,
@@ -39,10 +37,6 @@ public class MessageDto(
     public string Message { get; set; } = message;
 
     public string EmoteReplacedMessage { get; set; } = emoteReplacedMessage;
-
-    public string? PointRediam { get; set; } = pointRediam;
-
-    public int Bits { get; set; } = bits;
 
     public List<EmoteSet> Emotes { get; set; } = emotes;
 

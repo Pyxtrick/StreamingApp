@@ -9,9 +9,9 @@ using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 
-public class ActivityScheduler : BackgroundService
+public class MessageScheduler : BackgroundService
 {
-    private readonly ILogger<ActivityScheduler> _logger;
+    private readonly ILogger<MessageScheduler> _logger;
 
     private readonly IServiceProvider _serviceProvider;
 
@@ -21,7 +21,7 @@ public class ActivityScheduler : BackgroundService
 
     private int timer = 0;
 
-    public ActivityScheduler(IServiceProvider serviceProvider, ILogger<ActivityScheduler> logger, IConfiguration configuration)
+    public MessageScheduler(IServiceProvider serviceProvider, ILogger<MessageScheduler> logger, IConfiguration configuration)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;

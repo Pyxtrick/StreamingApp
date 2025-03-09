@@ -19,8 +19,6 @@ public class TwitchMappingProfile : Profile
                 x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
                 x.Message,
                 x.EmoteReplacedMessage,
-                x.CustomRewardId,
-                x.Bits,
                 MappEmotes(x),
                 x.Badges,
                 ChatOriginEnum.Twtich,
@@ -30,7 +28,7 @@ public class TwitchMappingProfile : Profile
                 x.IsSubscriber,
                 x.SubscribedMonthCount,
                 DateTime.UtcNow
-                ));
+            ));
 
         CreateMap<ChatMessage, MessageAlertDto>()
             .ConstructUsing(x => new MessageAlertDto(
