@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
@@ -19,7 +20,7 @@ public class CRUDStreams : ICRUDStreams
 
     public List<StreamDto> GetAll()
     {
-        List<Stream> streams = _unitOfWork.StreamHistory.ToList();
+        List<Stream> streams = _unitOfWork.StreamHistory.Include("GameCategories").Include("GameCategory").ToList();
 
         return streams.Select(_mapper.Map<StreamDto>).ToList();
     }
