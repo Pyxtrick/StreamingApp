@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using StreamingApp.API.Twitch.Interfaces;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Enums;
 using TwitchLib.PubSub.Events;
 
 namespace StreamingApp.API.Twitch;
@@ -36,5 +38,13 @@ public class TwitchPubSubApiRequest : ITwitchPubSubApiRequest
     public void Bot_OnFollow(object sender, OnFollowArgs e)
     {
         _logger.Log(LogLevel.Information, $"Pubsub event OnFollow {e.DisplayName}");
+
+
+
+        /**MessageAlertDto messageDto = _mapper.Map<MessageAlertDto>(raidDto);
+
+        messageDto.AlertType = e.ChatMessage.Bits != 0 ? AlertTypeEnum.Bits : AlertTypeEnum.PointRedeam;
+
+        _twitchCallCache.AddMessage(messageDto, CallCacheEnum.CachedAlertData);**/
     }
 }
