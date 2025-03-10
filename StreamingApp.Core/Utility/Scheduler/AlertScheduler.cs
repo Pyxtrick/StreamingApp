@@ -55,52 +55,37 @@ public class AlertScheduler : BackgroundService
 
             if (alertObject.IsNullOrEmpty() != false)
             {
-                var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
-
-                foreach (MessageAlertDto alert in alerts)
+                try
                 {
-                    try
-                    {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                    }
+                    alertObject.ConvertAll(s => (MessageAlertDto)s).Select(async alert => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
                 }
             }
 
             if (subObject.IsNullOrEmpty() != false)
             {
-                var subs = subObject.ConvertAll(s => (SubDto)s);
-
-                foreach (SubDto sub in subs)
+                try
                 {
-                    try
-                    {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                    }
+                    subObject.ConvertAll(s => (SubDto)s).Select(async sub => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub));
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex.Message);
                 }
             }
 
             if (raidObject.IsNullOrEmpty() != false)
             {
-                var raids = raidObject.ConvertAll(s => (RaidDto)s);
-
-                foreach (RaidDto raid in raids)
+                try
                 {
-                    try
-                    {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                    }
+                    raidObject.ConvertAll(s => (RaidDto)s).Select(async raid => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
                 }
             }
         }

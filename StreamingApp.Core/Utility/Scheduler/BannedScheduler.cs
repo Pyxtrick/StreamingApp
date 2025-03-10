@@ -49,15 +49,17 @@ public class BannedScheduler : BackgroundService
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
             //TODO: Check if 1 second is enouth for this
-            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedBannedData);
+            List<object> values = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedBannedData);
 
-            if (value.Count != 0)
+            if (values.Count != 0)
             {
-                List<BannedUserDto> messages = value.ConvertAll(s => (BannedUserDto)s);
-
-                foreach (var message in messages)
+                try
                 {
-                    await scope.ServiceProvider.GetRequiredService<IManageDeleted>().Execute(message);
+                    values.ConvertAll(s => (BannedUserDto)s).Select(async ban => await scope.ServiceProvider.GetRequiredService<IManageDeleted>().Execute(ban));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
                 }
             }
         }

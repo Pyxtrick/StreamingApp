@@ -75,6 +75,7 @@ public static class Registrar
         services.AddHostedService<MessageScheduler>();
         services.AddHostedService<BannedScheduler>();
         services.AddHostedService<AlertScheduler>();
+        //services.AddHostedService<YoutubeScheduler>();
 
         //Utility
         services.AddAutoMapper(typeof(CoreMappingProfile));

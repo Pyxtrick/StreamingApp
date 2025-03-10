@@ -53,9 +53,14 @@ public class MessageScheduler : BackgroundService
 
             if (value.Count != 0)
             {
-                List<MessageDto> messages = value.ConvertAll(s => (MessageDto)s);
-
-                await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteMultiple(messages);
+                try
+                {
+                    value.ConvertAll(s => (MessageDto)s).Select(async message => await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteOne(message));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                }
             }
         }
     }
