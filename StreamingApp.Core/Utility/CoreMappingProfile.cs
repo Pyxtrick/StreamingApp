@@ -16,11 +16,12 @@ public class CoreMappingProfile : Profile
         CreateMap<SpecialWords, SpecialWordDto>().ReverseMap();
         CreateMap<SpecialWords, SpecialWords>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 
+        
         CreateMap<Stream, StreamDto>()
-            .IncludeMembers(s => s.GameCategories)
-            .ReverseMap();//.ConstructUsing(x => new StreamDto(x.Id,x.StreamTitle,x.StreamStart,x.StreamEnd,_mapper.Map<GameHistoryDto>))
+            .ForMember(dest => dest.GameHistoryDtos, opt => opt.MapFrom(src => src.GameCategories))
+            .ReverseMap();
         CreateMap<Stream, Stream>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
-
+                
         CreateMap<StreamGame, GameHistoryDto>()
             .ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.GameCategory.Game))
             .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.GameCategory.Message))
@@ -28,7 +29,7 @@ public class CoreMappingProfile : Profile
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
             .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate)).ReverseMap();
         CreateMap<StreamGame, StreamGame>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
-
+        
         CreateMap<GameInfo, GameInfoDto>().ReverseMap();
         CreateMap<GameInfo, GameInfo>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
     }

@@ -1,20 +1,14 @@
 ﻿namespace StreamingApp.Domain.Entities.Dtos;
 
-public class StreamDto(
-    int Id,
-    string StreamTitle,
-    DateTime StreamStart,
-    DateTime StreamEnd,
-    List<GameHistoryDto> GameHistoryDtos
-    )
+public class StreamDto
 {
-    public int Id { get; set; } = Id;
+    public int Id { get; set; }
 
-    public string StreamTitle { get; set; } = StreamTitle;
+    public string StreamTitle { get; set; }
 
-    public DateTime StreamStart { get; set; } = StreamStart;
+    public DateTime StreamStart { get; set; }
 
-    public DateTime StreamEnd { get; set; } = StreamEnd;
+    public DateTime StreamEnd { get; set; }
 
-    public List<GameHistoryDto> GameHistoryDtos { get; set; } = GameHistoryDtos;
+    public List<GameHistoryDto> GameHistoryDtos { get; set; }
 }
