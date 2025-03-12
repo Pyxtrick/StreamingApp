@@ -57,7 +57,12 @@ public class AlertScheduler : BackgroundService
             {
                 try
                 {
-                    alertObject.ConvertAll(s => (MessageAlertDto)s).Select(async alert => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert));
+                    var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
+                    
+                    foreach (var alert in alerts)
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +74,12 @@ public class AlertScheduler : BackgroundService
             {
                 try
                 {
-                    subObject.ConvertAll(s => (SubDto)s).Select(async sub => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub));
+                    var subs = subObject.ConvertAll(s => (SubDto)s);
+                    
+                    foreach (var sub in subs)
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -81,7 +91,12 @@ public class AlertScheduler : BackgroundService
             {
                 try
                 {
-                    raidObject.ConvertAll(s => (RaidDto)s).Select(async raid => await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid));
+                    var raids = raidObject.ConvertAll(s => (RaidDto)s);
+                    
+                    foreach (var raid in raids)
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
+                    }
                 }
                 catch (Exception ex)
                 {

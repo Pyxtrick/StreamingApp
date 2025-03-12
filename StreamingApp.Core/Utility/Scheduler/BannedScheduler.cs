@@ -55,7 +55,11 @@ public class BannedScheduler : BackgroundService
             {
                 try
                 {
-                    values.ConvertAll(s => (BannedUserDto)s).Select(async ban => await scope.ServiceProvider.GetRequiredService<IManageDeleted>().Execute(ban));
+                    var bans = values.ConvertAll(s => (BannedUserDto)s);
+                    foreach (var ban in bans)
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageDeleted>().Execute(ban);
+                    }
                 }
                 catch (Exception ex)
                 {

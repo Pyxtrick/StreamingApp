@@ -55,7 +55,12 @@ public class MessageScheduler : BackgroundService
             {
                 try
                 {
-                    value.ConvertAll(s => (MessageDto)s).Select(async message => await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteOne(message));
+                    var messages = value.ConvertAll(s => (MessageDto)s);
+
+                    foreach (var message in messages)
+                    {
+                        await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteOne(message);
+                    }
                 }
                 catch (Exception ex)
                 {
