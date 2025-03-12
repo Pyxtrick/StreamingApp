@@ -65,7 +65,13 @@ public class TwitchApiRequest : ITwitchApiRequest
             Console.WriteLine($"User {RaidUser} chatted");
         }
 
-        if (e.ChatMessage.Bits != 0 || e.ChatMessage.CustomRewardId.IsNullOrEmpty() != false) {
+        if(e.ChatMessage.Message.Contains("Followed ALOO"))
+        {
+            Console.WriteLine("Follow Message Resived");
+        }
+
+        if (e.ChatMessage.Bits != 0 || e.ChatMessage.CustomRewardId.IsNullOrEmpty() == false)
+        {
             MessageAlertDto messageDto = _mapper.Map<MessageAlertDto>(e.ChatMessage);
 
             messageDto.AlertType = e.ChatMessage.Bits != 0 ? AlertTypeEnum.Bits : AlertTypeEnum.PointRedeam;
