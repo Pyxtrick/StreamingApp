@@ -142,11 +142,9 @@ public class ManageStream : IManageStream
             await _unitOfWork.SaveChangesAsync();
 
             await ChangeCategory();
+
+            _twitchSendRequest.SendChatMessage($"stream Started with Title '{newStream.StreamTitle}'");
         }
-
-        var newStream2 = _unitOfWork.StreamHistory.OrderBy(s => s.Id).Last();
-
-        _twitchSendRequest.SendChatMessage($"stream Started with Title '{newStream2.StreamTitle}'");
     }
 
     /// <summary>
