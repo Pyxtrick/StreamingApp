@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Internal.Stream;
 using StreamingApp.Domain.Enums;
@@ -22,12 +23,15 @@ public class TwitchSendRequest : ISendRequest
 
     private readonly ILogger<TwitchSendRequest> _logger;
 
-    public TwitchSendRequest(ITwitchCache twitchCache, ITwitchCallCache twitchCallCache, IConfiguration configuration, ILogger<TwitchSendRequest> logger)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public TwitchSendRequest(ITwitchCache twitchCache, ITwitchCallCache twitchCallCache, IConfiguration configuration, ILogger<TwitchSendRequest> logger, UnitOfWorkContext unitOfWork)
     {
         _twitchCache = twitchCache;
         _twitchCallCache = twitchCallCache;
         _configuration = configuration;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -64,8 +68,12 @@ public class TwitchSendRequest : ISendRequest
     /// <param name="message"></param>
     public void SendChatMessage(string message)
     {
-        _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
-        
+        var settings = _unitOfWork.Settings.FirstOrDefault();
+
+        if (settings.MuteChatMessages == false)
+        {
+            _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+        }
     }
 
     /// <summary>
@@ -75,7 +83,12 @@ public class TwitchSendRequest : ISendRequest
     /// <param name="replyToId"></param>
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
+        var settings = _unitOfWork.Settings.FirstOrDefault();
+
+        if (settings.MuteChatMessages == false)
+        {
+            _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
+        }
     }
 
     /// <summary>

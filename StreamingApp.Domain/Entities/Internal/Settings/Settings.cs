@@ -17,6 +17,9 @@ public class Settings
     // Mutes Allets in the frontend
     public bool MuteAllerts { get; set; }
 
+    // Mute Send Messages in Chat
+    public bool MuteChatMessages { get; set; }
+
     // To activate comunity Day commands
     public bool ComunityDayActive { get; set; }
 
