@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Enums;
 
-namespace StreamingApp.Domain.Entities.Internal;
+namespace StreamingApp.Domain.Entities.Dtos;
 
 public class UserDto
 {
@@ -8,7 +8,7 @@ public class UserDto
 
     public string UserName { get; set; }
 
-    #region UserDetail
+    #region UserDetail / TwitchDetail
     public string Url { get; set; }
     #endregion
 
@@ -16,7 +16,7 @@ public class UserDto
     public UserTypeEnum UserType { get; set; }
     #endregion
 
-    #region Achievements
+    #region Achievements / TwitchAchievements
     public int GiftedSubsCount { get; set; }
 
     public int GiftedBitsCount { get; set; }

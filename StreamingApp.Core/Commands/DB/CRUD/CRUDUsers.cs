@@ -187,7 +187,7 @@ public class CRUDUsers : ICRUDUsers
         {
             foreach (UserDto user in users)
             {
-                var removeData = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Id == user.Id);
+                var removeData = _unitOfWork.User.Include("TwitchDetail").Include("Status").Include("TwitchAchievements").Include("Ban").FirstOrDefault(t => t.Id == user.Id);
 
                 if (removeData != null)
                 {

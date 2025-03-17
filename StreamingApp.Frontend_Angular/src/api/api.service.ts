@@ -531,6 +531,54 @@ export class DataContollerClient {
         }
         return _observableOf(null as any);
     }
+
+    getAllUsers(): Observable<UserRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/Users";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllUsers(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserRespose>;
+        }));
+    }
+
+    protected processGetAllUsers(response: HttpResponseBase): Observable<UserRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable({
@@ -1497,6 +1545,136 @@ export enum SpecialWordEnum {
     Special = 7,
     Keyword = 8,
     Spam = 9,
+}
+
+export class UserRespose implements IUserRespose {
+    users!: UserDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: IUserRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.users = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["users"])) {
+                this.users = [] as any;
+                for (let item of _data["users"])
+                    this.users!.push(UserDto.fromJS(item));
+            }
+            else {
+                this.users = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.users)) {
+            data["users"] = [];
+            for (let item of this.users)
+                data["users"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface IUserRespose {
+    users: UserDto[];
+    isSucsess: boolean;
+}
+
+export class UserDto implements IUserDto {
+    id!: number;
+    userName!: string;
+    url!: string;
+    userType!: UserTypeEnum;
+    giftedSubsCount!: number;
+    giftedBitsCount!: number;
+    giftedDonationCount!: number;
+    wachedStreams!: number;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.url = _data["url"] !== undefined ? _data["url"] : <any>null;
+            this.userType = _data["userType"] !== undefined ? _data["userType"] : <any>null;
+            this.giftedSubsCount = _data["giftedSubsCount"] !== undefined ? _data["giftedSubsCount"] : <any>null;
+            this.giftedBitsCount = _data["giftedBitsCount"] !== undefined ? _data["giftedBitsCount"] : <any>null;
+            this.giftedDonationCount = _data["giftedDonationCount"] !== undefined ? _data["giftedDonationCount"] : <any>null;
+            this.wachedStreams = _data["wachedStreams"] !== undefined ? _data["wachedStreams"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["url"] = this.url !== undefined ? this.url : <any>null;
+        data["userType"] = this.userType !== undefined ? this.userType : <any>null;
+        data["giftedSubsCount"] = this.giftedSubsCount !== undefined ? this.giftedSubsCount : <any>null;
+        data["giftedBitsCount"] = this.giftedBitsCount !== undefined ? this.giftedBitsCount : <any>null;
+        data["giftedDonationCount"] = this.giftedDonationCount !== undefined ? this.giftedDonationCount : <any>null;
+        data["wachedStreams"] = this.wachedStreams !== undefined ? this.wachedStreams : <any>null;
+        return data;
+    }
+}
+
+export interface IUserDto {
+    id: number;
+    userName: string;
+    url: string;
+    userType: UserTypeEnum;
+    giftedSubsCount: number;
+    giftedBitsCount: number;
+    giftedDonationCount: number;
+    wachedStreams: number;
+}
+
+export enum UserTypeEnum {
+    Streamer = 0,
+    Mod = 1,
+    Bot = 2,
+    Friend = 3,
+    VipViewer = 4,
+    Clipper = 5,
+    Editor = 6,
+    Artist = 7,
+    Viewer = 8,
 }
 
 export class ApiException extends Error {

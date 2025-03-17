@@ -134,4 +134,18 @@ public class DataContoller : ControllerBase
         };
     }
     #endregion
+
+    #region Users
+    [HttpGet("Users")]
+    public UserRespose GetAllUsers([FromServices] ICRUDUsers crudUsers)
+    {
+        var users = crudUsers.GetAll();
+
+        return new UserRespose()
+        {
+            users = users,
+            isSucsess = users.Any(),
+        };
+    }
+    #endregion
 }
