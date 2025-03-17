@@ -21,4 +21,6 @@ public class Trigger : EntityBase
     public AuthEnum Auth { get; set; }
 
     public bool Active { get; set; }
+
+    public int ScheduleTime { get; set; }
 }

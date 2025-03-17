@@ -27,4 +27,7 @@ public class CommandAndResponse : EntityBase
     public CategoryEnum Category { get; set; }
 
     public bool HasLogic { get; set; }
+
+    public int? TargetId { get; set; }
+    public Target? Target { get; set; }
 }

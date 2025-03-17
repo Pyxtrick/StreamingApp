@@ -7,4 +7,5 @@ public enum TargetCondition
     VtubeStudio,
     OBS,
     PC, // For sending data to the PC
+    Chat,
 }

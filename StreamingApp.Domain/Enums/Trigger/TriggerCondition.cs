@@ -12,4 +12,6 @@ public enum TriggerCondition
     SubTier3,
     Raid,
     Follow,
+
+    Schedule,
 }

@@ -11,8 +11,11 @@ public class Target
     public int TriggerId { get; set; }
     public Trigger Trigger { get; set; }
 
-    public string TargetDataId { get; set; }
-    public TargetData TargetData { get; set; }
+    public int? TargetDataId { get; set; }
+    public TargetData? TargetData { get; set; }
+
+    public int? CommandAndResponseId {  get; set; }
+    public CommandAndResponse? CommandAndResponse { get; set; }
 
     public bool IsSameTime { get; set; }
 

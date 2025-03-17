@@ -72,6 +72,7 @@ public static class Registrar
         #endregion
 
         // Schedulars
+        services.AddHostedService<AlertMessageScheduler>();
         services.AddHostedService<MessageScheduler>();
         services.AddHostedService<BannedScheduler>();
         services.AddHostedService<AlertScheduler>();
