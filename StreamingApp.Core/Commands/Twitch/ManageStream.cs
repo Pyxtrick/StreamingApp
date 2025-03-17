@@ -141,9 +141,9 @@ public class ManageStream : IManageStream
             await _unitOfWork.StreamHistory.AddAsync(newStream);
             await _unitOfWork.SaveChangesAsync();
 
-            await ChangeCategory();
+            await ChangeCategory(true);
 
-            _twitchSendRequest.SendChatMessage($"stream Started with Title '{newStream.StreamTitle}'");
+            _twitchSendRequest.SendChatMessage($"Stream Started with Title '{newStream.StreamTitle}'");
         }
     }
 
@@ -169,7 +169,7 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            _twitchSendRequest.SendChatMessage($"stream Ended with Title '{stream.StreamTitle}'");
+            _twitchSendRequest.SendChatMessage($"Stream Ended with Title '{stream.StreamTitle}'");
         }
     }
 
@@ -179,7 +179,7 @@ public class ManageStream : IManageStream
     /// </summary>
     /// <param name="categoryName"></param>
     /// <returns></returns>
-    public async Task ChangeCategory()
+    public async Task ChangeCategory(bool isCreateStream = false)
     {
         var channelInfo = await _twitchSendRequest.GetChannelInfo("");
 
@@ -220,7 +220,10 @@ public class ManageStream : IManageStream
             streamGame.EndDate = DateTime.UtcNow;
         }
 
-        _twitchSendRequest.SendChatMessage($"stream Category has been Changed to '{gameInfo.Game}'");
+        if (isCreateStream == false)
+        {
+            _twitchSendRequest.SendChatMessage($"Stream Category has been Changed to '{gameInfo.Game}'");
+        }
 
         await _unitOfWork.StreamGame.AddAsync(newStreamGame);
         await _unitOfWork.SaveChangesAsync();
