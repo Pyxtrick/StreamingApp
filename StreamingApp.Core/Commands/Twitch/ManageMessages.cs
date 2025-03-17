@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
-using StreamingApp.Core.Commands.DB.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
@@ -17,9 +17,7 @@ public class ManageMessages : IManageMessages
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    private readonly IAddUserToDB _addUserToDb;
-
-    private readonly IUpdateUserOnDB _updateUserAchievementsOnDb;
+    private readonly ICRUDUsers _crudUsers;
 
     private readonly ITwitchCallCache _twitchCallCache;
 
@@ -37,11 +35,10 @@ public class ManageMessages : IManageMessages
 
     private readonly IGameCommand _gameCommand;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, IAddUserToDB addUserToDB, IUpdateUserOnDB updateUserAchievementsOnDb, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
-        _addUserToDb = addUserToDB;
-        _updateUserAchievementsOnDb = updateUserAchievementsOnDb;
+        _crudUsers = crudUsers;
         _twitchCallCache = twitchCallCache;
         _emotesCache = emotesCache;
         _sendSignalRMessage = sendSignalRMessage;
@@ -87,11 +84,11 @@ public class ManageMessages : IManageMessages
             // TODO: make backend check if this is the first message during the stream
             //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
 
-            await _updateUserAchievementsOnDb.UpdateAchievements(messageDto.UserId);
+            await _crudUsers.UpdateAchievements(messageDto.UserId);
         }
         else
         {
-            user = await _addUserToDb.AddUser(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
+            user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
         }
 
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;

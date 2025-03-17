@@ -11,8 +11,6 @@ using StreamingApp.Core.Queries.Logic;
 using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Core.Queries.Translate;
-using StreamingApp.Core.Commands.DB.Interfaces;
-using StreamingApp.Core.Commands.DB;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Commands.Twitch;
@@ -31,9 +29,7 @@ public static class Registrar
         services.AddScoped<ICRUDGameInfos, CRUDGameInfos>();
         services.AddScoped<ICRUDSpecialWords, CRUDSpecialWords>();
         services.AddScoped<ICRUDStreams, CRUDStreams>();
-
-        services.AddScoped<IAddUserToDB, AddUserToDB>();
-        services.AddScoped<IUpdateUserOnDB, UpdateUserOnDB>();
+        services.AddScoped<ICRUDUsers, CRUDUsers>();
 
         // FileLogic
         services.AddScoped<IManageFile, ManageFile>();

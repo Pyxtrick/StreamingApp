@@ -1,5 +1,5 @@
 ﻿using StreamingApp.API.Utility.Caching.Interface;
-using StreamingApp.Core.Commands.DB.Interfaces;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
@@ -14,13 +14,13 @@ public class ManageDeleted : IManageDeleted
 
     private readonly ITwitchCallCache _twitchCallCache;
 
-    private readonly IUpdateUserOnDB _updateUserOnDB;
+    private readonly ICRUDUsers _crudUsers;
 
-    public ManageDeleted(ISendSignalRMessage sendSignalRMessage, ITwitchCallCache twitchCallCache, IUpdateUserOnDB updateUserOnDB)
+    public ManageDeleted(ISendSignalRMessage sendSignalRMessage, ITwitchCallCache twitchCallCache, ICRUDUsers crudUsers)
     {
         _sendSignalRMessage = sendSignalRMessage;
         _twitchCallCache = twitchCallCache;
-        _updateUserOnDB = updateUserOnDB;
+        _crudUsers = crudUsers;
     }
 
     public async Task Execute(BannedUserDto bannedUserDto)
@@ -31,7 +31,7 @@ public class ManageDeleted : IManageDeleted
         {
             bannedUserDto.UserId = messages.FirstOrDefault(m => m.MessageId.Equals(bannedUserDto.MessageId)).UserId;
 
-            await _updateUserOnDB.UpdateBan(bannedUserDto.UserId, bannedUserDto);
+            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto);
 
             await _sendSignalRMessage.SendBannedEventMessage(bannedUserDto);
             return;
@@ -42,7 +42,7 @@ public class ManageDeleted : IManageDeleted
 
             bannedUserDto.LastMessage = messages.Last().Message;
 
-            await _updateUserOnDB.UpdateBan(bannedUserDto.UserId, bannedUserDto);
+            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto);
         }
 
         foreach (var message in messages)
