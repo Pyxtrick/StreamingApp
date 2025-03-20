@@ -43,6 +43,7 @@ public static class Registrar
         services.AddScoped<IGameCommand, GameCommand>();
         services.AddScoped<IManageCommands, ManageCommands>();
         services.AddScoped<IManageDeleted, ManageDeleted>();
+        services.AddScoped<IManageScheduler, ManageScheduler>();
         services.AddScoped<IManageMessages, ManageMessages>();
         services.AddScoped<IManageStream, ManageStream>();
         //services.AddScoped<IManageSub,  ManageSub>();

@@ -72,7 +72,10 @@ public class TwitchSendRequest : ISendRequest
 
         if (settings.MuteChatMessages == false)
         {
-            _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+            if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
+            {
+                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+            }
         }
     }
 

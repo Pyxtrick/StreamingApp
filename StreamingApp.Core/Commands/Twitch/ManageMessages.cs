@@ -196,20 +196,6 @@ public class ManageMessages : IManageMessages
         }
     }
 
-    private async Task PointRedeamLogic(MessageDto messageDto, User user)
-    {
-        Console.WriteLine(messageDto);
-
-        // TODO: make a Class for this in API.Twitch
-        //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
-
-        // Use EmotesCondition.ChannelPoints
-        // TODO: Check id for rediam 
-        // TODO: Do what ever the rediam is
-
-        //await _sendSignalRMessage.SendAllertAndEventMessage(data, user, messageDto);
-    }
-
     private List<KeyValuePair<string, string>> MappBadges(List<KeyValuePair<string, string>> userBadges)
     {
         List<KeyValuePair<string, string>> badges = new();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 
@@ -18,16 +19,11 @@ public class AlertMessageScheduler : BackgroundService
 
     private Timer _timer;
 
-    private int timer = 0;
-
     public AlertMessageScheduler(IServiceProvider serviceProvider, ILogger<AlertScheduler> logger, IConfiguration configuration)
     {
-        _serviceProvider = serviceProvider;
         _logger = logger;
-
+        _serviceProvider = serviceProvider;
         _configuration = configuration;
-
-        timer = Int32.Parse(_configuration["Scheduler:Activity"]);
     }
 
     public override Task StopAsync(CancellationToken cancellationToken)
@@ -42,7 +38,7 @@ public class AlertMessageScheduler : BackgroundService
 
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
-            triggers = scope.ServiceProvider.GetRequiredService<UnitOfWorkContext>().Trigger.Include("Targets.CommandAndResponse").Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Schedule).ToList();
+            triggers = scope.ServiceProvider.GetRequiredService<UnitOfWorkContext>().Trigger.Include("Targets.CommandAndResponse").Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Schedule && t.Active == true).ToList();
         }
 
         foreach (Trigger trigger in triggers)
@@ -56,5 +52,10 @@ public class AlertMessageScheduler : BackgroundService
     private async void RefreshAsync(object state)
     {
         Trigger trigger = state as Trigger;
+
+        using (IServiceScope scope = _serviceProvider.CreateScope())
+        {
+            await scope.ServiceProvider.GetRequiredService<IManageScheduler>().Execute(trigger);
+        }
     }
 }
