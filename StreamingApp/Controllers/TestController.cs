@@ -46,16 +46,13 @@ public class TestController : ControllerBase
     }
 
     [HttpGet("GetCacheData")]
-    public async void GetChachedData([FromServices] ITwitchCallCache _twitchCallCache, IEmotesCache emotesCache)
+    public async Task<List<MessageDto>> GetChachedData([FromServices] ITwitchCallCache _twitchCallCache, IEmotesCache emotesCache)
     {
         var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
 
         var emotes = emotesCache.GetEmotes(null);
 
-        foreach (var message in messages)
-        {
-            Console.WriteLine(message.Message);
-        }
+        return messages;
     }
 
     [HttpDelete("DeleteMessage")]
