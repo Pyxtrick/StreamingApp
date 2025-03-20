@@ -49,7 +49,7 @@ public class BannedScheduler : BackgroundService
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
             //TODO: Check if 1 second is enouth for this
-            List<object> values = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedBannedData);
+            List<object> values = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedBannedData);
 
             if (values.Count != 0)
             {

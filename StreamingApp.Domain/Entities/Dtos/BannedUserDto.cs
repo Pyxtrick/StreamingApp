@@ -2,30 +2,22 @@
 
 namespace StreamingApp.Domain.Entities.Dtos;
 
-public class BannedUserDto
-{
-    public BannedUserDto(string userId, string messageId, string userName, string lastMessage, string reson, BannedTargetEnum bannedTargetEnum, DateTime date)
+public class BannedUserDto(string userId, string messageId, string userName, string lastMessage, string reson, BannedTargetEnum targetEnum, bool isUsed, DateTime date)
     {
-        UserId = userId;
-        MessageId = messageId;
-        UserName = userName;
-        LastMessage = lastMessage;
-        Reson = reson;
-        TargetEnum = bannedTargetEnum;
-        Date = date;
-    }
 
-    public string UserId { get; set; }
+    public string UserId { get; set; } = userId;
 
-    public string MessageId { get; set; }
+    public string MessageId { get; set; } = messageId;
 
-    public string UserName { get; set; }
+    public string UserName { get; set; } = userName;
 
-    public string LastMessage { get; set; }
+    public string LastMessage { get; set; } = lastMessage;
 
-    public string Reson { get; set; }
+    public string Reson { get; set; } = reson;
 
-    public BannedTargetEnum TargetEnum { get; set; }
+    public BannedTargetEnum TargetEnum { get; set; } = targetEnum;
 
-    public DateTime Date { get; set; }
+    public bool IsUsed { get; set; } = isUsed;
+
+    public DateTime Date { get; set; } = DateTime.UtcNow;
 }

@@ -21,6 +21,7 @@ public class MessageAlertDto(
     AlertTypeEnum alertType,
     List<AuthEnum> auth,
     bool isSub,
+    bool isUsed,
     DateTime utcNow)
     : TwitchBase(messageId, userId, userName, utcNow)
 {
@@ -48,4 +49,6 @@ public class MessageAlertDto(
     public List<AuthEnum> Auth { get; set; } = auth;
 
     public bool IsSub { get; set; } = isSub;
+
+    public bool IsUsed { get; set; } = isUsed;
 }

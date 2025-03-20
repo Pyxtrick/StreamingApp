@@ -9,6 +9,7 @@ public class SubDto(string messageId,
     int gifftedSubCount,
     TierEnum currentTier,
     MessageDto? chatMessage,
+    bool isUsed,
     DateTime utcNow)
     : TwitchBase(messageId, userId, userName, utcNow)
 {
@@ -19,4 +20,6 @@ public class SubDto(string messageId,
     public TierEnum CurrentTier { get; set; } = currentTier;
 
     public MessageDto? ChatMessage { get; set; } = chatMessage;
+
+    public bool IsUsed { get; set; } = isUsed;
 }

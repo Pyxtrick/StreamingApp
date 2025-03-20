@@ -47,7 +47,7 @@ public class ManageDeleted : IManageDeleted
 
         foreach (var message in messages)
         {
-            BannedUserDto bannedMessage = new(message.UserId, message.MessageId, message.UserName, message.Message, bannedUserDto.Reson, bannedUserDto.TargetEnum, message.Date);
+            BannedUserDto bannedMessage = new(message.UserId, message.MessageId, message.UserName, message.Message, bannedUserDto.Reson, bannedUserDto.TargetEnum, false, message.Date);
 
             await _sendSignalRMessage.SendBannedEventMessage(bannedMessage);
         }

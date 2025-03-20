@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.DB;
+using StreamingApp.Domain.Common;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 
@@ -49,58 +51,63 @@ public class AlertScheduler : BackgroundService
     {
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
-            List<object> alertObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedAlertData);
-            List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedSubData);
-            List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedRaidData);
+            var settings = scope.ServiceProvider.GetRequiredService<UnitOfWorkContext>().Settings.FirstOrDefault();
 
-            if (alertObject.IsNullOrEmpty() != false)
+            if (settings.MuteAllerts == false)
             {
-                try
+                List<object> alertObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedAlertData);
+                List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
+                List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
+
+                if (alertObject.IsNullOrEmpty() != false)
                 {
-                    var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
-                    
-                    foreach (var alert in alerts)
+                    try
                     {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
+                        var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
+
+                        foreach (var alert in alerts)
+                        {
+                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                }
-            }
 
-            if (subObject.IsNullOrEmpty() != false)
-            {
-                try
+                if (subObject.IsNullOrEmpty() != false)
                 {
-                    var subs = subObject.ConvertAll(s => (SubDto)s);
-                    
-                    foreach (var sub in subs)
+                    try
                     {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
+                        var subs = subObject.ConvertAll(s => (SubDto)s);
+
+                        foreach (var sub in subs)
+                        {
+                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
                     }
                 }
-                catch(Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                }
-            }
 
-            if (raidObject.IsNullOrEmpty() != false)
-            {
-                try
+                if (raidObject.IsNullOrEmpty() != false)
                 {
-                    var raids = raidObject.ConvertAll(s => (RaidDto)s);
-                    
-                    foreach (var raid in raids)
+                    try
                     {
-                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
+                        var raids = raidObject.ConvertAll(s => (RaidDto)s);
+
+                        foreach (var raid in raids)
+                        {
+                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
                 }
             }
         }

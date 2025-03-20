@@ -27,6 +27,7 @@ public class TwitchMappingProfile : Profile
                 EffectEnum.none,
                 x.IsSubscriber,
                 x.SubscribedMonthCount,
+                false,
                 DateTime.UtcNow
             ));
 
@@ -47,6 +48,7 @@ public class TwitchMappingProfile : Profile
                 AlertTypeEnum.Undefined,
                 MappAuth(x),
                 x.IsSubscriber,
+                false,
                 DateTime.UtcNow
             ));
     }

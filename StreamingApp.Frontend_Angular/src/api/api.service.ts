@@ -828,7 +828,7 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
-    getChachedData(): Observable<void> {
+    getChachedData(): Observable<MessageDto[]> {
         let url_ = this.baseUrl + "/api/Test/GetCacheData";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -836,6 +836,7 @@ export class TestClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -846,14 +847,14 @@ export class TestClient {
                 try {
                     return this.processGetChachedData(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<MessageDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<MessageDto[]>;
         }));
     }
 
-    protected processGetChachedData(response: HttpResponseBase): Observable<void> {
+    protected processGetChachedData(response: HttpResponseBase): Observable<MessageDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -862,7 +863,17 @@ export class TestClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(MessageDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -1675,6 +1686,306 @@ export enum UserTypeEnum {
     Editor = 6,
     Artist = 7,
     Viewer = 8,
+}
+
+export class TwitchBase implements ITwitchBase {
+    messageId!: string;
+    userId!: string;
+    userName!: string;
+    date!: Date;
+
+    constructor(data?: ITwitchBase) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.messageId = _data["messageId"] !== undefined ? _data["messageId"] : <any>null;
+            this.userId = _data["userId"] !== undefined ? _data["userId"] : <any>null;
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TwitchBase {
+        data = typeof data === 'object' ? data : {};
+        let result = new TwitchBase();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["messageId"] = this.messageId !== undefined ? this.messageId : <any>null;
+        data["userId"] = this.userId !== undefined ? this.userId : <any>null;
+        data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["date"] = this.date ? this.date.toISOString() : <any>null;
+        return data;
+    }
+}
+
+export interface ITwitchBase {
+    messageId: string;
+    userId: string;
+    userName: string;
+    date: Date;
+}
+
+export class MessageDto extends TwitchBase implements IMessageDto {
+    isCommand!: boolean;
+    channel!: string;
+    colorHex!: string;
+    replayMessage?: string | null;
+    message!: string;
+    emoteReplacedMessage!: string;
+    emotes!: EmoteSet[];
+    badges?: KeyValuePairOfStringAndString[] | null;
+    chatOrigin!: ChatOriginEnum;
+    auth!: AuthEnum[];
+    specialMessage!: SpecialMessgeEnum[];
+    effect!: EffectEnum;
+    isSub!: boolean;
+    subCount!: number;
+    isUsed!: boolean;
+
+    constructor(data?: IMessageDto) {
+        super(data);
+        if (!data) {
+            this.emotes = [];
+            this.auth = [];
+            this.specialMessage = [];
+        }
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.isCommand = _data["isCommand"] !== undefined ? _data["isCommand"] : <any>null;
+            this.channel = _data["channel"] !== undefined ? _data["channel"] : <any>null;
+            this.colorHex = _data["colorHex"] !== undefined ? _data["colorHex"] : <any>null;
+            this.replayMessage = _data["replayMessage"] !== undefined ? _data["replayMessage"] : <any>null;
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
+            this.emoteReplacedMessage = _data["emoteReplacedMessage"] !== undefined ? _data["emoteReplacedMessage"] : <any>null;
+            if (Array.isArray(_data["emotes"])) {
+                this.emotes = [] as any;
+                for (let item of _data["emotes"])
+                    this.emotes!.push(EmoteSet.fromJS(item));
+            }
+            else {
+                this.emotes = <any>null;
+            }
+            if (Array.isArray(_data["badges"])) {
+                this.badges = [] as any;
+                for (let item of _data["badges"])
+                    this.badges!.push(KeyValuePairOfStringAndString.fromJS(item));
+            }
+            else {
+                this.badges = <any>null;
+            }
+            this.chatOrigin = _data["chatOrigin"] !== undefined ? _data["chatOrigin"] : <any>null;
+            if (Array.isArray(_data["auth"])) {
+                this.auth = [] as any;
+                for (let item of _data["auth"])
+                    this.auth!.push(item);
+            }
+            else {
+                this.auth = <any>null;
+            }
+            if (Array.isArray(_data["specialMessage"])) {
+                this.specialMessage = [] as any;
+                for (let item of _data["specialMessage"])
+                    this.specialMessage!.push(item);
+            }
+            else {
+                this.specialMessage = <any>null;
+            }
+            this.effect = _data["effect"] !== undefined ? _data["effect"] : <any>null;
+            this.isSub = _data["isSub"] !== undefined ? _data["isSub"] : <any>null;
+            this.subCount = _data["subCount"] !== undefined ? _data["subCount"] : <any>null;
+            this.isUsed = _data["isUsed"] !== undefined ? _data["isUsed"] : <any>null;
+        }
+    }
+
+    static override fromJS(data: any): MessageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MessageDto();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isCommand"] = this.isCommand !== undefined ? this.isCommand : <any>null;
+        data["channel"] = this.channel !== undefined ? this.channel : <any>null;
+        data["colorHex"] = this.colorHex !== undefined ? this.colorHex : <any>null;
+        data["replayMessage"] = this.replayMessage !== undefined ? this.replayMessage : <any>null;
+        data["message"] = this.message !== undefined ? this.message : <any>null;
+        data["emoteReplacedMessage"] = this.emoteReplacedMessage !== undefined ? this.emoteReplacedMessage : <any>null;
+        if (Array.isArray(this.emotes)) {
+            data["emotes"] = [];
+            for (let item of this.emotes)
+                data["emotes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.badges)) {
+            data["badges"] = [];
+            for (let item of this.badges)
+                data["badges"].push(item.toJSON());
+        }
+        data["chatOrigin"] = this.chatOrigin !== undefined ? this.chatOrigin : <any>null;
+        if (Array.isArray(this.auth)) {
+            data["auth"] = [];
+            for (let item of this.auth)
+                data["auth"].push(item);
+        }
+        if (Array.isArray(this.specialMessage)) {
+            data["specialMessage"] = [];
+            for (let item of this.specialMessage)
+                data["specialMessage"].push(item);
+        }
+        data["effect"] = this.effect !== undefined ? this.effect : <any>null;
+        data["isSub"] = this.isSub !== undefined ? this.isSub : <any>null;
+        data["subCount"] = this.subCount !== undefined ? this.subCount : <any>null;
+        data["isUsed"] = this.isUsed !== undefined ? this.isUsed : <any>null;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IMessageDto extends ITwitchBase {
+    isCommand: boolean;
+    channel: string;
+    colorHex: string;
+    replayMessage?: string | null;
+    message: string;
+    emoteReplacedMessage: string;
+    emotes: EmoteSet[];
+    badges?: KeyValuePairOfStringAndString[] | null;
+    chatOrigin: ChatOriginEnum;
+    auth: AuthEnum[];
+    specialMessage: SpecialMessgeEnum[];
+    effect: EffectEnum;
+    isSub: boolean;
+    subCount: number;
+    isUsed: boolean;
+}
+
+export class EmoteSet implements IEmoteSet {
+    name!: string;
+    animatedURL!: string;
+    staticURL!: string;
+
+    constructor(data?: IEmoteSet) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.animatedURL = _data["animatedURL"] !== undefined ? _data["animatedURL"] : <any>null;
+            this.staticURL = _data["staticURL"] !== undefined ? _data["staticURL"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): EmoteSet {
+        data = typeof data === 'object' ? data : {};
+        let result = new EmoteSet();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["animatedURL"] = this.animatedURL !== undefined ? this.animatedURL : <any>null;
+        data["staticURL"] = this.staticURL !== undefined ? this.staticURL : <any>null;
+        return data;
+    }
+}
+
+export interface IEmoteSet {
+    name: string;
+    animatedURL: string;
+    staticURL: string;
+}
+
+export class KeyValuePairOfStringAndString implements IKeyValuePairOfStringAndString {
+    key?: string | null;
+    value?: string | null;
+
+    constructor(data?: IKeyValuePairOfStringAndString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.key = _data["key"] !== undefined ? _data["key"] : <any>null;
+            this.value = _data["value"] !== undefined ? _data["value"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): KeyValuePairOfStringAndString {
+        data = typeof data === 'object' ? data : {};
+        let result = new KeyValuePairOfStringAndString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["key"] = this.key !== undefined ? this.key : <any>null;
+        data["value"] = this.value !== undefined ? this.value : <any>null;
+        return data;
+    }
+}
+
+export interface IKeyValuePairOfStringAndString {
+    key?: string | null;
+    value?: string | null;
+}
+
+export enum ChatOriginEnum {
+    Twtich = 0,
+    Youtube = 1,
+    Undefined = 2,
+}
+
+export enum SpecialMessgeEnum {
+    Undefined = 0,
+    FirstMessage = 1,
+    Highlighted = 2,
+    SkippSubMode = 3,
+    SubMessage = 4,
+    FirstStreamMessage = 5,
+    RaidMessage = 6,
+}
+
+export enum EffectEnum {
+    None = 0,
+    Flip = 1,
+    Rainbow = 2,
+    Revert = 3,
+    Bounce = 4,
+    Shake = 5,
+    Wave = 6,
+    Wiggle = 7,
+    Randamise = 8,
+    Translatehell = 9,
+    Gigantify = 10,
 }
 
 export class ApiException extends Error {
