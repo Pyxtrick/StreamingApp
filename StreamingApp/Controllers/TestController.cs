@@ -28,7 +28,7 @@ public class TestController : ControllerBase
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
             "testuser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich,
-            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.Now);
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
 
@@ -40,7 +40,7 @@ public class TestController : ControllerBase
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") },
-            ChatOriginEnum.Twtich, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, DateTime.UtcNow);
+            ChatOriginEnum.Twtich, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }
@@ -58,7 +58,7 @@ public class TestController : ControllerBase
     [HttpDelete("DeleteMessage")]
     public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string messageId)
     {
-        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, DateTime.UtcNow);
+        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
     }

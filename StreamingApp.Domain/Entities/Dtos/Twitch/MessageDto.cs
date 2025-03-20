@@ -23,6 +23,7 @@ public class MessageDto(
     EffectEnum effect,
     bool isSub,
     int subCount,
+    bool isUsed,
     DateTime utcNow)
     : TwitchBase(messageId, userId, userName, utcNow)
 {
@@ -54,4 +55,6 @@ public class MessageDto(
     public bool IsSub { get; set; } = isSub;
 
     public int SubCount { get; set; } = subCount;
+
+    public bool IsUsed { get; set; } = isUsed;
 }

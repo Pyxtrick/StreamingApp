@@ -26,7 +26,7 @@ public class ManageScheduler : IManageScheduler
         if(trigger.ScheduleTime < 30)
         {
             var messageCount = 0;
-            List<object> value = _twitchCallCache.GetAllMessagesFromTo(DateTime.Now.AddSeconds(trigger.ScheduleTime * -1), DateTime.Now, CallCacheEnum.CachedMessageData);
+            List<object> value = _twitchCallCache.GetAllUnusedMessages(CallCacheEnum.CachedMessageData);
 
             if (value.Count != 0)
             {

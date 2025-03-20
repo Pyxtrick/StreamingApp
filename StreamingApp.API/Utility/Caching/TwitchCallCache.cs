@@ -3,6 +3,8 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
+using TwitchLib.Api.Helix;
+using TwitchLib.Api.Helix.Models.Raids;
 
 namespace StreamingApp.API.Utility.Caching;
 public class TwitchCallCache : ITwitchCallCache
@@ -90,18 +92,110 @@ public class TwitchCallCache : ITwitchCallCache
         }
     }
 
+    public void UpdateIsUsed(List<Object> data, CallCacheEnum callCacheEnum)
+    {
+        foreach (var item in data)
+        {
+            switch (callCacheEnum)
+            {
+                case CallCacheEnum.CachedMessageData:
+                    var messageIndex = _twitchCallCacheData.CachedMessageData.FindIndex(t => t.MessageId == ((MessageDto)item).MessageId);
+
+                    if(messageIndex != -1)
+                    {
+                        _twitchCallCacheData.CachedMessageData[messageIndex].IsUsed = true;
+                    }
+                    break;
+                case CallCacheEnum.CachedSubData:
+                    var subIndex = _twitchCallCacheData.CachedSubData.FindIndex(t => t.MessageId == ((SubDto)item).MessageId);
+
+                    if (subIndex != -1)
+                    {
+                        _twitchCallCacheData.CachedSubData[subIndex].IsUsed = true;
+                    }
+                    break;
+                case CallCacheEnum.CachedAlertData:
+                    var alertIndex = _twitchCallCacheData.CachedAlertData.FindIndex(t => t.MessageId == ((MessageAlertDto)item).MessageId);
+
+                    if (alertIndex != -1)
+                    {
+                        _twitchCallCacheData.CachedAlertData[alertIndex].IsUsed = true;
+                    }
+                    break;
+                case CallCacheEnum.CachedRaidData:
+                    var raidIndex = _twitchCallCacheData.CachedRaidData.FindIndex(t => t.UserName == ((RaidDto)item).UserName);
+
+                    if (raidIndex != -1)
+                    {
+                        _twitchCallCacheData.CachedRaidData[raidIndex].IsUsed = true;
+                    }
+                    break;
+                case CallCacheEnum.CachedBannedData:
+                    var bannedIndex = _twitchCallCacheData.CachedBannedData.FindIndex(t => t.UserName == ((RaidDto)item).UserName);
+
+                    if(bannedIndex != -1)
+                    {
+                        _twitchCallCacheData.CachedBannedData[bannedIndex].IsUsed = true;
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine("Unknown data type.");
+                    break;
+            }
+        }
+    }
+
     public List<Object> GetAllMessages(CallCacheEnum callCacheEnum)
     {
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
-                return _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
+                var messages = _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
+                UpdateIsUsed(messages, callCacheEnum);
+                return messages;
             case CallCacheEnum.CachedSubData:
-                return _twitchCallCacheData.CachedSubData.ConvertAll(s => (Object)s);
+                var subs = _twitchCallCacheData.CachedSubData.ConvertAll(s => (Object)s);
+                UpdateIsUsed(subs, callCacheEnum);
+                return subs;
             case CallCacheEnum.CachedAlertData:
-                return _twitchCallCacheData.CachedAlertData.ConvertAll(s => (Object)s);
+                var alerts = _twitchCallCacheData.CachedAlertData.ConvertAll(s => (Object)s);
+                UpdateIsUsed(alerts, callCacheEnum);
+                return alerts;
             case CallCacheEnum.CachedRaidData:
-                return _twitchCallCacheData.CachedRaidData.ConvertAll(s => (Object)s);
+                var raids = _twitchCallCacheData.CachedRaidData.ConvertAll(s => (Object)s);
+                UpdateIsUsed(raids, callCacheEnum);
+                return raids;
+            default:
+                Console.WriteLine("Unknown data type.");
+                return new List<Object>();
+        }
+    }
+
+    public List<Object> GetAllUnusedMessages(CallCacheEnum callCacheEnum)
+    {
+        switch (callCacheEnum)
+        {
+            case CallCacheEnum.CachedMessageData:
+                var messages = _twitchCallCacheData.CachedMessageData.Where(t => t.IsUsed == false).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(messages, callCacheEnum);
+                return messages;
+            case CallCacheEnum.CachedSubData:
+                var subs = _twitchCallCacheData.CachedSubData.Where(t => t.IsUsed == false).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(subs, callCacheEnum);
+                return subs;
+            case CallCacheEnum.CachedAlertData:
+                var alerts = _twitchCallCacheData.CachedAlertData.Where(t => t.IsUsed == false).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(alerts, callCacheEnum);
+                return alerts;
+            case CallCacheEnum.CachedRaidData:
+                var raids = _twitchCallCacheData.CachedRaidData.Where(t => t.IsUsed == false).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(raids, callCacheEnum);
+                return raids;
+            case CallCacheEnum.CachedBannedData:
+                var banned = _twitchCallCacheData.CachedBannedData.Where(t => t.IsUsed == false).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(banned, callCacheEnum);
+                return banned;
             default:
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();
@@ -141,15 +235,25 @@ public class TwitchCallCache : ITwitchCallCache
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
-                return _twitchCallCacheData.CachedMessageData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                var messages = _twitchCallCacheData.CachedMessageData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(messages, callCacheEnum);
+                return messages;
             case CallCacheEnum.CachedSubData:
-                return _twitchCallCacheData.CachedSubData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                var subs = _twitchCallCacheData.CachedSubData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(subs, callCacheEnum);
+                return subs;
             case CallCacheEnum.CachedAlertData:
-                return _twitchCallCacheData.CachedAlertData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                var alerts = _twitchCallCacheData.CachedAlertData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(alerts, callCacheEnum);
+                return alerts;
             case CallCacheEnum.CachedRaidData:
-                return _twitchCallCacheData.CachedRaidData.Where(t => t.utcNow >= from && t.utcNow <= to).ToList().ConvertAll(s => (Object)s);
+                var raids = _twitchCallCacheData.CachedRaidData.Where(t => t.utcNow >= from && t.utcNow <= to).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(raids, callCacheEnum);
+                return raids;
             case CallCacheEnum.CachedBannedData:
-                return _twitchCallCacheData.CachedBannedData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                var banned = _twitchCallCacheData.CachedBannedData.Where(t => t.Date >= from && t.Date <= to).ToList().ConvertAll(s => (Object)s);
+                UpdateIsUsed(banned, callCacheEnum);
+                return banned;
             default:
                 Console.WriteLine("Unknown data type.");
                 return new List<Object>();

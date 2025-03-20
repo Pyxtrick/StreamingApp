@@ -56,7 +56,7 @@ public class ManageMessages : IManageMessages
     public async Task Execute()
     {
         // TODO: get Seconds from appsettings | _configuration["RefreshDelay:ChatRefresh"]
-        List<object> value = _twitchCallCache.GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+        List<object> value = _twitchCallCache.GetAllUnusedMessages(CallCacheEnum.CachedMessageData);
 
         if (value.Count != 0)
         {

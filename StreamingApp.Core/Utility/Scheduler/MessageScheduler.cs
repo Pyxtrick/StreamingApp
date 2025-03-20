@@ -49,7 +49,7 @@ public class MessageScheduler : BackgroundService
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
             //TODO: Check if 1 second is enouth for this
-            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllMessagesFromTo(DateTime.UtcNow.AddSeconds(timer * -1), DateTime.UtcNow, CallCacheEnum.CachedMessageData);
+            List<object> value = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedMessageData);
 
             if (value.Count != 0)
             {
