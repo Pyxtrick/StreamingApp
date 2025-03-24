@@ -144,6 +144,8 @@ public class ManageStream : IManageStream
             await ChangeCategory(true);
 
             _twitchSendRequest.SendChatMessage($"Stream Started with Title '{newStream.StreamTitle}'");
+            
+            // TODO: Send Discord Notification
         }
     }
 
@@ -169,7 +171,7 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            _twitchSendRequest.SendChatMessage($"Stream Ended with Title '{stream.StreamTitle}'");
+            _twitchSendRequest.SendChatMessage($"Stream is Ending, Thank you for watching <3");
         }
     }
 
