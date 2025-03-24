@@ -3,9 +3,9 @@
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDGameInfos
 {
-    List<GameInfoDto> GetAll();
+    Task<List<GameInfoDto>> GetAll();
 
-    List<GameInfoDto> CreateOrUpdtateAll(List<GameInfoDto> gameInfos);
+    Task<List<GameInfoDto>> CreateOrUpdtateAll(List<GameInfoDto> gameInfos);
 
-    bool Delete(List<GameInfoDto> gameInfos);
+    Task<bool> Delete(List<GameInfoDto> gameInfos);
 }

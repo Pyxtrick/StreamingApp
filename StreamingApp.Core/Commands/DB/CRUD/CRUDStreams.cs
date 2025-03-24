@@ -18,14 +18,14 @@ public class CRUDStreams : ICRUDStreams
         _mapper = mapper;
     }
 
-    public List<StreamDto> GetAll()
+    public async Task<List<StreamDto>> GetAll()
     {
         List<Stream> streams = _unitOfWork.StreamHistory.Include("GameCategories").Include("GameCategory").ToList();
 
         return streams.Select(_mapper.Map<StreamDto>).ToList();
     }
 
-    public List<StreamDto> CreateOrUpdtateAll(List<StreamDto> streams)
+    public async Task<List<StreamDto>> CreateOrUpdtateAll(List<StreamDto> streams)
     {
         List<Stream> allStreams = _unitOfWork.StreamHistory.ToList();
 
@@ -43,23 +43,23 @@ public class CRUDStreams : ICRUDStreams
             {
                 var mappedData = _mapper.Map<Stream>(stream);
 
-                _unitOfWork.Add(mappedData);
+                await _unitOfWork.AddAsync(mappedData);
                 allStreams.Add(mappedData);
             }
         }
 
-        _unitOfWork.SaveChanges();
+        await _unitOfWork.SaveChangesAsync();
 
         return streams.Select(_mapper.Map<StreamDto>).ToList();
     }
 
-    public bool Delete(List<StreamDto> streams)
+    public async Task<bool> Delete(List<StreamDto> streams)
     {
         try
         {
             foreach (StreamDto stream in streams)
             {
-                var removeData = _unitOfWork.StreamHistory.FirstOrDefault(t => t.Id == stream.Id);
+                var removeData = await _unitOfWork.StreamHistory.FirstOrDefaultAsync(t => t.Id == stream.Id);
 
                 if (removeData != null)
                 {
@@ -67,7 +67,7 @@ public class CRUDStreams : ICRUDStreams
                 }
             }
 
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

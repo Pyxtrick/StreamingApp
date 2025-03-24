@@ -6,17 +6,17 @@ using StreamingApp.Domain.Enums;
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDUsers
 {
-    List<UserDto> GetAll();
+    Task<List<UserDto>> GetAll();
 
     Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth);
     
-    Task UpdateAchievements(string userId);
+    Task<bool> UpdateAchievements(string userId);
 
-    Task UpdateAuth(string userId, List<AuthEnum> auths);
+    Task<bool> UpdateAuth(string userId, List<AuthEnum> auths);
 
-    Task UpdateSub(string userId, bool isSub, TierEnum tier, int subTime);
+    Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime);
 
-    Task UpdateBan(string userId, BannedUserDto bannedUserDto);
+    Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto);
 
-    bool Delete(List<UserDto> commands);
+    Task<bool> Delete(List<UserDto> commands);
 }

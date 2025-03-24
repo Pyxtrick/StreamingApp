@@ -3,9 +3,9 @@
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDStreams
 {
-    List<StreamDto> GetAll();
+    Task<List<StreamDto>> GetAll();
 
-    List<StreamDto> CreateOrUpdtateAll(List<StreamDto> streams);
+    Task<List<StreamDto>> CreateOrUpdtateAll(List<StreamDto> streams);
 
-    bool Delete(List<StreamDto> streams);
+    Task<bool> Delete(List<StreamDto> streams);
 }

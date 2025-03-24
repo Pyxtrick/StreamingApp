@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
@@ -17,14 +18,14 @@ public class CRUDGameInfos : ICRUDGameInfos
         _mapper = mapper;
     }
 
-    public List<GameInfoDto> GetAll()
+    public async Task<List<GameInfoDto>> GetAll()
     {
         List<GameInfo> gameInfos = _unitOfWork.GameInfo.ToList();
 
         return gameInfos.Select(_mapper.Map<GameInfoDto>).ToList();
     }
 
-    public List<GameInfoDto> CreateOrUpdtateAll(List<GameInfoDto> commands)
+    public async Task<List<GameInfoDto>> CreateOrUpdtateAll(List<GameInfoDto> commands)
     {
         List<GameInfo> allGameInfos = _unitOfWork.GameInfo.ToList();
 
@@ -42,23 +43,23 @@ public class CRUDGameInfos : ICRUDGameInfos
             {
                 var mappedData = _mapper.Map<GameInfo>(specialWord);
 
-                _unitOfWork.Add(mappedData);
+                await _unitOfWork.AddAsync(mappedData);
                 allGameInfos.Add(mappedData);
             }
         }
 
-        _unitOfWork.SaveChanges();
+        await _unitOfWork.SaveChangesAsync();
 
         return allGameInfos.Select(_mapper.Map<GameInfoDto>).ToList();
     }
 
-    public bool Delete(List<GameInfoDto> gameInfos)
+    public async Task<bool> Delete(List<GameInfoDto> gameInfos)
     {
         try
         {
             foreach (GameInfoDto gameInfo in gameInfos)
             {
-                var removeData = _unitOfWork.GameInfo.FirstOrDefault(t => t.Id == gameInfo.Id);
+                var removeData = await _unitOfWork.GameInfo.FirstOrDefaultAsync(t => t.Id == gameInfo.Id);
 
                 if (removeData != null)
                 {
@@ -66,7 +67,7 @@ public class CRUDGameInfos : ICRUDGameInfos
                 }
             }
 
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

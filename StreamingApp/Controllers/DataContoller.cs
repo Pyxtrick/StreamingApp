@@ -12,9 +12,9 @@ public class DataContoller : ControllerBase
 {
     #region Commands
     [HttpGet("Commands")]
-    public CommandRespose GetAllCommands([FromServices] ICRUDCommands crudCommands)
+    public async Task<CommandRespose> GetAllCommands([FromServices] ICRUDCommands crudCommands)
     {
-        var commands = crudCommands.GetAll();
+        var commands = await crudCommands.GetAll();
 
         return new CommandRespose()
         {
@@ -24,9 +24,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpPost("Commands")]
-    public CommandRespose UpdateCommands([FromServices] ICRUDCommands crudCommands, List<CommandAndResponseDto> commandAndResponses)
+    public async Task<CommandRespose> UpdateCommands([FromServices] ICRUDCommands crudCommands, List<CommandAndResponseDto> commandAndResponses)
     {
-        var commands = crudCommands.CreateOrUpdtateAll(commandAndResponses);
+        var commands = await crudCommands.CreateOrUpdtateAll(commandAndResponses);
 
         return new CommandRespose()
         {
@@ -36,9 +36,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpDelete("Commands")]
-    public CommandRespose DeleteCommands([FromServices] ICRUDCommands crudCommands, List<CommandAndResponseDto> commandAndResponses)
+    public async Task<CommandRespose> DeleteCommands([FromServices] ICRUDCommands crudCommands, List<CommandAndResponseDto> commandAndResponses)
     {
-        var sucsess = crudCommands.Delete(commandAndResponses);
+        var sucsess = await crudCommands.Delete(commandAndResponses);
 
         return new CommandRespose()
         {
@@ -49,9 +49,9 @@ public class DataContoller : ControllerBase
     
     #region GameInfo
     [HttpGet("GameInfos")]
-    public GameInfoRespose GetAllGameInfos([FromServices] ICRUDGameInfos crudGameInfos)
+    public async Task<GameInfoRespose> GetAllGameInfos([FromServices] ICRUDGameInfos crudGameInfos)
     {
-        var gameInfos = crudGameInfos.GetAll();
+        var gameInfos = await crudGameInfos.GetAll();
 
         return new GameInfoRespose()
         {
@@ -61,9 +61,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpPost("GameInfos")]
-    public GameInfoRespose UpdateGameInfos([FromServices] ICRUDGameInfos crudGameInfos, List<GameInfoDto> gameInfoDtos)
+    public async Task<GameInfoRespose> UpdateGameInfos([FromServices] ICRUDGameInfos crudGameInfos, List<GameInfoDto> gameInfoDtos)
     {
-        var gameInfos = crudGameInfos.CreateOrUpdtateAll(gameInfoDtos);
+        var gameInfos = await crudGameInfos.CreateOrUpdtateAll(gameInfoDtos);
 
         return new GameInfoRespose()
         {
@@ -73,9 +73,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpDelete("GameInfos")]
-    public GameInfoRespose DeleteGameInfos([FromServices] ICRUDGameInfos crudGameInfos, List<GameInfoDto> gameInfoDtos)
+    public async Task<GameInfoRespose> DeleteGameInfos([FromServices] ICRUDGameInfos crudGameInfos, List<GameInfoDto> gameInfoDtos)
     {
-        var sucsess = crudGameInfos.Delete(gameInfoDtos);
+        var sucsess = await crudGameInfos.Delete(gameInfoDtos);
 
         return new GameInfoRespose()
         {
@@ -86,9 +86,9 @@ public class DataContoller : ControllerBase
 
     #region Settings
     [HttpGet("Settings")]
-    public SettingsRespose GetAllSettings([FromServices] ICRUDSettings crudSettings)
+    public async Task<SettingsRespose> GetAllSettings([FromServices] ICRUDSettings crudSettings)
     {
-        var settings = crudSettings.GetAll();
+        var settings = await crudSettings.GetAll();
 
         return new SettingsRespose()
         {
@@ -104,7 +104,6 @@ public class DataContoller : ControllerBase
 
         return new SettingsRespose()
         {
-            Settings = null,
             isSucsess = gameInfos
         };
     }
@@ -112,9 +111,9 @@ public class DataContoller : ControllerBase
 
     #region SpecialWord
     [HttpGet("SpecialWords")]
-    public SpecialWordRespose GetAllspecialWords([FromServices] ICRUDSpecialWords getSpecialWords)
+    public async Task<SpecialWordRespose> GetAllspecialWords([FromServices] ICRUDSpecialWords getSpecialWords)
     {
-        var specialWords = getSpecialWords.GetAll();
+        var specialWords = await getSpecialWords.GetAll();
 
         return new SpecialWordRespose()
         {
@@ -124,9 +123,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpPost("SpecialWords")]
-    public SpecialWordRespose UpdatespecialWords([FromServices] ICRUDSpecialWords updateSpecialWords, List<SpecialWordDto> commandAndResponses)
+    public async Task<SpecialWordRespose> UpdatespecialWords([FromServices] ICRUDSpecialWords updateSpecialWords, List<SpecialWordDto> commandAndResponses)
     {
-        var specialWords = updateSpecialWords.CreateOrUpdtateAll(commandAndResponses);
+        var specialWords = await updateSpecialWords.CreateOrUpdtateAll(commandAndResponses);
 
         return new SpecialWordRespose()
         {
@@ -136,9 +135,9 @@ public class DataContoller : ControllerBase
     }
 
     [HttpDelete("SpecialWords")]
-    public SpecialWordRespose DeletespecialWords([FromServices] ICRUDSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
+    public async Task<SpecialWordRespose> DeletespecialWords([FromServices] ICRUDSpecialWords deleteSpecialWords, List<SpecialWordDto> commandAndResponses)
     {
-        var sucsess = deleteSpecialWords.Delete(commandAndResponses);
+        var sucsess = await deleteSpecialWords.Delete(commandAndResponses);
 
         return new SpecialWordRespose()
         {
@@ -149,9 +148,9 @@ public class DataContoller : ControllerBase
 
     #region Stream
     [HttpGet("Streams")]
-    public StreamRespose GetAllStreams([FromServices] ICRUDStreams crudStreams)
+    public async Task<StreamRespose> GetAllStreams([FromServices] ICRUDStreams crudStreams)
     {
-        var streams = crudStreams.GetAll();
+        var streams = await crudStreams.GetAll();
 
         return new StreamRespose()
         {
@@ -163,9 +162,9 @@ public class DataContoller : ControllerBase
 
     #region Users
     [HttpGet("Users")]
-    public UserRespose GetAllUsers([FromServices] ICRUDUsers crudUsers)
+    public async Task<UserRespose> GetAllUsers([FromServices] ICRUDUsers crudUsers)
     {
-        var users = crudUsers.GetAll();
+        var users = await crudUsers.GetAll();
 
         return new UserRespose()
         {

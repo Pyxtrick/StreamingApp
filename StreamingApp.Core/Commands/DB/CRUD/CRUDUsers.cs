@@ -20,7 +20,7 @@ public class CRUDUsers : ICRUDUsers
         _mapper = mapper;
     }
 
-    public List<UserDto> GetAll()
+    public async Task<List<UserDto>> GetAll()
     {
         List<User> users = _unitOfWork.User.Include("TwitchDetail").Include("Status").Include("TwitchAchievements").ToList();
 
@@ -109,7 +109,7 @@ public class CRUDUsers : ICRUDUsers
         return user;
     }
 
-    public async Task UpdateAchievements(string userId)
+    public async Task<bool> UpdateAchievements(string userId)
     {
         var stream = await _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).LastAsync();
 
@@ -125,12 +125,23 @@ public class CRUDUsers : ICRUDUsers
                 achievements.WachedStreams++;
 
                 //_unitOfWork.Achievements.Update(achievements);
-                await _unitOfWork.SaveChangesAsync();
+                try
+                {
+                    await _unitOfWork.SaveChangesAsync();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
         }
+        
+        return false;
     }
 
-    public async Task UpdateAuth(string userId, List<AuthEnum> auths)
+    public async Task<bool> UpdateAuth(string userId, List<AuthEnum> auths)
     {
         User user = _unitOfWork.User.Include("Status").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
         if (user != null)
@@ -140,11 +151,22 @@ public class CRUDUsers : ICRUDUsers
             user.Status.IsMod = auths.Contains(AuthEnum.Mod);
             user.Status.IsRaider = auths.Contains(AuthEnum.Raider);
 
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                await _unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
+
+        return false;
     }
 
-    public async Task UpdateSub(string userId, bool isSub, TierEnum tier, int subTime)
+    public async Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime)
     {
         User user = _unitOfWork.User.Include("Status").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
         if (user != null)
@@ -154,18 +176,29 @@ public class CRUDUsers : ICRUDUsers
                 user.Status.TwitchSub.CurrentySubscribed = isSub;
                 user.Status.TwitchSub.SubscribedTime = user.Status.TwitchSub.SubscribedTime <= subTime ? subTime : user.Status.TwitchSub.SubscribedTime++;
                 user.Status.TwitchSub.CurrentTier = tier;
-
-                await _unitOfWork.SaveChangesAsync();
             }
             else if (user.Status.TwitchSub.CurrentySubscribed == true)
             {
                 user.Status.TwitchSub.CurrentySubscribed = isSub;
                 user.Status.TwitchSub.CurrentTier = tier;
             }
+
+            try
+            {
+                await _unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
+
+        return false;
     }
 
-    public async Task UpdateBan(string userId, BannedUserDto bannedUserDto)
+    public async Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto)
     {
         User user = _unitOfWork.User.Include("Ban").Include("TwitchDetail").Where(u => u.TwitchDetail.UserId == userId).ToList().First();
 
@@ -191,10 +224,19 @@ public class CRUDUsers : ICRUDUsers
             }
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        try
+        {
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
 
-    public bool Delete(List<UserDto> users)
+    public async Task<bool> Delete(List<UserDto> users)
     {
         try
         {
@@ -208,7 +250,7 @@ public class CRUDUsers : ICRUDUsers
                 }
             }
 
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

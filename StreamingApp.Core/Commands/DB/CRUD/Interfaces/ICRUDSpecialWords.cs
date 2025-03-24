@@ -3,9 +3,9 @@
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDSpecialWords
 {
-    List<SpecialWordDto> GetAll();
+    Task<List<SpecialWordDto>> GetAll();
 
-    List<SpecialWordDto> CreateOrUpdtateAll(List<SpecialWordDto> specialWords);
+    Task<List<SpecialWordDto>> CreateOrUpdtateAll(List<SpecialWordDto> specialWords);
 
-    bool Delete(List<SpecialWordDto> specialWords);
+    Task<bool> Delete(List<SpecialWordDto> specialWords);
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Internal;
@@ -17,14 +18,14 @@ public class CRUDCommands : ICRUDCommands
         _mapper = mapper;
     }
 
-    public List<CommandAndResponseDto> GetAll()
+    public async Task<List<CommandAndResponseDto>> GetAll()
     {
         List<CommandAndResponse> commands = _unitOfWork.CommandAndResponse.ToList();
 
         return commands.Select(_mapper.Map<CommandAndResponseDto>).ToList();
     }
 
-    public List<CommandAndResponseDto> CreateOrUpdtateAll(List<CommandAndResponseDto> commands)
+    public async Task<List<CommandAndResponseDto>> CreateOrUpdtateAll(List<CommandAndResponseDto> commands)
     {
         List<CommandAndResponse> allCommands = _unitOfWork.CommandAndResponse.ToList();
 
@@ -42,23 +43,23 @@ public class CRUDCommands : ICRUDCommands
             {
                 var mappedData = _mapper.Map<CommandAndResponse>(specialWord);
 
-                _unitOfWork.Add(mappedData);
+                await _unitOfWork.AddAsync(mappedData);
                 allCommands.Add(mappedData);
             }
         }
 
-        _unitOfWork.SaveChanges();
+        await _unitOfWork.SaveChangesAsync();
 
         return allCommands.Select(_mapper.Map<CommandAndResponseDto>).ToList();
     }
 
-    public bool Delete(List<CommandAndResponseDto> commands)
+    public async Task<bool> Delete(List<CommandAndResponseDto> commands)
     {
         try
         {
             foreach (CommandAndResponseDto command in commands)
             {
-                var removeData = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Id == command.Id);
+                var removeData = await _unitOfWork.CommandAndResponse.FirstOrDefaultAsync(t => t.Id == command.Id);
 
                 if (removeData != null)
                 {
@@ -66,7 +67,7 @@ public class CRUDCommands : ICRUDCommands
                 }
             }
 
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

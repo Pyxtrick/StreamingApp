@@ -18,7 +18,7 @@ public class CRUDSettings : ICRUDSettings
         _mapper = mapper;
     }
 
-    public List<SettingsDto> GetAll()
+    public async Task<List<SettingsDto>> GetAll()
     {
         List<Settings> setting = _unitOfWork.Settings.ToList();
 
