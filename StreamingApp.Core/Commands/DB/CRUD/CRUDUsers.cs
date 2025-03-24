@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal;
 using StreamingApp.Domain.Entities.Internal.User;
 using StreamingApp.Domain.Enums;
 
@@ -30,7 +29,21 @@ public class CRUDUsers : ICRUDUsers
 
     public async Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth)
     {
-        User user = _unitOfWork.User.Where(t => t.TwitchDetail.UserId == twitchUserId).ToList().FirstOrDefault();
+        User user = _unitOfWork.User.Include("TwitchDetail").Where(t => t.TwitchDetail.UserId == twitchUserId).ToList().FirstOrDefault();
+
+        if (user != null)
+        {
+            User userTwo = _unitOfWork.User.Where(t => t.TwitchDetail.UserName == userName).ToList().FirstOrDefault();
+
+            // Check for userName change
+            if (userTwo == null)
+            {
+                user.TwitchDetail.UserName = userName;
+
+                _unitOfWork.User.Update(user);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
 
         if (user == null)
         {
