@@ -68,7 +68,7 @@ public class TwitchSendRequest : ISendRequest
     /// <param name="message"></param>
     public void SendChatMessage(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault();
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twtich);
 
         if (settings.MuteChatMessages == false)
         {
@@ -86,7 +86,7 @@ public class TwitchSendRequest : ISendRequest
     /// <param name="replyToId"></param>
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault();
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twtich);
 
         if (settings.MuteChatMessages == false)
         {

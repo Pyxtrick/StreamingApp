@@ -28,7 +28,7 @@ public class QueueCommand : IQueueCommand
     {
         int ammount = int.Parse(message.Split(" ")[1]);
 
-        Settings settings = _unitOfWork.Settings.First();
+        Settings settings = _unitOfWork.Settings.First(s => s.Origin == origin);
 
         switch (commandAndResponse.Command)
         {

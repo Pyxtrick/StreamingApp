@@ -144,7 +144,7 @@ public class ManageMessages : IManageMessages
         {
             if (commandAndResponse.Category == CategoryEnum.Queue)
             {
-                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault().ComunityDayActive;
+                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.ChatOrigin).ComunityDayActive;
 
                 if (queueIsActive)
                 {
