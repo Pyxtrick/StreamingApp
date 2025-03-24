@@ -180,54 +180,6 @@ export class DataContollerClient {
         return _observableOf(null as any);
     }
 
-    getAllStreams(): Observable<StreamRespose> {
-        let url_ = this.baseUrl + "/api/DataContoller/Streams";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllStreams(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllStreams(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<StreamRespose>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<StreamRespose>;
-        }));
-    }
-
-    protected processGetAllStreams(response: HttpResponseBase): Observable<StreamRespose> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StreamRespose.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     getAllGameInfos(): Observable<GameInfoRespose> {
         let url_ = this.baseUrl + "/api/DataContoller/GameInfos";
         url_ = url_.replace(/[?&]$/, "");
@@ -380,6 +332,106 @@ export class DataContollerClient {
         return _observableOf(null as any);
     }
 
+    getAllSettings(): Observable<SettingsRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/Settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllSettings(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SettingsRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SettingsRespose>;
+        }));
+    }
+
+    protected processGetAllSettings(response: HttpResponseBase): Observable<SettingsRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SettingsRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateGameInfos2(settingsDtos: SettingsDto): Observable<SettingsRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/Settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(settingsDtos);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateGameInfos2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateGameInfos2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SettingsRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SettingsRespose>;
+        }));
+    }
+
+    protected processUpdateGameInfos2(response: HttpResponseBase): Observable<SettingsRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SettingsRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     getAllspecialWords(): Observable<SpecialWordRespose> {
         let url_ = this.baseUrl + "/api/DataContoller/SpecialWords";
         url_ = url_.replace(/[?&]$/, "");
@@ -522,6 +574,54 @@ export class DataContollerClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = SpecialWordRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllStreams(): Observable<StreamRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/Streams";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllStreams(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllStreams(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StreamRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StreamRespose>;
+        }));
+    }
+
+    protected processGetAllStreams(response: HttpResponseBase): Observable<StreamRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StreamRespose.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1173,6 +1273,366 @@ export enum CategoryEnum {
     Basic = 8,
 }
 
+export class GameInfoRespose implements IGameInfoRespose {
+    gameInfos!: GameInfoDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: IGameInfoRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.gameInfos = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["gameInfos"])) {
+                this.gameInfos = [] as any;
+                for (let item of _data["gameInfos"])
+                    this.gameInfos!.push(GameInfoDto.fromJS(item));
+            }
+            else {
+                this.gameInfos = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): GameInfoRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameInfoRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.gameInfos)) {
+            data["gameInfos"] = [];
+            for (let item of this.gameInfos)
+                data["gameInfos"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface IGameInfoRespose {
+    gameInfos: GameInfoDto[];
+    isSucsess: boolean;
+}
+
+export class GameInfoDto implements IGameInfoDto {
+    id!: number;
+    game!: string;
+    message!: string;
+    gameCategory!: GameCategoryEnum;
+
+    constructor(data?: IGameInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.game = _data["game"] !== undefined ? _data["game"] : <any>null;
+            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
+            this.gameCategory = _data["gameCategory"] !== undefined ? _data["gameCategory"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): GameInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["game"] = this.game !== undefined ? this.game : <any>null;
+        data["message"] = this.message !== undefined ? this.message : <any>null;
+        data["gameCategory"] = this.gameCategory !== undefined ? this.gameCategory : <any>null;
+        return data;
+    }
+}
+
+export interface IGameInfoDto {
+    id: number;
+    game: string;
+    message: string;
+    gameCategory: GameCategoryEnum;
+}
+
+export enum GameCategoryEnum {
+    Info = 0,
+    ModPack = 1,
+    Server = 2,
+    Progress = 3,
+}
+
+export class SettingsRespose implements ISettingsRespose {
+    settings!: SettingsDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: ISettingsRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.settings = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["settings"])) {
+                this.settings = [] as any;
+                for (let item of _data["settings"])
+                    this.settings!.push(SettingsDto.fromJS(item));
+            }
+            else {
+                this.settings = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SettingsRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new SettingsRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.settings)) {
+            data["settings"] = [];
+            for (let item of this.settings)
+                data["settings"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface ISettingsRespose {
+    settings: SettingsDto[];
+    isSucsess: boolean;
+}
+
+export class SettingsDto implements ISettingsDto {
+    id!: number;
+    origin!: ChatOriginEnum;
+    allChat!: AuthEnum;
+    muteAllerts!: boolean;
+    muteChatMessages!: boolean;
+    comunityDayActive!: boolean;
+    delay!: string;
+    allertDelayS!: number;
+    timeOutSeconds!: number;
+    spamAmmount!: number;
+
+    constructor(data?: ISettingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.origin = _data["origin"] !== undefined ? _data["origin"] : <any>null;
+            this.allChat = _data["allChat"] !== undefined ? _data["allChat"] : <any>null;
+            this.muteAllerts = _data["muteAllerts"] !== undefined ? _data["muteAllerts"] : <any>null;
+            this.muteChatMessages = _data["muteChatMessages"] !== undefined ? _data["muteChatMessages"] : <any>null;
+            this.comunityDayActive = _data["comunityDayActive"] !== undefined ? _data["comunityDayActive"] : <any>null;
+            this.delay = _data["delay"] !== undefined ? _data["delay"] : <any>null;
+            this.allertDelayS = _data["allertDelayS"] !== undefined ? _data["allertDelayS"] : <any>null;
+            this.timeOutSeconds = _data["timeOutSeconds"] !== undefined ? _data["timeOutSeconds"] : <any>null;
+            this.spamAmmount = _data["spamAmmount"] !== undefined ? _data["spamAmmount"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["origin"] = this.origin !== undefined ? this.origin : <any>null;
+        data["allChat"] = this.allChat !== undefined ? this.allChat : <any>null;
+        data["muteAllerts"] = this.muteAllerts !== undefined ? this.muteAllerts : <any>null;
+        data["muteChatMessages"] = this.muteChatMessages !== undefined ? this.muteChatMessages : <any>null;
+        data["comunityDayActive"] = this.comunityDayActive !== undefined ? this.comunityDayActive : <any>null;
+        data["delay"] = this.delay !== undefined ? this.delay : <any>null;
+        data["allertDelayS"] = this.allertDelayS !== undefined ? this.allertDelayS : <any>null;
+        data["timeOutSeconds"] = this.timeOutSeconds !== undefined ? this.timeOutSeconds : <any>null;
+        data["spamAmmount"] = this.spamAmmount !== undefined ? this.spamAmmount : <any>null;
+        return data;
+    }
+}
+
+export interface ISettingsDto {
+    id: number;
+    origin: ChatOriginEnum;
+    allChat: AuthEnum;
+    muteAllerts: boolean;
+    muteChatMessages: boolean;
+    comunityDayActive: boolean;
+    delay: string;
+    allertDelayS: number;
+    timeOutSeconds: number;
+    spamAmmount: number;
+}
+
+export enum ChatOriginEnum {
+    Twtich = 0,
+    Youtube = 1,
+    Undefined = 2,
+}
+
+export class SpecialWordRespose implements ISpecialWordRespose {
+    sw!: SpecialWordDto[];
+    isSucsess!: boolean;
+
+    constructor(data?: ISpecialWordRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.sw = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["sw"])) {
+                this.sw = [] as any;
+                for (let item of _data["sw"])
+                    this.sw!.push(SpecialWordDto.fromJS(item));
+            }
+            else {
+                this.sw = <any>null;
+            }
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SpecialWordRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new SpecialWordRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.sw)) {
+            data["sw"] = [];
+            for (let item of this.sw)
+                data["sw"].push(item.toJSON());
+        }
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface ISpecialWordRespose {
+    sw: SpecialWordDto[];
+    isSucsess: boolean;
+}
+
+export class SpecialWordDto implements ISpecialWordDto {
+    id!: number;
+    name!: string;
+    comment!: string;
+    type!: SpecialWordEnum;
+    timesUsed!: number;
+
+    constructor(data?: ISpecialWordDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
+            this.type = _data["type"] !== undefined ? _data["type"] : <any>null;
+            this.timesUsed = _data["timesUsed"] !== undefined ? _data["timesUsed"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SpecialWordDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SpecialWordDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
+        data["type"] = this.type !== undefined ? this.type : <any>null;
+        data["timesUsed"] = this.timesUsed !== undefined ? this.timesUsed : <any>null;
+        return data;
+    }
+}
+
+export interface ISpecialWordDto {
+    id: number;
+    name: string;
+    comment: string;
+    type: SpecialWordEnum;
+    timesUsed: number;
+}
+
+export enum SpecialWordEnum {
+    None = 0,
+    Delete = 1,
+    Timeout = 2,
+    Replace = 3,
+    Banned = 4,
+    AllowedUrl = 5,
+    Count = 6,
+    Special = 7,
+    Keyword = 8,
+    Spam = 9,
+}
+
 export class StreamRespose implements IStreamRespose {
     streams!: StreamDto[];
     isSucsess!: boolean;
@@ -1293,54 +1753,6 @@ export interface IStreamDto {
     gameHistoryDtos: GameHistoryDto[];
 }
 
-export class GameInfoDto implements IGameInfoDto {
-    id!: number;
-    game!: string;
-    message!: string;
-    gameCategory!: GameCategoryEnum;
-
-    constructor(data?: IGameInfoDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.game = _data["game"] !== undefined ? _data["game"] : <any>null;
-            this.message = _data["message"] !== undefined ? _data["message"] : <any>null;
-            this.gameCategory = _data["gameCategory"] !== undefined ? _data["gameCategory"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): GameInfoDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GameInfoDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["game"] = this.game !== undefined ? this.game : <any>null;
-        data["message"] = this.message !== undefined ? this.message : <any>null;
-        data["gameCategory"] = this.gameCategory !== undefined ? this.gameCategory : <any>null;
-        return data;
-    }
-}
-
-export interface IGameInfoDto {
-    id: number;
-    game: string;
-    message: string;
-    gameCategory: GameCategoryEnum;
-}
-
 export class GameHistoryDto extends GameInfoDto implements IGameHistoryDto {
     startDate?: Date | null;
     endDate?: Date | null;
@@ -1376,186 +1788,6 @@ export class GameHistoryDto extends GameInfoDto implements IGameHistoryDto {
 export interface IGameHistoryDto extends IGameInfoDto {
     startDate?: Date | null;
     endDate?: Date | null;
-}
-
-export enum GameCategoryEnum {
-    Info = 0,
-    ModPack = 1,
-    Server = 2,
-    Progress = 3,
-}
-
-export class GameInfoRespose implements IGameInfoRespose {
-    gameInfos!: GameInfoDto[];
-    isSucsess!: boolean;
-
-    constructor(data?: IGameInfoRespose) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.gameInfos = [];
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["gameInfos"])) {
-                this.gameInfos = [] as any;
-                for (let item of _data["gameInfos"])
-                    this.gameInfos!.push(GameInfoDto.fromJS(item));
-            }
-            else {
-                this.gameInfos = <any>null;
-            }
-            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): GameInfoRespose {
-        data = typeof data === 'object' ? data : {};
-        let result = new GameInfoRespose();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.gameInfos)) {
-            data["gameInfos"] = [];
-            for (let item of this.gameInfos)
-                data["gameInfos"].push(item.toJSON());
-        }
-        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
-        return data;
-    }
-}
-
-export interface IGameInfoRespose {
-    gameInfos: GameInfoDto[];
-    isSucsess: boolean;
-}
-
-export class SpecialWordRespose implements ISpecialWordRespose {
-    sw!: SpecialWordDto[];
-    isSucsess!: boolean;
-
-    constructor(data?: ISpecialWordRespose) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-        if (!data) {
-            this.sw = [];
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["sw"])) {
-                this.sw = [] as any;
-                for (let item of _data["sw"])
-                    this.sw!.push(SpecialWordDto.fromJS(item));
-            }
-            else {
-                this.sw = <any>null;
-            }
-            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): SpecialWordRespose {
-        data = typeof data === 'object' ? data : {};
-        let result = new SpecialWordRespose();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.sw)) {
-            data["sw"] = [];
-            for (let item of this.sw)
-                data["sw"].push(item.toJSON());
-        }
-        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
-        return data;
-    }
-}
-
-export interface ISpecialWordRespose {
-    sw: SpecialWordDto[];
-    isSucsess: boolean;
-}
-
-export class SpecialWordDto implements ISpecialWordDto {
-    id!: number;
-    name!: string;
-    comment!: string;
-    type!: SpecialWordEnum;
-    timesUsed!: number;
-
-    constructor(data?: ISpecialWordDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
-            this.type = _data["type"] !== undefined ? _data["type"] : <any>null;
-            this.timesUsed = _data["timesUsed"] !== undefined ? _data["timesUsed"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): SpecialWordDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SpecialWordDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id !== undefined ? this.id : <any>null;
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
-        data["type"] = this.type !== undefined ? this.type : <any>null;
-        data["timesUsed"] = this.timesUsed !== undefined ? this.timesUsed : <any>null;
-        return data;
-    }
-}
-
-export interface ISpecialWordDto {
-    id: number;
-    name: string;
-    comment: string;
-    type: SpecialWordEnum;
-    timesUsed: number;
-}
-
-export enum SpecialWordEnum {
-    None = 0,
-    Delete = 1,
-    Timeout = 2,
-    Replace = 3,
-    Banned = 4,
-    AllowedUrl = 5,
-    Count = 6,
-    Special = 7,
-    Keyword = 8,
-    Spam = 9,
 }
 
 export class UserRespose implements IUserRespose {
@@ -1956,12 +2188,6 @@ export class KeyValuePairOfStringAndString implements IKeyValuePairOfStringAndSt
 export interface IKeyValuePairOfStringAndString {
     key?: string | null;
     value?: string | null;
-}
-
-export enum ChatOriginEnum {
-    Twtich = 0,
-    Youtube = 1,
-    Undefined = 2,
 }
 
 export enum SpecialMessgeEnum {

@@ -27,6 +27,7 @@ public static class Registrar
         // DB
         services.AddScoped<ICRUDCommands, CRUDCommands>();
         services.AddScoped<ICRUDGameInfos, CRUDGameInfos>();
+        services.AddScoped<ICRUDSettings, CRUDSettings>();
         services.AddScoped<ICRUDSpecialWords, CRUDSpecialWords>();
         services.AddScoped<ICRUDStreams, CRUDStreams>();
         services.AddScoped<ICRUDUsers, CRUDUsers>();

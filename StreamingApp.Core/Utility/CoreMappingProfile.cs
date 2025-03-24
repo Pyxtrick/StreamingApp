@@ -5,6 +5,7 @@ using StreamingApp.Domain.Entities.Dtos;
 using Stream = StreamingApp.Domain.Entities.Internal.Stream.Stream;
 using StreamingApp.Domain.Entities.Internal.Stream;
 using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.Internal.Settings;
 
 namespace StreamingApp.Core.Utility;
 public class CoreMappingProfile : Profile
@@ -33,7 +34,7 @@ public class CoreMappingProfile : Profile
         CreateMap<StreamGame, StreamGame>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 
 
-        CreateMap<User,  UserDto>()
+        CreateMap<User, UserDto>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserText))
             .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.TwitchDetail.Url))
             .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Status.UserType))
@@ -46,5 +47,8 @@ public class CoreMappingProfile : Profile
 
         CreateMap<GameInfo, GameInfoDto>().ReverseMap();
         CreateMap<GameInfo, GameInfo>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
+
+        CreateMap<Settings, SettingsDto>().ReverseMap();
+        CreateMap<SettingsDto, Settings>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
     }
 }

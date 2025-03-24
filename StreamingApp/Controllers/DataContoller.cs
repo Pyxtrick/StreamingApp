@@ -47,20 +47,6 @@ public class DataContoller : ControllerBase
     }
     #endregion
     
-    #region Stream
-    [HttpGet("Streams")]
-    public StreamRespose GetAllStreams([FromServices] ICRUDStreams crudStreams)
-    {
-        var streams = crudStreams.GetAll();
-
-        return new StreamRespose()
-        {
-            streams = streams,
-            isSucsess = streams.Any(),
-        };
-    }
-    #endregion
-
     #region GameInfo
     [HttpGet("GameInfos")]
     public GameInfoRespose GetAllGameInfos([FromServices] ICRUDGameInfos crudGameInfos)
@@ -98,6 +84,32 @@ public class DataContoller : ControllerBase
     }
     #endregion
 
+    #region Settings
+    [HttpGet("Settings")]
+    public SettingsRespose GetAllSettings([FromServices] ICRUDSettings crudSettings)
+    {
+        var settings = crudSettings.GetAll();
+
+        return new SettingsRespose()
+        {
+            Settings = settings,
+            isSucsess = settings.Any(),
+        };
+    }
+
+    [HttpPost("Settings")]
+    public async Task<SettingsRespose> UpdateGameInfos([FromServices] ICRUDSettings crudSettings, SettingsDto settingsDtos)
+    {
+        var gameInfos = await crudSettings.Update(settingsDtos);
+
+        return new SettingsRespose()
+        {
+            Settings = null,
+            isSucsess = gameInfos
+        };
+    }
+    #endregion
+
     #region SpecialWord
     [HttpGet("SpecialWords")]
     public SpecialWordRespose GetAllspecialWords([FromServices] ICRUDSpecialWords getSpecialWords)
@@ -131,6 +143,20 @@ public class DataContoller : ControllerBase
         return new SpecialWordRespose()
         {
             isSucsess = sucsess
+        };
+    }
+    #endregion
+
+    #region Stream
+    [HttpGet("Streams")]
+    public StreamRespose GetAllStreams([FromServices] ICRUDStreams crudStreams)
+    {
+        var streams = crudStreams.GetAll();
+
+        return new StreamRespose()
+        {
+            streams = streams,
+            isSucsess = streams.Any(),
         };
     }
     #endregion
