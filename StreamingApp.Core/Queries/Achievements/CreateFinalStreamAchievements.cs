@@ -87,13 +87,13 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         // Decode
         var html = Encoding.ASCII.GetString(alert.Html);
 
-        html.Replace("[StreamDuration]", streamDuration);
-        html.Replace("[MessageText]", messageText);
-        html.Replace("[NewViewerText]", newViewerText);
-        html.Replace("[SubText]", subText);
-        html.Replace("[RaidText]", raidText);
-        html.Replace("[UserText]", twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "");
-        html.Replace("[StreamTimes]", streamTimes.Count() != 0 ? $"{string.Join("</div><div>", streamTimes)}" : "");
+        html = html.Replace("[StreamDuration]", streamDuration);
+        html = html.Replace("[MessageText]", messageText);
+        html = html.Replace("[NewViewerText]", newViewerText);
+        html = html.Replace("[SubText]", subText);
+        html = html.Replace("[RaidText]", raidText);
+        html = html.Replace("[UserText]", twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "");
+        html = html.Replace("[StreamTimes]", streamTimes.Count() != 0 ? $"{string.Join("</div><div>", streamTimes)}" : "");
 
         //TODO: use this when ScrollText is in the Alert DB Table
         //return text;
@@ -115,9 +115,9 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
                     "<div class=\"user-stats\">User Stats</div>" +
                     $"<div>{userText}</div>" +
                     "<div class=\"user-stats\">Next Streams</div>" +
-                    "<div>Tuesday 9 PM CET (UTC +1)</div>" +
-                    "<div>Wednesday 9 PM CET (UTC +1)</div>" +
-                    "<div>Friday 10 AM CET (UTC +1)</div>" +
+                    "<div>Tuesday 9 PM CEST (UTC +2)</div>" +
+                    "<div>Wednesday 9 PM CEST (UTC +2)</div>" +
+                    "<div>Friday 9 PM CEST (UTC +2)</div>" +
                     "<div class=\"stats\">Stream End</div>" +
                     "<div>Thanks for Watching</div>" +
                 "</div>" +

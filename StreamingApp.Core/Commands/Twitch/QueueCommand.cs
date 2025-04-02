@@ -114,9 +114,9 @@ public class QueueCommand : IQueueCommand
                 {
 
                     // @User You are in Queue X
-                    commandAndResponse.Response.Replace("[User]", userName);
-                    commandAndResponse.Response.Replace("[Position]", queuePosition.ToString());
-                    SendMessage(commandAndResponse.Response, origin);
+                    message = commandAndResponse.Response.Replace("[User]", userName);
+                    message = message.Replace("[Position]", queuePosition.ToString());
+                    SendMessage(message, origin);
                 }
                 else
                 {

@@ -186,12 +186,12 @@ public class ManageMessages : IManageMessages
 
                 var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
-                message.Replace("[User]", messageDto.UserName);
-                message.Replace("[Time]", DateTime.Now.ToString());
-                message.Replace("[StreamStartTime]", stream.StreamStart.ToString());
-                message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
+                message = message.Replace("[User]", messageDto.UserName);
+                message = message.Replace("[Time]", DateTime.Now.ToString());
+                message = message.Replace("[StreamStartTime]", stream.StreamStart.ToLocalTime().ToString());
+                message = message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
 
-                _twitchSendRequest.SendChatMessage(commandAndResponse.Response);
+                _twitchSendRequest.SendChatMessage(message);
             }
         }
     }

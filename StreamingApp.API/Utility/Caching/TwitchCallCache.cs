@@ -131,7 +131,7 @@ public class TwitchCallCache : ITwitchCallCache
                     }
                     break;
                 case CallCacheEnum.CachedBannedData:
-                    var bannedIndex = _twitchCallCacheData.CachedBannedData.FindIndex(t => t.UserName == ((RaidDto)item).UserName);
+                    var bannedIndex = _twitchCallCacheData.CachedBannedData.FindIndex(t => t.UserName == ((BannedUserDto)item).UserName);
 
                     if(bannedIndex != -1)
                     {

@@ -78,9 +78,9 @@ public class ManageStream : IManageStream
                     {
                         string message = commandAndResponse.Response;
 
-                        message.Replace("[User]", splitMessage[1]);
-                        message.Replace("[GameName]", channelInfo.GameName);
-                        message.Replace("[Url]", $"https://twitch.tv/{splitMessage[1]}");
+                        message = message.Replace("[User]", splitMessage[1]);
+                        message = message.Replace("[GameName]", channelInfo.GameName);
+                        message = message.Replace("[Url]", $"https://twitch.tv/{splitMessage[1]}");
 
                         _twitchSendRequest.SendAnnouncement(message);
                     }

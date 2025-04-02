@@ -43,7 +43,7 @@ public class FileAchievements : IFileAchievements
 
             string newLine = $"{line}-{sum}";
 
-            lines.FirstOrDefault(foundLine).Replace(foundLine, newLine);
+            lines[0] = lines.FirstOrDefault(foundLine).Replace(foundLine, newLine);
 
             _manageFile.WriteFile(lines.ToArray(), false);
         }

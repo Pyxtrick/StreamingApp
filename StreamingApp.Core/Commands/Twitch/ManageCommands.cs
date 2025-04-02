@@ -94,7 +94,7 @@ public class ManageCommands : IManageCommands
                     {
                         var timeZone = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
 
-                        response = $"Stream will be live on {timeZone.DayOfWeek} and {timeZone.AddDays(1).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitNoCommandTextMessage[1]} / {offset}";
+                        response = $"Stream will be live on {timeZone.DayOfWeek}, {timeZone.AddDays(1).DayOfWeek} and {timeZone.AddDays(3).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitNoCommandTextMessage[1]} / {offset}";
                     }
                     catch (Exception e)
                     {
@@ -103,26 +103,33 @@ public class ManageCommands : IManageCommands
                 }
                 else
                 {
-                    response = $"Stream will be live on {result.DayOfWeek} and {result.AddDays(1).DayOfWeek} at {result.TimeOfDay.ToString()} CET / {offset}";
+                    response = $"Stream will be live on {streamTimes[0].DayOfWeek}, {streamTimes[1].DayOfWeek} and {streamTimes[2].DayOfWeek} at {result.TimeOfDay.ToString()} CEST / {offset}";
                 }
             }
             else if(splitMessage[0].Equals("!currentTime"))
             {
-                var localTime = DateTime.Now.Date + new TimeSpan(10, 00, 0);
+                var localTime = DateTime.Now;
 
-                if (splitNoCommandTextMessage.Length > 1)
+                if (splitNoCommandTextMessage.Length > 0)
                 {
-                    var timeZone = TimeZoneInfo.ConvertTime(localTime, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
+                    try
+                    {
+                        var timeZone = TimeZoneInfo.ConvertTime(localTime, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
 
-                    var offset = (timeZone - localTime.ToUniversalTime()).Hours;
+                        var offset = (timeZone - localTime.ToUniversalTime()).Hours;
 
-                    var offsetText = offset > 0 ? $"+{offset}" : $"{offset}";
+                        var offsetText = offset > 0 ? $"+{offset}" : $"{offset}";
 
-                    response = $"It is Currenty in {splitNoCommandTextMessage[0]} {timeZone.ToShortTimeString} (UTC {offsetText})";
+                        response = $"It is Currenty in {splitNoCommandTextMessage[0]} {timeZone.ToShortTimeString()} (UTC {offsetText})";
+                    }
+                    catch(Exception e)
+                    {
+                        response = commandAndResponse.Response;
+                    }
                 }
                 else
                 {
-                    response = $"It is Currenty {localTime.ToShortTimeString}";
+                    response = $"It is Currenty {localTime.ToShortTimeString()}";
                 }
             }
             else if(splitMessage[0].Equals("!language2"))
@@ -177,7 +184,7 @@ public class ManageCommands : IManageCommands
                 DateTime FirstStreamSeen = user.TwitchAchievements.FirstStreamSeen;
                 int streamStreak = user.TwitchAchievements.WachedStreams;
 
-                response = $"User {messageDto.UserName} has seen {streamStreak} since {FirstStreamSeen.ToShortDateString()}";
+                response = $"User {messageDto.UserName} has seen {streamStreak} Streams since {FirstStreamSeen.ToShortDateString()}";
             }
             else if (messageDto.Auth.Min() <= AuthEnum.Mod)
             {

@@ -48,7 +48,7 @@ public class MessageCheck : IMessageCheck
 
         foreach (var t in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Replace))
         {
-            messageDto.Message.Replace(t.Name, "");
+            messageDto.Message = messageDto.Message.Replace(t.Name, "");
         }
 
         if (user.Status.UserType != UserTypeEnum.Bot
@@ -69,7 +69,31 @@ public class MessageCheck : IMessageCheck
 
             if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Delete))
             {
-                if (!isAllowed)
+                if (foundSpecialWords.Any(f => f.Name.Contains("http")))
+                {
+                    var foundHttp = messageDto.Message.Split(" ").Where(s => s.Contains("http"));
+
+                    if (foundHttp.Count() == 1)
+                    {
+                        if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.AllowedUrl) == false)
+                        {
+                            await _twitchSendRequest.DeleteMessage(messageDto.MessageId);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var fh in foundHttp)
+                        {
+                            var t = foundSpecialWords.Where(f => fh.Contains(f.Name));
+
+                            if (t.Count() <= 2)
+                            {
+                                await _twitchSendRequest.DeleteMessage(messageDto.MessageId);
+                            }
+                        }
+                    }
+                }
+                else if (!isAllowed)
                 {
                     // TODO: allow User for x Seconds to use
                     // TODO: Delete Messate
