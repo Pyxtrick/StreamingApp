@@ -1,21 +1,20 @@
-Stream 28.02
-
 Backend
-	Watch for the new console logs (folower)
+	Add Data From Client about VTS
+		Models
+			Toggles
+		Items
+		Possiton
 
 Fronted
 	Update On screen chat
+	Update Data Display
+	Add create and edit Data
 
-	Settings Stream (Start / end / category)
-		Show List of old streams with what was played during those
-
-	Modify Commands
-
-
-Between Streams
-	Combine Sub/gifts/prime
-
-
+	Update VTS Data
+		possition
+		Model
+			Toggle
+		Item
 
 
 // Frontnend
