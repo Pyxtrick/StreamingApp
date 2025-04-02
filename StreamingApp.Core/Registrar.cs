@@ -79,8 +79,6 @@ public static class Registrar
         //Utility
         services.AddAutoMapper(typeof(CoreMappingProfile));
 
-        services.AddScoped<IGetTwitchChatData, GetTwitchChatData>();
-
         services.AddScoped<IQueueCache, QueueCache>();
         services.AddSingleton<QueueData>();
 
