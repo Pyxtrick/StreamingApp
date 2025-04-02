@@ -196,10 +196,19 @@ public class ManageStream : IManageStream
                 Game = channelInfo.GameName,
                 GameId = channelInfo.GameId,
                 Message = "",
-                GameCategory = Domain.Enums.GameCategoryEnum.Info,
+                GameCategory = GameCategoryEnum.Info,
+            };
+
+            var gameProgress = new GameInfo()
+            {
+                Game = channelInfo.GameName,
+                GameId = channelInfo.GameId,
+                Message = "Just Started",
+                GameCategory = GameCategoryEnum.Progress,
             };
 
             await _unitOfWork.GameInfo.AddAsync(gameInfo);
+            await _unitOfWork.GameInfo.AddAsync(gameProgress);
         }
 
         // TODO: Send category change to Twitch
