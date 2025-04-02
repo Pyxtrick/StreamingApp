@@ -6,6 +6,7 @@ using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Queries.Achievements;
+using StreamingApp.Domain.Responces;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -46,13 +47,18 @@ public class TestController : ControllerBase
     }
 
     [HttpGet("GetCacheData")]
-    public async Task<List<MessageDto>> GetChachedData([FromServices] ITwitchCallCache _twitchCallCache, IEmotesCache emotesCache)
+    public async Task<CacheResponse> GetChachedData([FromServices] ITwitchCallCache _twitchCallCache, IEmotesCache emotesCache)
     {
-        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
+        CacheResponse cacheResponse = new()
+        {
+            messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData, false).ConvertAll(s => (MessageDto)s),
+            subs = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedSubData, false).ConvertAll(s => (SubDto)s),
+            alerts = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedAlertData, false).ConvertAll(s => (AlertDto)s),
+            raids = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedRaidData, false).ConvertAll(s => (RaidDto)s),
+            emotes = emotesCache.GetEmotes(null),
+        };
 
-        var emotes = emotesCache.GetEmotes(null);
-
-        return messages;
+        return cacheResponse;
     }
 
     [HttpDelete("DeleteMessage")]
@@ -61,6 +67,12 @@ public class TestController : ControllerBase
         BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
+    }
+
+    [HttpPost("SendToClient")]
+    public async void SendToClient([FromServices] IHubContext<ClientHub> hubContext)
+    {
+        await hubContext.Clients.All.SendAsync("ReciveClientMessage", "hello");
     }
 
     [HttpGet("StreamAchievements")]
