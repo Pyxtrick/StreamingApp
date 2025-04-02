@@ -146,25 +146,25 @@ public class TwitchCallCache : ITwitchCallCache
         }
     }
 
-    public List<Object> GetAllMessages(CallCacheEnum callCacheEnum)
+    public List<Object> GetAllMessages(CallCacheEnum callCacheEnum, bool updateIsUsed = true)
     {
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:
                 var messages = _twitchCallCacheData.CachedMessageData.ConvertAll(s => (Object)s);
-                UpdateIsUsed(messages, callCacheEnum);
+                if (updateIsUsed) { UpdateIsUsed(messages, callCacheEnum); }
                 return messages;
             case CallCacheEnum.CachedSubData:
                 var subs = _twitchCallCacheData.CachedSubData.ConvertAll(s => (Object)s);
-                UpdateIsUsed(subs, callCacheEnum);
+                if (updateIsUsed) { UpdateIsUsed(subs, callCacheEnum); }
                 return subs;
             case CallCacheEnum.CachedAlertData:
                 var alerts = _twitchCallCacheData.CachedAlertData.ConvertAll(s => (Object)s);
-                UpdateIsUsed(alerts, callCacheEnum);
+                if (updateIsUsed) { UpdateIsUsed(alerts, callCacheEnum); }
                 return alerts;
             case CallCacheEnum.CachedRaidData:
                 var raids = _twitchCallCacheData.CachedRaidData.ConvertAll(s => (Object)s);
-                UpdateIsUsed(raids, callCacheEnum);
+                if (updateIsUsed) { UpdateIsUsed(raids, callCacheEnum); }
                 return raids;
             default:
                 Console.WriteLine("Unknown data type.");

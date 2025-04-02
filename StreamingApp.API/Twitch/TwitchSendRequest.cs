@@ -308,7 +308,7 @@ public class TwitchSendRequest : ISendRequest
     {
         // TODO: Delete Message (maybe with Reason)
         
-        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (string)s);
+        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData, true).ConvertAll(s => (string)s);
 
         _logger.LogCritical(messages.FirstOrDefault(m => m.Contains(messageId)));
         //await _twitchCache.GetTheTwitchAPI().Helix.Moderation.DeleteChatMessagesAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], messageId);

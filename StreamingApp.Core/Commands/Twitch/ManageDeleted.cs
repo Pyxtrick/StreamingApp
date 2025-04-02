@@ -25,7 +25,7 @@ public class ManageDeleted : IManageDeleted
 
     public async Task Execute(BannedUserDto bannedUserDto)
     {
-        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData).ConvertAll(s => (MessageDto)s);
+        var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData, true).ConvertAll(s => (MessageDto)s);
 
         if (bannedUserDto.TargetEnum == BannedTargetEnum.Message)
         {
