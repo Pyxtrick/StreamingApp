@@ -5,5 +5,5 @@ namespace StreamingApp.API.Utility.Caching.Interface;
 public interface IEmotesCache
 {
     void AddEmotes(List<EmoteDto> emotes);
-    IList<EmoteDto> GetEmotes(EmoteProviderEnum? emoteProviderEnum);
+    List<EmoteDto> GetEmotes(EmoteProviderEnum? emoteProviderEnum);
 }

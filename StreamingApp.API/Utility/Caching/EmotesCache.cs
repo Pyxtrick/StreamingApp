@@ -33,7 +33,7 @@ public class EmotesCache : IEmotesCache
         }
     }
 
-    public IList<EmoteDto> GetEmotes(EmoteProviderEnum? emoteProviderEnum)
+    public List<EmoteDto> GetEmotes(EmoteProviderEnum? emoteProviderEnum)
     {
         if (emoteProviderEnum == null)
         {
