@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="DataModel\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +21,48 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StreamingApp.Domain\StreamingApp.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataModel\Allerts.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Allerts.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="DataModel\Settings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="DataModel\Stream.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Stream.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="DataModel\User.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>User.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DataModel\Allerts.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Allerts.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="DataModel\Settings.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="DataModel\Stream.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Stream.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="DataModel\User.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>User.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
