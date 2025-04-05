@@ -928,7 +928,7 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
-    getChachedData(): Observable<MessageDto[]> {
+    getChachedData(): Observable<CacheResponse> {
         let url_ = this.baseUrl + "/api/Test/GetCacheData";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -947,14 +947,14 @@ export class TestClient {
                 try {
                     return this.processGetChachedData(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<MessageDto[]>;
+                    return _observableThrow(e) as any as Observable<CacheResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<MessageDto[]>;
+                return _observableThrow(response_) as any as Observable<CacheResponse>;
         }));
     }
 
-    protected processGetChachedData(response: HttpResponseBase): Observable<MessageDto[]> {
+    protected processGetChachedData(response: HttpResponseBase): Observable<CacheResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -965,14 +965,7 @@ export class TestClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(MessageDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = CacheResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1964,6 +1957,120 @@ export enum UserTypeEnum {
     Viewer = 8,
 }
 
+export class CacheResponse implements ICacheResponse {
+    messages!: MessageDto[];
+    subs!: SubDto[];
+    alerts!: AlertDto[];
+    raids!: RaidDto[];
+    emotes!: EmoteDto[];
+
+    constructor(data?: ICacheResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.messages = [];
+            this.subs = [];
+            this.alerts = [];
+            this.raids = [];
+            this.emotes = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(MessageDto.fromJS(item));
+            }
+            else {
+                this.messages = <any>null;
+            }
+            if (Array.isArray(_data["subs"])) {
+                this.subs = [] as any;
+                for (let item of _data["subs"])
+                    this.subs!.push(SubDto.fromJS(item));
+            }
+            else {
+                this.subs = <any>null;
+            }
+            if (Array.isArray(_data["alerts"])) {
+                this.alerts = [] as any;
+                for (let item of _data["alerts"])
+                    this.alerts!.push(AlertDto.fromJS(item));
+            }
+            else {
+                this.alerts = <any>null;
+            }
+            if (Array.isArray(_data["raids"])) {
+                this.raids = [] as any;
+                for (let item of _data["raids"])
+                    this.raids!.push(RaidDto.fromJS(item));
+            }
+            else {
+                this.raids = <any>null;
+            }
+            if (Array.isArray(_data["emotes"])) {
+                this.emotes = [] as any;
+                for (let item of _data["emotes"])
+                    this.emotes!.push(EmoteDto.fromJS(item));
+            }
+            else {
+                this.emotes = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): CacheResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CacheResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.subs)) {
+            data["subs"] = [];
+            for (let item of this.subs)
+                data["subs"].push(item.toJSON());
+        }
+        if (Array.isArray(this.alerts)) {
+            data["alerts"] = [];
+            for (let item of this.alerts)
+                data["alerts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.raids)) {
+            data["raids"] = [];
+            for (let item of this.raids)
+                data["raids"].push(item.toJSON());
+        }
+        if (Array.isArray(this.emotes)) {
+            data["emotes"] = [];
+            for (let item of this.emotes)
+                data["emotes"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICacheResponse {
+    messages: MessageDto[];
+    subs: SubDto[];
+    alerts: AlertDto[];
+    raids: RaidDto[];
+    emotes: EmoteDto[];
+}
+
 export class TwitchBase implements ITwitchBase {
     messageId!: string;
     userId!: string;
@@ -2256,6 +2363,242 @@ export enum EffectEnum {
     Randamise = 8,
     Translatehell = 9,
     Gigantify = 10,
+}
+
+export class SubDto extends TwitchBase implements ISubDto {
+    isGifftedSub!: boolean;
+    gifftedSubCount!: number;
+    currentTier!: TierEnum;
+    chatMessage?: MessageDto | null;
+    isUsed!: boolean;
+
+    constructor(data?: ISubDto) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.isGifftedSub = _data["isGifftedSub"] !== undefined ? _data["isGifftedSub"] : <any>null;
+            this.gifftedSubCount = _data["gifftedSubCount"] !== undefined ? _data["gifftedSubCount"] : <any>null;
+            this.currentTier = _data["currentTier"] !== undefined ? _data["currentTier"] : <any>null;
+            this.chatMessage = _data["chatMessage"] ? MessageDto.fromJS(_data["chatMessage"]) : <any>null;
+            this.isUsed = _data["isUsed"] !== undefined ? _data["isUsed"] : <any>null;
+        }
+    }
+
+    static override fromJS(data: any): SubDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubDto();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isGifftedSub"] = this.isGifftedSub !== undefined ? this.isGifftedSub : <any>null;
+        data["gifftedSubCount"] = this.gifftedSubCount !== undefined ? this.gifftedSubCount : <any>null;
+        data["currentTier"] = this.currentTier !== undefined ? this.currentTier : <any>null;
+        data["chatMessage"] = this.chatMessage ? this.chatMessage.toJSON() : <any>null;
+        data["isUsed"] = this.isUsed !== undefined ? this.isUsed : <any>null;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface ISubDto extends ITwitchBase {
+    isGifftedSub: boolean;
+    gifftedSubCount: number;
+    currentTier: TierEnum;
+    chatMessage?: MessageDto | null;
+    isUsed: boolean;
+}
+
+export enum TierEnum {
+    None = 0,
+    Megabyte = 1,
+    Gigabyte = 2,
+    Terabyte = 3,
+    NotSet = 4,
+    Prime = 5,
+    Tier1 = 6,
+    Tier2 = 7,
+    Tier3 = 8,
+}
+
+export class AlertDto implements IAlertDto {
+    volume!: number;
+    image?: string | null;
+    sound?: string | null;
+    video?: string | null;
+    html!: string;
+    videoLeght!: number;
+    isMute!: boolean;
+    duration!: number;
+    isSameTime!: boolean;
+
+    constructor(data?: IAlertDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.volume = _data["volume"] !== undefined ? _data["volume"] : <any>null;
+            this.image = _data["image"] !== undefined ? _data["image"] : <any>null;
+            this.sound = _data["sound"] !== undefined ? _data["sound"] : <any>null;
+            this.video = _data["video"] !== undefined ? _data["video"] : <any>null;
+            this.html = _data["html"] !== undefined ? _data["html"] : <any>null;
+            this.videoLeght = _data["videoLeght"] !== undefined ? _data["videoLeght"] : <any>null;
+            this.isMute = _data["isMute"] !== undefined ? _data["isMute"] : <any>null;
+            this.duration = _data["duration"] !== undefined ? _data["duration"] : <any>null;
+            this.isSameTime = _data["isSameTime"] !== undefined ? _data["isSameTime"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): AlertDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AlertDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["volume"] = this.volume !== undefined ? this.volume : <any>null;
+        data["image"] = this.image !== undefined ? this.image : <any>null;
+        data["sound"] = this.sound !== undefined ? this.sound : <any>null;
+        data["video"] = this.video !== undefined ? this.video : <any>null;
+        data["html"] = this.html !== undefined ? this.html : <any>null;
+        data["videoLeght"] = this.videoLeght !== undefined ? this.videoLeght : <any>null;
+        data["isMute"] = this.isMute !== undefined ? this.isMute : <any>null;
+        data["duration"] = this.duration !== undefined ? this.duration : <any>null;
+        data["isSameTime"] = this.isSameTime !== undefined ? this.isSameTime : <any>null;
+        return data;
+    }
+}
+
+export interface IAlertDto {
+    volume: number;
+    image?: string | null;
+    sound?: string | null;
+    video?: string | null;
+    html: string;
+    videoLeght: number;
+    isMute: boolean;
+    duration: number;
+    isSameTime: boolean;
+}
+
+export class RaidDto implements IRaidDto {
+    count!: number;
+    game!: string;
+    userName!: string;
+    utcNow!: Date;
+    isUsed!: boolean;
+
+    constructor(data?: IRaidDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.count = _data["count"] !== undefined ? _data["count"] : <any>null;
+            this.game = _data["game"] !== undefined ? _data["game"] : <any>null;
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.utcNow = _data["utcNow"] ? new Date(_data["utcNow"].toString()) : <any>null;
+            this.isUsed = _data["isUsed"] !== undefined ? _data["isUsed"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): RaidDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RaidDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["count"] = this.count !== undefined ? this.count : <any>null;
+        data["game"] = this.game !== undefined ? this.game : <any>null;
+        data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["utcNow"] = this.utcNow ? this.utcNow.toISOString() : <any>null;
+        data["isUsed"] = this.isUsed !== undefined ? this.isUsed : <any>null;
+        return data;
+    }
+}
+
+export interface IRaidDto {
+    count: number;
+    game: string;
+    userName: string;
+    utcNow: Date;
+    isUsed: boolean;
+}
+
+export class EmoteDto implements IEmoteDto {
+    id!: string;
+    provider!: EmoteProviderEnum;
+    name!: string;
+    url!: string;
+
+    constructor(data?: IEmoteDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.provider = _data["provider"] !== undefined ? _data["provider"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.url = _data["url"] !== undefined ? _data["url"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): EmoteDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EmoteDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["provider"] = this.provider !== undefined ? this.provider : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["url"] = this.url !== undefined ? this.url : <any>null;
+        return data;
+    }
+}
+
+export interface IEmoteDto {
+    id: string;
+    provider: EmoteProviderEnum;
+    name: string;
+    url: string;
+}
+
+export enum EmoteProviderEnum {
+    Twitch = 0,
+    _7TV = 1,
+    BetterTTV = 2,
+    FrankerFaceZ = 3,
 }
 
 export class ApiException extends Error {

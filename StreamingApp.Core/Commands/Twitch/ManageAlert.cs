@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.Internal.Trigger;
 using StreamingApp.Domain.Enums;
@@ -9,6 +11,14 @@ namespace StreamingApp.Core.Commands.Twitch;
 internal class ManageAlert : IManageAlert
 {
     private readonly UnitOfWorkContext _unitOfWork;
+
+    private readonly ISendRequest _twitchSendRequest;
+
+    public ManageAlert(UnitOfWorkContext unitOfWork, ISendRequest twitchSendRequest)
+    {
+        _unitOfWork = unitOfWork;
+        _twitchSendRequest = twitchSendRequest;
+    }
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
     {
@@ -69,6 +79,21 @@ internal class ManageAlert : IManageAlert
     public async Task ExecuteRaid(RaidDto raidDto)
     {
         Console.WriteLine(raidDto.UserName);
+
+        ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(raidDto.UserName);
+
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals("so") && t.Active);
+
+        if (channelInfo != null)
+        {
+            string message = commandAndResponse.Response;
+
+            message = message.Replace("[User]", raidDto.UserName);
+            message = message.Replace("[GameName]", channelInfo.GameName);
+            message = message.Replace("[Url]", $"https://twitch.tv/{raidDto.UserName}");
+
+            _twitchSendRequest.SendAnnouncement(message);
+        }
     }
 
     public async Task ExecuteSub(SubDto subDto)
