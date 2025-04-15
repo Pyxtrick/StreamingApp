@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Interfaces;
+using StreamingApp.API.StreamerBot;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility;
@@ -14,6 +15,25 @@ public static class APIRegistrar
 {
     public static void AddApiOptions(this IServiceCollection services)
     {
+        //Discord
+
+        //Emotes
+        services.AddScoped<IEmotesApiRequest, EmotesApiRequest>();
+
+        //StreamerBot
+        services.AddScoped<IStreamerBotRequest, StreamerBotRequest>();
+
+        //TTS
+
+        //twitch
+        services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();
+        services.AddScoped<ITwitchPubSubApiRequest, TwitchPubSubApiRequest>();
+        services.AddScoped<ITwitchInitialise, TwitchInitialise>();
+        services.AddScoped<ITwitchSendRequest, TwitchSendRequest>();
+
+        //YouTube
+        services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
+
         //utility
         services.AddAutoMapper(typeof(TwitchMappingProfile));
 
@@ -25,17 +45,5 @@ public static class APIRegistrar
 
         services.AddScoped<IEmotesCache, EmotesCache>();
         services.AddSingleton<EmotesCacheData>();
-
-        //twitch
-        services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();
-        services.AddScoped<ITwitchPubSubApiRequest, TwitchPubSubApiRequest>();
-        services.AddScoped<ITwitchInitialise, TwitchInitialise>();
-
-        // TODO: Check if works
-        services.AddScoped<ISendRequest, TwitchSendRequest>();
-        //services.AddScoped<ISendRequest, YoutubeSendRequest>("");
-
-        // 7tv
-        services.AddScoped<IEmotesApiRequest, EmotesApiRequest>();
     }
 }

@@ -14,11 +14,11 @@ public class ManageCommands : IManageCommands
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    private readonly ISendRequest _twitchSendRequest;
+    private readonly ITwitchSendRequest _twitchSendRequest;
 
     private readonly IEmotesApiRequest _emotesApiRequest;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ISendRequest sendRequest, IEmotesApiRequest emotesApiRequest)
+    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest sendRequest, IEmotesApiRequest emotesApiRequest)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = sendRequest;

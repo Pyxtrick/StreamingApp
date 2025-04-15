@@ -14,13 +14,13 @@ public class ManageStream : IManageStream
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    private readonly ISendRequest _twitchSendRequest;
+    private readonly ITwitchSendRequest _twitchSendRequest;
 
     private readonly ITwitchCallCache _twitchCallCache;
 
     private readonly IManageFile _manageFile;
 
-    public ManageStream(UnitOfWorkContext unitOfWork, ISendRequest sendRequest, ITwitchCallCache twitchCallCache, IManageFile manageFile)
+    public ManageStream(UnitOfWorkContext unitOfWork, ITwitchSendRequest sendRequest, ITwitchCallCache twitchCallCache, IManageFile manageFile)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = sendRequest;

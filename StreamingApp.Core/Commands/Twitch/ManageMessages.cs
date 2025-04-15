@@ -25,7 +25,7 @@ public class ManageMessages : IManageMessages
 
     private readonly ISendSignalRMessage _sendSignalRMessage;
 
-    private readonly ISendRequest _twitchSendRequest;
+    private readonly ITwitchSendRequest _twitchSendRequest;
 
     private readonly IManageStream _manageStream;
 
@@ -35,7 +35,7 @@ public class ManageMessages : IManageMessages
 
     private readonly IGameCommand _gameCommand;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ISendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ITwitchSendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
         _crudUsers = crudUsers;

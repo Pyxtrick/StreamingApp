@@ -8,11 +8,11 @@ namespace StreamingApp.Core.Commands.Twitch;
 
 public class GameCommand : IGameCommand
 {
-    private readonly ISendRequest _sendRequest;
+    private readonly ITwitchSendRequest _sendRequest;
 
     private readonly UnitOfWorkContext _unitOfWork;
 
-    public GameCommand(ISendRequest sendRequest, UnitOfWorkContext unitOfWorkContext)
+    public GameCommand(ITwitchSendRequest sendRequest, UnitOfWorkContext unitOfWorkContext)
     {
         _sendRequest = sendRequest;
         _unitOfWork = unitOfWorkContext;

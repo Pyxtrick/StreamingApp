@@ -12,9 +12,9 @@ internal class ManageAlert : IManageAlert
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    private readonly ISendRequest _twitchSendRequest;
+    private readonly ITwitchSendRequest _twitchSendRequest;
 
-    public ManageAlert(UnitOfWorkContext unitOfWork, ISendRequest twitchSendRequest)
+    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;

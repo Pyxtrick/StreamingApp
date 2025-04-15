@@ -16,11 +16,11 @@ public class MessageCheck : IMessageCheck
 {
     private readonly UnitOfWorkContext _unitOfWork;
 
-    private readonly ISendRequest _twitchSendRequest;
+    private readonly ITwitchSendRequest _twitchSendRequest;
 
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public MessageCheck(UnitOfWorkContext unitOfWork, ISendRequest twitchSendRequest, IHubContext<ChatHub> hubContext)
+    public MessageCheck(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IHubContext<ChatHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;

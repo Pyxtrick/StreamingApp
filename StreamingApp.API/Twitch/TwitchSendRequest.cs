@@ -14,7 +14,7 @@ using WebSocketSharp;
 
 namespace StreamingApp.API.Twitch;
 
-public class TwitchSendRequest : ISendRequest
+public class TwitchSendRequest : ITwitchSendRequest
 {
     private readonly ITwitchCache _twitchCache;
     private readonly ITwitchCallCache _twitchCallCache;

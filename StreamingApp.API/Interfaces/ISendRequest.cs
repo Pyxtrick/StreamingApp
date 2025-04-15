@@ -1,6 +1,10 @@
 ﻿using StreamingApp.Domain.Entities.APIs;
 
 namespace StreamingApp.API.Interfaces;
+
+public interface ITwitchSendRequest : ISendRequest;
+public interface IYouTubeSendRequest : ISendRequest;
+
 public interface ISendRequest
 {
     Task<ChannelInfo?> GetChannelInfo(string? broadcasterId);
