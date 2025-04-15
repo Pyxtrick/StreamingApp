@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StreamingApp.API.StreamerBot;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -12,5 +13,11 @@ public class StreamerBotContoller : ControllerBase
         Console.WriteLine($"{user}, {text}");
 
         return "true";
+    }
+
+    [HttpGet("GetActions")]
+    public async Task<List<Actions>> GetActions([FromServices] IStreamerBotRequest streamerBotRequest)
+    {
+        return await streamerBotRequest.GetActions();
     }
 }

@@ -2,7 +2,8 @@
 using System.Text;
 
 namespace StreamingApp.API.StreamerBot;
-public class StreamerBotRequest
+
+public class StreamerBotRequest : IStreamerBotRequest
 {
     /// <summary>
     /// https://docs.streamer.bot/api/servers/http#getactions-get
@@ -10,29 +11,37 @@ public class StreamerBotRequest
     /// <returns></returns>
     public async Task<List<Actions>> GetActions()
     {
-        HttpResponseMessage response = await new HttpClient().GetAsync("http://127.0.0.1:7474/GetActions");
+        HttpResponseMessage response = await new HttpClient().GetAsync("http://localhost:7474/GetActions");
         string stringResponse = await response.Content.ReadAsStringAsync();
         Result convertedResponse = JsonConvert.DeserializeObject<Result>(stringResponse);
 
-        var values = new Request()
+        return convertedResponse.actions;
+    }
+
+    public async Task DoAction(string id, string name, List<KeyValuePair<string, string>> args)
+    {
+        var data = TransformData(id, name, args);
+
+        var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+        await new HttpClient().PostAsync("http://localhost:7474/DoAction", content);
+    }
+
+    private Request TransformData(string id, string name, List<KeyValuePair<string, string>> args)
+    {
+        return new Request
         {
             action = new Actions()
             {
-                id = "ef8189f0-227d-4311-a5d0-b780e294014a",
-                name = "URL test"
+                id = id,
+                name = name,
             },
-            args = new()
+            args = new Arg()
             {
-                user = "testUser",
-                rawInput = "input value"
+                user = args.FirstOrDefault(t => t.Key.Equals("user")).Value,
+                rawInput = args.FirstOrDefault(t => t.Key.Equals("rawInput")).Value
             }
         };
-
-        var content = new StringContent(JsonConvert.SerializeObject(values), Encoding.UTF8, "application/json");
-
-        await new HttpClient().PostAsync("http://localhost:7474/DoAction", content);
-
-        return convertedResponse.actions;
     }
 }
 
