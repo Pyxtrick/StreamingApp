@@ -62,7 +62,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         // TODO: Test if this is valid
         if (e.ChatMessage.Username.Equals(RaidUser))
         {
-            Console.WriteLine($"User {RaidUser} chatted");
+            Console.WriteLine($"Raid User {RaidUser} chatted");
         }
 
         if(e.ChatMessage.Message.Contains("Followed ALOO"))
@@ -360,17 +360,17 @@ public class TwitchApiRequest : ITwitchApiRequest
     public void Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
     {
         // TODO: Save to DB
-        Console.WriteLine("Check this if it also does it when user followed");
-        Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
+        //Console.WriteLine("Check this if it also does it when user followed");
+        //Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
         //throw new NotImplementedException();
     }
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
-        Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
+        //Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
     }
     public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
     {
-        Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
+        //Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
     }
     #endregion
 }

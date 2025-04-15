@@ -57,9 +57,11 @@ TODO: place things on screen at specific locations with x and y axies
 // Client
 TODO: 1 Create Recording Breackpoint
 
-TODO: 3 Trigger Vtube Studio Events
-
 TODO: 3 Trigger OBS Events
+
+TODO: 4 TTS
+TODO: 4 Web Crawler
+TOOD: 5 PressKeys
 
 
 // Backend
@@ -71,12 +73,13 @@ TODO: 1 have a counter for how many times a sound has been played
 TODO: 1 able to respond to good "spam" (Dance Emojis)
 TODO: 2 respond with sound
 
+TODO: 2 YouTube Chat bot
+
 TODO: 2 create TTS or alert queue
 
 TODO: 2 detect bot attack and ad anti mesures
 	disable some logic for follow / chat bots
 
-TODO: 1 send Chat Message every x minutes
 TODO: 1 every x minutes: https://crontab.cronhub.io/
 
 TODO: 1 Spam protection for Commands / use Cache for checking when it was last used
@@ -84,6 +87,7 @@ TODO: 2 Same for Bot Spam with fallower
 TODO: 2 Able to disable it for a x time or reset some data / Cache
 
 TODO: 2 Ads check (for myself and on screen display)
+	Use servy_bot or Streamer.bot for this
 
 TODO: 2 clip creates twitch clip of the last x seconds
 TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
@@ -98,6 +102,7 @@ TODO: 2 Save Queue to a file (for next time)
 TODO: 3 Move Badges and Emote List to DB
 
 TODO: 3 create a screenshot of the current Stream using bits or point rediam
+	Use Web Crawler for this (server or Client)
 
 TODO: 3 auto delete message if there are in a diffrent language
 

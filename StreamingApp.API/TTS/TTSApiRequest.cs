@@ -11,9 +11,4 @@ public class TTSApiRequest
     {
         // Convert Message to a TTS / Text localy
     }
-
-    public void DecTalkMessage(string message)
-    {
-        // Send Message to DecTalk localy
-    }
 }

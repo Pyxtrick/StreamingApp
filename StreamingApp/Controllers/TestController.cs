@@ -72,7 +72,7 @@ public class TestController : ControllerBase
     [HttpPost("SendToClient")]
     public async void SendToClient([FromServices] IHubContext<ClientHub> hubContext)
     {
-        await hubContext.Clients.All.SendAsync("ReciveClientMessage", "hello");
+        await hubContext.Clients.All.SendAsync("ReciveClientTTSMessage", "[mmaa<200,22>mmaa<1000,22>uw<400,20>uw<200,22>uw<200,23>uw<600,22]~");
     }
 
     [HttpGet("StreamAchievements")]
