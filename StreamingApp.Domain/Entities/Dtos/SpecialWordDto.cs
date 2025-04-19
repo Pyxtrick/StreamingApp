@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Enums;
 
-namespace StreamingApp.Domain.Entities.Internal;
+namespace StreamingApp.Domain.Entities.InternalDB;
 
 public class SpecialWordDto
 {

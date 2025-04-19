@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Enums;
 
-namespace StreamingApp.Domain.Entities.Internal.User;
+namespace StreamingApp.Domain.Entities.InternalDB.User;
 
 public class Sub
 {

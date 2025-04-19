@@ -5,8 +5,8 @@ using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.Stream;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
@@ -115,7 +115,7 @@ public class ManageStream : IManageStream
     /// Starts Stream in DB
     /// </summary>
     /// <returns></returns>
-    public async Task StartStream()
+    public async Task StartStream(string youtubeId = "")
     {
         _twitchCallCache.ReseetCounts();
 
@@ -131,11 +131,12 @@ public class ManageStream : IManageStream
 
             var utcNow = DateTime.UtcNow;
 
-            Domain.Entities.Internal.Stream.Stream newStream = new()
+            Domain.Entities.InternalDB.Stream.Stream newStream = new()
             {
                 StreamTitle = channelInfo.Title,
                 StreamStart = utcNow,
                 StreamEnd = utcNow,
+                VodUrl = $"https://www.youtube.com/watch?v={youtubeId}"
             };
 
             await _unitOfWork.StreamHistory.AddAsync(newStream);

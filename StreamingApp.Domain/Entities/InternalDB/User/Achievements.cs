@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Domain.Entities.Internal.User;
+﻿namespace StreamingApp.Domain.Entities.InternalDB.User;
 
 public class Achievements // TODO: Change all DB to AchievementsEntity
 {

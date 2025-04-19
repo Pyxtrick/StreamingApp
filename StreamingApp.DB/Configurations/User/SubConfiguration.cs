@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB.User;
 
 namespace StreamingApp.DB.Configurations.User;
 

@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB.User;
 
 namespace StreamingApp.Core.Commands.Hub;
 public interface ISendSignalRMessage

@@ -3,8 +3,8 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal.Settings;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;

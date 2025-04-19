@@ -1,8 +1,8 @@
 ﻿using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Internal.Settings;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 
 namespace StreamingApp.Core.Commands;
 

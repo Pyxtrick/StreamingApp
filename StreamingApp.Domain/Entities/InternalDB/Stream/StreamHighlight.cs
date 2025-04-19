@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 
-namespace StreamingApp.Domain.Entities.Internal.Stream;
+namespace StreamingApp.Domain.Entities.InternalDB.Stream;
 
 /// <summary>
 /// used of Highlights / clip durring a stream

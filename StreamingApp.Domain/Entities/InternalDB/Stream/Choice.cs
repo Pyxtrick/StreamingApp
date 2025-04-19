@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Domain.Entities.Internal.Stream;
+﻿namespace StreamingApp.Domain.Entities.InternalDB.Stream;
 
 public class Choice
 {

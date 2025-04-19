@@ -1,6 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
 
-namespace StreamingApp.Domain.Entities.Internal;
+namespace StreamingApp.Domain.Entities.InternalDB;
 
 public class SettingsRespose
 {

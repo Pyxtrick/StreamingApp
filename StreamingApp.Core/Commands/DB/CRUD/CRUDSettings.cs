@@ -2,7 +2,7 @@
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal.Settings;
+using StreamingApp.Domain.Entities.InternalDB.Settings;
 
 namespace StreamingApp.Core.Commands.DB.CRUD;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StreamingApp.Domain.Entities.Internal.Trigger;
+namespace StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 public class Alert
 {

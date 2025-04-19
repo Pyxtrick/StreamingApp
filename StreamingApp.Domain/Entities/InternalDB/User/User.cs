@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StreamingApp.Domain.Entities.Internal.User;
+namespace StreamingApp.Domain.Entities.InternalDB.User;
 
 public class User
 {

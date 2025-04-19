@@ -5,8 +5,8 @@ using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.Trigger;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
 

@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace StreamingApp.Domain.Entities.Internal.Stream;
+namespace StreamingApp.Domain.Entities.InternalDB.Stream;
 
 public class GameInfo
 {

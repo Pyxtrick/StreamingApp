@@ -1,7 +1,7 @@
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Enums.Trigger;
 
-namespace StreamingApp.Domain.Entities.Internal.Trigger;
+namespace StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 public class Trigger : EntityBase
 {

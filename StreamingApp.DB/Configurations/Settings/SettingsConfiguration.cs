@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Setting = StreamingApp.Domain.Entities.Internal.Settings.Settings;
+using Setting = StreamingApp.Domain.Entities.InternalDB.Settings.Settings;
 
 namespace StreamingApp.DB.Configurations.Settings;
 

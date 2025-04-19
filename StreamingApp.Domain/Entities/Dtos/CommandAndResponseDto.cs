@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace StreamingApp.Domain.Entities.Internal;
+namespace StreamingApp.Domain.Entities.InternalDB;
 
 public class CommandAndResponseDto
 {

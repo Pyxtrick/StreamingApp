@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StreamingApp.Domain.Entities.Internal;
-using StreamingApp.Domain.Entities.Internal.Settings;
-using StreamingApp.Domain.Entities.Internal.Stream;
-using StreamingApp.Domain.Entities.Internal.Trigger;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB;
+using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.User;
 using System.Reflection;
 
 namespace StreamingApp.DB;
@@ -29,7 +29,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     public DbSet<Pole> Pole { get; set; } = null!;
 
-    public DbSet<Domain.Entities.Internal.Stream.Stream> StreamHistory { get; set; } = null!;
+    public DbSet<Domain.Entities.InternalDB.Stream.Stream> StreamHistory { get; set; } = null!;
 
     public DbSet<StreamGame> StreamGame { get; set; } = null!;
 

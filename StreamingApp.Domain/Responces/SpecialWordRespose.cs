@@ -1,4 +1,4 @@
-﻿namespace StreamingApp.Domain.Entities.Internal;
+﻿namespace StreamingApp.Domain.Entities.InternalDB;
 
 public class SpecialWordRespose
 {

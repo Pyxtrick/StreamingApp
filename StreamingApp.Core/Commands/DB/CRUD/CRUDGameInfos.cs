@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 namespace StreamingApp.Core.Commands.DB.CRUD;
 
 public class CRUDGameInfos : ICRUDGameInfos

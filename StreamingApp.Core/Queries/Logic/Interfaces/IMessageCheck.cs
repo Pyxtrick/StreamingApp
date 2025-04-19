@@ -1,5 +1,5 @@
 ﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB.User;
 
 namespace StreamingApp.Core.Queries.Logic.Interfaces;
 public interface IMessageCheck

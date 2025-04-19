@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 namespace StreamingApp.DB.Configurations.Trigger;
 public class TargetDataConfiguration : IEntityTypeConfiguration<TargetData>

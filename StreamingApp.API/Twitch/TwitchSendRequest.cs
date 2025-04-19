@@ -4,7 +4,7 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Moderation.BanUser;
@@ -225,7 +225,7 @@ public class TwitchSendRequest : ITwitchSendRequest
                 IsPole = pole,
                 Title = data.Title,
                 StartedAt = data.StartedAt,
-                Choices = data.Choices.Select(option => { return new Domain.Entities.Internal.Stream.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
+                Choices = data.Choices.Select(option => { return new Domain.Entities.InternalDB.Stream.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
             };
         }
         else
@@ -240,7 +240,7 @@ public class TwitchSendRequest : ITwitchSendRequest
                 IsPole = pole,
                 Title = data.Title,
                 StartedAt = DateTime.Parse(data.CreatedAt),
-                Choices = data.Outcomes.Select(option => { return new Domain.Entities.Internal.Stream.Choice() { Title = option.Title, Votes = option.ChannelPointsVotes, VotesPoints = option.ChannelPointsVotes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
+                Choices = data.Outcomes.Select(option => { return new Domain.Entities.InternalDB.Stream.Choice() { Title = option.Title, Votes = option.ChannelPointsVotes, VotesPoints = option.ChannelPointsVotes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
             };
         }
     }

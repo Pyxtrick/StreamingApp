@@ -6,6 +6,6 @@ public interface IManageStream
 {
     Task Execute(MessageDto messageDto);
     Task ChangeCategory(bool isCreateStream = false);
-    Task StartStream();
+    Task StartStream(string youtubeId = "");
     Task EndStream();
 }

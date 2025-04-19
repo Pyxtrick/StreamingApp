@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace StreamingApp.Domain.Entities.Internal.Settings;
+namespace StreamingApp.Domain.Entities.InternalDB.Settings;
 
 public class Settings
 {

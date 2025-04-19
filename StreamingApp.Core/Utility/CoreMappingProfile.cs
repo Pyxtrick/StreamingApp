@@ -1,11 +1,11 @@
-﻿using StreamingApp.Domain.Entities.Internal;
+﻿using StreamingApp.Domain.Entities.InternalDB;
 using AutoMapper;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Entities.Dtos;
-using Stream = StreamingApp.Domain.Entities.Internal.Stream.Stream;
-using StreamingApp.Domain.Entities.Internal.Stream;
-using StreamingApp.Domain.Entities.Internal.User;
-using StreamingApp.Domain.Entities.Internal.Settings;
+using Stream = StreamingApp.Domain.Entities.InternalDB.Stream.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
+using StreamingApp.Domain.Entities.InternalDB.User;
+using StreamingApp.Domain.Entities.InternalDB.Settings;
 
 namespace StreamingApp.Core.Utility;
 public class CoreMappingProfile : Profile

@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Internal;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 namespace StreamingApp.Core.Commands.DB.CRUD;
 public class CRUDSpecialWords : ICRUDSpecialWords

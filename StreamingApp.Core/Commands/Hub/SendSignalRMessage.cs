@@ -5,7 +5,7 @@ using StreamingApp.Core.Queries.Translate;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.Internal.User;
+using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
 

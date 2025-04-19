@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StreamingApp.Domain.Entities.Internal.Stream;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 
 namespace StreamingApp.DB.Configurations.Stream;
 

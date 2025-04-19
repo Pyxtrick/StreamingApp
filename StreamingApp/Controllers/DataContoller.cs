@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Internal;
+using StreamingApp.Domain.Entities.InternalDB;
 using StreamingApp.Domain.Responces;
 
 namespace StreamingApp.Web.Controllers;

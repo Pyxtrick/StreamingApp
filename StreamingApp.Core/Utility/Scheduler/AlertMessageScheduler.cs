@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Internal.Trigger;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 
