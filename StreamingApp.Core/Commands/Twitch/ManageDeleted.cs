@@ -31,7 +31,7 @@ public class ManageDeleted : IManageDeleted
         {
             bannedUserDto.UserId = messages.FirstOrDefault(m => m.MessageId.Equals(bannedUserDto.MessageId)).UserId;
 
-            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto);
+            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto, bannedUserDto.ChatOrigin);
 
             await _sendSignalRMessage.SendBannedEventMessage(bannedUserDto);
             return;
@@ -42,12 +42,12 @@ public class ManageDeleted : IManageDeleted
 
             bannedUserDto.LastMessage = messages.Last().Message;
 
-            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto);
+            await _crudUsers.UpdateBan(bannedUserDto.UserId, bannedUserDto, bannedUserDto.ChatOrigin);
         }
 
         foreach (var message in messages)
         {
-            BannedUserDto bannedMessage = new(message.UserId, message.MessageId, message.UserName, message.Message, bannedUserDto.Reson, bannedUserDto.TargetEnum, false, message.Date);
+            BannedUserDto bannedMessage = new(message.UserId, message.MessageId, message.UserName, message.Message, bannedUserDto.Reson, bannedUserDto.TargetEnum, false, bannedUserDto.ChatOrigin, message.Date);
 
             await _sendSignalRMessage.SendBannedEventMessage(bannedMessage);
         }

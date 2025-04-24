@@ -315,21 +315,21 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
-        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, DateTime.Now);
+        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, ChatOriginEnum.Twtich, DateTime.Now);
         
         _twitchCallCache.AddMessage(bannedUser, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
     {
-        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, DateTime.Now);
+        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, ChatOriginEnum.Twtich, DateTime.Now);
         
         _twitchCallCache.AddMessage(userTimeOout, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
     {
-        BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, DateTime.Now);
+        BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, ChatOriginEnum.Twtich, DateTime.Now);
         
         _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }

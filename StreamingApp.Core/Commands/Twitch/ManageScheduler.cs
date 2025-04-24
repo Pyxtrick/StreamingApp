@@ -46,6 +46,7 @@ public class ManageScheduler : IManageScheduler
 
         foreach (var target in trigger.Targets)
         {
+            //TODO: Check for differences for Youtube / Twitch
             _twitchSendRequest.SendChatMessage(target.CommandAndResponse.Response);
 
             _youTubeSendRequest.SendChatMessage(target.CommandAndResponse.Response);

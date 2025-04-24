@@ -45,15 +45,15 @@ public class ManageCommands : IManageCommands
             bool reply = false;
 
             // Update / Refresh Emotes from 7tv and Betterttv
-            
-            if(splitMessage[0].Equals("!timer"))
+
+            if (splitMessage[0].Equals("!timer"))
             {
                 // TODO: create Timer for x seconds or minutes
                 // Countdown
             }
-            else if(splitMessage[0].Equals("!tracker"))
+            else if (splitMessage[0].Equals("!tracker"))
             {
-                if(splitNoCommandTextMessage.Length > 0)
+                if (splitNoCommandTextMessage.Length > 0)
                 {
                     var specialWord = await _unitOfWork.SpecialWords.FirstOrDefaultAsync(s => s.Name.Contains(splitNoCommandTextMessage[0]) && s.Type == Domain.Enums.SpecialWordEnum.Count);
 
@@ -64,7 +64,7 @@ public class ManageCommands : IManageCommands
                 }
             }
             // response with the time when stream goes live / with conversion to other time zones
-            else if(splitMessage[0].Equals("!live"))
+            else if (splitMessage[0].Equals("!live"))
             {
                 var timeTexts = _unitOfWork.CommandAndResponse.FirstOrDefault(c => c.Command.Equals("streamTime")).Response.Split(",").ToList();
 
@@ -106,7 +106,7 @@ public class ManageCommands : IManageCommands
                     response = $"Stream will be live on {streamTimes[0].DayOfWeek}, {streamTimes[1].DayOfWeek} and {streamTimes[2].DayOfWeek} at {result.TimeOfDay.ToString()} CEST / {offset}";
                 }
             }
-            else if(splitMessage[0].Equals("!currentTime"))
+            else if (splitMessage[0].Equals("!currentTime"))
             {
                 var localTime = DateTime.Now;
 
@@ -122,7 +122,7 @@ public class ManageCommands : IManageCommands
 
                         response = $"It is Currenty in {splitNoCommandTextMessage[0]} {timeZone.ToShortTimeString()} (UTC {offsetText})";
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         response = commandAndResponse.Response;
                     }
@@ -132,19 +132,19 @@ public class ManageCommands : IManageCommands
                     response = $"It is Currenty {localTime.ToShortTimeString()}";
                 }
             }
-            else if(splitMessage[0].Equals("!language2"))
+            else if (splitMessage[0].Equals("!language2"))
             {
                 // Use Twitch user Language and send message in chat
             }
-            else if(splitMessage[0].Equals("!clip2"))
+            else if (splitMessage[0].Equals("!clip2"))
             {
                 // lgic to create a OBS Clip / checkpoint
             }
-            else if(splitMessage[0].Equals("!song"))
+            else if (splitMessage[0].Equals("!song"))
             {
                 // reads the current song application / API to get the currenty plaing song
             }
-            else if(splitMessage[0].Equals("!collab"))
+            else if (splitMessage[0].Equals("!collab"))
             {
                 if (!commandAndResponse.Active)
                 {
@@ -161,7 +161,7 @@ public class ManageCommands : IManageCommands
                 {
                     var user = await _unitOfWork.UserDetail.FirstAsync(x => x.UserName == text);
 
-                    if(user != null)
+                    if (user != null)
                     {
                         string userLink = user.Url != null ? user.Url : $"https://www.twitch.tv/{user.UserName}";
 
@@ -177,7 +177,7 @@ public class ManageCommands : IManageCommands
 
                 response = $"Current Collab with {peopleLinks}";
             }
-            else if(splitMessage[0].Equals("!statistics"))
+            else if (splitMessage[0].Equals("!statistics"))
             {
                 User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
 
@@ -185,6 +185,12 @@ public class ManageCommands : IManageCommands
                 int streamStreak = user.TwitchAchievements.WachedStreams;
 
                 response = $"User {messageDto.UserName} has seen {streamStreak} Streams since {FirstStreamSeen.ToShortDateString()}";
+            }
+            else if (splitMessage[0].Equals("!youtube"))
+            {
+                var streamHistory = await _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).LastAsync();
+
+                response = $"The stream is also live on YouTube: {streamHistory.VodUrl}";
             }
             else if (messageDto.Auth.Min() <= AuthEnum.Mod)
             {

@@ -16,14 +16,17 @@ public class ManageStream : IManageStream
 
     private readonly ITwitchSendRequest _twitchSendRequest;
 
+    private readonly IYouTubeSendRequest _youTubeSendRequest;
+
     private readonly ITwitchCallCache _twitchCallCache;
 
     private readonly IManageFile _manageFile;
 
-    public ManageStream(UnitOfWorkContext unitOfWork, ITwitchSendRequest sendRequest, ITwitchCallCache twitchCallCache, IManageFile manageFile)
+    public ManageStream(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IYouTubeSendRequest youTubeSendRequest, ITwitchCallCache twitchCallCache, IManageFile manageFile)
     {
         _unitOfWork = unitOfWork;
-        _twitchSendRequest = sendRequest;
+        _twitchSendRequest = twitchSendRequest;
+        _youTubeSendRequest = youTubeSendRequest;
         _twitchCallCache = twitchCallCache;
         _manageFile = manageFile;
     }
@@ -144,8 +147,11 @@ public class ManageStream : IManageStream
 
             await ChangeCategory(true);
 
-            _twitchSendRequest.SendChatMessage($"Stream Started with Title '{newStream.StreamTitle}'");
-            
+            string message = $"Stream Started with Title '{newStream.StreamTitle}'";
+
+            _twitchSendRequest.SendChatMessage(message);
+            _youTubeSendRequest.SendChatMessage(message);
+
             // TODO: Send Discord Notification
         }
     }
@@ -172,7 +178,11 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            _twitchSendRequest.SendChatMessage($"Stream is Ending, Thank you for watching <3");
+            string message = $"Stream is Ending, Thank you for watching <3";
+
+            _twitchSendRequest.SendChatMessage(message);
+            _youTubeSendRequest.SendChatMessage(message);
+
         }
     }
 

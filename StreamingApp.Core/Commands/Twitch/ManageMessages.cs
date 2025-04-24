@@ -84,11 +84,11 @@ public class ManageMessages : IManageMessages
             // TODO: make backend check if this is the first message during the stream
             //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
 
-            await _crudUsers.UpdateAchievements(messageDto.UserId);
+            await _crudUsers.UpdateAchievements(messageDto.UserId, messageDto.ChatOrigin);
         }
         else
         {
-            user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth);
+            user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth, messageDto.ChatOrigin);
         }
 
         var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;

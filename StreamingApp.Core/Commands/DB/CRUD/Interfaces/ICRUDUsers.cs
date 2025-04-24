@@ -1,5 +1,4 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.InternalDB;
 using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 
@@ -8,15 +7,17 @@ public interface ICRUDUsers
 {
     Task<List<UserDto>> GetAll();
 
-    Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth);
-    
-    Task<bool> UpdateAchievements(string userId);
+    Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth, ChatOriginEnum chatOrigin);
 
-    Task<bool> UpdateAuth(string userId, List<AuthEnum> auths);
+    Task CombineUser(string twitchUserId, string youtubeUserId);
 
-    Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime);
+    Task<bool> UpdateAchievements(string userId, ChatOriginEnum chatOrigin);
 
-    Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto);
+    Task<bool> UpdateAuth(string userId, List<AuthEnum> auths, ChatOriginEnum chatOrigin);
 
-    Task<bool> Delete(List<UserDto> commands);
+    Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime, ChatOriginEnum chatOrigin);
+
+    Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto, ChatOriginEnum chatOrigin);
+
+    Task<bool> Delete(List<UserDto> commands, ChatOriginEnum chatOrigin);
 }
