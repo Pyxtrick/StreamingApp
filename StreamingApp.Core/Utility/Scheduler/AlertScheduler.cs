@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
-using StreamingApp.Domain.Common;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 

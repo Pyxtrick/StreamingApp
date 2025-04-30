@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:Achievements" ZOrder="7" X="382" Y="129" Height="250" Width="267" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="191" />
     <Shape ID="DesignTable:User" ZOrder="6" X="777" Y="276" Height="227" Width="217" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="168" />
     <Shape ID="DesignTable:Status" ZOrder="2" X="413" Y="409" Height="342" Width="210" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="283" />
-    <Shape ID="DesignTable:Sub" ZOrder="5" X="791" Y="556" Height="204" Width="193" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="145" />
+    <Shape ID="DesignTable:Sub" ZOrder="5" X="792" Y="556" Height="204" Width="193" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="145" />
     <Shape ID="DesignTable:Ban" ZOrder="4" X="1207" Y="434" Height="365" Width="200" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="306" />
     <Shape ID="DesignTable:UserDetail" ZOrder="3" X="1177" Y="171" Height="204" Width="240" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="145" />
   </Shapes>
@@ -65,7 +65,7 @@
     <Connector ID="DesignRelation:Sub_Status" ZOrder="1" LineWidth="11">
       <RoutePoints>
         <Point>
-          <X>791</X>
+          <X>792</X>
           <Y>564</Y>
         </Point>
         <Point>

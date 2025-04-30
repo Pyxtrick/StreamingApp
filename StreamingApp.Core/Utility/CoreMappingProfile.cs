@@ -6,6 +6,7 @@ using Stream = StreamingApp.Domain.Entities.InternalDB.Stream.Stream;
 using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility;
 public class CoreMappingProfile : Profile
@@ -34,14 +35,15 @@ public class CoreMappingProfile : Profile
         CreateMap<StreamGame, StreamGame>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 
 
+        //TODO: Fix UserDto
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserText))
-            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.TwitchDetail.Url))
+            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).Url))
             .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Status.UserType))
-            .ForMember(dest => dest.GiftedSubsCount, opt => opt.MapFrom(src => src.TwitchAchievements.GiftedSubsCount))
-            .ForMember(dest => dest.GiftedBitsCount, opt => opt.MapFrom(src => src.TwitchAchievements.GiftedBitsCount))
-            .ForMember(dest => dest.GiftedDonationCount, opt => opt.MapFrom(src => src.TwitchAchievements.GiftedDonationCount))
-            .ForMember(dest => dest.WachedStreams, opt => opt.MapFrom(src => src.TwitchAchievements.WachedStreams))
+            .ForMember(dest => dest.GiftedSubsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedSubsCount))
+            .ForMember(dest => dest.GiftedBitsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedBitsCount))
+            .ForMember(dest => dest.GiftedDonationCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedDonationCount))
+            .ForMember(dest => dest.WachedStreams, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).WachedStreams))
             .ReverseMap();
         CreateMap<User, User>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 

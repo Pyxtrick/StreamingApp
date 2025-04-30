@@ -179,10 +179,10 @@ public class ManageCommands : IManageCommands
             }
             else if (splitMessage[0].Equals("!statistics"))
             {
-                User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.TwitchDetail.UserName == messageDto.UserName);
+                User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).UserName == messageDto.UserName);
 
-                DateTime FirstStreamSeen = user.TwitchAchievements.FirstStreamSeen;
-                int streamStreak = user.TwitchAchievements.WachedStreams;
+                DateTime FirstStreamSeen = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).FirstStreamSeen;
+                int streamStreak = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).WachedStreams;
 
                 response = $"User {messageDto.UserName} has seen {streamStreak} Streams since {FirstStreamSeen.ToShortDateString()}";
             }

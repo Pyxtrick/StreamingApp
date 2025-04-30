@@ -90,7 +90,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
         // TODO: ArgumentValidator.EnsureNotNull(modelBuilder, nameof(modelBuilder));
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
-        
+
         /** combining two objects on one table
         modelBuilder.Entity<ObjectBase>()
             .HasDiscriminator<string>("object_type")

@@ -1,9 +1,12 @@
-﻿namespace StreamingApp.Domain.Entities.InternalDB.User;
+﻿using StreamingApp.Domain.Enums;
+
+namespace StreamingApp.Domain.Entities.InternalDB.User;
 
 public class Achievements // TODO: Change all DB to AchievementsEntity
 {
     public int Id { get; set; }
 
+    public int UserId { get; set; }
     public User User { get; set; }
 
     // Giffted Subs Amount
@@ -22,4 +25,6 @@ public class Achievements // TODO: Change all DB to AchievementsEntity
     public DateTime LastStreamSeen { get; set; }
 
     public DateTime FirstStreamSeen { get; set; }
+
+    public OriginEnum Origin { get; set; }
 }

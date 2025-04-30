@@ -12,10 +12,11 @@ public class UserDetailConfiguration : IEntityTypeConfiguration<UserDetail>
     {
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
-        builder.HasKey(a => a.Id);
-        builder.Property(a => a.UserName).HasMaxLength(100);
-        builder.Property(a => a.UserId).HasMaxLength(100);
-        builder.Property(a => a.AppAuthEnum).HasConversion<string>();
-        builder.HasOne(a => a.User).WithOne(user => user.TwitchDetail).HasForeignKey<user>(user => user.TwitchDetailId).IsRequired();
+        builder.HasKey(ud => ud.Id);
+        builder.Property(ud => ud.UserName).HasMaxLength(100);
+        builder.Property(ud => ud.ExternalUserId).HasMaxLength(100);
+        builder.Property(ud => ud.AppAuthEnum).HasConversion<string>();
+        builder.Property(ud => ud.Origin).HasConversion<string>();
+        builder.HasOne(ud => ud.User).WithMany(user => user.Details).HasForeignKey(ud => ud.UserId).IsRequired();
     }
 }

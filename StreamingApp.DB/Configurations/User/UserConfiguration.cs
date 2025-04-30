@@ -11,14 +11,10 @@ public class UserConfiguration : IEntityTypeConfiguration<user>
     {
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
-        builder.HasKey(a => a.Id);
-        builder.HasOne(a => a.TwitchDetail).WithOne(userDetail => userDetail.User).HasForeignKey<user>(a => a.TwitchDetailId).IsRequired();
-        // Youtube builder.HasOne(a => a.TwitchDetail).WithOne(userDetail => userDetail.User).HasForeignKey<user>(a => a.TwitchDetailId).IsRequired();
-        // Discord builder.HasOne(a => a.TwitchDetail).WithOne(userDetail => userDetail.User).HasForeignKey<user>(a => a.TwitchDetailId).IsRequired();
-        // Twitter builder.HasOne(a => a.TwitchDetail).WithOne(userDetail => userDetail.User).HasForeignKey<user>(a => a.TwitchDetailId).IsRequired();
-        builder.HasOne(a => a.Status).WithOne(status => status.User).HasForeignKey<user>(a => a.StatusId).IsRequired();
-        builder.HasOne(a => a.TwitchAchievements).WithOne(achievements => achievements.User).HasForeignKey<user>(a => a.TwitchAchievementsId).IsRequired();
-        // Youtube builder.HasOne(a => a.TwitchAchievements).WithOne(achievements => achievements.User).HasForeignKey<user>(a => a.TwitchAchievementsId).IsRequired();
-        builder.HasOne(a => a.Ban).WithOne(ban => ban.User).HasForeignKey<user>(a => a.BanId);
+        builder.HasKey(u => u.Id);
+        builder.HasMany(u => u.Details).WithOne(userDetail => userDetail.User).HasForeignKey(ud => ud.UserId).IsRequired();
+        //builder.HasOne(u => u.Status).WithOne(status => status.User).HasForeignKey<user>(a => a.StatusId).IsRequired();
+        builder.HasMany(u => u.Achievements).WithOne(achievements => achievements.User).HasForeignKey(a => a.UserId).IsRequired();
+        builder.HasOne(u => u.Ban).WithOne(ban => ban.User).HasForeignKey<user>(user => user.BanId);
     }
 }

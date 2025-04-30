@@ -9,6 +9,7 @@ public class UserDto
     public string UserName { get; set; }
 
     #region UserDetail / TwitchDetail
+    //TODO: Change to a List of Details
     public string Url { get; set; }
     #endregion
 
@@ -17,6 +18,7 @@ public class UserDto
     #endregion
 
     #region Achievements / TwitchAchievements
+    //TODO: Change to a List of Achievements
     public int GiftedSubsCount { get; set; }
 
     public int GiftedBitsCount { get; set; }

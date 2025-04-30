@@ -14,8 +14,7 @@ public class StatusConfiguration : IEntityTypeConfiguration<Status>
 
         builder.HasKey(a => a.Id);
         builder.Property(a => a.UserType).HasConversion<string>();
-        builder.HasOne(a => a.User).WithOne(user => user.Status).HasForeignKey<user>(user => user.StatusId).IsRequired();
-        builder.HasOne(a => a.TwitchSub).WithOne(sub => sub.Status).HasForeignKey<Status>(a => a.TwitchSubId).IsRequired();
-        // Youtube builder.HasOne(a => a.TwitchSub).WithOne(user => user.Status).HasForeignKey<Status>(a => a.TwitchSub).IsRequired();
+        builder.HasOne(a => a.User).WithOne(user => user.Status).HasForeignKey<Status>(s => s.UserId).IsRequired();
+        builder.HasMany(a => a.Subs).WithOne(sub => sub.Status).HasForeignKey(sub => sub.StatusId).IsRequired();
     }
 }

@@ -13,6 +13,7 @@ public class AchievementsConfiguration : IEntityTypeConfiguration<Achievements>
         // TODO: ArgumentValidator.EnsureNotNull(builder, nameof(builder));
 
         builder.HasKey(a => a.Id);
-        builder.HasOne(a => a.User).WithOne(user => user.TwitchAchievements).HasForeignKey<user>(user => user.TwitchAchievementsId).IsRequired();
+        builder.Property(a => a.Origin).HasConversion<string>();
+        builder.HasOne(a => a.User).WithMany(user => user.Achievements).HasForeignKey(a => a.UserId).IsRequired();
     }
 }

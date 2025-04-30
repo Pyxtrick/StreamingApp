@@ -12,20 +12,20 @@ using StreamingApp.DB;
 namespace StreamingApp.DB.Migrations
 {
     [DbContext(typeof(UnitOfWorkContext))]
-    [Migration("20250214114432_udpdateBan")]
-    partial class udpdateBan
+    [Migration("20250430154407_updateFK")]
+    partial class updateFK
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Settings.Settings", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Settings.Settings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,6 +50,9 @@ namespace StreamingApp.DB.Migrations
                     b.Property<bool>("MuteAllerts")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("MuteChatMessages")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -65,7 +68,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Choice", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Choice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,7 +102,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Choice");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.GameInfo", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.GameInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +131,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("GameInfo");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Pole", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Pole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -155,7 +158,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Pole");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Stream", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Stream", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,13 +184,19 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("StreamHistory");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamGame", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.StreamGame", b =>
                 {
-                    b.Property<int>("GameCategoryId")
+                    b.Property<int>("StreamGameId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StreamGameId"));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("GameCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -195,14 +204,16 @@ namespace StreamingApp.DB.Migrations
                     b.Property<int>("StreamId")
                         .HasColumnType("int");
 
-                    b.HasKey("GameCategoryId");
+                    b.HasKey("StreamGameId");
+
+                    b.HasIndex("GameCategoryId");
 
                     b.HasIndex("StreamId");
 
                     b.ToTable("StreamGame");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamHighlight", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.StreamHighlight", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -230,7 +241,58 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("StreamHighlights");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.CommandAndResponse", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Html")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMute")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Sound")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("TimesUsed")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Video")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("Volume")
+                        .HasColumnType("int");
+
+                    b.Property<int>("videoLeght")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Alert");
+                });
+
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.CommandAndResponse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,6 +328,9 @@ namespace StreamingApp.DB.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<int?>("TargetId")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
 
@@ -276,55 +341,14 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TargetId")
+                        .IsUnique()
+                        .HasFilter("[TargetId] IS NOT NULL");
+
                     b.ToTable("CommandAndResponse");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Emote", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMute")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Sound")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("TimesUsed")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Video")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("Volume")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Emotes");
-                });
-
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.SpecialWords", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.SpecialWords", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -360,7 +384,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("SpecialWords");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Target", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Target", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -371,6 +395,9 @@ namespace StreamingApp.DB.Migrations
                     b.Property<int>("Chance")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CommandAndResponseId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsSameTime")
                         .HasColumnType("bit");
 
@@ -378,9 +405,8 @@ namespace StreamingApp.DB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TargetDataId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TargetDataId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TriggerId")
                         .HasColumnType("int");
@@ -392,7 +418,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Target");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.TargetData", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.TargetData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -400,10 +426,10 @@ namespace StreamingApp.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Duration")
+                    b.Property<int>("AlertId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmoteId")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<int>("Size")
@@ -418,7 +444,7 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmoteId");
+                    b.HasIndex("AlertId");
 
                     b.HasIndex("TargetId")
                         .IsUnique();
@@ -426,7 +452,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("TargetData");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Trigger", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Trigger", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -450,6 +476,9 @@ namespace StreamingApp.DB.Migrations
                     b.Property<bool>("ExactAmmount")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ScheduleTime")
+                        .HasColumnType("int");
+
                     b.Property<string>("TriggerCondition")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -467,13 +496,16 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Trigger");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Achievements", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Achievements", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("FirstStreamSeen")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("GiftedBitsCount")
                         .HasColumnType("int");
@@ -487,15 +519,24 @@ namespace StreamingApp.DB.Migrations
                     b.Property<DateTime>("LastStreamSeen")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("WachedStreams")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Achievements");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Ban", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Ban", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,6 +566,9 @@ namespace StreamingApp.DB.Migrations
                     b.Property<bool>("IsExcludeQueue")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsWatchList")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastMessage")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -541,7 +585,7 @@ namespace StreamingApp.DB.Migrations
                     b.ToTable("Ban");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Status", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Status", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -567,15 +611,9 @@ namespace StreamingApp.DB.Migrations
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MyProperty")
-                        .HasColumnType("int");
-
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TwitchSubId")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -586,13 +624,13 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TwitchSubId")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Status");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Sub", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Sub", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -607,6 +645,13 @@ namespace StreamingApp.DB.Migrations
                     b.Property<bool>("CurrentySubscribed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("SubGiffted")
                         .HasColumnType("bit");
 
@@ -615,10 +660,12 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StatusId");
+
                     b.ToTable("Sub");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.User", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -629,15 +676,6 @@ namespace StreamingApp.DB.Migrations
                     b.Property<int>("BanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TwitchAchievementsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TwitchDetailId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserText")
                         .HasColumnType("nvarchar(max)");
 
@@ -646,19 +684,10 @@ namespace StreamingApp.DB.Migrations
                     b.HasIndex("BanId")
                         .IsUnique();
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
-
-                    b.HasIndex("TwitchAchievementsId")
-                        .IsUnique();
-
-                    b.HasIndex("TwitchDetailId")
-                        .IsUnique();
-
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.UserDetail", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.UserDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -670,13 +699,20 @@ namespace StreamingApp.DB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("ExternalUserId")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -685,12 +721,14 @@ namespace StreamingApp.DB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("UserDetail");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Choice", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Choice", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Stream.Pole", "Poles")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Stream.Pole", "Poles")
                         .WithMany("Choices")
                         .HasForeignKey("PoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -699,15 +737,15 @@ namespace StreamingApp.DB.Migrations
                     b.Navigation("Poles");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamGame", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.StreamGame", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Stream.GameInfo", "GameCategory")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Stream.GameInfo", "GameCategory")
                         .WithMany("GameCategories")
                         .HasForeignKey("GameCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Stream.Stream", "Stream")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Stream.Stream", "Stream")
                         .WithMany("GameCategories")
                         .HasForeignKey("StreamId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -718,9 +756,9 @@ namespace StreamingApp.DB.Migrations
                     b.Navigation("Stream");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.StreamHighlight", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.StreamHighlight", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Stream.Stream", "Stream")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Stream.Stream", "Stream")
                         .WithMany("StreamHighlights")
                         .HasForeignKey("StreamId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -729,9 +767,18 @@ namespace StreamingApp.DB.Migrations
                     b.Navigation("Stream");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Target", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.CommandAndResponse", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Trigger.Trigger", "Trigger")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Trigger.Target", "Target")
+                        .WithOne("CommandAndResponse")
+                        .HasForeignKey("StreamingApp.Domain.Entities.InternalDB.Trigger.CommandAndResponse", "TargetId");
+
+                    b.Navigation("Target");
+                });
+
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Target", b =>
+                {
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Trigger.Trigger", "Trigger")
                         .WithMany("Targets")
                         .HasForeignKey("TriggerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -740,132 +787,132 @@ namespace StreamingApp.DB.Migrations
                     b.Navigation("Trigger");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.TargetData", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.TargetData", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Trigger.Emote", "Emote")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Trigger.Alert", "Alert")
                         .WithMany("TargetData")
-                        .HasForeignKey("EmoteId")
+                        .HasForeignKey("AlertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.Trigger.Target", "Target")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.Trigger.Target", "Target")
                         .WithOne("TargetData")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.Trigger.TargetData", "TargetId")
+                        .HasForeignKey("StreamingApp.Domain.Entities.InternalDB.Trigger.TargetData", "TargetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Emote");
+                    b.Navigation("Alert");
 
                     b.Navigation("Target");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Status", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Achievements", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.User.Sub", "TwitchSub")
-                        .WithOne("Status")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.User.Status", "TwitchSubId")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.User.User", "User")
+                        .WithMany("Achievements")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TwitchSub");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.User", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Status", b =>
                 {
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.User.Ban", "Ban")
-                        .WithOne("User")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.User.User", "BanId")
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.User.User", "User")
+                        .WithOne("Status")
+                        .HasForeignKey("StreamingApp.Domain.Entities.InternalDB.User.Status", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.User.Status", "Status")
-                        .WithOne("User")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.User.User", "StatusId")
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Sub", b =>
+                {
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.User.Status", "Status")
+                        .WithMany("Subs")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.User.Achievements", "TwitchAchievements")
-                        .WithOne("User")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.User.User", "TwitchAchievementsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Status");
+                });
 
-                    b.HasOne("StreamingApp.Domain.Entities.Internal.User.UserDetail", "TwitchDetail")
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.User", b =>
+                {
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.User.Ban", "Ban")
                         .WithOne("User")
-                        .HasForeignKey("StreamingApp.Domain.Entities.Internal.User.User", "TwitchDetailId")
+                        .HasForeignKey("StreamingApp.Domain.Entities.InternalDB.User.User", "BanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Ban");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("TwitchAchievements");
-
-                    b.Navigation("TwitchDetail");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.GameInfo", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.UserDetail", b =>
+                {
+                    b.HasOne("StreamingApp.Domain.Entities.InternalDB.User.User", "User")
+                        .WithMany("Details")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.GameInfo", b =>
                 {
                     b.Navigation("GameCategories");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Pole", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Pole", b =>
                 {
                     b.Navigation("Choices");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Stream.Stream", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Stream.Stream", b =>
                 {
                     b.Navigation("GameCategories");
 
                     b.Navigation("StreamHighlights");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Emote", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Alert", b =>
                 {
                     b.Navigation("TargetData");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Target", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Target", b =>
                 {
-                    b.Navigation("TargetData")
-                        .IsRequired();
+                    b.Navigation("CommandAndResponse");
+
+                    b.Navigation("TargetData");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.Trigger.Trigger", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.Trigger.Trigger", b =>
                 {
                     b.Navigation("Targets");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Achievements", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Ban", b =>
                 {
                     b.Navigation("User")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Ban", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.Status", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("Subs");
                 });
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Status", b =>
+            modelBuilder.Entity("StreamingApp.Domain.Entities.InternalDB.User.User", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
+                    b.Navigation("Achievements");
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.Sub", b =>
-                {
-                    b.Navigation("Status")
-                        .IsRequired();
-                });
+                    b.Navigation("Details");
 
-            modelBuilder.Entity("StreamingApp.Domain.Entities.Internal.User.UserDetail", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("Status");
                 });
 #pragma warning restore 612, 618
         }

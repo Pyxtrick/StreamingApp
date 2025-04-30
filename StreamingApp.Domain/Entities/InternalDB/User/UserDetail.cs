@@ -7,6 +7,7 @@ public class UserDetail
 {
     public int Id { get; set; }
 
+    public int UserId { get; set; }
     public User User { get; set; }
 
     // User Name
@@ -15,11 +16,13 @@ public class UserDetail
 
     // User ID
     [Required]
-    public string UserId { get; set; }
+    public string ExternalUserId { get; set; }
 
     // Url | defined internal
     public string? Url { get; set; }
 
     // Gives Autherisation for the App / Backend and Frontend
     public AppAuthEnum AppAuthEnum { get; set; }
+
+    public OriginEnum Origin { get; set; }
 }

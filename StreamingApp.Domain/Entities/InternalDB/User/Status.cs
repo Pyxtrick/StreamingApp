@@ -9,11 +9,7 @@ public class Status
     public int UserId { get; set; }
     public User User { get; set; }
 
-    public int TwitchSubId { get; set; }
-    public Sub? TwitchSub { get; set; }
-
-    //public int YoutubeSubId { get; set; }
-    //public Sub YoutubeSub { get; set; }
+    public List<Sub> Subs { get; set; }
 
     // Date of first Message
     public DateTime FirstChatDate { get; set; }

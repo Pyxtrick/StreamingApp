@@ -78,7 +78,7 @@ public class ManageMessages : IManageMessages
 
     public async Task ExecuteOne(MessageDto messageDto)
     {
-        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("TwitchDetail").FirstOrDefault(u => u.TwitchDetail.UserId == messageDto.UserId);
+        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == messageDto.UserId);
         if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
