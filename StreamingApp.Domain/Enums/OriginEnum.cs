@@ -2,7 +2,7 @@
 
 public enum OriginEnum
 {
-    Twtich,
+    Twitch,
     Youtube,
     Discord,
 }

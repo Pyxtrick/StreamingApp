@@ -26,7 +26,7 @@ public class Tests : DataBaseFixture
 
         var auths = new List<AuthEnum> { AuthEnum.Mod, AuthEnum.Streamer };
 
-        CommandDto commandDto = new("1", "user1", "user", "!live", auths, DateTime.UtcNow, ChatOriginEnum.Twtich);
+        CommandDto commandDto = new("1", "user1", "user", "!live", auths, DateTime.UtcNow, ChatOriginEnum.Twitch);
 
         //IManageCommands createOrReplaceActivitiesCommand = CreateCommand();
 

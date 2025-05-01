@@ -2,7 +2,7 @@
 
 public enum ChatOriginEnum
 {
-    Twtich,
+    Twitch,
     Youtube,
     Undefined,
 }

@@ -1823,7 +1823,7 @@ export interface ISettingsDto {
 }
 
 export enum ChatOriginEnum {
-    Twtich = 0,
+    Twitch = 0,
     Youtube = 1,
     Undefined = 2,
 }

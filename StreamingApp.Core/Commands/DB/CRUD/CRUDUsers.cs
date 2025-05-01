@@ -29,16 +29,16 @@ public class CRUDUsers : ICRUDUsers
 
     public async Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth, ChatOriginEnum chatOrigin)
     {
-        User user = _unitOfWork.User.Include("Details").Where(t => t.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == twitchUserId).ToList().FirstOrDefault();
+        User user = _unitOfWork.User.Include("Details").Where(t => t.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == twitchUserId).ToList().FirstOrDefault();
 
         if (user != null)
         {
-            User userTwo = _unitOfWork.User.Where(t => t.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).UserName == userName).ToList().FirstOrDefault();
+            User userTwo = _unitOfWork.User.Where(t => t.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).UserName == userName).ToList().FirstOrDefault();
 
             // Check for userName change
             if (userTwo == null)
             {
-                user.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).UserName = userName;
+                user.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).UserName = userName;
 
                 _unitOfWork.User.Update(user);
                 await _unitOfWork.SaveChangesAsync();
@@ -80,9 +80,9 @@ public class CRUDUsers : ICRUDUsers
                     {
                         new()
                         {
-                            CurrentySubscribed = chatOrigin == ChatOriginEnum.Twtich ? isSub : false,
-                            SubscribedTime = chatOrigin == ChatOriginEnum.Twtich ? subTime : 0,
-                            CurrentTier = chatOrigin == ChatOriginEnum.Twtich ? (isSub ? TierEnum.Tier1 : TierEnum.None) : TierEnum.None, // cannot get data ATM
+                            CurrentySubscribed = chatOrigin == ChatOriginEnum.Twitch ? isSub : false,
+                            SubscribedTime = chatOrigin == ChatOriginEnum.Twitch ? subTime : 0,
+                            CurrentTier = chatOrigin == ChatOriginEnum.Twitch ? (isSub ? TierEnum.Tier1 : TierEnum.None) : TierEnum.None, // cannot get data ATM
                         }
                         /**
                         new()
@@ -131,7 +131,7 @@ public class CRUDUsers : ICRUDUsers
     /// <returns></returns>
     public async Task CombineUser(string twitchUserId, string youtubeUserId)
     {
-        User user = _unitOfWork.User.Include("Achievements").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == twitchUserId).ToList().First();
+        User user = _unitOfWork.User.Include("Achievements").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == twitchUserId).ToList().First();
         
         // TODO: Combine both user (add data from the newest one to the oldest one + remove the one that is not needed anymore)
     }
@@ -144,9 +144,9 @@ public class CRUDUsers : ICRUDUsers
         {
             User user = null;
 
-            if (chatOrigin == ChatOriginEnum.Twtich)
+            if (chatOrigin == ChatOriginEnum.Twitch)
             {
-                user = _unitOfWork.User.Include("Achievements").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == userId).ToList().First();
+                user = _unitOfWork.User.Include("Achievements").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == userId);
             }
             else if(chatOrigin == ChatOriginEnum.Youtube)
             {
@@ -158,7 +158,7 @@ public class CRUDUsers : ICRUDUsers
                 return false;
             }
 
-            var achievements = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich);
+            var achievements = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch);
 
             if (achievements.LastStreamSeen < stream.StreamStart)
             {
@@ -184,7 +184,7 @@ public class CRUDUsers : ICRUDUsers
 
     public async Task<bool> UpdateAuth(string userId, List<AuthEnum> auths, ChatOriginEnum chatOrigin)
     {
-        User user = _unitOfWork.User.Include("Status").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == userId).ToList().First();
+        User user = _unitOfWork.User.Include("Status").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == userId).ToList().First();
         if (user != null)
         {
             user.Status.IsVIP = auths.Contains(AuthEnum.Vip);
@@ -209,10 +209,10 @@ public class CRUDUsers : ICRUDUsers
 
     public async Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime, ChatOriginEnum chatOrigin)
     {
-        User user = _unitOfWork.User.Include("Status").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == userId).ToList().First();
+        User user = _unitOfWork.User.Include("Status").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == userId).ToList().First();
         if (user != null)
         {
-            var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == OriginEnum.Twtich);
+            var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == OriginEnum.Twitch);
 
             if (isSub)
             {
@@ -243,7 +243,7 @@ public class CRUDUsers : ICRUDUsers
 
     public async Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto, ChatOriginEnum chatOrigin)
     {
-        User user = _unitOfWork.User.Include("Ban").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == userId).ToList().First();
+        User user = _unitOfWork.User.Include("Ban").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == userId).ToList().First();
 
         if (bannedUserDto.TargetEnum == BannedTargetEnum.Message)
         {

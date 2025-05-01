@@ -4,5 +4,5 @@ namespace StreamingApp.Core.Commands.Twitch.Interfaces;
 
 public interface IGameCommand
 {
-    void Execute(CommandAndResponse commandAndResponse);
+    Task Execute(CommandAndResponse commandAndResponse);
 }

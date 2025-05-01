@@ -26,9 +26,9 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
     {
         var stream = _unitOfWork.StreamHistory.OrderBy(x => x.Id).Last();
 
-        var streamChattedViewers = _unitOfWork.User.Include("Achievements").Include("Ban").Where(u => u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).LastStreamSeen >= stream.StreamStart && u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).LastStreamSeen <= DateTime.UtcNow);
+        var streamChattedViewers = _unitOfWork.User.Include("Achievements").Include("Ban").Where(u => u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).LastStreamSeen >= stream.StreamStart && u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).LastStreamSeen <= DateTime.UtcNow);
 
-        var newViewers = streamChattedViewers.Where(u => u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).WachedStreams == 1 && u.Ban.IsBaned == false);
+        var newViewers = streamChattedViewers.Where(u => u.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).WachedStreams == 1 && u.Ban.IsBaned == false);
 
         var duration = DateTime.Now - stream.StreamStart.AddHours(1);
         var days = duration.Days > 0 ? $"{duration.Days.ToString()} Days, " : "";
@@ -50,7 +50,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
             if (parts.Length == 4)
             {
-                if (parts[0].Contains(nameof(ChatOriginEnum.Twtich)))
+                if (parts[0].Contains(nameof(ChatOriginEnum.Twitch)))
                 {
                     twitchAchievements.Add($"User: {parts[1]} has gifted {parts[3]} {parts[2]}");
                 }
@@ -61,7 +61,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         {
             foreach (var viewer in newViewers)
             {
-                twitchAchievements.Add($"{viewer.UserText} has First Chatted at {viewer.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).LastStreamSeen.ToLocalTime().ToShortTimeString()}");
+                twitchAchievements.Add($"{viewer.UserText} has First Chatted at {viewer.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).LastStreamSeen.ToLocalTime().ToShortTimeString()}");
             }
         }
 

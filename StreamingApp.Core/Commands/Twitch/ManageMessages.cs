@@ -78,7 +78,8 @@ public class ManageMessages : IManageMessages
 
     public async Task ExecuteOne(MessageDto messageDto)
     {
-        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).ExternalUserId == messageDto.UserId);
+        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin.ToString().Equals(messageDto.ChatOrigin.ToString())).ExternalUserId == messageDto.UserId);
+
         if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
@@ -155,7 +156,7 @@ public class ManageMessages : IManageMessages
             }
             else if (commandAndResponse.Category == CategoryEnum.Game)
             {
-                _gameCommand.Execute(commandAndResponse);
+                await _gameCommand.Execute(commandAndResponse);
                 Console.WriteLine("Command Game");
             }
             // sstart, sstop, sset

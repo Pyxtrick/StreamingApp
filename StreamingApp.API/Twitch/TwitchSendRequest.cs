@@ -63,12 +63,12 @@ public class TwitchSendRequest : ITwitchSendRequest
     }
 
     /// <summary>
-    /// Send Twtich Message
+    /// Send Twitch Message
     /// </summary>
     /// <param name="message"></param>
     public void SendChatMessage(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twtich);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
 
         if (settings.MuteChatMessages == false)
         {
@@ -80,13 +80,13 @@ public class TwitchSendRequest : ITwitchSendRequest
     }
 
     /// <summary>
-    /// Send Twtich Reply Message
+    /// Send Twitch Reply Message
     /// </summary>
     /// <param name="message"></param>
     /// <param name="replyToId"></param>
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twtich);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
 
         if (settings.MuteChatMessages == false)
         {

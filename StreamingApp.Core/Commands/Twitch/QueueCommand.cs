@@ -61,7 +61,7 @@ public class QueueCommand : IQueueCommand
             case "cjoin": // able to join the queue once
                 if (settings.ComunityDayActive)
                 {
-                    UserQueueDto userQueueDto = new(userName, true, 0, ChatOriginEnum.Twtich);
+                    UserQueueDto userQueueDto = new(userName, true, 0, ChatOriginEnum.Twitch);
                     var possition = _queueCache.AddUserToQueue(userQueueDto);
                     // @User Has have Joined the Queue on Possition X
                     // Even if the user has allready joined previously
@@ -162,7 +162,7 @@ public class QueueCommand : IQueueCommand
     {
         switch (origin)
         { 
-            case ChatOriginEnum.Twtich:
+            case ChatOriginEnum.Twitch:
                 _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], response);
                 break;
             case ChatOriginEnum.Youtube:

@@ -12,13 +12,13 @@ public class GameCommand : IGameCommand
 
     private readonly UnitOfWorkContext _unitOfWork;
 
-    public GameCommand(ITwitchSendRequest sendRequest, UnitOfWorkContext unitOfWorkContext)
+    public GameCommand(ITwitchSendRequest sendRequest, UnitOfWorkContext unitOfWork)
     {
         _sendRequest = sendRequest;
-        _unitOfWork = unitOfWorkContext;
+        _unitOfWork = unitOfWork;
     }
 
-    public async void Execute(CommandAndResponse commandAndResponse)
+    public async Task Execute(CommandAndResponse commandAndResponse)
     {
         var channelInfo = await _sendRequest.GetChannelInfo(null);
 
@@ -29,8 +29,9 @@ public class GameCommand : IGameCommand
 
         switch (commandAndResponse.Command)
         {
+            //Fix
             case "gameinfo":
-                var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Info);
+                var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.Info);
 
                 if (gameInfo != null)
                 {
@@ -43,7 +44,7 @@ public class GameCommand : IGameCommand
                 }
                 break;
             case "modpack":
-                var gameModpack = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.ModPack);
+                var gameModpack = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.ModPack);
 
                 if (gameModpack != null)
                 {
@@ -56,7 +57,7 @@ public class GameCommand : IGameCommand
                 }
                 break;
             case "gameprogress":
-                var gameProgress = _unitOfWork.GameInfo.FirstOrDefault(t => t.Game == gameName && t.GameCategory == GameCategoryEnum.Progress);
+                var gameProgress = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.Progress);
 
                 if (gameProgress != null)
                 {

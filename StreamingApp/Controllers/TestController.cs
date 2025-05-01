@@ -28,7 +28,7 @@ public class TestController : ControllerBase
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "testuser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twtich,
+            "testuser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -41,7 +41,7 @@ public class TestController : ControllerBase
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") },
-            ChatOriginEnum.Twtich, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
+            ChatOriginEnum.Twitch, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }
@@ -64,7 +64,7 @@ public class TestController : ControllerBase
     [HttpDelete("DeleteMessage")]
     public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string messageId)
     {
-        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, ChatOriginEnum.Twtich, DateTime.UtcNow);
+        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, ChatOriginEnum.Twitch, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
     }

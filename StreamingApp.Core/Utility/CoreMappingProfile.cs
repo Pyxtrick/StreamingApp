@@ -38,12 +38,12 @@ public class CoreMappingProfile : Profile
         //TODO: Fix UserDto
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserText))
-            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).Url))
+            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).Url))
             .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Status.UserType))
-            .ForMember(dest => dest.GiftedSubsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedSubsCount))
-            .ForMember(dest => dest.GiftedBitsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedBitsCount))
-            .ForMember(dest => dest.GiftedDonationCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).GiftedDonationCount))
-            .ForMember(dest => dest.WachedStreams, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).WachedStreams))
+            .ForMember(dest => dest.GiftedSubsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).GiftedSubsCount))
+            .ForMember(dest => dest.GiftedBitsCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).GiftedBitsCount))
+            .ForMember(dest => dest.GiftedDonationCount, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).GiftedDonationCount))
+            .ForMember(dest => dest.WachedStreams, opt => opt.MapFrom(src => src.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).WachedStreams))
             .ReverseMap();
         CreateMap<User, User>().ForAllMembers(opts => opts.Condition((src, dest, member) => member != null));
 

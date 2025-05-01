@@ -10,6 +10,7 @@ using StreamingApp.Domain.Enums;
 using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
+
 public class ManageCommands : IManageCommands
 {
     private readonly UnitOfWorkContext _unitOfWork;
@@ -84,9 +85,7 @@ public class ManageCommands : IManageCommands
                 //https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
                 var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage.Length > 0 ? splitNoCommandTextMessage[0] : "Europe/Zurich");
 
-                int pFrom = timeZoneInfo.DisplayName.IndexOf("(") + "(".Length;
-                int pTo = timeZoneInfo.DisplayName.LastIndexOf(")");
-                string offset = timeZoneInfo.DisplayName.Substring(pFrom, pTo - pFrom);
+                string offset = $"UTC {((DateTime.UtcNow - DateTime.Now).TotalHours > 1.5 ? timeZoneInfo.BaseUtcOffset + TimeSpan.FromHours(1) : timeZoneInfo.BaseUtcOffset).ToString()}";
 
                 if (splitNoCommandTextMessage.Length > 0)
                 {
@@ -179,10 +178,10 @@ public class ManageCommands : IManageCommands
             }
             else if (splitMessage[0].Equals("!statistics"))
             {
-                User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).UserName == messageDto.UserName);
+                User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).UserName == messageDto.UserName);
 
-                DateTime FirstStreamSeen = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).FirstStreamSeen;
-                int streamStreak = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twtich).WachedStreams;
+                DateTime FirstStreamSeen = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).FirstStreamSeen;
+                int streamStreak = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).WachedStreams;
 
                 response = $"User {messageDto.UserName} has seen {streamStreak} Streams since {FirstStreamSeen.ToShortDateString()}";
             }
@@ -221,7 +220,10 @@ public class ManageCommands : IManageCommands
                 }
                 else
                 {
-                    _twitchSendRequest.SendChatMessage(response);
+                    if (messageDto.ChatOrigin == ChatOriginEnum.Twitch)
+                    {
+                        _twitchSendRequest.SendChatMessage(response);
+                    }
                 }
             }
         }
