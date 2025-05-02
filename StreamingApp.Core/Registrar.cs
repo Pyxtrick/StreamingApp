@@ -16,6 +16,7 @@ using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Commands.Twitch;
 using StreamingApp.Core.Commands.DB.CRUD;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
+using StreamingApp.Core.Queries.Alerts;
 
 namespace StreamingApp.Core;
 
@@ -59,6 +60,9 @@ public static class Registrar
         #region Queries
         // Achievements
         services.AddScoped<ICreateFinalStreamAchievements, CreateFinalStreamAchievements>();
+
+        //Alert
+        services.AddScoped<ISubAlertLoong, SubAlertLoong>();
 
         //Logic 
         services.AddScoped<IMessageCheck, MessageCheck>();

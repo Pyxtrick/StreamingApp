@@ -7,6 +7,8 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Domain.Responces;
+using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Domain.Entities.InternalDB.User;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -81,5 +83,31 @@ public class TestController : ControllerBase
         AlertDto alert = new AlertDto() { Html = await createFinalStreamAchievements.Execute() };
 
         await clientHub.Clients.All.SendAsync("ReceiveAlert", alert);
+    }
+
+    [HttpGet("StreamAllert")]
+    public async Task GetStreamAllert([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
+    {
+        List<KeyValuePair<string, int>> data = new()
+        {
+            new("Pyxtrick", new Random().Next(1, 150)),
+            new("tiny_karo", new Random().Next(1, 150)),
+            new("yamakasi", new Random().Next(1, 150)),
+            new("PyxtrickBot", new Random().Next(1, 150)),
+            new("servy_bot", new Random().Next(1, 150))
+        };
+
+        string html = "";
+
+        foreach (var k in data)
+        {
+            var alert = await subAlertLoong.Execute(k.Key, k.Value);
+
+            html += $"<div>{alert.Html}</div>";
+        }
+
+        var finalAlert = new AlertDto() { Html = html };
+
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", finalAlert);
     }
 }
