@@ -1,6 +1,7 @@
 ﻿using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
@@ -15,11 +16,14 @@ public class ManageScheduler : IManageScheduler
 
     private readonly ITwitchCallCache _twitchCallCache;
 
-    public ManageScheduler(ITwitchSendRequest twitchSendRequest, ITwitchCallCache twitchCallCache, IYouTubeSendRequest youTubeSendRequest)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public ManageScheduler(ITwitchSendRequest twitchSendRequest, ITwitchCallCache twitchCallCache, IYouTubeSendRequest youTubeSendRequest, UnitOfWorkContext unitOfWorkContext)
     {
         _twitchSendRequest = twitchSendRequest;
         _twitchCallCache = twitchCallCache;
         _youTubeSendRequest = youTubeSendRequest;
+        _unitOfWork = unitOfWorkContext;
     }
 
     public async Task Execute(Trigger trigger)
@@ -46,10 +50,15 @@ public class ManageScheduler : IManageScheduler
 
         foreach (var target in trigger.Targets)
         {
-            //TODO: Check for differences for Youtube / Twitch
-            _twitchSendRequest.SendChatMessage(target.CommandAndResponse.Response);
+            var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
-            _youTubeSendRequest.SendChatMessage(target.CommandAndResponse.Response);
+            var message = target.CommandAndResponse.Response;
+            var twitchMessage = message.Replace("[platform]", $"YouTube: {stream.VodUrl}");
+            var youtubeMessage = message.Replace("[platform]", "Twitch: https://www.twitch.tv/pyxtrick");
+
+            _twitchSendRequest.SendChatMessage(twitchMessage);
+
+            _youTubeSendRequest.SendChatMessage(youtubeMessage);
         }
     }
 }
