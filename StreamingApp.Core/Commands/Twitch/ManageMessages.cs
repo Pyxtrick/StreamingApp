@@ -139,7 +139,9 @@ public class ManageMessages : IManageMessages
     {
         string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
-        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active && messageDto.Auth.Min() <= t.Auth);
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() >= t.Auth);
+
+        CommandAndResponse? commandAndResponsenew = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText));
 
         if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
         {

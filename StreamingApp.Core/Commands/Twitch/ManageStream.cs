@@ -75,7 +75,14 @@ public class ManageStream : IManageStream
                 // TODO: Twitch Shouout user
                 if (splitMessage[1] != null)
                 {
-                    ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(splitMessage[1]);
+                    if(messageDto.ChatOrigin == ChatOriginEnum.Youtube)
+                    {
+                        //_youtubeSendRequest.SendChatMessage($"");
+                        return;
+                    }
+                    var userDetail = _unitOfWork.UserDetail.FirstOrDefault(u => u.UserName == splitMessage[1] && u.Origin == OriginEnum.Twitch);
+
+                    ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(userDetail.ExternalUserId);
 
                     if (channelInfo != null)
                     {
