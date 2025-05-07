@@ -7,7 +7,7 @@ public class SubAlertLoong : ISubAlertLoong
     public async Task<AlertDto> Execute(string userName, int Length)
     {
         int rot = new Random().Next(1, 360);
-        int sat = new Random().Next(1, 400);
+        int sat = new Random().Next(1, 1000);
 
         string body = "";
 
@@ -15,15 +15,15 @@ public class SubAlertLoong : ISubAlertLoong
 
         //Image Colour Change: https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
 
-        string cssltr = $"#{userName}"+" {\r\n\t  width:" + $"{width}px" + ";\r\n\t  bottom: 0;\r\n\t  position: relative;\r\n\t  animation: linear infinite;\r\n\t  animation-name: "+$"{userName}"+";\r\n\t  animation-duration: 15s;\r\n\t  animation-iteration-count: 1\r\n\t}\r\n\t@keyframes " + $"{userName}"+" {\r\n\t  0% {\r\n\t\tleft: " + $"-{width}px" + ";\r\n\t\ttransform: rotateY(180deg);\r\n\t  }\r\n\t  100% { \r\n\t\tleft: calc(100% + 600px);\r\n\t\ttransform: rotateY(180deg);\r\n\t  }\r\n\t}";
-        string cssrtl = "#target {\r\n width: " + $"{width}px;" + " bottom: 0;\r\n  position: relative;\r\n  animation: linear infinite;\r\n  animation-name: run;\r\n  animation-duration: 15s;\r\n  animation-iteration-count: 1\r\n}\r\n@keyframes run {\r\n  0% {\r\n    left: 100%;\r\n  }\r\n  48% {\r\n    transform: rotateY(180deg); \r\n  }\r\n  100% {\r\n    left: -100%;    \r\n     transform: rotateY(180deg);\r\n  }\r\n}";
+        string cssltr = $"#{userName}"+" { width:" + $"{width}px" + "; bottom: 0; position: relative; animation: linear infinite; animation-name: "+$"{userName}"+"; animation-duration: 15s; animation-iteration-count: 1 } @keyframes " + $"{userName}"+" { 0% {left: " + $"-{width}px" + ";transform: rotateY(180deg); } 100% { left: calc(100% + 600px); transform: rotateY(180deg);}}";
+        string cssrtl = "#target { width: " + $"{width}px;" + " bottom: 0;  position: relative;  animation: linear infinite;  animation-name: run;  animation-duration: 15s;  animation-iteration-count: 1}@keyframes run {  0% {    left: 100%;  }  48% {    transform: rotateY(180deg);   }  100% {    left: -100%;         transform: rotateY(180deg);  }}";
 
         for (int t = 0; t < Length; t++)
         {
             body += "<img class=\"bildmed\" src=\"assets/images/the8bitS2.gif\" alt=\"body\">";
         }
 
-        var sub = "<html lang=\"en\">\r\n <body>" +
+        var sub = "<html lang=\"en\"> <body>" +
             "<div id=\""+$"{userName}"+"\">" +
                 "<div>" +
                    "<img class=\"bildmed\" src=\"assets/images/the8bitS1.gif\" alt=\"Head\">" +

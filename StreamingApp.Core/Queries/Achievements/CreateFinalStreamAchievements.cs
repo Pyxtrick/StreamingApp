@@ -103,7 +103,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
         // TODO: Save in backend as byte[]
         var userText = twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "";
-        return "<html lang=\"en\">\r\n <body>" +
+        return "<html lang=\"en\"> <body>" +
             "<div id=\"target\">" +
                 "<div>" +
                     "<div class=\"stats\">Stream Stats</div>" +
@@ -124,7 +124,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
             "</div>" +
             "</body>" +
             "<style>" +
-                "#target {\r\n      position: absolute;\r\n      top: -2300px;\r\n      bottom: 0;\r\n      left: 0;\r\n      right: 0;\r\n      overflow: hidden;\r\n      font-size: 30px;\r\n      text-align: center;\r\n      font-family: sans-serif;\r\n    }\r\n    #target > div {\r\n      padding-top: 3500px;\r\n      animation: autoscroll 1000s linear;\r\n    }\r\n    .stats {\r\n      font-weight: bold;\r\n      color: red;\r\n    }\r\n    .user-stats {\r\n      font-weight: bold;\r\n      margin-top: 100px;\r\n      color: red;\r\n    }\r\n    #target > div > div {\r\n      height: 40px;\r\n    }\r\n    html:after {\r\n      content: '';\r\n      position: absolute;\r\n      top: 0;\r\n      bottom: 0;\r\n      left: 0;\r\n      right: 0;\r\n      background: linear-gradient(top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 100%);\r\n      background: linear-gradient(\r\n        to bottom,\r\n        rgba(0, 0, 0, 1),\r\n        rgba(0, 0, 0, 0) 100%\r\n      );\r\n      pointer-events: none;\r\n    }\r\n\r\n    body {\r\n      position: absolute;\r\n      top: 0;\r\n      bottom: 0;\r\n      left: 0;\r\n      right: 0;\r\n      transform-origin: 50% 100%;\r\n      transform: perspective(600px) rotateX(20deg);\r\n    }\r\n    html {\r\n      color: orange;\r\n    }\r\n    @keyframes autoscroll {\r\n      to {\r\n        margin-top: -50000px;\r\n      }\r\n    }" +
-            "</style>";
+                "#target { position: absolute; top: -2300px; bottom: 0; left: 0; right: 0; overflow: hidden; font-size: 30px; text-align: center; font-family: sans-serif; } #target > div { padding-top: 3500px; animation: autoscroll 1000s linear; } .stats { font-weight: bold; color: red; } .user-stats { font-weight: bold; margin-top: 100px; color: red; } #target > div > div { height: 40px; } html:after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: linear-gradient(top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 100%); background: linear-gradient(   to bottom,   rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 100% ); pointer-events: none; } body { position: absolute; top: 0; bottom: 0; left: 0; right: 0; transform-origin: 50% 100%; transform: perspective(600px) rotateX(20deg); } html { color: orange; } @keyframes autoscroll { to {   margin-top: -50000px; } }" +
+       "</style>";
     }
 }
