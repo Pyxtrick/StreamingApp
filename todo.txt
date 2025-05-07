@@ -1,14 +1,8 @@
 Backend
-	Add Data From Client about VTS
-		Models
-			Toggles
-		Items
-		Possiton
-
-		Fix SO 
-		Fix modpack / all commands / all things with logic
 
 Fronted
+	Remove allert after X time
+
 	Update On screen chat
 	Update Data Display
 	Add create and edit Data
@@ -19,7 +13,7 @@ Fronted
 			Toggle
 		Item
 Client
-	Send / Recive VTS Commands / data
+	
 
 
 // Frontnend

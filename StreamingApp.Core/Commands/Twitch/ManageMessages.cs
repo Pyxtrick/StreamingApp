@@ -108,13 +108,10 @@ public class ManageMessages : IManageMessages
         }
         string userId = messageDto.UserId;
 
+        // TODO: Combined Chat
         messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick")
             ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
             : $"https://static-cdn.jtvnw.net/jtv_user_pictures/{userId}-profile_image-70x70.png"));
-
-        // TODO: make a Class for this in API.Twitch
-        // TODO: save to cache
-        //GetCustomRewardsResponse rewardsResponse = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ClientId"]);
 
         // Check Message befor it is sent to the Frontend or anywhere else
         if (await _messageCheck.Execute(messageDto, user) == false)

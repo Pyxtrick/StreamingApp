@@ -268,6 +268,8 @@ public class TwitchSendRequest : ITwitchSendRequest
     public async Task GetChannelPoints()
     {
         var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.GetCustomRewardAsync(_configuration["Twitch:ChannelId"]);
+
+        // TODO: Save to Cache
     }
 
     public async Task GetHypeTrain()
@@ -277,6 +279,8 @@ public class TwitchSendRequest : ITwitchSendRequest
 
     public async Task AdSchedule()
     {
+        //TODO: User Streamer.bot or servy_bot for AD info
+
         //GET https://api.twitch.tv/helix/channels/ads
         // https://dev.twitch.tv/docs/api/reference/#get-ad-schedule
         //_twitchCache.GetTheTwitchAPI().Helix.Channels.ads
