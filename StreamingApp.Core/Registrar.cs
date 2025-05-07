@@ -17,6 +17,8 @@ using StreamingApp.Core.Commands.Twitch;
 using StreamingApp.Core.Commands.DB.CRUD;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Core.VTubeStudio.Cache.Interface;
+using StreamingApp.Core.VTubeStudio.Cache.CacheData;
 
 namespace StreamingApp.Core;
 
@@ -89,5 +91,9 @@ public static class Registrar
         // File
         services.AddScoped<IFileAchievements , FileAchievements>();
         services.AddScoped<IManageFile, ManageFile>();
+
+        //VtubeStudio
+        services.AddScoped<IVtubeStudioCache, VtubeStudioCache>();
+        services.AddSingleton<VtubeStudioCacheData>();
     }
 }

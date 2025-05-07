@@ -18,6 +18,116 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
+export class ClientContollerClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    updateVtubeStudioData(vtubeStudioData: VtubeStudioData): Observable<void> {
+        let url_ = this.baseUrl + "/api/ClientContoller/VtubeStudioData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(vtubeStudioData);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateVtubeStudioData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateVtubeStudioData(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateVtubeStudioData(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getVtubeStudioData(): Observable<VtubeStudioData> {
+        let url_ = this.baseUrl + "/api/ClientContoller/VtubeStudioData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVtubeStudioData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVtubeStudioData(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<VtubeStudioData>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<VtubeStudioData>;
+        }));
+    }
+
+    protected processGetVtubeStudioData(response: HttpResponseBase): Observable<VtubeStudioData> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VtubeStudioData.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class DataContollerClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -1492,6 +1602,621 @@ export class TwitchClient {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class VtubeStudioContollerClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getModels(): Observable<Model[]> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/GetModels";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetModels(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetModels(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Model[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Model[]>;
+        }));
+    }
+
+    protected processGetModels(response: HttpResponseBase): Observable<Model[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Model.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    moveOrChangeModel(moveModelData: MoveModelData): Observable<void> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/MoveOrChangeModel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(moveModelData);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMoveOrChangeModel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMoveOrChangeModel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processMoveOrChangeModel(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getToggles(): Observable<Toggle[]> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/GetToggles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetToggles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetToggles(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Toggle[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Toggle[]>;
+        }));
+    }
+
+    protected processGetToggles(response: HttpResponseBase): Observable<Toggle[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Toggle.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    triggerToggle(toggleId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/TriggerToggle?";
+        if (toggleId === null)
+            throw new Error("The parameter 'toggleId' cannot be null.");
+        else if (toggleId !== undefined)
+            url_ += "toggleId=" + encodeURIComponent("" + toggleId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTriggerToggle(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTriggerToggle(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTriggerToggle(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getItems(): Observable<Item[]> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/GetItems";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetItems(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetItems(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Item[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Item[]>;
+        }));
+    }
+
+    protected processGetItems(response: HttpResponseBase): Observable<Item[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Item.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    setOrDeletItem(item: Item): Observable<void> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/SetOrDeletItem";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(item);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetOrDeletItem(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetOrDeletItem(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSetOrDeletItem(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    moveItem(item: MoveModelData): Observable<void> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/MoveItem";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(item);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMoveItem(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMoveItem(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processMoveItem(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export class VtubeStudioData implements IVtubeStudioData {
+    availableItems?: Item[] | null;
+    itemsInScene?: Item[] | null;
+    models?: Model[] | null;
+    modelToggles?: Toggle[] | null;
+
+    constructor(data?: IVtubeStudioData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["availableItems"])) {
+                this.availableItems = [] as any;
+                for (let item of _data["availableItems"])
+                    this.availableItems!.push(Item.fromJS(item));
+            }
+            else {
+                this.availableItems = <any>null;
+            }
+            if (Array.isArray(_data["itemsInScene"])) {
+                this.itemsInScene = [] as any;
+                for (let item of _data["itemsInScene"])
+                    this.itemsInScene!.push(Item.fromJS(item));
+            }
+            else {
+                this.itemsInScene = <any>null;
+            }
+            if (Array.isArray(_data["models"])) {
+                this.models = [] as any;
+                for (let item of _data["models"])
+                    this.models!.push(Model.fromJS(item));
+            }
+            else {
+                this.models = <any>null;
+            }
+            if (Array.isArray(_data["modelToggles"])) {
+                this.modelToggles = [] as any;
+                for (let item of _data["modelToggles"])
+                    this.modelToggles!.push(Toggle.fromJS(item));
+            }
+            else {
+                this.modelToggles = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): VtubeStudioData {
+        data = typeof data === 'object' ? data : {};
+        let result = new VtubeStudioData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.availableItems)) {
+            data["availableItems"] = [];
+            for (let item of this.availableItems)
+                data["availableItems"].push(item.toJSON());
+        }
+        if (Array.isArray(this.itemsInScene)) {
+            data["itemsInScene"] = [];
+            for (let item of this.itemsInScene)
+                data["itemsInScene"].push(item.toJSON());
+        }
+        if (Array.isArray(this.models)) {
+            data["models"] = [];
+            for (let item of this.models)
+                data["models"].push(item.toJSON());
+        }
+        if (Array.isArray(this.modelToggles)) {
+            data["modelToggles"] = [];
+            for (let item of this.modelToggles)
+                data["modelToggles"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IVtubeStudioData {
+    availableItems?: Item[] | null;
+    itemsInScene?: Item[] | null;
+    models?: Model[] | null;
+    modelToggles?: Toggle[] | null;
+}
+
+export class Item implements IItem {
+    fileName!: string;
+    instanceID?: string | null;
+    positionX!: number;
+    positionY!: number;
+    size!: number;
+    rotation!: number;
+    flipped!: boolean;
+    order!: number;
+    censored!: boolean;
+
+    constructor(data?: IItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileName = _data["fileName"] !== undefined ? _data["fileName"] : <any>null;
+            this.instanceID = _data["instanceID"] !== undefined ? _data["instanceID"] : <any>null;
+            this.positionX = _data["positionX"] !== undefined ? _data["positionX"] : <any>null;
+            this.positionY = _data["positionY"] !== undefined ? _data["positionY"] : <any>null;
+            this.size = _data["size"] !== undefined ? _data["size"] : <any>null;
+            this.rotation = _data["rotation"] !== undefined ? _data["rotation"] : <any>null;
+            this.flipped = _data["flipped"] !== undefined ? _data["flipped"] : <any>null;
+            this.order = _data["order"] !== undefined ? _data["order"] : <any>null;
+            this.censored = _data["censored"] !== undefined ? _data["censored"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Item {
+        data = typeof data === 'object' ? data : {};
+        let result = new Item();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileName"] = this.fileName !== undefined ? this.fileName : <any>null;
+        data["instanceID"] = this.instanceID !== undefined ? this.instanceID : <any>null;
+        data["positionX"] = this.positionX !== undefined ? this.positionX : <any>null;
+        data["positionY"] = this.positionY !== undefined ? this.positionY : <any>null;
+        data["size"] = this.size !== undefined ? this.size : <any>null;
+        data["rotation"] = this.rotation !== undefined ? this.rotation : <any>null;
+        data["flipped"] = this.flipped !== undefined ? this.flipped : <any>null;
+        data["order"] = this.order !== undefined ? this.order : <any>null;
+        data["censored"] = this.censored !== undefined ? this.censored : <any>null;
+        return data;
+    }
+}
+
+export interface IItem {
+    fileName: string;
+    instanceID?: string | null;
+    positionX: number;
+    positionY: number;
+    size: number;
+    rotation: number;
+    flipped: boolean;
+    order: number;
+    censored: boolean;
+}
+
+export class Model implements IModel {
+    modelName!: string;
+    modelID!: string;
+    isActive!: boolean;
+
+    constructor(data?: IModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.modelName = _data["modelName"] !== undefined ? _data["modelName"] : <any>null;
+            this.modelID = _data["modelID"] !== undefined ? _data["modelID"] : <any>null;
+            this.isActive = _data["isActive"] !== undefined ? _data["isActive"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Model {
+        data = typeof data === 'object' ? data : {};
+        let result = new Model();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["modelName"] = this.modelName !== undefined ? this.modelName : <any>null;
+        data["modelID"] = this.modelID !== undefined ? this.modelID : <any>null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : <any>null;
+        return data;
+    }
+}
+
+export interface IModel {
+    modelName: string;
+    modelID: string;
+    isActive: boolean;
+}
+
+export class Toggle implements IToggle {
+    name!: string;
+    hotkeyID!: string;
+
+    constructor(data?: IToggle) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.hotkeyID = _data["hotkeyID"] !== undefined ? _data["hotkeyID"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Toggle {
+        data = typeof data === 'object' ? data : {};
+        let result = new Toggle();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["hotkeyID"] = this.hotkeyID !== undefined ? this.hotkeyID : <any>null;
+        return data;
+    }
+}
+
+export interface IToggle {
+    name: string;
+    hotkeyID: string;
+}
+
 export class CommandRespose implements ICommandRespose {
     commandAndResponses!: CommandAndResponseDto[];
     isSucsess!: boolean;
@@ -2960,6 +3685,58 @@ export enum EmoteProviderEnum {
     _7TV = 1,
     BetterTTV = 2,
     FrankerFaceZ = 3,
+}
+
+export class MoveModelData implements IMoveModelData {
+    itemInsanceID?: string | null;
+    posX!: number;
+    posY!: number;
+    size!: number;
+    rotation!: number;
+
+    constructor(data?: IMoveModelData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.itemInsanceID = _data["itemInsanceID"] !== undefined ? _data["itemInsanceID"] : <any>null;
+            this.posX = _data["posX"] !== undefined ? _data["posX"] : <any>null;
+            this.posY = _data["posY"] !== undefined ? _data["posY"] : <any>null;
+            this.size = _data["size"] !== undefined ? _data["size"] : <any>null;
+            this.rotation = _data["rotation"] !== undefined ? _data["rotation"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): MoveModelData {
+        data = typeof data === 'object' ? data : {};
+        let result = new MoveModelData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["itemInsanceID"] = this.itemInsanceID !== undefined ? this.itemInsanceID : <any>null;
+        data["posX"] = this.posX !== undefined ? this.posX : <any>null;
+        data["posY"] = this.posY !== undefined ? this.posY : <any>null;
+        data["size"] = this.size !== undefined ? this.size : <any>null;
+        data["rotation"] = this.rotation !== undefined ? this.rotation : <any>null;
+        return data;
+    }
+}
+
+export interface IMoveModelData {
+    itemInsanceID?: string | null;
+    posX: number;
+    posY: number;
+    size: number;
+    rotation: number;
 }
 
 export class ApiException extends Error {
