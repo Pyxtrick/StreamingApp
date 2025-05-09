@@ -6,6 +6,7 @@ using StreamingApp.Domain.Entities.InternalDB.Stream;
 
 namespace StreamingApp.Core.Commands;
 
+// TODO: Change this to the new Data or remove it
 public class AddDBData : IAddDBData
 {
     private readonly UnitOfWorkContext _unitOfWork;
@@ -201,7 +202,7 @@ public class AddDBData : IAddDBData
         {
             List<Settings> settingsList = new List<Settings>
             {
-                new Settings() { Origin = ChatOriginEnum.Twitch, AllChat = AuthEnum.Undefined, MuteAllerts = false, ComunityDayActive = false, Delay = "*/10 * * * *", AllertDelayS = 2, TimeOutSeconds = 60, SpamAmmount = 5}
+                new Settings() { Origin = ChatOriginEnum.Twitch, AllChat = AuthEnum.Undefined, MuteAllerts = false, ComunityDayActive = false, Delay = "*/10 * * * *", AllertDelayS = 2, TimeOutSeconds = 60, TTSSpamAmmount = 5}
             };
 
             await _unitOfWork.AddRangeAsync(settingsList);

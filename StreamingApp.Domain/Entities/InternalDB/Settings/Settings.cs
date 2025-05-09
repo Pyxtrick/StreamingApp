@@ -17,11 +17,16 @@ public class Settings
     // Mutes Allets in the frontend
     public bool MuteAllerts { get; set; }
 
-    // Mute Send Messages in Chat
-    public bool MuteChatMessages { get; set; }
+    public bool PauseAllerts { get; set; }
+
+    // Pauses for Send Messages in Chat
+    public bool PauseChatMessages { get; set; }
 
     // To activate comunity Day commands
     public bool ComunityDayActive { get; set; }
+
+    // TODO:  
+    //public bool SubathonActive { get; set; }
 
     // TODO: every x minutes: https://crontab.cronhub.io/
     // Sends a message every x minutes with out been pined | for sponsor or anouncements
@@ -35,5 +40,8 @@ public class Settings
     public int TimeOutSeconds { get; set; }
 
     // Stops TTS if the same message is used X times
-    public int SpamAmmount { get; set; }
+    public int TTSSpamAmmount { get; set; }
+
+    // Stops TTS if the message is longer than X Words
+    public int TTSLenghtAmmount { get; set; }
 }

@@ -2,6 +2,7 @@
 using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.StreamerBot;
+using StreamingApp.API.TTS;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility;
@@ -24,6 +25,7 @@ public static class APIRegistrar
         services.AddScoped<IStreamerBotRequest, StreamerBotRequest>();
 
         //TTS
+        services.AddScoped<ITTSApiRequest, TTSApiRequest>();
 
         //twitch
         services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();

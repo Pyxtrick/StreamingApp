@@ -70,7 +70,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
 
-        if (settings.MuteChatMessages == false)
+        if (settings.PauseChatMessages == false)
         {
             if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
             {
@@ -88,7 +88,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
 
-        if (settings.MuteChatMessages == false)
+        if (settings.PauseChatMessages == false)
         {
             _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
         }

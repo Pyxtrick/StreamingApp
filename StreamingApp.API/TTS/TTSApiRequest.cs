@@ -1,14 +1,20 @@
-﻿namespace StreamingApp.API.TTS;
+﻿using Microsoft.AspNetCore.SignalR;
+using StreamingApp.API.SignalRHub;
+using StreamingApp.Domain.Entities;
 
-public class TTSApiRequest
+namespace StreamingApp.API.TTS;
+
+public class TTSApiRequest : ITTSApiRequest
 {
-    public void SendMessage(string message)
+    private readonly IHubContext<ClientHub> _hubContext;
+
+    public TTSApiRequest(IHubContext<ClientHub> hubContext)
     {
-        // Send Message to a TTS / Text to speach System
+        _hubContext = hubContext;
     }
 
-    public void ConvertMessage(string message)
+    public async Task SendMessage(TTSData ttsData)
     {
-        // Convert Message to a TTS / Text localy
+        await _hubContext.Clients.All.SendAsync("TTSDectalk", ttsData.Message);
     }
 }

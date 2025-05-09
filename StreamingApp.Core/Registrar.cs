@@ -19,6 +19,8 @@ using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Queries.Alerts;
 using StreamingApp.Core.VTubeStudio.Cache.Interface;
 using StreamingApp.Core.VTubeStudio.Cache.CacheData;
+using StreamingApp.Core.Utility.TextToSpeach.Cache.CacheData;
+using StreamingApp.Core.Utility.TextToSpeach.Cache;
 
 namespace StreamingApp.Core;
 
@@ -87,6 +89,10 @@ public static class Registrar
 
         services.AddScoped<IQueueCache, QueueCache>();
         services.AddSingleton<QueueData>();
+
+        // TTS
+        services.AddScoped<ITTSCache, TTSCache>();
+        services.AddSingleton<TTSCacheData>();
 
         // File
         services.AddScoped<IFileAchievements , FileAchievements>();

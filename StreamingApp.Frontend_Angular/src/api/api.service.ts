@@ -1876,8 +1876,8 @@ export class VtubeStudioContollerClient {
         return _observableOf(null as any);
     }
 
-    setOrDeletItem(item: Item): Observable<void> {
-        let url_ = this.baseUrl + "/api/VtubeStudioContoller/SetOrDeletItem";
+    setOrMoveOrDeletItem(item: Item): Observable<void> {
+        let url_ = this.baseUrl + "/api/VtubeStudioContoller/SetOrMoveOrDeletItem";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(item);
@@ -1892,11 +1892,11 @@ export class VtubeStudioContollerClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSetOrDeletItem(response_);
+            return this.processSetOrMoveOrDeletItem(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSetOrDeletItem(response_ as any);
+                    return this.processSetOrMoveOrDeletItem(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -1905,55 +1905,7 @@ export class VtubeStudioContollerClient {
         }));
     }
 
-    protected processSetOrDeletItem(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    moveItem(item: MoveModelData): Observable<void> {
-        let url_ = this.baseUrl + "/api/VtubeStudioContoller/MoveItem";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(item);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMoveItem(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processMoveItem(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processMoveItem(response: HttpResponseBase): Observable<void> {
+    protected processSetOrMoveOrDeletItem(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2705,15 +2657,15 @@ export interface ISpecialWordDto {
 
 export enum SpecialWordEnum {
     None = 0,
-    Delete = 1,
+    Banned = 1,
     Timeout = 2,
-    Replace = 3,
-    Banned = 4,
+    Delete = 3,
+    Replace = 4,
     AllowedUrl = 5,
-    Count = 6,
-    Special = 7,
-    Keyword = 8,
-    Spam = 9,
+    Spam = 6,
+    Count = 7,
+    Special = 8,
+    Keyword = 9,
 }
 
 export class StreamRespose implements IStreamRespose {
