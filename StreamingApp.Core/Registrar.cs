@@ -21,6 +21,7 @@ using StreamingApp.Core.VTubeStudio.Cache.Interface;
 using StreamingApp.Core.VTubeStudio.Cache.CacheData;
 using StreamingApp.Core.Utility.TextToSpeach.Cache.CacheData;
 using StreamingApp.Core.Utility.TextToSpeach.Cache;
+using StreamingApp.Core.Utility.TextToSpeach;
 
 namespace StreamingApp.Core;
 
@@ -91,6 +92,8 @@ public static class Registrar
         services.AddSingleton<QueueData>();
 
         // TTS
+        services.AddScoped<IManageTextToSpeach, ManageTextToSpeach>();
+
         services.AddScoped<ITTSCache, TTSCache>();
         services.AddSingleton<TTSCacheData>();
 
