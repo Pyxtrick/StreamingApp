@@ -15,6 +15,6 @@ public class TTSApiRequest : ITTSApiRequest
 
     public async Task SendMessage(TTSData ttsData)
     {
-        await _hubContext.Clients.All.SendAsync("TTSDectalk", ttsData.Message);
+        await _hubContext.Clients.All.SendAsync("ReciveClientTTSMessage", ttsData);
     }
 }

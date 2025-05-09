@@ -5,6 +5,7 @@ using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
+using StreamingApp.Core.Utility.TextToSpeach;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
@@ -33,9 +34,11 @@ public class ManageMessages : IManageMessages
 
     private readonly IMessageCheck _messageCheck;
 
+    private readonly IManageTextToSpeach _manageTextToSpeach;
+
     private readonly IGameCommand _gameCommand;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ITwitchSendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ITwitchSendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IManageTextToSpeach manageTextToSpeach, IGameCommand gameCommand)
     {
         _unitOfWork = unitOfWork;
         _crudUsers = crudUsers;
@@ -46,6 +49,7 @@ public class ManageMessages : IManageMessages
         _manageStream = manageStream;
         _manageCommands = manageCommands;
         _messageCheck = messageCheck;
+        _manageTextToSpeach = manageTextToSpeach;
         _gameCommand = gameCommand;
     }
 
@@ -169,6 +173,10 @@ public class ManageMessages : IManageMessages
             else if (commandAndResponse.Category == CategoryEnum.Fun)
             {
                 //_ManageFun.Execute(commandAndResponse);
+                if (messageDto.Message.Contains("say"))
+                {
+                    _manageTextToSpeach.Execute(messageDto);
+                }
             }
             else if (commandAndResponse.HasLogic)
             {

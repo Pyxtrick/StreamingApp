@@ -2,6 +2,7 @@
 using StreamingApp.Core.Utility.TextToSpeach.Cache;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.TextToSpeach;
@@ -21,13 +22,13 @@ public class ManageTextToSpeach : IManageTextToSpeach
         _ttsCache = ttsCache;
     }
 
-    public void Execute(string message, ChatOriginEnum chatOrigin)
+    public void Execute(MessageDto messageDto)
     {
         string convertedMessage = "";
 
-        convertedMessage = ShortenMessage(message);
+        convertedMessage = RemoveDuplicateText(messageDto.Message);
 
-        convertedMessage = RemoveDuplicateText(convertedMessage);
+        convertedMessage = ShortenMessage(convertedMessage);
 
         convertedMessage = CencorTextInMessage(convertedMessage);
 
@@ -36,7 +37,7 @@ public class ManageTextToSpeach : IManageTextToSpeach
         TTSData data = new TTSData()
         {
             Message = convertedMessage,
-            OriginalMessage = message,
+            OriginalMessage = messageDto.Message,
             MessageLengthSeconds = count,
             IsActive = true,
             Posted = DateTime.UtcNow,
@@ -45,7 +46,14 @@ public class ManageTextToSpeach : IManageTextToSpeach
         _ttsCache.AddTTSData(data);
     }
 
-    public async Task PlayTTSMessage()
+    public async Task PlaySpecificTTSMessage(int id)
+    {
+        var data = _ttsCache.GetSpecificTTSData(id);
+
+        await _TTSApiRequest.SendMessage(data);
+    }
+
+    public async Task PlayLatestTTSMessage()
     {
         var data = _ttsCache.GetLatestTTSData();
 
@@ -59,7 +67,10 @@ public class ManageTextToSpeach : IManageTextToSpeach
         string newMessage = "";
         var split = message.Split(' ');
 
-        for (int i = 0; i < ttsLenghtAmmount; i++)
+        // Start at 1 to remvoe !say
+        int startIndex = split[0].Contains("!") ? 1 : 0;
+
+        for (int i = startIndex; i < ttsLenghtAmmount; i++)
         {
             newMessage += split[i] + " ";
         }
@@ -78,11 +89,6 @@ public class ManageTextToSpeach : IManageTextToSpeach
         {
             KeyValuePair<string, int> found = wordCount.FirstOrDefault(w => w.Key.Contains(word));
 
-            if (found.Value > ttsSpamAmmount)
-            {
-                return newMessage;
-            }
-
             if (found.Key != null)
             {
                 found = new(found.Key, found.Value + 1);
@@ -93,11 +99,16 @@ public class ManageTextToSpeach : IManageTextToSpeach
                 found = new(word, 1);
             }
 
-            newMessage += word + " ";
+            // Do not Add Words That are used in a "Spam" way
+            if (found.Value <= ttsSpamAmmount)
+            {
+                newMessage += word + " ";
+            }
+
             wordCount.Add(found);
         }
 
-        return message;
+        return newMessage;
     }
 
     private string CencorTextInMessage(string message)
