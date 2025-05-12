@@ -23,30 +23,41 @@ export class ConvertMessage {
         '</p></span></div>';
     });
 
-    badges += '';
-
     let finalName = '';
 
-    if (isOnScreen) {
-      finalName =
-        badges +
-        '<span class="name-text" style="color: ' +
-        chatMessage.colorHex +
-        ' !important;">' +
-        chatMessage.userName +
-        '</span>';
-    } else {
+    if (!isOnScreen) {
       finalName =
         '<span class="name-date" style="color: white">' +
         this.formatDate(new Date(Date.parse(chatMessage.date))) +
-        '</span>' +
-        badges +
-        '<span class="name-text" style="color: ' +
-        chatMessage.colorHex +
-        ' !important;">' +
-        chatMessage.userName +
         '</span>';
     }
+
+    let style = 'badges-image';
+    let isOnlyImages = true;
+
+    if (isOnScreen) {
+      chatMessage.message?.split(' ').forEach((element) => {
+        const foundData = chatMessage.emotes.find((m) => m.name === element);
+        if (foundData != null) {
+          console.log('is not Null');
+        } else {
+          isOnlyImages = false;
+        }
+      });
+      console.log('chatMessage.message', chatMessage.message);
+
+      if (isOnlyImages) {
+        style = 'badges-image-only';
+      }
+    }
+
+    finalName +=
+      badges +
+      '<span class="name-text" style="color: ' +
+      chatMessage.colorHex +
+      ' !important;">' +
+      chatMessage.userName +
+      '</span>';
 
     const isFirstMessage =
       chatMessage.specialMessage.find(
@@ -69,6 +80,10 @@ export class ConvertMessage {
 
     let finalMessage = isFirstMessage + '<span class="message-text">';
 
+    if (isOnlyImages) {
+      finalMessage = isFirstMessage + '<span class="message-text-none">';
+    }
+
     // TODO: Add More XSS Checks later
     // For any message staring < and ending with >
     if (new RegExp('(\\<).*([\\w-]).*(\\>)').test(chatMessage.message)) {
@@ -83,9 +98,13 @@ export class ConvertMessage {
         if (foundData != null) {
           finalMessage +=
             '<div class="tooltip bottom">' +
-            '<img class="badges-image" src="' +
+            '<img class="' +
+            style +
+            '" src="' +
+            foundData.animatedURL +
+            '" onerror="this.onerror=null; this.src=\'' +
             foundData.staticURL +
-            '" /> <span class="tooltiptext"><span>' +
+            '\'" /> <span class="tooltiptext"><span>' +
             foundData.name +
             '</span></span></div>';
         } else {

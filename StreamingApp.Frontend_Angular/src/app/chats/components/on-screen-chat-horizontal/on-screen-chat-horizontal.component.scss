@@ -1,4 +1,4 @@
-::ng-deep .cols-link {
+.cols-link {
   visibility: hidden !important;
   height: 0px;
 }
@@ -51,6 +51,13 @@ mat-list.list-horizontal {
   display: inline-block;
 }
 
+.message-text-none {
+  color: white;
+  margin-bottom: 0px;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
 .mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
 .mdc-list-item__secondary-text::before {
@@ -72,7 +79,7 @@ mat-list.list-horizontal {
   height: initial !important;
 }
 
-::ng-deep .mat-line {
+.mat-line {
   word-wrap: break-word !important;
   white-space: pre-wrap !important;
 }
@@ -81,7 +88,6 @@ mat-list.list-horizontal {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
-  margin-right: 5px;
 }
 
 .tooltip .tooltiptext {

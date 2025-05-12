@@ -6,8 +6,10 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
@@ -17,9 +19,10 @@ import { DisplayChat } from '../../models/DisplayChat';
 @Component({
   selector: 'app-on-screen-chat',
   standalone: true,
-  imports: [MatListModule],
+  imports: [MatListModule, MatTooltipModule],
   templateUrl: './on-screen-chat-horizontal.component.html',
   styleUrl: './on-screen-chat-horizontal.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
   constructor(
