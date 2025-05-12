@@ -1,5 +1,5 @@
 Backend
-	Add able ot add Message to TTS
+	
 
 Fronted
 	Remove allert after X time
@@ -19,6 +19,8 @@ Client
 
 
 // Frontnend
+TODO: 2 Show specific Chat Message on Screen
+
 TODO: 1 Show statistics in Frontend
 
 TODO: 1 Display Stream statistics | Credits for the end of the stream
@@ -74,7 +76,7 @@ TODO: 2 respond with sound
 
 TODO: 2 YouTube Chat bot
 
-TODO: 2 create TTS or alert queue
+TODO: 2 create alert queue
 
 TODO: 2 detect bot attack and ad anti mesures
 	disable some logic for follow / chat bots
@@ -90,6 +92,10 @@ TODO: 2 Ads check (for myself and on screen display)
 
 TODO: 2 clip creates twitch clip of the last x seconds
 TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp
+
+TODO: 3 Addd Clip to Discord
+TODO: 3 Addd Clip to DB
+TODO: 3 Addd Clip from chat
 
 TODO: 2 update Twitch Title / Game
 	update Youtube Title / Game if possible

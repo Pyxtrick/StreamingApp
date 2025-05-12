@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreamingApp.Core.Utility.TextToSpeach;
+using StreamingApp.Core.Utility.TextToSpeach.Cache;
+using StreamingApp.Domain.Entities;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -17,5 +19,11 @@ public class TTSContoller : ControllerBase
     public async Task PlayLatestTTSMessage([FromServices] IManageTextToSpeach _manageTextToSpeach)
     {
         await _manageTextToSpeach.PlayLatestTTSMessage();
+    }
+
+    [HttpGet("GetAllTTSData")]
+    public async Task<List<TTSData>> GetAllTTSData([FromServices] ITTSCache _ttsCache)
+    {
+        return _ttsCache.GetAllTTSData();
     }
 }
