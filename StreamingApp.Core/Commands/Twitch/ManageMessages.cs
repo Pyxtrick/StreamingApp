@@ -110,12 +110,16 @@ public class ManageMessages : IManageMessages
         {
             messageDto.Badges = new();
         }
-        string userId = messageDto.UserId;
 
-        // TODO: Combined Chat
-        messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick")
-            ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
-            : $"https://static-cdn.jtvnw.net/jtv_user_pictures/{userId}-profile_image-70x70.png"));
+        bool combinedChat = false; // TODO: get data from somewere
+        // Combined Chat
+        // TODO: userId Not working
+        if (combinedChat == true)
+        {
+            messageDto.Badges.Add(new(messageDto.Channel, messageDto.Channel.Contains("Pyxtrick", StringComparison.CurrentCultureIgnoreCase)
+                ? "https://static-cdn.jtvnw.net/jtv_user_pictures/f0eb150a-0f70-4876-977a-7eabb557fa79-profile_image-70x70.png"
+                : $"https://static-cdn.jtvnw.net/jtv_user_pictures/{""}-profile_image-70x70.png"));
+        }
 
         // Check Message befor it is sent to the Frontend or anywhere else
         if (await _messageCheck.Execute(messageDto, user) == false)

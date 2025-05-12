@@ -72,7 +72,7 @@ public class SendSignalRMessage : ISendSignalRMessage
 
             // DO not allow to show links of any kink on the OnScreenChat
             if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(messageDto.Message).Success == false
-                && messageDto.Channel.Equals(_configuration["Twitch:Channel"]))
+                && messageDto.Channel.Equals(_configuration["Twitch:Channel"], StringComparison.InvariantCultureIgnoreCase))
             {
                 var settings = _unitOfWork.Settings.First(s => s.Origin == messageDto.ChatOrigin);
 
