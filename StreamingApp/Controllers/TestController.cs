@@ -88,20 +88,20 @@ public class TestController : ControllerBase
     [HttpGet("StreamAllert")]
     public async Task GetStreamAllert([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
     {
-        List<KeyValuePair<string, int>> data = new()
+        List<KeyValuePair<string, List<int>>> data = new()
         {
-            new("Pyxtrick", new Random().Next(1, 150)),
-            new("tiny_karo", new Random().Next(1, 150)),
-            new("yamakasi", new Random().Next(1, 150)),
-            new("PyxtrickBot", new Random().Next(1, 150)),
-            new("servy_bot", new Random().Next(1, 150))
+            new("Pyxtrick", new(){ new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000) }),
+            new("tiny_karo", new(){ new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000) }),
+            new("yamakasi", new(){ new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000) }),
+            new("PyxtrickBot", new(){ new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000) }),
+            new("servy_bot", new(){ new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000) }),
         };
 
         string html = "";
 
         foreach (var k in data)
         {
-            var alert = await subAlertLoong.Execute(k.Key, k.Value);
+            var alert = await subAlertLoong.Execute(k.Key, k.Value[0], k.Value[1], k.Value[2], true);
 
             html += $"<div>{alert.Html}</div>";
         }
