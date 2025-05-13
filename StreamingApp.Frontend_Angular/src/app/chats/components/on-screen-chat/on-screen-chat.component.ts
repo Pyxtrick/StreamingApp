@@ -84,7 +84,7 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
       (t) => t.Date!.getTime() <= date.getTime()
     );
     data.forEach(() => {
-      //this.displayChatMessages.shift();
+      this.displayChatMessages.shift();
     });
   }
 
