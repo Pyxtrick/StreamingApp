@@ -20,7 +20,7 @@ public class CRUDStreams : ICRUDStreams
 
     public async Task<List<StreamDto>> GetAll()
     {
-        List<Stream> streams = _unitOfWork.StreamHistory.Include("GameCategories").Include("GameCategory").ToList();
+        List<Stream> streams = _unitOfWork.StreamHistory.Include("GameCategories").Include("StreamHighlights").ToList();
 
         return streams.Select(_mapper.Map<StreamDto>).ToList();
     }
