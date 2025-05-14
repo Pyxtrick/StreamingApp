@@ -56,7 +56,7 @@ export class ConvertMessage {
       '<span class="name-text" style="color: ' +
       chatMessage.colorHex +
       ' !important;">' +
-      chatMessage.userName +
+      chatMessage.displayName +
       '</span>';
 
     const isFirstMessage =

@@ -11,6 +11,7 @@ import {
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
+import { interval, Subscription } from 'rxjs';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 import { ConvertMessage } from '../../logic/convertMessage';
@@ -35,6 +36,8 @@ export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
 
   private scrollContainer: any;
   private isNearBottom = true;
+
+  private subscription: Subscription | undefined;
 
   displayChatMessages: DisplayChat[] = [];
 
@@ -68,6 +71,24 @@ export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
           }
         });
     });
+
+    this.subscription = interval(1000).subscribe((val) => this.removeElement());
+  }
+
+  private removeElement() {
+    const date = new Date();
+    date.setSeconds(date.getSeconds() - 10);
+
+    const data = this.displayChatMessages.filter(
+      (t) => t.Date!.getTime() <= date.getTime()
+    );
+    data.forEach(() => {
+      this.displayChatMessages.shift();
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription && this.subscription.unsubscribe();
   }
 
   convertMessageData(chatMessage: ChatDto) {

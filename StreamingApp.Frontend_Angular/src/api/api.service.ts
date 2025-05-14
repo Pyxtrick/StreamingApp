@@ -3274,6 +3274,7 @@ export class TwitchBase implements ITwitchBase {
     messageId!: string;
     userId!: string;
     userName!: string;
+    displayName!: string;
     date!: Date;
 
     constructor(data?: ITwitchBase) {
@@ -3290,6 +3291,7 @@ export class TwitchBase implements ITwitchBase {
             this.messageId = _data["messageId"] !== undefined ? _data["messageId"] : <any>null;
             this.userId = _data["userId"] !== undefined ? _data["userId"] : <any>null;
             this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
+            this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>null;
         }
     }
@@ -3306,6 +3308,7 @@ export class TwitchBase implements ITwitchBase {
         data["messageId"] = this.messageId !== undefined ? this.messageId : <any>null;
         data["userId"] = this.userId !== undefined ? this.userId : <any>null;
         data["userName"] = this.userName !== undefined ? this.userName : <any>null;
+        data["displayName"] = this.displayName !== undefined ? this.displayName : <any>null;
         data["date"] = this.date ? this.date.toISOString() : <any>null;
         return data;
     }
@@ -3315,6 +3318,7 @@ export interface ITwitchBase {
     messageId: string;
     userId: string;
     userName: string;
+    displayName: string;
     date: Date;
 }
 

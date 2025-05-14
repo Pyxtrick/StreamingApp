@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { interval, Subscription } from 'rxjs';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
@@ -19,14 +19,29 @@ export class FullscreenComponent implements OnInit {
 
   public htmldata: SafeHtml | undefined;
 
+  private subscription: Subscription | undefined;
+
   ngOnInit(): void {
     this.signalRService.startConnection().subscribe(() => {
       this.signalRService
         .receiveAlertMessage('ReceiveAlert')
         .subscribe((message) => {
           this.htmldata = this._sanitizer.bypassSecurityTrustHtml(message.html);
+          this.subscription = interval(
+            (message.duration - 0.5) * 1000
+          ).subscribe((val) => this.removeElement());
         });
     });
+  }
+
+  private removeElement() {
+    this.htmldata = undefined;
+
+    this.subscription && this.subscription.unsubscribe();
+  }
+
+  ngOnDestroy() {
+    this.subscription && this.subscription.unsubscribe();
   }
 
   private bin2String(array: []) {

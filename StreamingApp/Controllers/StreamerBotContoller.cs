@@ -39,7 +39,7 @@ public class StreamerBotContoller : ControllerBase
     [HttpGet("Command")]
     public async Task Command([FromServices] IManageMessages manageMessages, string userId, string userName, string message, string broadcastUserName, bool isModerator)
     {
-        MessageDto messsage = new(null, true, broadcastUserName, userId, userName, "", null, message, null, null, null, ChatOriginEnum.Youtube, null, null, EffectEnum.none, false, 0, false, DateTime.Now);
+        MessageDto messsage = new(null, true, broadcastUserName, userId, userName, userName, "", null, message, null, null, null, ChatOriginEnum.Youtube, null, null, EffectEnum.none, false, 0, false, DateTime.Now);
 
         await manageMessages.ExecuteOne(messsage);
     }

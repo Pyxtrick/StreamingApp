@@ -22,6 +22,10 @@ mat-list.list-horizontal {
   height: 20px;
 }
 
+.badges-image-only {
+  height: 30px;
+}
+
 .name-date {
   font-size: smaller;
   margin-bottom: 0px !important;
@@ -73,6 +77,10 @@ mat-list.list-horizontal {
   white-space: wrap !important;
   word-break: break-word;
   color: #ffffff;
+}
+
+.mat-mdc-list-item {
+  width: auto !important;
 }
 
 .mdc-list-item.mdc-list-item--with-two-lines {

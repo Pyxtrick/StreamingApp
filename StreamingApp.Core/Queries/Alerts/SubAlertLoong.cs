@@ -10,7 +10,7 @@ public class SubAlertLoong : ISubAlertLoong
 
         int width = (56 * Length) + (2 * 56);
         int bottom = new Random().Next(-10, 10);
-        int animationDuration = new Random().Next(5, 15);
+        int animationDuration = 15;
 
         //Image Colour Change: https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
 

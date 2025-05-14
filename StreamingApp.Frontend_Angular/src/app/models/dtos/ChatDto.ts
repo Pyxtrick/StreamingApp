@@ -9,6 +9,7 @@ import { EmoteSet } from '../external/EmoteSet';
 export interface ChatDto {
   id: string;
   userName: string;
+  displayName: string;
   colorHex: string;
   replayMessage: string;
   message: string;

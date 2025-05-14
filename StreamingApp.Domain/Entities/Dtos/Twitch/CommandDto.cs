@@ -5,11 +5,12 @@ public class CommandDto(
         string messageId,
         string userId,
         string userName,
+        string displayName,
         string message,
         List<AuthEnum> auth,
         DateTime utcNow,
         ChatOriginEnum origin)
-        : TwitchBase(messageId, userId, userName, utcNow)
+        : TwitchBase(messageId, userId, userName, displayName, utcNow)
 {
     public string Message { get; set; } = message;
 

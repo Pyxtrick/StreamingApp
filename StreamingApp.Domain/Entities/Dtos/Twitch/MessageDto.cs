@@ -11,6 +11,7 @@ public class MessageDto(
     string channel,
     string userId,
     string userName,
+    string displayName,
     string colorHex,
     string? replayMessage,
     string message,
@@ -25,7 +26,7 @@ public class MessageDto(
     int subCount,
     bool isUsed,
     DateTime utcNow)
-    : TwitchBase(messageId, userId, userName, utcNow)
+    : TwitchBase(messageId, userId, userName, displayName, utcNow)
 {
     public bool IsCommand { get; set; } = isCommand;
 

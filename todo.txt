@@ -77,6 +77,7 @@ TODO: 2 respond with sound
 TODO: 2 YouTube Chat bot
 
 TODO: 2 create alert queue
+TOOD: 3 Add Alert to File
 
 TODO: 2 detect bot attack and ad anti mesures
 	disable some logic for follow / chat bots
@@ -123,8 +124,9 @@ TODO: 4 Things can be tracked from things outside this Programm
 
 TODO: 5 Create a Discord crawler to get Images / and other tings
 	Send Discord notification for stram start
+	Get Images / Videos to be able to play on Stream
 
-TODO: 5 Send Twitter / Youtube Community message for Stream start
+TODO: 5 Send Twitter / BlueSky / Youtube Community message for Stream start
 
 TODO: 5 Subathon timer
 	sstart

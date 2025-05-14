@@ -10,6 +10,7 @@ public class MessageAlertDto(
     string channel,
     string userId,
     string userName,
+    string displayName,
     string colorHex,
     string message,
     string emoteReplacedMessage,
@@ -23,7 +24,7 @@ public class MessageAlertDto(
     bool isSub,
     bool isUsed,
     DateTime utcNow)
-    : TwitchBase(messageId, userId, userName, utcNow)
+    : TwitchBase(messageId, userId, userName, displayName, utcNow)
 {
     public string Channel { get; set; } = channel;
 

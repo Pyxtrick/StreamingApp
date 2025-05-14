@@ -17,6 +17,10 @@ body {
   height: 20px;
 }
 
+.badges-image-only {
+  height: 60px;
+}
+
 .name-date {
   font-size: smaller;
   margin-bottom: 0px !important;
@@ -53,6 +57,7 @@ body {
 .list {
   max-height: 1000px;
   overflow: hidden;
+  width: 400px;
 }
 
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
@@ -114,7 +119,12 @@ body {
 }
 
 .item {
-  border-bottom: solid;
-  border-width: thin;
-  border-color: rgba(255, 255, 255, 0);
+  border: 1px solid white;
+  border-radius: 15px;
+  background-color: gray;
+}
+
+.message-text-none {
+  display: flex;
+  flex-wrap: wrap;
 }
