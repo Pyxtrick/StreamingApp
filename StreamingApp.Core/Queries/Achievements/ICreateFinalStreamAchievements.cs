@@ -1,6 +1,8 @@
-﻿namespace StreamingApp.Core.Queries.Achievements;
+﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
+
+namespace StreamingApp.Core.Queries.Achievements;
 
 public interface ICreateFinalStreamAchievements
 {
-    Task<string> Execute();
+    Task<AlertDto> Execute();
 }

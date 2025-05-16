@@ -80,9 +80,7 @@ public class TestController : ControllerBase
     [HttpGet("StreamAchievements")]
     public async Task GetStreamAchievements([FromServices] ICreateFinalStreamAchievements createFinalStreamAchievements, IHubContext<ChatHub> clientHub)
     {
-        AlertDto alert = new AlertDto() { Html = await createFinalStreamAchievements.Execute() };
-
-        await clientHub.Clients.All.SendAsync("ReceiveAlert", alert);
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", await createFinalStreamAchievements.Execute());
     }
 
     [HttpGet("StreamAllert")]

@@ -2,6 +2,8 @@
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.FileLogic;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 using System.Text;
 
@@ -22,7 +24,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         _unitOfWork = unitOfWorkContext;
     }
 
-    public async Task<string> Execute()
+    public async Task<AlertDto> Execute()
     {
         var stream = _unitOfWork.StreamHistory.OrderBy(x => x.Id).Last();
 
@@ -77,11 +79,14 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         // TODO: add back when _manageFile is Fixed
         //_manageFile.WriteFile(lines.ToArray(), true);
 
-        return await CreateHdmlFile("ScrollText", streamDuration, messageText, newViewerText, subText, raidText, twitchAchievements, streamTimes);
+        int videoLeght = 60 + newViewerText.Count();
+
+        return new AlertDto() { Html = await CreateHdmlFile("ScrollText", streamDuration, messageText, newViewerText, subText, raidText, twitchAchievements, streamTimes), videoLeght = videoLeght };
     }
 
     private async Task<string> CreateHdmlFile(string alertName, string streamDuration, string messageText, string newViewerText, string subText, string raidText, List<string> twitchAchievements, List<string> streamTimes)
     {
+        /** Fix Reading data form DB
         var alert = await _unitOfWork.Alert.FirstAsync(a => a.Name.Equals(alertName));
 
         // Decode
@@ -94,7 +99,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
         html = html.Replace("[RaidText]", raidText);
         html = html.Replace("[UserText]", twitchAchievements.Count() != 0 ? $"{string.Join("</a><a>", twitchAchievements)}" : "");
         html = html.Replace("[StreamTimes]", streamTimes.Count() != 0 ? $"{string.Join("</div><div>", streamTimes)}" : "");
-
+        **/
         //TODO: use this when ScrollText is in the Alert DB Table
         //return text;
 
@@ -115,9 +120,9 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
                     "<div class=\"user-stats\">User Stats</div>" +
                     $"<div>{userText}</div>" +
                     "<div class=\"user-stats\">Next Streams</div>" +
-                    "<div>Tuesday 9 PM CEST (UTC +2)</div>" +
-                    "<div>Wednesday 9 PM CEST (UTC +2)</div>" +
-                    "<div>Friday 9 PM CEST (UTC +2)</div>" +
+                    "<div>Tuesday 8 PM CEST (UTC +2)</div>" +
+                    "<div>Wednesday 8 PM CEST (UTC +2)</div>" +
+                    "<div>Friday 8 PM CEST (UTC +2)</div>" +
                     "<div class=\"stats\">Stream End</div>" +
                     "<div>Thanks for Watching</div>" +
                 "</div>" +
