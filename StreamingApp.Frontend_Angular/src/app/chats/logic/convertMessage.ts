@@ -18,9 +18,11 @@ export class ConvertMessage {
         '<div class="tooltip bottom">' +
         '<img class="badges-image" src="' +
         badge.value +
-        '" /> <span class="tooltiptext"><p>' +
-        badge.key +
-        '</p></span></div>';
+        '" /> ';
+      if (!isOnScreen) {
+        badges += '<span class="tooltiptext"><p>' + badge.key + '</p></span>';
+      }
+      badges += '</div>';
     });
 
     let finalName = '';
@@ -44,7 +46,6 @@ export class ConvertMessage {
           isOnlyImages = false;
         }
       });
-      console.log('chatMessage.message', chatMessage.message);
 
       if (isOnlyImages) {
         style = 'badges-image-only';
@@ -103,10 +104,14 @@ export class ConvertMessage {
             '" src="' +
             foundData.animatedURL +
             '" onerror="this.onerror=null; this.src=\'' +
-            foundData.staticURL +
-            '\'" /> <span class="tooltiptext"><span>' +
-            foundData.name +
-            '</span></span></div>';
+            foundData.staticURL;
+          if (!isOnScreen) {
+            finalMessage +=
+              '\'" /> <span class="tooltiptext"><span>' +
+              foundData.name +
+              '</span></span>';
+          }
+          finalMessage += '</div>';
         } else {
           finalMessage = finalMessage + ' ' + element + '';
         }

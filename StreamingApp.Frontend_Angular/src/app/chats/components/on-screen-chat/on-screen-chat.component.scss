@@ -15,6 +15,7 @@ body {
 
 .badges-image {
   height: 20px;
+  margin-top: 7px;
 }
 
 .badges-image-only {
@@ -33,6 +34,11 @@ body {
   font-weight: bold;
   margin-bottom: 0px !important;
   display: inline-block;
+
+  border-radius: 15px;
+  background-color: black;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .message-reply {
@@ -94,6 +100,10 @@ body {
   height: initial !important;
 }
 
+.mat-mdc-list-item {
+  margin-top: 10px;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -116,12 +126,6 @@ body {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
-}
-
-.item {
-  border: 1px solid white;
-  border-radius: 15px;
-  background-color: gray;
 }
 
 .message-text-none {
