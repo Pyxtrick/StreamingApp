@@ -30,7 +30,7 @@ public class TestController : ControllerBase
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "testuser", "TestUser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "assets/3x.webp") }, ChatOriginEnum.Twitch,
+            "testuser", "TestUser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");

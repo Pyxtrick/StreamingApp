@@ -100,8 +100,13 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="message"></param>
     public void SendAnnouncement(string message)
     {
-        //ChannelBotId
-        _twitchCache.GetTheTwitchAPI().Helix.Chat.SendChatAnnouncementAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], message);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
+
+        if (settings.PauseChatMessages == false)
+        {
+            //ChannelBotId
+            _twitchCache.GetTheTwitchAPI().Helix.Chat.SendChatAnnouncementAsync(_configuration["Twitch:ChannelId"], _configuration["Twitch:ChannelBotId"], message);
+        }
     }
 
     public async Task SendShoutout()

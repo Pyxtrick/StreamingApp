@@ -1,6 +1,8 @@
 ﻿using StreamingApp.API.Interfaces;
 using StreamingApp.API.StreamerBot;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Twitch;
 
@@ -8,9 +10,12 @@ public class YoutubeSendRequest : IYouTubeSendRequest
 {
     private readonly IStreamerBotRequest _streamerBotRequest;
 
-    public YoutubeSendRequest(IStreamerBotRequest streamerBotRequest)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public YoutubeSendRequest(IStreamerBotRequest streamerBotRequest, UnitOfWorkContext unitOfWorkContext)
     {
         _streamerBotRequest = streamerBotRequest;
+        _unitOfWork = unitOfWorkContext;
     }
 
     public async Task DeleteMessage(string messageId)
@@ -27,21 +32,36 @@ public class YoutubeSendRequest : IYouTubeSendRequest
 
     public void SendAnnouncement(string message)
     {
-        var data = new List<KeyValuePair<string, string>> { new("rawInput", message) };
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
 
-        _streamerBotRequest.DoAction("", "", new() { new("rawInput", message) });
+        if (settings.PauseChatMessages == false)
+        {
+            var data = new List<KeyValuePair<string, string>> { new("rawInput", message) };
+
+            _streamerBotRequest.DoAction("", "", new() { new("rawInput", message) });
+        }
     }
 
     public void SendChatMessage(string message)
     {
-        _streamerBotRequest.DoAction("3f953f7d-124f-42cf-9e97-751c60fb60c6", "Scheduled Message", new() { new("rawInput", message) });
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
+
+        if (settings.PauseChatMessages == false)
+        {
+            _streamerBotRequest.DoAction("3f953f7d-124f-42cf-9e97-751c60fb60c6", "Scheduled Message", new() { new("rawInput", message) });
+        }
     }
 
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        var data = new List<KeyValuePair<string, string>> { new("rawInput", message), new("replyTo", replyToId) };
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
 
-        _streamerBotRequest.DoAction("", "", new() { new("rawInput", message), new("replyTo", replyToId) });
+        if (settings.PauseChatMessages == false)
+        {
+            var data = new List<KeyValuePair<string, string>> { new("rawInput", message), new("replyTo", replyToId) };
+
+            _streamerBotRequest.DoAction("", "", new() { new("rawInput", message), new("replyTo", replyToId) });
+        }
     }
 
     public bool SetChannelInfo(string? gameId, string? title)
