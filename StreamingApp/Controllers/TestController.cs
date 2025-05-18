@@ -8,7 +8,6 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Domain.Responces;
 using StreamingApp.Core.Queries.Alerts;
-using StreamingApp.Domain.Entities.InternalDB.User;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -17,7 +16,7 @@ namespace StreamingApp.Web.Controllers;
 public class TestController : ControllerBase
 {
     [HttpPost("sendChatDto")]
-    public async void TestLogic([FromServices] IHubContext<ChatHub> clientHub)
+    public async void SendChatDto([FromServices] IHubContext<ChatHub> clientHub)
     {
         int t = new Random().Next(1, 50);
 
@@ -30,7 +29,26 @@ public class TestController : ControllerBase
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "testuser", "TestUser", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
+            "streamer", "Streamer", "#fff", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
+
+        Console.WriteLine($"message {chatMessage.UserName}");
+
+        await clientHub.Clients.All.SendAsync("ReceiveChatMessage", chatMessage);
+        await clientHub.Clients.All.SendAsync("ReceiveOnScreenChatMessage", chatMessage);
+    }
+
+    [HttpPost("sendEmoteChatDto")]
+    public async void SendEmoteChatDto([FromServices] IHubContext<ChatHub> clientHub)
+    {
+        int t = new Random().Next(1, 50);
+
+        Random random = new Random();
+
+        Console.WriteLine($"messageId {t}");
+
+        MessageDto chatMessage = new("Id", false, "local", "userid",
+            "streamer", "Streamer", "#fff", "", " tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -80,7 +98,9 @@ public class TestController : ControllerBase
     [HttpGet("StreamAchievements")]
     public async Task GetStreamAchievements([FromServices] ICreateFinalStreamAchievements createFinalStreamAchievements, IHubContext<ChatHub> clientHub)
     {
-        await clientHub.Clients.All.SendAsync("ReceiveAlert", await createFinalStreamAchievements.Execute());
+        var t = await createFinalStreamAchievements.Execute();
+        Console.WriteLine(t.Duration);
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", t);
     }
 
     [HttpGet("StreamAllert")]
