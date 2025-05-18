@@ -15,15 +15,20 @@ mat-list.list-horizontal {
 
 .list {
   max-width: 2560px;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .badges-image {
-  height: 20px;
+  height: 30px;
+  margin-top: 7px;
 }
 
-.badges-image-only {
-  height: 30px;
+.emote-image {
+  height: 40px;
+}
+
+.emote-image-only {
+  height: 80px;
 }
 
 .name-date {
@@ -34,20 +39,21 @@ mat-list.list-horizontal {
 }
 
 .name-text {
-  font-size: large;
+  font-size: xx-large;
   font-weight: bold;
   margin-bottom: 0px !important;
   display: inline-block;
 }
 
 .message-reply {
-  font-size: smaller;
+  font-size: large;
   font-style: oblique;
   color: white;
   margin-bottom: 0px;
 }
 
 .message-text {
+  font-size: x-large;
   color: white;
   margin-bottom: 0px;
   word-wrap: break-word;

@@ -14,12 +14,16 @@ body {
 }
 
 .badges-image {
-  height: 20px;
+  height: 30px;
   margin-top: 7px;
 }
 
-.badges-image-only {
-  height: 60px;
+.emote-image {
+  height: 40px;
+}
+
+.emote-image-only {
+  height: 80px;
 }
 
 .name-date {
@@ -30,7 +34,7 @@ body {
 }
 
 .name-text {
-  font-size: large;
+  font-size: xx-large;
   font-weight: bold;
   margin-bottom: 0px !important;
   display: inline-block;
@@ -42,13 +46,14 @@ body {
 }
 
 .message-reply {
-  font-size: smaller;
+  font-size: large;
   font-style: oblique;
   color: white;
   margin-bottom: 0px;
 }
 
 .message-text {
+  font-size: x-large;
   color: white;
   margin-bottom: 0px;
   word-wrap: break-word;
@@ -61,9 +66,9 @@ body {
 }
 
 .list {
-  max-height: 1000px;
+  max-height: 1440px;
   overflow: hidden;
-  width: 400px;
+  width: 800px;
 }
 
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,

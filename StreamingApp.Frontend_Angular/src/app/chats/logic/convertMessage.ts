@@ -34,21 +34,22 @@ export class ConvertMessage {
         '</span>';
     }
 
-    let style = 'badges-image';
+    let style = 'emote-image';
     let isOnlyImages = true;
 
     if (isOnScreen) {
       chatMessage.message?.split(' ').forEach((element) => {
-        const foundData = chatMessage.emotes.find((m) => m.name === element);
-        if (foundData != null) {
-          console.log('is not Null');
-        } else {
-          isOnlyImages = false;
+        console.log('element', element);
+        if (element != '') {
+          const foundData = chatMessage.emotes.find((m) => m.name === element);
+          if (foundData == null) {
+            isOnlyImages = false;
+          }
         }
       });
 
       if (isOnlyImages) {
-        style = 'badges-image-only';
+        style = 'emote-image-only';
       }
     }
 
@@ -104,10 +105,11 @@ export class ConvertMessage {
             '" src="' +
             foundData.animatedURL +
             '" onerror="this.onerror=null; this.src=\'' +
-            foundData.staticURL;
+            foundData.staticURL +
+            '\'" />';
           if (!isOnScreen) {
             finalMessage +=
-              '\'" /> <span class="tooltiptext"><span>' +
+              '<span class="tooltiptext"><span>' +
               foundData.name +
               '</span></span>';
           }
