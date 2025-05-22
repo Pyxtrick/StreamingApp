@@ -25,9 +25,7 @@ public class ManageMessages : IManageMessages
 
     private readonly IMessageCheck _messageCheck;
 
-    private readonly IManageCommands _manageCommands;
-
-    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, IMessageCheck messageCheck, IManageCommands manageCommands)
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, IMessageCheck messageCheck)
     {
         _unitOfWork = unitOfWork;
         _crudUsers = crudUsers;
@@ -35,7 +33,6 @@ public class ManageMessages : IManageMessages
         _emotesCache = emotesCache;
         _sendSignalRMessage = sendSignalRMessage;
         _messageCheck = messageCheck;
-        _manageCommands = manageCommands;
     }
 
     /// <summary>
@@ -81,20 +78,8 @@ public class ManageMessages : IManageMessages
             user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth, messageDto.ChatOrigin);
         }
 
-        var isBroadcaster = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Streamer) == AuthEnum.Streamer;
-        var isModerator = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Mod) == AuthEnum.Mod;
-        var isStaff = messageDto.Auth.FirstOrDefault(e => e == AuthEnum.Staff) == AuthEnum.Staff;
-
-        messageDto.Emotes.AddRange(MappBadges(messageDto));
-
-        if (messageDto.Badges != null)
-        {
-            messageDto.Badges = MappBadges(messageDto.Badges);
-        }
-        else
-        {
-            messageDto.Badges = new();
-        }
+        messageDto.Emotes.AddRange(MappEmotes(messageDto));
+        messageDto.Badges = MappBadges(messageDto.Badges);
 
         bool combinedChat = false; // TODO: get data from somewere
         // Combined Chat
@@ -113,16 +98,7 @@ public class ManageMessages : IManageMessages
             return;
         }
 
-        // Check for beeing not an command
-        if (messageDto.IsCommand == false)
-        {
-            await _sendSignalRMessage.SendChatMessage(user, messageDto);
-        }
-        // Check if the Bot_OnChatCommandRecived is working as intended
-        else if (messageDto.IsCommand)
-        {
-            await _manageCommands.Execute(messageDto);
-        }
+        await _sendSignalRMessage.SendChatMessage(user, messageDto);
     }
 
     private List<KeyValuePair<string, string>> MappBadges(List<KeyValuePair<string, string>> userBadges)
@@ -145,7 +121,7 @@ public class ManageMessages : IManageMessages
         return badges;
     }
 
-    private List<EmoteSet>? MappBadges(MessageDto messageDto)
+    private List<EmoteSet>? MappEmotes(MessageDto messageDto)
     {
         var emotes = _emotesCache.GetEmotes(null);
 

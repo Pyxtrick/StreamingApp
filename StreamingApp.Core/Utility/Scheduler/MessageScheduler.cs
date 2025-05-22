@@ -59,7 +59,14 @@ public class MessageScheduler : BackgroundService
 
                     foreach (var message in messages)
                     {
-                        await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteOne(message);
+                        if (message.IsCommand)
+                        {
+                            await scope.ServiceProvider.GetRequiredService<IManageCommands>().Execute(message);
+                        }
+                        else
+                        {
+                            await scope.ServiceProvider.GetRequiredService<IManageMessages>().ExecuteOne(message);
+                        }
                     }
                 }
                 catch (Exception ex)

@@ -7,7 +7,6 @@ using StreamingApp.Domain.Enums;
 namespace StreamingApp.API.Utility.Caching;
 public class TwitchCallCache : ITwitchCallCache
 {
-
     private readonly TwitchCallCacheData _twitchCallCacheData;
 
     public TwitchCallCache(TwitchCallCacheData twitchCallCacheData)
@@ -229,7 +228,6 @@ public class TwitchCallCache : ITwitchCallCache
 
     public List<Object> GetAllMessagesFromTo(DateTime from, DateTime to, CallCacheEnum callCacheEnum)
     {
-        
         switch (callCacheEnum)
         {
             case CallCacheEnum.CachedMessageData:

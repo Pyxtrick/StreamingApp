@@ -1,4 +1,6 @@
-﻿using StreamingApp.API.Interfaces;
+﻿using Microsoft.AspNetCore.SignalR;
+using StreamingApp.API.Interfaces;
+using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Utility.TextToSpeach;
 using StreamingApp.DB;
@@ -22,7 +24,9 @@ public class ManageCommands : IManageCommands
 
     private readonly IManageStream _manageStream;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IGameCommand gameCommand, IManageTextToSpeach manageTextToSpeach, IManageCommandsWithLogic manageCommandsWithLogic, IManageStream manageStream)
+    private readonly IHubContext<ChatHub> _hubContext;
+
+    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IGameCommand gameCommand, IManageTextToSpeach manageTextToSpeach, IManageCommandsWithLogic manageCommandsWithLogic, IManageStream manageStream, IHubContext<ChatHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
@@ -30,10 +34,13 @@ public class ManageCommands : IManageCommands
         _manageTextToSpeach = manageTextToSpeach;
         _manageCommandsWithLogic = manageCommandsWithLogic;
         _manageStream = manageStream;
+        _hubContext = hubContext;
     }
 
     public async Task Execute(MessageDto messageDto)
     {
+        await _hubContext.Clients.All.SendAsync("ReceiveCommandMessage", messageDto);
+
         string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
         CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() <= t.Auth);
