@@ -49,6 +49,7 @@ public static class Registrar
         // Twitch
         services.AddScoped<IGameCommand, GameCommand>();
         services.AddScoped<IManageCommands, ManageCommands>();
+        services.AddScoped<IManageCommandsWithLogic, ManageCommandsWithLogic>();
         services.AddScoped<IManageDeleted, ManageDeleted>();
         services.AddScoped<IManageScheduler, ManageScheduler>();
         services.AddScoped<IManageMessages, ManageMessages>();

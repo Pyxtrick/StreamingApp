@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StreamingApp.API.BetterTV_7TV;
-using StreamingApp.API.Interfaces;
+﻿using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Utility.TextToSpeach;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
-using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
-using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Twitch;
 
@@ -17,214 +14,86 @@ public class ManageCommands : IManageCommands
 
     private readonly ITwitchSendRequest _twitchSendRequest;
 
-    private readonly IEmotesApiRequest _emotesApiRequest;
+    private readonly IGameCommand _gameCommand;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest sendRequest, IEmotesApiRequest emotesApiRequest)
+    private readonly IManageTextToSpeach _manageTextToSpeach;
+
+    private readonly IManageCommandsWithLogic _manageCommandsWithLogic;
+
+    private readonly IManageStream _manageStream;
+
+    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IGameCommand gameCommand, IManageTextToSpeach manageTextToSpeach, IManageCommandsWithLogic manageCommandsWithLogic, IManageStream manageStream)
     {
         _unitOfWork = unitOfWork;
-        _twitchSendRequest = sendRequest;
-        _emotesApiRequest = emotesApiRequest;
+        _twitchSendRequest = twitchSendRequest;
+        _gameCommand = gameCommand;
+        _manageTextToSpeach = manageTextToSpeach;
+        _manageCommandsWithLogic = manageCommandsWithLogic;
+        _manageStream = manageStream;
     }
 
-    public async Task Execute(MessageDto messageDto, CommandAndResponse commandAndResponse)
+    public async Task Execute(MessageDto messageDto)
     {
-        var splitMessage = messageDto.Message.Split(' ');
-        string[] splitNoCommandTextMessage = new List<string>().ToArray();
+        string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
-        if (splitMessage.Length > 1)
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() <= t.Auth);
+
+        if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
         {
-            if (splitMessage[1].Contains("\U000e0000")) {
-                splitMessage = splitMessage.Where(s => s == splitMessage[1]).ToArray();
-            }
-            splitNoCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..].Split(' ');
-        }
-
-        if (commandAndResponse != null && commandAndResponse.Active == true)
-        {
-            string response = "";
-
-            bool reply = false;
-
-            // Update / Refresh Emotes from 7tv and Betterttv
-
-            if (splitMessage[0].Equals("!timer"))
+            if (commandAndResponse.Category == CategoryEnum.Queue)
             {
-                // TODO: create Timer for x seconds or minutes
-                // Countdown
-            }
-            else if (splitMessage[0].Equals("!tracker"))
-            {
-                if (splitNoCommandTextMessage.Length > 0)
+                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.ChatOrigin).ComunityDayActive;
+
+                if (queueIsActive)
                 {
-                    var specialWord = await _unitOfWork.SpecialWords.FirstOrDefaultAsync(s => s.Name.Contains(splitNoCommandTextMessage[0]) && s.Type == Domain.Enums.SpecialWordEnum.Count);
-
-                    if (specialWord != null)
-                    {
-                        response = $"{splitNoCommandTextMessage[0]} has been used {specialWord.TimesUsed} Times";
-                    }
-                }
-            }
-            // response with the time when stream goes live / with conversion to other time zones
-            else if (splitMessage[0].Equals("!live"))
-            {
-                var timeTexts = _unitOfWork.CommandAndResponse.FirstOrDefault(c => c.Command.Equals("streamTime")).Response.Split(",").ToList();
-
-                var streamTimes = new List<DateTime>();
-
-                foreach (var timeText in timeTexts)
-                {
-                    var split = timeText.Split(" ");
-
-                    var localTime = DateTime.Parse($"{split[1]} {split[2]}");
-
-                    streamTimes.Add(localTime.AddDays(((int)(DayOfWeek)Enum.Parse(typeof(DayOfWeek), split[1]) - (int)localTime.DayOfWeek + 7) % 7));
+                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
                 }
 
-                var result = streamTimes.Order().First();
-
-                //https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-                var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage.Length > 0 ? splitNoCommandTextMessage[0] : "Europe/Zurich");
-
-                string offset = $"UTC {((DateTime.UtcNow - DateTime.Now).TotalHours > 1.5 ? timeZoneInfo.BaseUtcOffset + TimeSpan.FromHours(1) : timeZoneInfo.BaseUtcOffset).ToString()}";
-
-                if (splitNoCommandTextMessage.Length > 0)
+                Console.WriteLine("Command Queue");
+            }
+            else if (commandAndResponse.Category == CategoryEnum.Game)
+            {
+                await _gameCommand.Execute(commandAndResponse);
+                Console.WriteLine("Command Game");
+            }
+            // sstart, sstop, sset
+            else if (commandAndResponse.Category == CategoryEnum.Subathon)
+            {
+                //commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
+                //_subathonCommand.Execute(commandAndResponse);
+                Console.WriteLine("Command Subathon");
+            }
+            // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
+            else if (commandAndResponse.Category == CategoryEnum.Fun)
+            {
+                //_ManageFun.Execute(commandAndResponse);
+                if (messageDto.Message.Contains("say"))
                 {
-                    try
-                    {
-                        var timeZone = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
-
-                        response = $"Stream will be live on {timeZone.DayOfWeek}, {timeZone.AddDays(1).DayOfWeek} and {timeZone.AddDays(3).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitNoCommandTextMessage[1]} / {offset}";
-                    }
-                    catch (Exception e)
-                    {
-                        response = commandAndResponse.Response;
-                    }
-                }
-                else
-                {
-                    response = $"Stream will be live on {streamTimes[0].DayOfWeek}, {streamTimes[1].DayOfWeek} and {streamTimes[2].DayOfWeek} at {result.TimeOfDay.ToString()} CEST / {offset}";
+                    _manageTextToSpeach.Execute(messageDto);
                 }
             }
-            else if (splitMessage[0].Equals("!currentTime"))
+            else if (commandAndResponse.HasLogic)
             {
-                var localTime = DateTime.Now;
-
-                if (splitNoCommandTextMessage.Length > 0)
-                {
-                    try
-                    {
-                        var timeZone = TimeZoneInfo.ConvertTime(localTime, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitNoCommandTextMessage[0]));
-
-                        var offset = (timeZone - localTime.ToUniversalTime()).Hours;
-
-                        var offsetText = offset > 0 ? $"+{offset}" : $"{offset}";
-
-                        response = $"It is Currenty in {splitNoCommandTextMessage[0]} {timeZone.ToShortTimeString()} (UTC {offsetText})";
-                    }
-                    catch (Exception e)
-                    {
-                        response = commandAndResponse.Response;
-                    }
-                }
-                else
-                {
-                    response = $"It is Currenty {localTime.ToShortTimeString()}";
-                }
+                await _manageCommandsWithLogic.Execute(messageDto, commandAndResponse);
+                Console.WriteLine("Command Has Logic");
             }
-            else if (splitMessage[0].Equals("!language2"))
+            else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
             {
-                // Use Twitch user Language and send message in chat
+                await _manageStream.Execute(messageDto);
             }
-            else if (splitMessage[0].Equals("!clip2"))
+            else
             {
-                // lgic to create a OBS Clip / checkpoint
-            }
-            else if (splitMessage[0].Equals("!song"))
-            {
-                // reads the current song application / API to get the currenty plaing song
-            }
-            else if (splitMessage[0].Equals("!collab"))
-            {
-                if (!commandAndResponse.Active)
-                {
-                    // No collab
-                    response = commandAndResponse.Response;
+                // TODO: Replace parts in the message
+                string message = commandAndResponse.Response;
 
-                    return;
-                }
+                var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
-                string peopleLinks = "";
+                message = message.Replace("[User]", messageDto.UserName);
+                message = message.Replace("[Time]", DateTime.Now.ToString());
+                message = message.Replace("[StreamStartTime]", stream.StreamStart.ToLocalTime().ToString());
+                message = message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
 
-                // get all collab peole from the message
-                foreach (var text in splitNoCommandTextMessage)
-                {
-                    var user = await _unitOfWork.UserDetail.FirstAsync(x => x.UserName == text);
-
-                    if (user != null)
-                    {
-                        string userLink = user.Url != null ? user.Url : $"https://www.twitch.tv/{user.UserName}";
-
-                        peopleLinks += $"{user.UserName}: {user.Url} ";
-                    }
-                    else
-                    {
-                        Console.WriteLine($"User {text} is not in the DB yet");
-
-                        peopleLinks += $"{text}: https://www.twitch.tv/{text} ";
-                    }
-                }
-
-                response = $"Current Collab with {peopleLinks}";
-            }
-            else if (splitMessage[0].Equals("!statistics"))
-            {
-                User user = _unitOfWork.User.Include("Ban").Include("Status").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).UserName == messageDto.UserName);
-
-                DateTime FirstStreamSeen = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).FirstStreamSeen;
-                int streamStreak = user.Achievements.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).WachedStreams;
-
-                response = $"User {messageDto.UserName} has seen {streamStreak} Streams since {FirstStreamSeen.ToShortDateString()}";
-            }
-            else if (splitMessage[0].Equals("!youtube"))
-            {
-                var streamHistory = await _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).LastAsync();
-
-                response = $"The stream is also live on YouTube: {streamHistory.VodUrl}";
-            }
-            else if (messageDto.Auth.Min() <= AuthEnum.Mod)
-            {
-                if (splitMessage[0].Equals("!permit"))
-                {
-                    // TODO: Permit user to send a Link for 2 Minutes
-                }
-                else if (splitMessage[0].Equals("!randomuser"))
-                {
-                    // chooses a random user who has chatted in the current stream (Achievements.LastStreamSeen)
-                    // Use TwitchCallCache.GetAllMessages
-                    // var t = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData);
-                    //List<MessageDto> messages = t.ConvertAll(s => (MessageDto)s);
-                }
-                else if (splitMessage[0].Equals("!updateEmotes"))
-                {
-                    await _emotesApiRequest.GetTVEmoteSet();
-
-                    response = "Emotes have been updated";
-                }
-            }
-
-            if (!response.IsNullOrEmpty())
-            {
-                if (reply)
-                {
-                    _twitchSendRequest.SendResplyChatMessage(response, messageDto.MessageId);
-                }
-                else
-                {
-                    if (messageDto.ChatOrigin == ChatOriginEnum.Twitch)
-                    {
-                        _twitchSendRequest.SendChatMessage(response);
-                    }
-                }
+                _twitchSendRequest.SendChatMessage(message);
             }
         }
     }

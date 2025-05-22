@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
-using StreamingApp.Core.Utility.TextToSpeach;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Static;
@@ -26,31 +23,19 @@ public class ManageMessages : IManageMessages
 
     private readonly ISendSignalRMessage _sendSignalRMessage;
 
-    private readonly ITwitchSendRequest _twitchSendRequest;
-
-    private readonly IManageStream _manageStream;
+    private readonly IMessageCheck _messageCheck;
 
     private readonly IManageCommands _manageCommands;
 
-    private readonly IMessageCheck _messageCheck;
-
-    private readonly IManageTextToSpeach _manageTextToSpeach;
-
-    private readonly IGameCommand _gameCommand;
-
-    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, ITwitchSendRequest twitchSendRequest, IManageStream manageStream, IManageCommands manageCommands, IMessageCheck messageCheck, IManageTextToSpeach manageTextToSpeach, IGameCommand gameCommand)
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, IMessageCheck messageCheck, IManageCommands manageCommands)
     {
         _unitOfWork = unitOfWork;
         _crudUsers = crudUsers;
         _twitchCallCache = twitchCallCache;
         _emotesCache = emotesCache;
         _sendSignalRMessage = sendSignalRMessage;
-        _twitchSendRequest = twitchSendRequest;
-        _manageStream = manageStream;
-        _manageCommands = manageCommands;
         _messageCheck = messageCheck;
-        _manageTextToSpeach = manageTextToSpeach;
-        _gameCommand = gameCommand;
+        _manageCommands = manageCommands;
     }
 
     /// <summary>
@@ -136,75 +121,7 @@ public class ManageMessages : IManageMessages
         // Check if the Bot_OnChatCommandRecived is working as intended
         else if (messageDto.IsCommand)
         {
-            await CommandLogic(messageDto);
-        }
-    }
-
-    private async Task CommandLogic(MessageDto messageDto)
-    {
-        string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
-
-        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() >= t.Auth);
-
-        CommandAndResponse? commandAndResponsenew = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText));
-
-        if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
-        {
-            if (commandAndResponse.Category == CategoryEnum.Queue)
-            {
-                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.ChatOrigin).ComunityDayActive;
-
-                if (queueIsActive)
-                {
-                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
-                }
-
-                Console.WriteLine("Command Queue");
-            }
-            else if (commandAndResponse.Category == CategoryEnum.Game)
-            {
-                await _gameCommand.Execute(commandAndResponse);
-                Console.WriteLine("Command Game");
-            }
-            // sstart, sstop, sset
-            else if (commandAndResponse.Category == CategoryEnum.Subathon)
-            {
-                //commandAndResponse.Response.Replace("[SubathonTimer]", DateTime.Now.ToString());
-                //_subathonCommand.Execute(commandAndResponse);
-                Console.WriteLine("Command Subathon");
-            }
-            // Fun     flip,random,rainbow,revert,bounce,random,translatehell,gigantify
-            else if (commandAndResponse.Category == CategoryEnum.Fun)
-            {
-                //_ManageFun.Execute(commandAndResponse);
-                if (messageDto.Message.Contains("say"))
-                {
-                    _manageTextToSpeach.Execute(messageDto);
-                }
-            }
-            else if (commandAndResponse.HasLogic)
-            {
-                await _manageCommands.Execute(messageDto, commandAndResponse);
-                Console.WriteLine("Command Has Logic");
-            }
-            else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
-            {
-                await _manageStream.Execute(messageDto);
-            }
-            else
-            {
-                // TODO: Replace parts in the message
-                string message = commandAndResponse.Response;
-
-                var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
-
-                message = message.Replace("[User]", messageDto.UserName);
-                message = message.Replace("[Time]", DateTime.Now.ToString());
-                message = message.Replace("[StreamStartTime]", stream.StreamStart.ToLocalTime().ToString());
-                message = message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
-
-                _twitchSendRequest.SendChatMessage(message);
-            }
+            await _manageCommands.Execute(messageDto);
         }
     }
 

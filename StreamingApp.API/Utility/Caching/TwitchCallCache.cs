@@ -3,8 +3,6 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
-using TwitchLib.Api.Helix;
-using TwitchLib.Api.Helix.Models.Raids;
 
 namespace StreamingApp.API.Utility.Caching;
 public class TwitchCallCache : ITwitchCallCache
