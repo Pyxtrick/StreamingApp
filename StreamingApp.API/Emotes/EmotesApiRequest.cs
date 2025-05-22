@@ -42,8 +42,11 @@ public class EmotesApiRequest : IEmotesApiRequest
 
         foreach (_7TVEmoteList _7emote in convertedResponse)
         {
-            // replase 1x.webp with 1-4 for a bigger image
-            EmoteDto emote = new EmoteDto(_7emote.code, _7emote.provider, _7emote.code, _7emote.urls[0].url);
+            string url = _7emote.urls[0].url.Replace("1x.avif", "4x.avif");
+            url = url.Replace("1x.webp", "4x.webp");
+            url = url.Replace("1x", "3x");
+
+            EmoteDto emote = new EmoteDto(_7emote.code, _7emote.provider, _7emote.code, url);
 
             emotes.Add(emote);
         }
