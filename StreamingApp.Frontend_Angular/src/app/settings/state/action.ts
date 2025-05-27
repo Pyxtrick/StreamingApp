@@ -2,7 +2,9 @@ import { createActionGroup, emptyProps } from '@ngrx/store';
 import {
   CommandAndResponseDto,
   GameInfoDto,
+  SpecialWordDto,
   StreamDto,
+  UserDto,
 } from 'src/api/api.service';
 
 export const SettingsActions = createActionGroup({
@@ -54,6 +56,46 @@ export const SettingsActions = createActionGroup({
       gameInfos,
     }),
     'update gameInfos failure': (message?: string) => ({
+      message,
+    }),
+    //#endregion
+
+    //#region User
+    'load users': emptyProps(),
+    'load users success': (users: UserDto[]) => ({
+      users,
+    }),
+    'load users failure': (message?: string) => ({
+      message,
+    }),
+
+    'update users': (users: UserDto[]) => ({
+      users,
+    }),
+    'update users success': (users: UserDto[]) => ({
+      users,
+    }),
+    'update users failure': (message?: string) => ({
+      message,
+    }),
+    //#endregion
+
+    //#region SpecialWord
+    'load specialWords': emptyProps(),
+    'load specialWords success': (specialWords: SpecialWordDto[]) => ({
+      specialWords,
+    }),
+    'load specialWords failure': (message?: string) => ({
+      message,
+    }),
+
+    'update specialWords': (specialWords: SpecialWordDto[]) => ({
+      specialWords,
+    }),
+    'update specialWords success': (specialWords: SpecialWordDto[]) => ({
+      specialWords,
+    }),
+    'update specialWords failure': (message?: string) => ({
       message,
     }),
     //#endregion

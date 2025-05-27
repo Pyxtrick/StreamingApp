@@ -126,4 +126,71 @@ export class SettingsEffects {
     );
   });
   //#endregion
+
+  //#region User
+  loadUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SettingsActions.loadCommands),
+      switchMap(() =>
+        this.api.getAllUsers().pipe(
+          map((r) => {
+            if (r.isSucsess) {
+              return SettingsActions.loadUsersSuccess(r.users ?? []);
+            } else {
+              return SettingsActions.loadUsersFailure();
+            }
+          }),
+          catchError((_error) => of(SettingsActions.loadUsersFailure()))
+        )
+      )
+    );
+  });
+  //#endregion
+
+  //#region Command
+  loadSpecialWords$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SettingsActions.loadSpecialWords),
+      switchMap(() =>
+        this.api.getAllspecialWords().pipe(
+          map((r) => {
+            if (r.isSucsess) {
+              return SettingsActions.loadSpecialWordsSuccess(r.sw ?? []);
+            } else {
+              return SettingsActions.loadSpecialWordsFailure();
+            }
+          }),
+          catchError((_error) => of(SettingsActions.loadSpecialWordsFailure()))
+        )
+      )
+    );
+  });
+
+  updateSpecialWords$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SettingsActions.updateSpecialWords),
+      switchMap((payload) =>
+        this.api.updatespecialWords(payload.specialWords).pipe(
+          map((r) => {
+            if (r.isSucsess) {
+              return SettingsActions.updateSpecialWordsSuccess(r.sw ?? []);
+            } else {
+              return SettingsActions.updateSpecialWordsFailure();
+            }
+          }),
+          catchError((_error) =>
+            of(SettingsActions.updateSpecialWordsFailure(_error))
+          )
+        )
+      )
+    );
+  });
+
+  updateSpecialWordsSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SettingsActions.updateSpecialWords),
+      map(() => SettingsActions.loadSpecialWords())
+    );
+  });
+  //#endregion
 }
