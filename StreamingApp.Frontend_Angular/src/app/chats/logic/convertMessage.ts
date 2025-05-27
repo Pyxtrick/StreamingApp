@@ -134,8 +134,6 @@ export class ConvertMessage {
   }
 
   private static formatDate(date: Date): string {
-    return `${date.toLocaleDateString(
-      'ch-DE'
-    )} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   }
 }

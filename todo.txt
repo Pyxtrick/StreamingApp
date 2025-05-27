@@ -1,20 +1,15 @@
 Backend
-	
+	Send chat message to Web to
 
 Fronted
-	Remove allert after X time
-
-	Update On screen chat
 	Update Data Display
 	Add create and edit Data
 
-	Update VTS Data
+	Show VTS Data
 		possition
 		Model
 			Toggle
 		Item
-
-Client
 	
 
 

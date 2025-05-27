@@ -14,10 +14,8 @@
 }
 
 .name-text {
-  font-size: large;
   font-weight: bold;
   margin-bottom: 0px !important;
-  display: inline-block;
 }
 
 .message-reply {
@@ -37,6 +35,10 @@
 
 .message-text-none {
   color: white;
+  margin-bottom: 0px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  display: inline-block;
 }
 
 .mdc-list-item {
