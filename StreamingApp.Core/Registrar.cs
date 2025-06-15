@@ -68,6 +68,7 @@ public static class Registrar
         services.AddScoped<ICreateFinalStreamAchievements, CreateFinalStreamAchievements>();
 
         //Alert
+        services.AddScoped<IHighlightMessage, HighlightMessage>();
         services.AddScoped<ISubAlertLoong, SubAlertLoong>();
 
         //Logic 

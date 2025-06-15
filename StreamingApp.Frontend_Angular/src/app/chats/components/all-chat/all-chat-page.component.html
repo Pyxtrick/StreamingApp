@@ -4,10 +4,19 @@
       <mat-list>
         @for (message of displayChatMessages; track message) {
         <mat-list-item class="item" #item>
-          <div matListItemTitle [innerHTML]="message.SaveName"></div>
-          <div matListItemLine [innerHTML]="message.SaveReply"></div>
-          <div matListItemLine [innerHTML]="message.SaveMessage"></div>
-          <div matListItemLine [innerHTML]="message.Addon"></div>
+          <mat-toolbar class="toolbar">
+            <button
+              class="toolbar-icon"
+              toolbar-button
+              (click)="OnMessageClicked(message.Id!)"
+            >
+              <mat-icon>favorite</mat-icon>
+            </button>
+            <div matListItemTitle [innerHTML]="message.SaveName"></div>
+            <div matListItemLine [innerHTML]="message.SaveReply"></div>
+            <div matListItemLine [innerHTML]="message.SaveMessage"></div>
+            <div matListItemLine [innerHTML]="message.Addon"></div>
+          </mat-toolbar>
         </mat-list-item>
         }
       </mat-list>

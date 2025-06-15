@@ -8,7 +8,7 @@ import {
 } from 'src/api/api.service';
 
 export const SettingsActions = createActionGroup({
-  source: 'Shared',
+  source: 'Settings',
   events: {
     //#region Commands
     'load commands': emptyProps(),

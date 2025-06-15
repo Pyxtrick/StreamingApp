@@ -70,6 +70,14 @@ export class AppSignalRService {
     });
   }
 
+  receiveHighlightMessage(): Observable<ChatDto> {
+    return new Observable<ChatDto>((observer) => {
+      this.hubConnection.on('ReceiveHighlightMessage', (message: ChatDto) => {
+        observer.next(message);
+      });
+    });
+  }
+
   //#region Just for Debugging / testing
   receiveMessage(): Observable<string> {
     return new Observable<string>((observer) => {

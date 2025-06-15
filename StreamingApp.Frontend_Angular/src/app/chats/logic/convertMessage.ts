@@ -124,7 +124,7 @@ export class ConvertMessage {
     finalMessage += '</span>';
 
     return {
-      Id: chatMessage.id,
+      Id: chatMessage.messageId,
       SaveName: sanitizer.bypassSecurityTrustHtml(finalName), // This needs to be done that style is correctly implemented,
       SaveReply: sanitizer.bypassSecurityTrustHtml(finalReply),
       SaveMessage: sanitizer.bypassSecurityTrustHtml(finalMessage), // This needs to be done that style is correctly implemented,

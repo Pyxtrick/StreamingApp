@@ -1,2 +1,28 @@
 @import '../../../../styles.scss';
 @import '../../styles/ChatStyle.scss';
+
+.toolbar {
+  display: contents !important;
+}
+
+.toolbar .toolbar-icon {
+  visibility: hidden;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.toolbar:hover .toolbar-icon {
+  visibility: visible;
+  opacity: 1;
+}
+
+.toolbar-icon {
+  margin-left: 260px;
+}

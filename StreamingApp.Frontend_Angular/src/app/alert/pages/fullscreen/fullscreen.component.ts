@@ -29,7 +29,7 @@ export class FullscreenComponent implements OnInit {
           this.htmldata = this._sanitizer.bypassSecurityTrustHtml(message.html);
           this.subscription = interval(
             (message.duration - 0.5) * 1000
-          ).subscribe((val) => this.removeElement());
+          ).subscribe(() => this.removeElement());
         });
     });
   }

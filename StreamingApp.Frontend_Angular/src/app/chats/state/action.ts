@@ -74,5 +74,16 @@ export const ChatsActions = createActionGroup({
       chat,
     }),
     //#endregion
+
+    //#region Friend Chat
+    'send highlight message': (messageId: string) => ({
+      messageId,
+    }),
+
+    'send highlight message success': emptyProps(),
+    'send highlight message failure': (message?: string) => ({
+      message,
+    }),
+    //#endregion
   },
 });
