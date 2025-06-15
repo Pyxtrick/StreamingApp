@@ -4,8 +4,11 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
+using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.InternalDB.Stream;
+using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
+using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 using TwitchLib.Api.Helix.Models.Polls.CreatePoll;
@@ -34,19 +37,43 @@ public class TwitchSendRequest : ITwitchSendRequest
         _unitOfWork = unitOfWork;
     }
 
+    public async Task<UserDto?> GetUser(string? userName)
+    {
+        var usersResponse = await _twitchCache.GetTheTwitchAPI().Helix.Users.GetUsersAsync(null, new() { userName });
+
+        var user = usersResponse.Users.FirstOrDefault();
+
+        return new UserDto() { UserId = user.Id, UserName = user.DisplayName };
+    }
+
     /// <summary>
     /// Channel Info with GameId, GameName, Title
     /// </summary>
     /// <param name="broadcasterId">null for using _twitchCache.ChannelId</param>
+    /// <param name="isId">check for if twitchUserId is Used or UserName</param>
     /// <returns>ChannelInfo</returns>
-    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId)
+    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId, bool isId)
     {
-        if (broadcasterId.IsNullOrEmpty())
-        {
-            broadcasterId = _configuration["Twitch:ChannelId"];
-        }
+        GetChannelInformationResponse channel = null;
 
-        var channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(broadcasterId);
+        if (isId)
+        {
+            if (broadcasterId.IsNullOrEmpty())
+            {
+                broadcasterId = _configuration["Twitch:ChannelId"];
+            }
+
+            // TODO: Error
+            // Your request was blocked due to bad credentials (Do you have the right scope for your access token?).
+            // BroadcastID = "66716756"
+            channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(broadcasterId);
+        }
+        else
+        {
+            var user = await GetUser(broadcasterId);
+
+            channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(user.UserId);
+        }
 
         if (channel != null)
         {

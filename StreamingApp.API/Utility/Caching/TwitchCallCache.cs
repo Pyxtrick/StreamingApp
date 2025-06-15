@@ -338,4 +338,9 @@ public class TwitchCallCache : ITwitchCallCache
                 break;
         }
     }
+
+    public MessageDto GetSpecificMessage(string messageId)
+    {
+        return _twitchCallCacheData.CachedMessageData.FirstOrDefault(t => t.MessageId == messageId);
+    }
 }

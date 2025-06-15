@@ -33,8 +33,6 @@ public class ManageStream : IManageStream
 
     public async Task Execute(MessageDto messageDto)
     {
-        var thisChannelInfo = await _twitchSendRequest.GetChannelInfo("");
-
         // removed first word of string
         var noCommandTextMessage = messageDto.Message.Split().Length > 1 ? messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..] : "";
 
@@ -82,7 +80,7 @@ public class ManageStream : IManageStream
                     }
                     var userDetail = _unitOfWork.UserDetail.FirstOrDefault(u => u.UserName == splitMessage[1] && u.Origin == OriginEnum.Twitch);
 
-                    ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(userDetail.ExternalUserId);
+                    ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(userDetail.ExternalUserId, true);
 
                     if (channelInfo != null)
                     {
@@ -129,8 +127,6 @@ public class ManageStream : IManageStream
     {
         _twitchCallCache.ReseetCounts();
 
-        var channelInfo = await _twitchSendRequest.GetChannelInfo("");
-
         var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.Id).ToList().Last();
 
         // For a new Stream
@@ -138,6 +134,8 @@ public class ManageStream : IManageStream
         {
             // TODO: reactiveate when _manageFile has changed / Fixed
             //_manageFile.CreateFile();
+
+            var channelInfo = await _twitchSendRequest.GetChannelInfo("", true);
 
             var utcNow = DateTime.UtcNow;
 
@@ -201,7 +199,7 @@ public class ManageStream : IManageStream
     /// <returns></returns>
     public async Task ChangeCategory(bool isCreateStream = false)
     {
-        var channelInfo = await _twitchSendRequest.GetChannelInfo("");
+        var channelInfo = await _twitchSendRequest.GetChannelInfo("", true);
 
         var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.StreamStart).Last();
         var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(gi => gi.Game.Equals(channelInfo.GameName));

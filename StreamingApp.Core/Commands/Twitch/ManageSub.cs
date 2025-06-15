@@ -18,6 +18,4 @@ public class ManageSub
         // Gifted 1 Sub / Gifted X Subs
 
     }
-
-
 }

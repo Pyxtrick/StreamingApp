@@ -2,6 +2,7 @@
 using StreamingApp.API.StreamerBot;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
+using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Twitch;
@@ -18,12 +19,19 @@ public class YoutubeSendRequest : IYouTubeSendRequest
         _unitOfWork = unitOfWorkContext;
     }
 
+    public async Task<UserDto?> GetUser(string? userName)
+    {
+        await _streamerBotRequest.DoAction("", "", new() { new("messageId", userName) });
+
+        return null;
+    }
+
     public async Task DeleteMessage(string messageId)
     {
         await _streamerBotRequest.DoAction("", "", new() { new("messageId", messageId) });
     }
 
-    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId)
+    public async Task<ChannelInfo?> GetChannelInfo(string? broadcasterId, bool isId)
     {
         await _streamerBotRequest.DoAction("", "", new() { new("broadcasterId", broadcasterId) });
 

@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Interfaces;
+using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Queries.Alerts;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -14,10 +17,16 @@ internal class ManageAlert : IManageAlert
 
     private readonly ITwitchSendRequest _twitchSendRequest;
 
-    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest)
+    private readonly ISubAlertLoong _subAlertLoong;
+
+    private readonly IHubContext<ChatHub> _clientHub;
+
+    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
+        _subAlertLoong = subAlertLoong;
+        _clientHub = clientHub;
     }
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
@@ -80,7 +89,7 @@ internal class ManageAlert : IManageAlert
     {
         Console.WriteLine(raidDto.UserName);
 
-        ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(raidDto.UserName);
+        ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(raidDto.UserName, false);//Fix GetChannelInfo to be used with UserName
 
         CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals("so") && t.Active);
 
@@ -91,13 +100,18 @@ internal class ManageAlert : IManageAlert
             message = message.Replace("[User]", raidDto.UserName);
             message = message.Replace("[GameName]", channelInfo.GameName);
             message = message.Replace("[Url]", $"https://twitch.tv/{raidDto.UserName}");
-
             _twitchSendRequest.SendAnnouncement(message);
+
+            MessageDto chatMessage = new(raidDto.UserName, false, "local", "userid", "", "", "#ff6b6b", "", $"{raidDto.UserName} raided with {raidDto.Count} Viewers", null, new(), new(), ChatOriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+            await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", chatMessage);
         }
     }
 
     public async Task ExecuteSub(SubDto subDto)
     {
-        Console.WriteLine(subDto.UserName);
+        int rotation = new Random().Next(1, 360);
+        int saturation = new Random().Next(1, 1000);
+
+        await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true);
     }
 }

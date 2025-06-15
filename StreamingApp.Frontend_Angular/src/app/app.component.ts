@@ -25,11 +25,4 @@ registerLocaleData(ch);
 })
 export class AppComponent {
   title = 'Streaming.Web';
-  typesOfShoes: string[] = [
-    'Boots',
-    'Clogs',
-    'Loafers',
-    'Moccasins',
-    'Sneakers',
-  ];
 }

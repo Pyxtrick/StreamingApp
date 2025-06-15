@@ -1,4 +1,5 @@
-﻿using StreamingApp.Domain.Enums;
+﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Utility.Caching.Interface;
 public interface ITwitchCallCache
@@ -10,6 +11,7 @@ public interface ITwitchCallCache
     List<Object> GetAllMessages(CallCacheEnum callCacheEnum, bool updateIsUsed);
     List<Object> GetAllUnusedMessages(CallCacheEnum callCacheEnum);
     List<Object> GetAllMessagesFromTo(DateTime from, DateTime to, CallCacheEnum callCacheEnum);
+    MessageDto GetSpecificMessage(string messageId);
     void RemoveMessages(IList<Object> messages, CallCacheEnum callCacheEnum);
     void RemoveOlderThan(DateTime to, CallCacheEnum callCacheEnum);
 }

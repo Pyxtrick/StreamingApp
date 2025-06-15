@@ -1,6 +1,8 @@
-﻿using StreamingApp.API.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
@@ -20,7 +22,32 @@ public class GameCommand : IGameCommand
 
     public async Task Execute(CommandAndResponse commandAndResponse)
     {
-        var channelInfo = await _sendRequest.GetChannelInfo(null);
+        // Change to Gameinfo from ongoing Stream 
+        ChannelInfo channelInfo = new();
+
+        var stream = _unitOfWork.StreamGame.Include("GameCategory").OrderBy(sh => sh.StartDate).ToList().Last();
+
+        try
+        {
+            var ci = await _sendRequest.GetChannelInfo(null, true);
+
+            if (ci != null)
+            {
+                channelInfo = ci;
+            }
+            else
+            {
+                channelInfo.GameName = stream.GameCategory.Game;
+                channelInfo.GameId = stream.GameCategory.GameId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"{DateTime.Now} Error with GetChannelInfo");
+
+            channelInfo.GameName = stream.GameCategory.Game;
+            channelInfo.GameId = stream.GameCategory.GameId;
+        }
 
         string gameId = channelInfo.GameId;
         string gameName = channelInfo.GameName;

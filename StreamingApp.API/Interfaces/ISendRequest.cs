@@ -1,4 +1,5 @@
 ﻿using StreamingApp.Domain.Entities.APIs;
+using StreamingApp.Domain.Entities.Dtos;
 
 namespace StreamingApp.API.Interfaces;
 
@@ -7,7 +8,8 @@ public interface IYouTubeSendRequest : ISendRequest;
 
 public interface ISendRequest
 {
-    Task<ChannelInfo?> GetChannelInfo(string? broadcasterId);
+    Task<UserDto?> GetUser(string? userName);
+    Task<ChannelInfo?> GetChannelInfo(string? broadcasterId, bool isId);
     void SendChatMessage(string message);
 
     void SendResplyChatMessage(string message, string replyToId);

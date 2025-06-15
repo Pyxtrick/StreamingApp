@@ -81,7 +81,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
         int videoLeght = 60 + newViewerText.Count();
 
-        return new AlertDto() { Html = await CreateHdmlFile("ScrollText", streamDuration, messageText, newViewerText, subText, raidText, twitchAchievements, streamTimes), videoLeght = videoLeght };
+        return new AlertDto() { Html = await CreateHdmlFile("ScrollText", streamDuration, messageText, newViewerText, subText, raidText, twitchAchievements, streamTimes), videoLeght = videoLeght, Duration = videoLeght };
     }
 
     private async Task<string> CreateHdmlFile(string alertName, string streamDuration, string messageText, string newViewerText, string subText, string raidText, List<string> twitchAchievements, List<string> streamTimes)

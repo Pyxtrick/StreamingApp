@@ -2130,6 +2130,116 @@ export class VtubeStudioContollerClient {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class WebContollerClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    highlightMessage(messageId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/WebContoller/HighlightMessage?";
+        if (messageId === null)
+            throw new Error("The parameter 'messageId' cannot be null.");
+        else if (messageId !== undefined)
+            url_ += "messageId=" + encodeURIComponent("" + messageId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHighlightMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHighlightMessage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processHighlightMessage(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sendHighlightMessage(chatMessage: MessageDto): Observable<void> {
+        let url_ = this.baseUrl + "/api/WebContoller/SendHighlightMessage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(chatMessage);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendHighlightMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendHighlightMessage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSendHighlightMessage(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export class VtubeStudioData implements IVtubeStudioData {
     availableItems?: Item[] | null;
     itemsInScene?: Item[] | null;
@@ -3086,6 +3196,7 @@ export interface IUserRespose {
 
 export class UserDto implements IUserDto {
     id!: number;
+    userId!: string;
     userName!: string;
     url!: string;
     userType!: UserTypeEnum;
@@ -3106,6 +3217,7 @@ export class UserDto implements IUserDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.userId = _data["userId"] !== undefined ? _data["userId"] : <any>null;
             this.userName = _data["userName"] !== undefined ? _data["userName"] : <any>null;
             this.url = _data["url"] !== undefined ? _data["url"] : <any>null;
             this.userType = _data["userType"] !== undefined ? _data["userType"] : <any>null;
@@ -3126,6 +3238,7 @@ export class UserDto implements IUserDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["userId"] = this.userId !== undefined ? this.userId : <any>null;
         data["userName"] = this.userName !== undefined ? this.userName : <any>null;
         data["url"] = this.url !== undefined ? this.url : <any>null;
         data["userType"] = this.userType !== undefined ? this.userType : <any>null;
@@ -3139,6 +3252,7 @@ export class UserDto implements IUserDto {
 
 export interface IUserDto {
     id: number;
+    userId: string;
     userName: string;
     url: string;
     userType: UserTypeEnum;
