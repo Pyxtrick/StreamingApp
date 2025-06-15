@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StreamingApp.API.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Hub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;
+using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Static;
@@ -25,7 +28,9 @@ public class ManageMessages : IManageMessages
 
     private readonly IMessageCheck _messageCheck;
 
-    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, IMessageCheck messageCheck)
+    private readonly ITwitchSendRequest _twitchSendRequest;
+
+    public ManageMessages(UnitOfWorkContext unitOfWork, ICRUDUsers crudUsers, ITwitchCallCache twitchCallCache, IEmotesCache emotesCache, ISendSignalRMessage sendSignalRMessage, IMessageCheck messageCheck, ITwitchSendRequest twitchSendRequest)
     {
         _unitOfWork = unitOfWork;
         _crudUsers = crudUsers;
@@ -33,6 +38,7 @@ public class ManageMessages : IManageMessages
         _emotesCache = emotesCache;
         _sendSignalRMessage = sendSignalRMessage;
         _messageCheck = messageCheck;
+        _twitchSendRequest = twitchSendRequest;
     }
 
     /// <summary>
@@ -66,16 +72,33 @@ public class ManageMessages : IManageMessages
     {
         User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin.ToString().Equals(messageDto.ChatOrigin.ToString())).ExternalUserId == messageDto.UserId);
 
+        bool isFirstMessage = false;
+
         if (user != null)
         {
             // TODO: make backend check if this is the first message during the stream
             //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
 
-            await _crudUsers.UpdateAchievements(messageDto.UserId, messageDto.ChatOrigin);
+            isFirstMessage = await _crudUsers.UpdateAchievements(messageDto.UserId, messageDto.ChatOrigin);
         }
         else
         {
             user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth, messageDto.ChatOrigin);
+        }
+
+        if (user.Status.AutoShoutout == true && user.Details.Where(d => d.Origin == OriginEnum.Twitch) != null && isFirstMessage)
+        {
+            ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(messageDto.UserId, true);
+
+            CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals("so") && t.Active);
+
+            string message = commandAndResponse.Response;
+
+            message = message.Replace("[User]", messageDto.UserName);
+            message = message.Replace("[GameName]", channelInfo.GameName);
+            message = message.Replace("[Url]", $"https://twitch.tv/{messageDto.UserName}");
+
+            _twitchSendRequest.SendAnnouncement(message);
         }
 
         messageDto.Emotes.AddRange(MappEmotes(messageDto));

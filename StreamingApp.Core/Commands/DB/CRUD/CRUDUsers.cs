@@ -97,7 +97,7 @@ public class CRUDUsers : ICRUDUsers
                     IsVIP = auth.Contains(AuthEnum.Vip),
                     IsVerified = auth.Contains(AuthEnum.Partner),
                     IsMod = auth.Contains(AuthEnum.Mod),
-                    IsRaider = auth.Contains(AuthEnum.Raider),
+                    AutoShoutout = false,
                     TimeZone = "waiting",
                     UserType = UserTypeEnum.Viewer,
                 },
@@ -128,7 +128,7 @@ public class CRUDUsers : ICRUDUsers
     /// <summary>
     /// Combine User from Twitch and YouTube
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if Firts Message of Stream</returns>
     public async Task CombineUser(string twitchUserId, string youtubeUserId)
     {
         User user = _unitOfWork.User.Include("Achievements").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == twitchUserId).ToList().First();
@@ -190,7 +190,6 @@ public class CRUDUsers : ICRUDUsers
             user.Status.IsVIP = auths.Contains(AuthEnum.Vip);
             user.Status.IsVerified = auths.Contains(AuthEnum.Partner);
             user.Status.IsMod = auths.Contains(AuthEnum.Mod);
-            user.Status.IsRaider = auths.Contains(AuthEnum.Raider);
 
             try
             {
