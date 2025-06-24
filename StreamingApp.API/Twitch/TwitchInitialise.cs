@@ -21,7 +21,7 @@ public class TwitchInitialise : ITwitchInitialise
 
     // Authentication
     private HttpServer WebServer;
-    private readonly List<string> Scopes = new List<string> { "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions", "moderator:manage:shoutouts", "chat:read", "chat:edit", "whispers:read", "whispers:edit", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions" };
+    private readonly List<string> Scopes = new List<string> { "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions", "moderator:manage:shoutouts", "moderator:manage:announcements", "chat:read", "chat:edit", "whispers:read", "whispers:edit", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions" };
 
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;

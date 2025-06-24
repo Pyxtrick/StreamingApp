@@ -3,6 +3,7 @@ using StreamingApp.API.StreamerBot;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Twitch;
@@ -40,7 +41,7 @@ public class YoutubeSendRequest : IYouTubeSendRequest
 
     public void SendAnnouncement(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Youtube);
 
         if (settings.PauseChatMessages == false)
         {
@@ -52,7 +53,7 @@ public class YoutubeSendRequest : IYouTubeSendRequest
 
     public void SendChatMessage(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Youtube);
 
         if (settings.PauseChatMessages == false)
         {
@@ -62,7 +63,7 @@ public class YoutubeSendRequest : IYouTubeSendRequest
 
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Youtube);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Youtube);
 
         if (settings.PauseChatMessages == false)
         {
@@ -82,5 +83,10 @@ public class YoutubeSendRequest : IYouTubeSendRequest
     public async Task TimeoutUser(string userId, string reson, int time)
     {
         await _streamerBotRequest.DoAction("", "", new() { new("userId", userId), new("reson", reson), new("time", time.ToString()) });
+    }
+
+    public Task<StreamHighlight> CreateClip(string message)
+    {
+        return null;
     }
 }

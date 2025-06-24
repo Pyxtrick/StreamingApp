@@ -111,7 +111,7 @@ public class MessageCheck : IMessageCheck
                 {
                     List<string> result = (from word in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Timeout) select word.Name.ToString()).ToList();
 
-                    int timeOutSeconds = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.ChatOrigin)!.TimeOutSeconds;
+                    int timeOutSeconds = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.Origin)!.TimeOutSeconds;
 
                     // TODO Use specialWords.Comment to determin timeout time
                     await _twitchSendRequest.TimeoutUser(messageDto.UserId, $"Used prohibited word {JsonConvert.SerializeObject(result)}", timeOutSeconds);

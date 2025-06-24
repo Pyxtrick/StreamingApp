@@ -38,15 +38,26 @@ public class ManageStream : IManageStream
 
         var splitMessage = messageDto.Message.Split(' ');
 
+        string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
+
         var splitNoCommandTextMessage = noCommandTextMessage.Split(',');
 
         // TODO: Add Auth Check to the other Get CommandAndResponse to
-        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(splitMessage[0]) && t.Active);
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Contains(commandText) && t.Active);
 
         if (splitMessage[0].Equals("!clip"))
         {
+            var stream = _unitOfWork.StreamHistory.OrderBy(sh => sh.Id).ToList().Last();
+
             // TODO: Twitch clip Stream for the last x seconds
-            //_twitchSendRequest.CreateClip(noCommandTextMessage)
+            var sh = await _twitchSendRequest.CreateClip(stream.StreamTitle);
+
+            sh.StreamId = stream.Id;
+            sh.Stream = stream;
+
+            await _unitOfWork.StreamHighlights.AddAsync(sh);
+            await _unitOfWork.SaveChangesAsync();
+
         }
         // Limit Commands to Mods and Streamer
         else if (messageDto.Auth.Min() <= AuthEnum.Mod)
@@ -73,7 +84,7 @@ public class ManageStream : IManageStream
                 // TODO: Twitch Shouout user
                 if (splitMessage[1] != null)
                 {
-                    if(messageDto.ChatOrigin == ChatOriginEnum.Youtube)
+                    if(messageDto.Origin == OriginEnum.Youtube)
                     {
                         //_youtubeSendRequest.SendChatMessage($"");
                         return;

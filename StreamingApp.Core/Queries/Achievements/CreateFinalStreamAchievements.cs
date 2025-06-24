@@ -52,7 +52,7 @@ public class CreateFinalStreamAchievements : ICreateFinalStreamAchievements
 
             if (parts.Length == 4)
             {
-                if (parts[0].Contains(nameof(ChatOriginEnum.Twitch)))
+                if (parts[0].Contains(nameof(OriginEnum.Twitch)))
                 {
                     twitchAchievements.Add($"User: {parts[1]} has gifted {parts[3]} {parts[2]}");
                 }

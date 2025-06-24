@@ -20,9 +20,9 @@ public class TwitchMappingProfile : Profile
                 x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
                 x.Message,
                 x.EmoteReplacedMessage,
-                MappEmotes(x),
+                MappEmotes(x.EmoteSet),
                 x.Badges,
-                ChatOriginEnum.Twitch,
+                OriginEnum.Twitch,
                 MappAuth(x),
                 MappSpecialMessage(x),
                 EffectEnum.none,
@@ -44,20 +44,93 @@ public class TwitchMappingProfile : Profile
                 x.EmoteReplacedMessage,
                 x.CustomRewardId,
                 x.Bits,
-                MappEmotes(x),
+                MappEmotes(x.EmoteSet),
                 x.Badges,
-                ChatOriginEnum.Twitch,
+                OriginEnum.Twitch,
                 AlertTypeEnum.Undefined,
                 MappAuth(x),
                 x.IsSubscriber,
                 false,
                 DateTime.UtcNow
             ));
+
+
+        CreateMap<Subscriber, SubDto>()
+            .ConstructUsing(x => new SubDto(
+                x.MsgId,
+                x.UserId,
+                x.DisplayName,
+                x.DisplayName,
+                x.Channel,
+                OriginEnum.Twitch,
+                false,
+                0,
+                int.Parse(x.MsgParamCumulativeMonths),
+                (TierEnum)Enum.Parse(typeof(TierEnum), x.SubscriptionPlan.ToString()),
+                null,
+                false,
+                DateTime.UtcNow
+            ));
+
+        CreateMap<PrimePaidSubscriber, SubDto>()
+            .ConstructUsing(x => new SubDto(
+                x.MsgId,
+                x.UserId,
+                x.DisplayName,
+                x.DisplayName,
+                x.Channel,
+                OriginEnum.Twitch,
+                false,
+                0,
+                int.Parse(x.MsgParamCumulativeMonths),
+                (TierEnum)Enum.Parse(typeof(TierEnum), x.SubscriptionPlan.ToString()),
+                null,
+                false,
+                DateTime.UtcNow
+            ));
+
+        CreateMap<ReSubscriber, SubDto>()
+            .ConstructUsing(x => new SubDto(
+                x.MsgId,
+                x.UserId,
+                x.DisplayName,
+                x.DisplayName,
+                x.Channel,
+                OriginEnum.Twitch,
+                false,
+                0,
+                int.Parse(x.MsgParamCumulativeMonths),
+                (TierEnum)Enum.Parse(typeof(TierEnum), x.SubscriptionPlan.ToString()),
+                new MessageDto(
+                    x.Id,
+                    false,
+                    x.Channel,
+                    x.UserId,
+                    x.DisplayName,
+                    x.DisplayName,
+                    x.ColorHex,
+                    null,
+                    x.ResubMessage,
+                    x.EmoteSet,
+                    new List<Domain.Entities.Dtos.Twitch.EmoteSet>(),
+                    x.Badges,
+                    OriginEnum.Twitch,
+                    new List<AuthEnum>() { AuthEnum.Subscriber },
+                    new List<SpecialMessgeEnum>(),
+                    EffectEnum.none,
+                    true,
+                    int.Parse(x.MsgParamCumulativeMonths),
+                    false,
+                    DateTime.UtcNow
+                ),
+                false,
+                DateTime.UtcNow
+            ));
     }
 
-    private List<Domain.Entities.Dtos.Twitch.EmoteSet> MappEmotes(ChatMessage chatMessage)
+    private List<Domain.Entities.Dtos.Twitch.EmoteSet> MappEmotes(TwitchLib.Client.Models.EmoteSet chatMessage)
     {
-        return new(from emote in chatMessage.EmoteSet.Emotes
+        return new(from emote in chatMessage.Emotes
                    select new Domain.Entities.Dtos.Twitch.EmoteSet()
                    {
                        Name = emote.Name,

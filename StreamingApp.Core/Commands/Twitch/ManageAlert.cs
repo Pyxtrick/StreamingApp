@@ -11,6 +11,7 @@ using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
+
 internal class ManageAlert : IManageAlert
 {
     private readonly UnitOfWorkContext _unitOfWork;
@@ -31,6 +32,8 @@ internal class ManageAlert : IManageAlert
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
     {
+        string message = "";
+
         if (messageAlertDto.AlertType == AlertTypeEnum.Bits)
         {
             if (messageAlertDto.Bits >= 200)
@@ -74,19 +77,28 @@ internal class ManageAlert : IManageAlert
                     }
                 }
             }
+
+            message = $"Given {messageAlertDto.Bits} Bits";
         }
         if (messageAlertDto.AlertType == AlertTypeEnum.PointRedeam)
         {
+            message = $"Used {messageAlertDto.PointRediam} Point Redeam";
+
             // TODO: Create Connection with Client APP for VTubeStudio
         }
         if (messageAlertDto.AlertType == AlertTypeEnum.Follow)
         {
-
+            message = $"Fallowed";
         }
+
+        MessageDto chatMessage = new(messageAlertDto.AlertType.ToString(), false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, null, message, messageAlertDto.EmoteReplacedMessage, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        await _clientHub.Clients.All.SendAsync("displayEventMessages", chatMessage);
     }
 
     public async Task ExecuteRaid(RaidDto raidDto)
     {
+        //await _subAlertLoong.Execute(raidDto.UserName, raidDto.Count, 0, 0, true, false);
+
         Console.WriteLine(raidDto.UserName);
 
         ChannelInfo? channelInfo = await _twitchSendRequest.GetChannelInfo(raidDto.UserName, false);//Fix GetChannelInfo to be used with UserName
@@ -100,9 +112,11 @@ internal class ManageAlert : IManageAlert
             message = message.Replace("[User]", raidDto.UserName);
             message = message.Replace("[GameName]", channelInfo.GameName);
             message = message.Replace("[Url]", $"https://twitch.tv/{raidDto.UserName}");
-            _twitchSendRequest.SendAnnouncement(message);
+            //_twitchSendRequest.SendAnnouncement(message);
 
-            MessageDto chatMessage = new(raidDto.UserName, false, "local", "userid", "", "", "#ff6b6b", "", $"{raidDto.UserName} raided with {raidDto.Count} Viewers", null, new(), new(), ChatOriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+            Console.WriteLine($"Raid {message}");
+
+            MessageDto chatMessage = new("raidId", false, "local", "userid", "", "", "#ff6b6b", "", $"{raidDto.UserName} raided with {raidDto.Count} Viewers", null, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
             await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", chatMessage);
         }
     }
@@ -112,6 +126,29 @@ internal class ManageAlert : IManageAlert
         int rotation = new Random().Next(1, 360);
         int saturation = new Random().Next(1, 1000);
 
-        await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true);
+        //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);
+
+        MessageDto chatMessage;
+        string message = "";
+
+        if (subDto.SubLenght > 1)
+        {
+            message = $"Giffted {subDto.GifftedSubCount} {subDto.CurrentTier} Subs";
+        }
+        else
+        {
+            message = $"Subscribed with Tier {subDto.CurrentTier} for {subDto.SubLenght}";
+        }
+
+        if (subDto.ChatMessage != null)
+        {
+            chatMessage = new("sub", false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, subDto.ChatMessage.ColorHex, null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        }
+        else
+        {
+            chatMessage = new("sub", false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, "Hex", null, message, "EmoteReplacedMessage", null, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        }
+
+        await _clientHub.Clients.All.SendAsync("displayEventMessages", chatMessage);
     }
 }

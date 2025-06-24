@@ -7,17 +7,17 @@ public interface ICRUDUsers
 {
     Task<List<UserDto>> GetAll();
 
-    Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth, ChatOriginEnum chatOrigin);
+    Task<User> CreateOne(string twitchUserId, string userName, bool isSub, int subTime, List<AuthEnum> auth, OriginEnum Origin);
 
     Task CombineUser(string twitchUserId, string youtubeUserId);
 
-    Task<bool> UpdateAchievements(string userId, ChatOriginEnum chatOrigin);
+    Task<bool> UpdateAchievements(string userId, OriginEnum Origin);
 
-    Task<bool> UpdateAuth(string userId, List<AuthEnum> auths, ChatOriginEnum chatOrigin);
+    Task<bool> UpdateAuth(string userId, List<AuthEnum> auths, OriginEnum Origin);
 
-    Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime, ChatOriginEnum chatOrigin);
+    Task<bool> UpdateSub(string userId, bool isSub, TierEnum tier, int subTime, OriginEnum Origin);
 
-    Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto, ChatOriginEnum chatOrigin);
+    Task<bool> UpdateBan(string userId, BannedUserDto bannedUserDto, OriginEnum Origin);
 
-    Task<bool> Delete(List<UserDto> commands, ChatOriginEnum chatOrigin);
+    Task<bool> Delete(List<UserDto> commands, OriginEnum Origin);
 }

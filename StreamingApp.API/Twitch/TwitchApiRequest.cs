@@ -135,22 +135,24 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             string userName = e.Subscriber.DisplayName;
             string subscriptionPlan = e.Subscriber.SubscriptionPlan.ToString();
-            int cumulativeMonths = -1;
+            int cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
             string emoteMessage = "";
 
             //await UpdateSub(e.Subscriber, null);
 
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
 
-            //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.Subscriber);
-            SubscriptionDto subscriptionDto = new SubscriptionDto(e.Subscriber.Id, userName, null, false, 0, tier, null);
+            //TODO:
+            SubDto subscriptionDto = _mapper.Map<SubDto>(e.Subscriber);
+
+            SubDto subDto = new SubDto(null, e.Subscriber.Id, userName, e.Subscriber.DisplayName, "channel", OriginEnum.Twitch, false, 0, 0, tier, null, false, DateTime.Now);
 
             try
             {
                 cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
 
                 if (cumulativeMonths == 0)
-                {
+                {   
                     emoteMessage = $"Thank you {userName} for joining us for the first month as an {subscriptionPlan} Sub";
                 }
                 else
@@ -165,7 +167,7 @@ public class TwitchApiRequest : ITwitchApiRequest
                 Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.Subscriber.MsgParamCumulativeMonths}");
             }
 
-            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+            _twitchCallCache.AddMessage(subDto, CallCacheEnum.CachedSubData);
 
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
@@ -180,11 +182,10 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             string userName = e.PrimePaidSubscriber.DisplayName;
             string subscriptionPlan = e.PrimePaidSubscriber.SubscriptionPlan.ToString();
+            int cumulativeMonths = int.Parse(e.PrimePaidSubscriber.MsgParamCumulativeMonths);
             string message = e.PrimePaidSubscriber.ResubMessage;
 
             MessageDto messageDto = _mapper.Map<MessageDto>(e.PrimePaidSubscriber);
-
-            int cumulativeMonths = -1;
 
             string emoteMessage = "";
 
@@ -192,8 +193,9 @@ public class TwitchApiRequest : ITwitchApiRequest
 
             TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
 
-            //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.PrimePaidSubscriber);
-            SubscriptionDto subscriptionDto = new SubscriptionDto(e.PrimePaidSubscriber.Id, userName, null, false, 0, tier, messageDto);
+            SubDto subscriptionDto = _mapper.Map<SubDto>(e.PrimePaidSubscriber);
+
+            SubDto subDto = new SubDto(null, e.PrimePaidSubscriber.Id, userName, e.PrimePaidSubscriber.DisplayName, e.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
 
             try
             {
@@ -215,7 +217,7 @@ public class TwitchApiRequest : ITwitchApiRequest
                 Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
             }
 
-            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+            _twitchCallCache.AddMessage(subDto, CallCacheEnum.CachedSubData);
 
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
@@ -230,7 +232,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         int months = e.ReSubscriber.Months;
         string subscriptionPlan = e.ReSubscriber.SubscriptionPlan.ToString();
         var message = e.ReSubscriber.ResubMessage;
-        int cumulativeMonths = -1;
+        int cumulativeMonths = int.Parse(e.ReSubscriber.MsgParamCumulativeMonths);
 
         string emoteMessage = "";
 
@@ -255,7 +257,10 @@ public class TwitchApiRequest : ITwitchApiRequest
         //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
         //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.ReSubscriber);
 
-        //MessageDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, ChatOriginEnum.Twitch, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
+        SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
+        SubDto subDto = new SubDto(null, e.ReSubscriber.Id, userName, e.ReSubscriber.DisplayName, e.ReSubscriber.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
+
+        //MessageDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, OriginEnum.Twitch, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
 
         MessageDto messageDto = _mapper.Map<MessageDto>(e.ReSubscriber);
         //TODO: SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, null, true, 1, tier, chatDto);
@@ -281,7 +286,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
         }
 
-        //TODO: _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+        //TODO:
+        _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
         // TODO: SaveMessage to Cache
         // TODO: Show emote with Message
@@ -315,21 +321,21 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
-        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, ChatOriginEnum.Twitch, DateTime.Now);
+        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, OriginEnum.Twitch, DateTime.Now);
         
         _twitchCallCache.AddMessage(bannedUser, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
     {
-        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, ChatOriginEnum.Twitch, DateTime.Now);
+        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, OriginEnum.Twitch, DateTime.Now);
         
         _twitchCallCache.AddMessage(userTimeOout, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
     {
-        BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, ChatOriginEnum.Twitch, DateTime.Now);
+        BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, OriginEnum.Twitch, DateTime.Now);
         
         _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }
@@ -366,11 +372,11 @@ public class TwitchApiRequest : ITwitchApiRequest
     }
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
-        //Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
+        Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
     }
     public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
     {
-        //Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
+        Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
     }
     #endregion
 }

@@ -70,7 +70,7 @@ public class ManageMessages : IManageMessages
 
     public async Task ExecuteOne(MessageDto messageDto)
     {
-        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin.ToString().Equals(messageDto.ChatOrigin.ToString())).ExternalUserId == messageDto.UserId);
+        User user = _unitOfWork.User.Include("Ban").Include("Status").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin.ToString().Equals(messageDto.Origin.ToString())).ExternalUserId == messageDto.UserId);
 
         bool isFirstMessage = false;
 
@@ -79,11 +79,11 @@ public class ManageMessages : IManageMessages
             // TODO: make backend check if this is the first message during the stream
             //messageDto.SpecialMessage.Add(SpecialMessgeEnum.FirstStreamMessage);
 
-            isFirstMessage = await _crudUsers.UpdateAchievements(messageDto.UserId, messageDto.ChatOrigin);
+            isFirstMessage = await _crudUsers.UpdateAchievements(messageDto.UserId, messageDto.Origin);
         }
         else
         {
-            user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth, messageDto.ChatOrigin);
+            user = await _crudUsers.CreateOne(messageDto.UserId, messageDto.UserName, messageDto.IsSub, messageDto.SubCount, messageDto.Auth, messageDto.Origin);
         }
 
         if (user.Status.AutoShoutout == true && user.Details.Where(d => d.Origin == OriginEnum.Twitch) != null && isFirstMessage)

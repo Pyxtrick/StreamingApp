@@ -20,7 +20,7 @@ public class FileAchievements : IFileAchievements
     /// <param name="what"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    public async Task Execute(ChatOriginEnum platform, string user, string what, int count, string contence = "Achievements")
+    public async Task Execute(OriginEnum platform, string user, string what, int count, string contence = "Achievements")
     {
         List<string> lines = _manageFile.ReadFile(contence);
 

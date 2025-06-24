@@ -95,7 +95,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="message"></param>
     public void SendChatMessage(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
         if (settings.PauseChatMessages == false)
         {
@@ -113,7 +113,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="replyToId"></param>
     public void SendResplyChatMessage(string message, string replyToId)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
         if (settings.PauseChatMessages == false)
         {
@@ -127,7 +127,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="message"></param>
     public void SendAnnouncement(string message)
     {
-        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == ChatOriginEnum.Twitch);
+        var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
         if (settings.PauseChatMessages == false)
         {
@@ -138,6 +138,7 @@ public class TwitchSendRequest : ITwitchSendRequest
 
     public async Task SendShoutout()
     {
+        //_twitchCache.GetTheTwitchAPI().Helix.
         //Send a Shoutout
     }
 
@@ -145,9 +146,18 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// 
     /// </summary>
     /// <param name="message"></param>
-    public async Task CreateClip(string message)
+    public async Task<StreamHighlight> CreateClip(string message)
     {
         var t = await _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
+
+        StreamHighlight streamHighlight = new StreamHighlight()
+        {
+            HighlightUrl = t.CreatedClips.Last().EditUrl,
+            Description = t.CreatedClips.Last().Id, 
+            HighlighteTime = DateTime.UtcNow,
+        };
+
+        return streamHighlight;
     }
 
     /// <summary>

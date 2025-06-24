@@ -43,17 +43,17 @@ public class ManageCommands : IManageCommands
 
         string commandText = messageDto.Message.Split(' ').ToList()[0].Trim('!');
 
-        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() <= t.Auth);
+        CommandAndResponse? commandAndResponse = _unitOfWork.CommandAndResponse.FirstOrDefault(t => t.Command.Equals(commandText) && t.Active && messageDto.Auth.Min() >= t.Auth);
 
         if (commandAndResponse != null && commandAndResponse.Active == true && messageDto.Auth.First() <= commandAndResponse.Auth)
         {
             if (commandAndResponse.Category == CategoryEnum.Queue)
             {
-                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.ChatOrigin).ComunityDayActive;
+                bool queueIsActive = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageDto.Origin).ComunityDayActive;
 
                 if (queueIsActive)
                 {
-                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.ChatOrigin);
+                    //_queueCommand.Execute(commandAndResponse, messageDto.Message, messageDto.UserName, messageDto.Origin);
                 }
 
                 Console.WriteLine("Command Queue");

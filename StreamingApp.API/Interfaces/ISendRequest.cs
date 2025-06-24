@@ -1,5 +1,6 @@
 ﻿using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 
 namespace StreamingApp.API.Interfaces;
 
@@ -16,6 +17,8 @@ public interface ISendRequest
     bool SetChannelInfo(string? gameId, string? title);
 
     void SendAnnouncement(string message);
+
+    Task<StreamHighlight> CreateClip(string message);
 
     Task DeleteMessage(string messageId);
 

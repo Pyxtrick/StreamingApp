@@ -18,7 +18,7 @@ public class MessageDto(
     string emoteReplacedMessage,
     List<EmoteSet> emotes,
     List<KeyValuePair<string, string>> badges,
-    ChatOriginEnum chatOrigin,
+    OriginEnum origin,
     List<AuthEnum> auth,
     List<SpecialMessgeEnum> specialMessage,
     EffectEnum effect,
@@ -45,7 +45,7 @@ public class MessageDto(
     // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
 
-    public ChatOriginEnum ChatOrigin { get; set; } = chatOrigin;
+    public OriginEnum Origin { get; set; } = origin;
 
     public List<AuthEnum> Auth { get; set; } = auth;
 

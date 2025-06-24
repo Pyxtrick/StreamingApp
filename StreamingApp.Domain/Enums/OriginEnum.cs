@@ -5,4 +5,5 @@ public enum OriginEnum
     Twitch,
     Youtube,
     Discord,
+    Undefined,
 }

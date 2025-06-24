@@ -78,6 +78,14 @@ export class AppSignalRService {
     });
   }
 
+  receiveOnscreenMessage(): Observable<string> {
+    return new Observable<string>((observer) => {
+      this.hubConnection.on('ReceiveOnScreenMessage', (message: string) => {
+        observer.next(message);
+      });
+    });
+  }
+
   //#region Just for Debugging / testing
   receiveMessage(): Observable<string> {
     return new Observable<string>((observer) => {

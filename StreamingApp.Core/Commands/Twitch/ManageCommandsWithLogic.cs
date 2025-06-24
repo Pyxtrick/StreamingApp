@@ -220,7 +220,7 @@ public class ManageCommandsWithLogic : IManageCommandsWithLogic
                 }
                 else
                 {
-                    if (messageDto.ChatOrigin == ChatOriginEnum.Twitch)
+                    if (messageDto.Origin == OriginEnum.Twitch)
                     {
                         _twitchSendRequest.SendChatMessage(response);
                     }

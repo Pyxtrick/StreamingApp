@@ -8,7 +8,7 @@ public class Settings
     public int Id { get; set; }
 
     // Applies settings for specific platform
-    public ChatOriginEnum Origin { get; set; }
+    public OriginEnum Origin { get; set; }
 
     // Changes who is shown in the the "OnScreen" chat
     [Required]

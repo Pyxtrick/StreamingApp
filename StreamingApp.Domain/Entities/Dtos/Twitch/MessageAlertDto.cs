@@ -18,7 +18,7 @@ public class MessageAlertDto(
     int bits,
     List<EmoteSet> emotes,
     List<KeyValuePair<string, string>> badges,
-    ChatOriginEnum chatOrigin,
+    OriginEnum origin,
     AlertTypeEnum alertType,
     List<AuthEnum> auth,
     bool isSub,
@@ -43,7 +43,7 @@ public class MessageAlertDto(
     // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
 
-    public ChatOriginEnum ChatOrigin { get; set; } = chatOrigin;
+    public OriginEnum origin { get; set; } = origin;
 
     public AlertTypeEnum AlertType { get; set; } = alertType;
 

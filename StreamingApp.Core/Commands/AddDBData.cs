@@ -202,7 +202,7 @@ public class AddDBData : IAddDBData
         {
             List<Settings> settingsList = new List<Settings>
             {
-                new Settings() { Origin = ChatOriginEnum.Twitch, AllChat = AuthEnum.Undefined, MuteAllerts = false, ComunityDayActive = false, Delay = "*/10 * * * *", AllertDelayS = 2, TimeOutSeconds = 60, TTSSpamAmmount = 5}
+                new Settings() { Origin = OriginEnum.Twitch, AllChat = AuthEnum.Undefined, MuteAllerts = false, ComunityDayActive = false, Delay = "*/10 * * * *", AllertDelayS = 2, TimeOutSeconds = 60, TTSSpamAmmount = 5}
             };
 
             await _unitOfWork.AddRangeAsync(settingsList);

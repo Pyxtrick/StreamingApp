@@ -6,7 +6,7 @@ public class SettingsDto
 {
     public int Id { get; set; }
 
-    public ChatOriginEnum Origin { get; set; }
+    public OriginEnum Origin { get; set; }
 
     public AuthEnum AllChat { get; set; }
 

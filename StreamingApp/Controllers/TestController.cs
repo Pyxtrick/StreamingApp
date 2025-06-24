@@ -29,7 +29,7 @@ public class TestController : ControllerBase
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "streamer", "Streamelements_Test_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", "#ff6b6b", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
+            "streamer", "Streamelements_Test_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", "#ff6b6b", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -48,7 +48,7 @@ public class TestController : ControllerBase
         Console.WriteLine($"messageId {t}");
 
         MessageDto chatMessage = new("Id", false, "local", "userid",
-            "streamer", "Streamer", "#ff6b6b", "", " tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, ChatOriginEnum.Twitch,
+            "streamer", "Streamer", "#ff6b6b", "", " tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -61,7 +61,7 @@ public class TestController : ControllerBase
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
         MessageDto message = new("1", false, "testuser", "TestUser", "1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") },
-            ChatOriginEnum.Twitch, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
+            OriginEnum.Twitch, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }
@@ -84,7 +84,7 @@ public class TestController : ControllerBase
     [HttpDelete("DeleteMessage")]
     public async void DeleteMessage([FromServices] IHubContext<ChatHub> clientHub, string messageId)
     {
-        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, ChatOriginEnum.Twitch, DateTime.UtcNow);
+        BannedUserDto bannedUser = new("userId", messageId, "userName", "message", "Reson", BannedTargetEnum.Message, false, OriginEnum.Twitch, DateTime.UtcNow);
 
         await clientHub.Clients.All.SendAsync("ReceiveBanned", bannedUser);
     }
@@ -119,7 +119,7 @@ public class TestController : ControllerBase
 
         foreach (var k in data)
         {
-            var alert = await subAlertLoong.Execute(k.Key, k.Value[0], k.Value[1], k.Value[2], true);
+            var alert = await subAlertLoong.Execute(k.Key, k.Value[0], k.Value[1], k.Value[2], true, false);
 
             html += $"<div>{alert.Html}</div>";
         }

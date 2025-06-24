@@ -53,11 +53,9 @@ public class ManageScheduler : IManageScheduler
             var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
             var message = target.CommandAndResponse.Response;
-            var twitchMessage = message.Replace("[platform]", $"YouTube: {stream.VodUrl}");
-            var youtubeMessage = message.Replace("[platform]", "Twitch: https://www.twitch.tv/pyxtrick Where i am Currently Affiliate Pushing");
 
-            _twitchSendRequest.SendChatMessage(twitchMessage);
-            _youTubeSendRequest.SendChatMessage(youtubeMessage);
+            _twitchSendRequest.SendChatMessage(message);
+            _youTubeSendRequest.SendChatMessage(message);
         }
     }
 }

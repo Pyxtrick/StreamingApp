@@ -24,7 +24,7 @@ public class QueueCommand : IQueueCommand
         _configuration = configuration;
     }
 
-    public void Execute(CommandAndResponse commandAndResponse, string message, string userName, ChatOriginEnum origin)
+    public void Execute(CommandAndResponse commandAndResponse, string message, string userName, OriginEnum origin)
     {
         int ammount = int.Parse(message.Split(" ")[1]);
 
@@ -61,7 +61,7 @@ public class QueueCommand : IQueueCommand
             case "cjoin": // able to join the queue once
                 if (settings.ComunityDayActive)
                 {
-                    UserQueueDto userQueueDto = new(userName, true, 0, ChatOriginEnum.Twitch);
+                    UserQueueDto userQueueDto = new(userName, true, 0, OriginEnum.Twitch);
                     var possition = _queueCache.AddUserToQueue(userQueueDto);
                     // @User Has have Joined the Queue on Possition X
                     // Even if the user has allready joined previously
@@ -158,14 +158,14 @@ public class QueueCommand : IQueueCommand
         }
     }
 
-    private void SendMessage(string response, ChatOriginEnum origin)
+    private void SendMessage(string response, OriginEnum origin)
     {
         switch (origin)
         { 
-            case ChatOriginEnum.Twitch:
+            case OriginEnum.Twitch:
                 _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], response);
                 break;
-            case ChatOriginEnum.Youtube:
+            case OriginEnum.Youtube:
                 break;
         }
     }

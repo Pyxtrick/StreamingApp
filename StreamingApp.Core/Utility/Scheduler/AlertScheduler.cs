@@ -7,6 +7,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
@@ -58,7 +59,7 @@ public class AlertScheduler : BackgroundService
                 List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
                 List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
 
-                if (alertObject.IsNullOrEmpty() != false)
+                if (alertObject.IsNullOrEmpty() == false)
                 {
                     try
                     {
@@ -66,6 +67,7 @@ public class AlertScheduler : BackgroundService
 
                         foreach (var alert in alerts)
                         {
+                            await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteBit(alert);
                             await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
                         }
                     }
@@ -75,7 +77,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (subObject.IsNullOrEmpty() != false)
+                if (subObject.IsNullOrEmpty() == false)
                 {
                     try
                     {
@@ -83,6 +85,7 @@ public class AlertScheduler : BackgroundService
 
                         foreach (var sub in subs)
                         {
+                            await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteSub(sub);
                             await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
                         }
                     }
@@ -92,7 +95,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (raidObject.IsNullOrEmpty() != false)
+                if (raidObject.IsNullOrEmpty() == false)
                 {
                     try
                     {

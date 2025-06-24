@@ -62,7 +62,7 @@ public class ManageTextToSpeach : IManageTextToSpeach
 
     private string ShortenMessage(string message)
     {
-        var ttsLenghtAmmount = _unitOfWork.Settings.Where(s => s.Origin == ChatOriginEnum.Twitch).FirstOrDefault().TTSLenghtAmmount;
+        var ttsLenghtAmmount = _unitOfWork.Settings.Where(s => s.Origin == OriginEnum.Twitch).FirstOrDefault().TTSLenghtAmmount;
 
         string newMessage = "";
         var split = message.Split(' ');
@@ -81,7 +81,7 @@ public class ManageTextToSpeach : IManageTextToSpeach
     private string RemoveDuplicateText(string message)
     {
         string newMessage = "";
-        var ttsSpamAmmount = _unitOfWork.Settings.Where(s => s.Origin == ChatOriginEnum.Twitch).FirstOrDefault().TTSSpamAmmount;
+        var ttsSpamAmmount = _unitOfWork.Settings.Where(s => s.Origin == OriginEnum.Twitch).FirstOrDefault().TTSSpamAmmount;
 
         List<KeyValuePair<string, int>> wordCount = new();
 

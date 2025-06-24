@@ -74,12 +74,12 @@ public class SendSignalRMessage : ISendSignalRMessage
             if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(messageDto.Message).Success == false
                 && messageDto.Channel.Equals(_configuration["Twitch:Channel"], StringComparison.InvariantCultureIgnoreCase))
             {
-                var settings = _unitOfWork.Settings.First(s => s.Origin == messageDto.ChatOrigin);
+                var settings = _unitOfWork.Settings.First(s => s.Origin == messageDto.Origin);
 
                 // Limit OnScreenChatters using settings.AllChat without limiting the Twitch Chat
                 if (settings != null && messageDto.Auth.Min() <= settings.AllChat)
                 {
-                    // TODO: Change Send Location when messageDto.ChatOrigin is not Twitch
+                    // TODO: Change Send Location when messageDto.Origin is not Twitch
                     await _hubContext.Clients.All.SendAsync("ReceiveOnScreenChatMessage", messageDto);
                 }
             }

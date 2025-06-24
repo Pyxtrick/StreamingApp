@@ -1212,6 +1212,118 @@ export class StreamerBotContollerClient {
         }
         return _observableOf(null as any);
     }
+
+    ads(adLength: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/StreamerBotContoller/Ads?";
+        if (adLength === null)
+            throw new Error("The parameter 'adLength' cannot be null.");
+        else if (adLength !== undefined)
+            url_ += "adLength=" + encodeURIComponent("" + adLength) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAds(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAds(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processAds(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    hypeTrain(level: number | undefined, persentage: number | undefined, hypeTrainStage: string | undefined, bitsCount: number | undefined, subsCount: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/StreamerBotContoller/HypeTrain?";
+        if (level === null)
+            throw new Error("The parameter 'level' cannot be null.");
+        else if (level !== undefined)
+            url_ += "level=" + encodeURIComponent("" + level) + "&";
+        if (persentage === null)
+            throw new Error("The parameter 'persentage' cannot be null.");
+        else if (persentage !== undefined)
+            url_ += "persentage=" + encodeURIComponent("" + persentage) + "&";
+        if (hypeTrainStage === null)
+            throw new Error("The parameter 'hypeTrainStage' cannot be null.");
+        else if (hypeTrainStage !== undefined)
+            url_ += "hypeTrainStage=" + encodeURIComponent("" + hypeTrainStage) + "&";
+        if (bitsCount === null)
+            throw new Error("The parameter 'bitsCount' cannot be null.");
+        else if (bitsCount !== undefined)
+            url_ += "bitsCount=" + encodeURIComponent("" + bitsCount) + "&";
+        if (subsCount === null)
+            throw new Error("The parameter 'subsCount' cannot be null.");
+        else if (subsCount !== undefined)
+            url_ += "subsCount=" + encodeURIComponent("" + subsCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHypeTrain(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHypeTrain(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processHypeTrain(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable({
@@ -2788,7 +2900,7 @@ export interface ISettingsRespose {
 
 export class SettingsDto implements ISettingsDto {
     id!: number;
-    origin!: ChatOriginEnum;
+    origin!: OriginEnum;
     allChat!: AuthEnum;
     muteAllerts!: boolean;
     muteChatMessages!: boolean;
@@ -2847,7 +2959,7 @@ export class SettingsDto implements ISettingsDto {
 
 export interface ISettingsDto {
     id: number;
-    origin: ChatOriginEnum;
+    origin: OriginEnum;
     allChat: AuthEnum;
     muteAllerts: boolean;
     muteChatMessages: boolean;
@@ -2858,10 +2970,11 @@ export interface ISettingsDto {
     spamAmmount: number;
 }
 
-export enum ChatOriginEnum {
+export enum OriginEnum {
     Twitch = 0,
     Youtube = 1,
-    Undefined = 2,
+    Discord = 2,
+    Undefined = 3,
 }
 
 export class SpecialWordRespose implements ISpecialWordRespose {
@@ -3489,7 +3602,7 @@ export class MessageDto extends TwitchBase implements IMessageDto {
     emoteReplacedMessage!: string;
     emotes!: EmoteSet[];
     badges?: KeyValuePairOfStringAndString[] | null;
-    chatOrigin!: ChatOriginEnum;
+    origin!: OriginEnum;
     auth!: AuthEnum[];
     specialMessage!: SpecialMessgeEnum[];
     effect!: EffectEnum;
@@ -3531,7 +3644,7 @@ export class MessageDto extends TwitchBase implements IMessageDto {
             else {
                 this.badges = <any>null;
             }
-            this.chatOrigin = _data["chatOrigin"] !== undefined ? _data["chatOrigin"] : <any>null;
+            this.origin = _data["origin"] !== undefined ? _data["origin"] : <any>null;
             if (Array.isArray(_data["auth"])) {
                 this.auth = [] as any;
                 for (let item of _data["auth"])
@@ -3580,7 +3693,7 @@ export class MessageDto extends TwitchBase implements IMessageDto {
             for (let item of this.badges)
                 data["badges"].push(item.toJSON());
         }
-        data["chatOrigin"] = this.chatOrigin !== undefined ? this.chatOrigin : <any>null;
+        data["origin"] = this.origin !== undefined ? this.origin : <any>null;
         if (Array.isArray(this.auth)) {
             data["auth"] = [];
             for (let item of this.auth)
@@ -3609,7 +3722,7 @@ export interface IMessageDto extends ITwitchBase {
     emoteReplacedMessage: string;
     emotes: EmoteSet[];
     badges?: KeyValuePairOfStringAndString[] | null;
-    chatOrigin: ChatOriginEnum;
+    origin: OriginEnum;
     auth: AuthEnum[];
     specialMessage: SpecialMessgeEnum[];
     effect: EffectEnum;
@@ -3727,8 +3840,11 @@ export enum EffectEnum {
 }
 
 export class SubDto extends TwitchBase implements ISubDto {
+    channel!: string;
+    origin!: OriginEnum;
     isGifftedSub!: boolean;
     gifftedSubCount!: number;
+    subLenght!: number;
     currentTier!: TierEnum;
     chatMessage?: MessageDto | null;
     isUsed!: boolean;
@@ -3740,8 +3856,11 @@ export class SubDto extends TwitchBase implements ISubDto {
     override init(_data?: any) {
         super.init(_data);
         if (_data) {
+            this.channel = _data["channel"] !== undefined ? _data["channel"] : <any>null;
+            this.origin = _data["origin"] !== undefined ? _data["origin"] : <any>null;
             this.isGifftedSub = _data["isGifftedSub"] !== undefined ? _data["isGifftedSub"] : <any>null;
             this.gifftedSubCount = _data["gifftedSubCount"] !== undefined ? _data["gifftedSubCount"] : <any>null;
+            this.subLenght = _data["subLenght"] !== undefined ? _data["subLenght"] : <any>null;
             this.currentTier = _data["currentTier"] !== undefined ? _data["currentTier"] : <any>null;
             this.chatMessage = _data["chatMessage"] ? MessageDto.fromJS(_data["chatMessage"]) : <any>null;
             this.isUsed = _data["isUsed"] !== undefined ? _data["isUsed"] : <any>null;
@@ -3757,8 +3876,11 @@ export class SubDto extends TwitchBase implements ISubDto {
 
     override toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["channel"] = this.channel !== undefined ? this.channel : <any>null;
+        data["origin"] = this.origin !== undefined ? this.origin : <any>null;
         data["isGifftedSub"] = this.isGifftedSub !== undefined ? this.isGifftedSub : <any>null;
         data["gifftedSubCount"] = this.gifftedSubCount !== undefined ? this.gifftedSubCount : <any>null;
+        data["subLenght"] = this.subLenght !== undefined ? this.subLenght : <any>null;
         data["currentTier"] = this.currentTier !== undefined ? this.currentTier : <any>null;
         data["chatMessage"] = this.chatMessage ? this.chatMessage.toJSON() : <any>null;
         data["isUsed"] = this.isUsed !== undefined ? this.isUsed : <any>null;
@@ -3768,8 +3890,11 @@ export class SubDto extends TwitchBase implements ISubDto {
 }
 
 export interface ISubDto extends ITwitchBase {
+    channel: string;
+    origin: OriginEnum;
     isGifftedSub: boolean;
     gifftedSubCount: number;
+    subLenght: number;
     currentTier: TierEnum;
     chatMessage?: MessageDto | null;
     isUsed: boolean;
