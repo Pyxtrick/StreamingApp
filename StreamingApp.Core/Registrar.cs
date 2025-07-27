@@ -57,6 +57,7 @@ public static class Registrar
         //services.AddScoped<IManageSub,  ManageSub>();
         //services.AddScoped<IManageSubathon,  ManageSubathon>();
         services.AddScoped<IQueueCommand, QueueCommand>();
+        services.AddScoped<IPointRedeam, PointRedeam>();
 
         //Commands
         services.AddScoped<IStartTwitchApi, StartInitialise>();
@@ -70,6 +71,7 @@ public static class Registrar
         //Alert
         services.AddScoped<IHighlightMessage, HighlightMessage>();
         services.AddScoped<ISubAlertLoong, SubAlertLoong>();
+        services.AddScoped<IMovingText, MovingText>();
 
         //Logic 
         services.AddScoped<IMessageCheck, MessageCheck>();
