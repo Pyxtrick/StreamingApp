@@ -128,4 +128,10 @@ public class TestController : ControllerBase
 
         await clientHub.Clients.All.SendAsync("ReceiveAlert", finalAlert);
     }
+
+    [HttpGet("TextAlert")]
+    public async Task TextAlert([FromServices] IMovingText movingText, int adLength, string text)
+    {
+        await movingText.ExecuteAlert(adLength, text);
+    }
 }

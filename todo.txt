@@ -1,6 +1,8 @@
 Backend
 	Send chat message to Web to
 
+	Check for Deleted Messages and send a delete request to Frontend Onscreen Chat
+
 Fronted
 	Update Data Display
 	Add create and edit Data
@@ -10,12 +12,10 @@ Fronted
 		Model
 			Toggle
 		Item
-	
+
 
 
 // Frontnend
-TODO: 2 Show specific Chat Message on Screen
-
 TODO: 1 Show statistics in Frontend
 
 TODO: 1 Display Stream statistics | Credits for the end of the stream
@@ -27,8 +27,17 @@ TODO: 2 Ideas Wheel / Randomiser (Data from Backend / or temporary in frontend) 
 TODO: 2 Skip allerts
 TODO: 2 stop allerts from playing
 TODO: 2 mute allerts
-TODO: 2 delay allerts that they are not overlayed
+TODO: 2 delay allerts that they are not overlayed => in progress
 TODO: 2 Speed up TTS / allerts when to long
+
+TODO: 3 add Effects for fun effects
+	rainbow
+	reverse letters / words
+	randomice letters / words
+	rotate
+	bounce up and down
+	
+	TV Logo emote bounce / use entire screen
 
 TODO: 5 authorice users in frontend using twitch or youtube auth
 TODO: 5 have an frontend for users for polls / votes / Comunity day queue / forms (ticket / "mod application")
@@ -47,7 +56,7 @@ TODO: place things on screen at specific locations with x and y axies
 
 	TODO: 4 use chat to run quick effects linke run the message thrue translate or tts or open it in a new window for a question
 
-	TODO: 4 Horizontal chat For Stream That it can switched betwen vertical and Horizontal
+	TODO: 4 Horizontal chat For Stream That it can switched betwen vertical and Horizontal => WIP
 
 
 // Client
@@ -61,6 +70,8 @@ TOOD: 5 PressKeys
 
 
 // Backend
+TODO: 1 able to disable / filter duplicate messages
+
 TODO: 1 Save every Raid User and Number (for now only in a file / Later maybe in the DB)
 
 TOOD Test: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
@@ -82,9 +93,6 @@ TODO: 1 every x minutes: https://crontab.cronhub.io/
 TODO: 1 Spam protection for Commands / use Cache for checking when it was last used
 TODO: 2 Same for Bot Spam with fallower
 TODO: 2 Able to disable it for a x time or reset some data / Cache
-
-TODO: 2 Ads check (for myself and on screen display)
-	Use servy_bot or Streamer.bot for this
 
 TODO: 2 clip creates twitch clip of the last x seconds
 TODO: 2 clip2 creates a stream time stamp in a file for editor / maybe even obs timestamp

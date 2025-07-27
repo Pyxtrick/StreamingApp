@@ -2,6 +2,7 @@
 using StreamingApp.API.StreamerBot;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Queries.Alerts;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 
@@ -24,6 +25,7 @@ public class StreamerBotContoller : ControllerBase
         //TODO: send to YouTube as well
     }
 
+    //http://localhost:7033/api/StreamerBotContoller/UpdateCategory?category=%gameName%
     [HttpGet("UpdateCategory")]
     public async Task StreamCategory([FromServices] IManageStream updateStream, string category)
     {
@@ -44,24 +46,33 @@ public class StreamerBotContoller : ControllerBase
         await manageMessages.ExecuteOne(messsage);
     }
 
+    //http://localhost:7033/api/StreamerBotContoller/Ads?adLength=%adLength%
     [HttpGet("Ads")]
-    public async Task Ads(int adLength)
+    public async Task Ads([FromServices] IMovingText movingText, int adLength)
     {
-        Console.WriteLine(adLength.ToString());
+        await movingText.ExecuteAlert(adLength, "Stream is Paused for Ads");
     }
 
+    //http://localhost:7033/api/StreamerBotContoller/PointRedeam?userName=%userName%&userId=%userId%&rewardid=%rewardId%&rewardName=%rewardName%&rewardPrompt=%rewardPrompt%
+    [HttpGet("PointRedeam")]
+    public async Task PointRedeam([FromServices] IPointRedeam pointRedeam, string userName, string userId, string rewardid, string rewardName, string? rewardPrompt)
+    {
+        await pointRedeam.Execute(userName, userId, rewardid, rewardName, rewardPrompt);
+    }
+
+    //http://localhost:7033/api/StreamerBotContoller/HypeTrain?level=%level%&persentage=%percentDecimal%&hypeTrainStage=%triggerName%&isGoldenKappaTrain=%isGoldenKappaTrain%
     [HttpGet("HypeTrain")]
-    public async Task HypeTrain(int level, float persentage, string hypeTrainStage, int bitsCount, int subsCount)
+    public async Task HypeTrain(int level, float persentage, string hypeTrainStage, bool isGoldenKappaTrain)
     {
         switch (hypeTrainStage)
         {
-            case "HypeTrain Start": // Start
+            case "Hype Train Start":
                 break;
-            case "HypeTrain": // Update
+            case "Hype Train Update":
                 break;
-            case "HypeTrain Level": // Level Up
+            case "Hype Train Level Up":
                 break;
-            case "HypeTrain End": // End
+            case "Hype Train End":
                 break;
         }
     }

@@ -1261,7 +1261,69 @@ export class StreamerBotContollerClient {
         return _observableOf(null as any);
     }
 
-    hypeTrain(level: number | undefined, persentage: number | undefined, hypeTrainStage: string | undefined, bitsCount: number | undefined, subsCount: number | undefined): Observable<void> {
+    pointRedeam(userName: string | undefined, userId: string | undefined, rewardid: string | undefined, rewardName: string | undefined, rewardPrompt: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/StreamerBotContoller/PointRedeam?";
+        if (userName === null)
+            throw new Error("The parameter 'userName' cannot be null.");
+        else if (userName !== undefined)
+            url_ += "userName=" + encodeURIComponent("" + userName) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (rewardid === null)
+            throw new Error("The parameter 'rewardid' cannot be null.");
+        else if (rewardid !== undefined)
+            url_ += "rewardid=" + encodeURIComponent("" + rewardid) + "&";
+        if (rewardName === null)
+            throw new Error("The parameter 'rewardName' cannot be null.");
+        else if (rewardName !== undefined)
+            url_ += "rewardName=" + encodeURIComponent("" + rewardName) + "&";
+        if (rewardPrompt !== undefined && rewardPrompt !== null)
+            url_ += "rewardPrompt=" + encodeURIComponent("" + rewardPrompt) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPointRedeam(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPointRedeam(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processPointRedeam(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    hypeTrain(level: number | undefined, persentage: number | undefined, hypeTrainStage: string | undefined, isGoldenKappaTrain: boolean | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/StreamerBotContoller/HypeTrain?";
         if (level === null)
             throw new Error("The parameter 'level' cannot be null.");
@@ -1275,14 +1337,10 @@ export class StreamerBotContollerClient {
             throw new Error("The parameter 'hypeTrainStage' cannot be null.");
         else if (hypeTrainStage !== undefined)
             url_ += "hypeTrainStage=" + encodeURIComponent("" + hypeTrainStage) + "&";
-        if (bitsCount === null)
-            throw new Error("The parameter 'bitsCount' cannot be null.");
-        else if (bitsCount !== undefined)
-            url_ += "bitsCount=" + encodeURIComponent("" + bitsCount) + "&";
-        if (subsCount === null)
-            throw new Error("The parameter 'subsCount' cannot be null.");
-        else if (subsCount !== undefined)
-            url_ += "subsCount=" + encodeURIComponent("" + subsCount) + "&";
+        if (isGoldenKappaTrain === null)
+            throw new Error("The parameter 'isGoldenKappaTrain' cannot be null.");
+        else if (isGoldenKappaTrain !== undefined)
+            url_ += "isGoldenKappaTrain=" + encodeURIComponent("" + isGoldenKappaTrain) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1681,6 +1739,58 @@ export class TestClient {
     }
 
     protected processGetStreamAllert(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    textAlert(adLength: number | undefined, text: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test/TextAlert?";
+        if (adLength === null)
+            throw new Error("The parameter 'adLength' cannot be null.");
+        else if (adLength !== undefined)
+            url_ += "adLength=" + encodeURIComponent("" + adLength) + "&";
+        if (text === null)
+            throw new Error("The parameter 'text' cannot be null.");
+        else if (text !== undefined)
+            url_ += "text=" + encodeURIComponent("" + text) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTextAlert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTextAlert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTextAlert(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
