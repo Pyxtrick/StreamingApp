@@ -14,4 +14,5 @@ public enum TriggerCondition
     Follow,
 
     Schedule,
+    Redeam,
 }

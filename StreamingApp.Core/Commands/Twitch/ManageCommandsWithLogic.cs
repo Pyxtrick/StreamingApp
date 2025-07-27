@@ -206,7 +206,7 @@ public class ManageCommandsWithLogic : IManageCommandsWithLogic
                 }
                 else if (splitMessage[0].Equals("!updateEmotes"))
                 {
-                    await _emotesApiRequest.GetTVEmoteSet();
+                    await _emotesApiRequest.GetTVEmoteSet(null);
 
                     response = "Emotes have been updated";
                 }

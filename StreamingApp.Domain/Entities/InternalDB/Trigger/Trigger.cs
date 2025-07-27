@@ -7,6 +7,8 @@ public class Trigger : EntityBase
 {
     public int Id { get; set; }
 
+    public string Description { get; set; }
+
     public TriggerCondition TriggerCondition { get; set; }
 
     public int Ammount { get; set; }

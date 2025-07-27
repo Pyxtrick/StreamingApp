@@ -22,12 +22,15 @@ internal class ManageAlert : IManageAlert
 
     private readonly IHubContext<ChatHub> _clientHub;
 
-    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
+    private readonly IMovingText _movingText;
+
+    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub, IMovingText movingText)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
         _subAlertLoong = subAlertLoong;
         _clientHub = clientHub;
+        _movingText = movingText;
     }
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
@@ -97,6 +100,7 @@ internal class ManageAlert : IManageAlert
 
     public async Task ExecuteRaid(RaidDto raidDto)
     {
+        //TODO: add Raider to DB 
         //await _subAlertLoong.Execute(raidDto.UserName, raidDto.Count, 0, 0, true, false);
 
         Console.WriteLine(raidDto.UserName);
@@ -112,13 +116,23 @@ internal class ManageAlert : IManageAlert
             message = message.Replace("[User]", raidDto.UserName);
             message = message.Replace("[GameName]", channelInfo.GameName);
             message = message.Replace("[Url]", $"https://twitch.tv/{raidDto.UserName}");
-            //_twitchSendRequest.SendAnnouncement(message);
+            _twitchSendRequest.SendAnnouncement(message);
 
             Console.WriteLine($"Raid {message}");
-
-            MessageDto chatMessage = new("raidId", false, "local", "userid", "", "", "#ff6b6b", "", $"{raidDto.UserName} raided with {raidDto.Count} Viewers", null, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
-            await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", chatMessage);
         }
+
+        string raidMessage = $"{raidDto.UserName} raided with {raidDto.Count} Viewers";
+
+        if (raidDto.UserName.Equals("tiny_karo"))
+        {
+            raidMessage = raidMessage.Replace("Viewers", "Raccoons");
+        }
+
+        Console.WriteLine(raidMessage);
+
+        /**MessageDto chatMessage = new("raidId", false, "local", "userid", "", "", "#ff6b6b", "", raidMessage, null, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", chatMessage);**/
+        await _movingText.ExecuteAlert(30, raidMessage);
     }
 
     public async Task ExecuteSub(SubDto subDto)
