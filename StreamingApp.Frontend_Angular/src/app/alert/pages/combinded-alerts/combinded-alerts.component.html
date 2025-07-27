@@ -1,0 +1,18 @@
+<div class="fullscreen">
+  <app-fullscreen [htmldata]="htmldata" [useSignalR]="false"></app-fullscreen>
+  <!--<div [innerHTML]="htmldata"></div>-->
+</div>
+<div class="highlight-message">
+  <app-highlight-message
+    [displayChatMessage]="displayChatMessage"
+    [useSignalR]="false"
+  ></app-highlight-message>
+  <!--<div matListItemTitle [innerHTML]="displayChatMessage?.SaveName"></div>
+  <div matListItemLine [innerHTML]="displayChatMessage?.SaveReply"></div>
+  <div matListItemLine [innerHTML]="displayChatMessage?.SaveMessage"></div>
+  <div matListItemLine [innerHTML]="displayChatMessage?.Addon"></div>-->
+</div>
+<div class="text-message">
+  <app-text-message [message]="message" [useSignalR]="false"></app-text-message>
+  <!--<div matListItemLine [innerHTML]="message"></div>-->
+</div>

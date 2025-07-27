@@ -1,0 +1,25 @@
+<div class="alerts">
+  <div class="fullscreen">
+    <app-fullscreen [htmldata]="htmldata" [useSignalR]="false"></app-fullscreen>
+  </div>
+  <div class="highlight-message">
+    <app-highlight-message
+      [displayChatMessage]="displayChatMessage"
+      [useSignalR]="false"
+    ></app-highlight-message>
+  </div>
+  <div class="text-message">
+    <app-text-message
+      [message]="message"
+      [useSignalR]="false"
+    ></app-text-message>
+  </div>
+</div>
+<div class="chats">
+  <!--<div *ngIf="isHorizontalChat; else other_content">
+    <app-on-screen-chat-horizontal></app-on-screen-chat-horizontal>
+  </div>
+  <div #other_content>
+    <app-on-screen-chat></app-on-screen-chat>
+  </div>-->
+</div>

@@ -1,0 +1,50 @@
+.cols-link {
+  visibility: hidden !important;
+  height: 0px;
+}
+
+.marquee {
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  color: white;
+  height: 100px;
+}
+.marquee span {
+  display: inline-block;
+  font-size: 20px;
+  position: relative;
+  left: 100%;
+  animation: marquee 10s linear infinite;
+}
+
+.marquee span:nth-child(1) {
+  animation-delay: 0s;
+}
+.marquee span:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.marquee span:nth-child(3) {
+  animation-delay: 1s;
+}
+.marquee span:nth-child(4) {
+  animation-delay: 1.5s;
+}
+.marquee span:nth-child(5) {
+  animation-delay: 2s;
+}
+
+.marquee span {
+  top: 40px;
+  font-size: 100px;
+}
+
+@keyframes marquee {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -55%;
+  }
+}

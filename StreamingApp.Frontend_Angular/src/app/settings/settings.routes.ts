@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 import { SettingsComponent } from './pages/settings/settings.component';
 
-export const CHAT_ROUTES: Route[] = [
+export const SETTINGS_ROUTES: Route[] = [
   {
     path: '',
     component: SettingsComponent,

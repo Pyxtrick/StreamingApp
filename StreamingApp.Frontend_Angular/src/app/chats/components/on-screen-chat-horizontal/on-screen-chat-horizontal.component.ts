@@ -18,7 +18,7 @@ import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from '../../models/DisplayChat';
 
 @Component({
-  selector: 'app-on-screen-chat',
+  selector: 'app-on-screen-chat-horizontal',
   standalone: true,
   imports: [MatListModule, MatTooltipModule],
   templateUrl: './on-screen-chat-horizontal.component.html',

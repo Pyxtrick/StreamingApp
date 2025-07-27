@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { ConvertMessage } from 'src/app/chats/logic/convertMessage';
@@ -19,24 +25,27 @@ export class HighlightMessageComponent implements OnInit, OnDestroy {
     private signalRService: AppSignalRService
   ) {}
 
-  displayChatMessage: DisplayChat | undefined;
+  @Input() displayChatMessage: DisplayChat | undefined;
+  @Input() useSignalR = true;
 
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.signalRService.startConnection().subscribe(() => {
-      this.signalRService.receiveHighlightMessage().subscribe((message) => {
-        this.displayChatMessage = ConvertMessage.convertMessage(
-          this._sanitizer,
-          message,
-          true
-        );
+    if (this.useSignalR) {
+      this.signalRService.startConnection().subscribe(() => {
+        this.signalRService.receiveHighlightMessage().subscribe((message) => {
+          this.displayChatMessage = ConvertMessage.convertMessage(
+            this._sanitizer,
+            message,
+            true
+          );
 
-        this.subscription = interval(10 * 1000).subscribe(() =>
-          this.removeElement()
-        );
+          this.subscription = interval(10 * 1000).subscribe(() =>
+            this.removeElement()
+          );
+        });
       });
-    });
+    }
   }
 
   private removeElement() {

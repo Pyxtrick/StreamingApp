@@ -24,13 +24,19 @@ export const routes: Routes = [
     path: 'settings',
     providers: [provideState(settingsFeature), provideEffects(SettingsEffects)],
     loadChildren: () =>
-      import('./settings/settings.routes').then((m) => m.CHAT_ROUTES),
+      import('./settings/settings.routes').then((m) => m.SETTINGS_ROUTES),
   },
   {
     // lasy loading (gets sites when changing to path)
     path: 'alert',
     loadChildren: () =>
-      import('./alert/alert.routes').then((m) => m.CHAT_ROUTES),
+      import('./alert/alert.routes').then((m) => m.ALERT_ROUTES),
+  },
+  {
+    // lasy loading (gets sites when changing to path)
+    path: 'main',
+    //providers: [provideState(chatsFeature), provideEffects(ChatsEffects)],
+    loadChildren: () => import('./main/main.routes').then((m) => m.MAIN_ROUTES),
   },
   /**{
     // not lasy loading (loads all paths form the beginning)

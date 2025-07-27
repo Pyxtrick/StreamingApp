@@ -78,10 +78,10 @@ export class AppSignalRService {
     });
   }
 
-  receiveOnscreenMessage(): Observable<string> {
-    return new Observable<string>((observer) => {
-      this.hubConnection.on('ReceiveOnScreenMessage', (message: string) => {
-        observer.next(message);
+  receiveOnscreenMessage(): Observable<AlertDto> {
+    return new Observable<AlertDto>((observer) => {
+      this.hubConnection.on('ReceiveOnScreenMessage', (alert: AlertDto) => {
+        observer.next(alert);
       });
     });
   }

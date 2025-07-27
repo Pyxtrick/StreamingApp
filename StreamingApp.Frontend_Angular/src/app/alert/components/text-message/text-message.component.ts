@@ -1,5 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
@@ -9,6 +15,7 @@ import { AppSignalRService } from 'src/app/services/chat-signalr.services';
   imports: [],
   templateUrl: './text-message.component.html',
   styleUrl: './text-message.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class TextMessageComponent implements OnInit, OnDestroy {
   constructor(
@@ -16,20 +23,25 @@ export class TextMessageComponent implements OnInit, OnDestroy {
     private signalRService: AppSignalRService
   ) {}
 
-  message: string | undefined;
+  @Input() message: SafeHtml | undefined;
+  @Input() useSignalR = true;
 
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.signalRService.startConnection().subscribe(() => {
-      this.signalRService.receiveOnscreenMessage().subscribe((message) => {
-        this.message = message;
+    if (this.useSignalR) {
+      this.signalRService.startConnection().subscribe(() => {
+        this.signalRService.receiveOnscreenMessage().subscribe((message) => {
+          this.message = this._sanitizer.bypassSecurityTrustHtml(message.html);
 
-        this.subscription = interval(10 * 1000).subscribe(() =>
-          this.removeElement()
-        );
+          console.log('ad alert Called', message.duration);
+
+          this.subscription = interval(message.duration * 1000).subscribe(() =>
+            this.removeElement()
+          );
+        });
       });
-    });
+    }
   }
 
   private removeElement() {

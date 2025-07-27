@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
@@ -17,21 +17,26 @@ export class FullscreenComponent implements OnInit {
     private signalRService: AppSignalRService
   ) {}
 
-  public htmldata: SafeHtml | undefined;
+  @Input() htmldata: SafeHtml | undefined;
+  @Input() useSignalR = true;
 
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.signalRService.startConnection().subscribe(() => {
-      this.signalRService
-        .receiveAlertMessage('ReceiveAlert')
-        .subscribe((message) => {
-          this.htmldata = this._sanitizer.bypassSecurityTrustHtml(message.html);
-          this.subscription = interval(
-            (message.duration - 0.5) * 1000
-          ).subscribe(() => this.removeElement());
-        });
-    });
+    if (this.useSignalR) {
+      this.signalRService.startConnection().subscribe(() => {
+        this.signalRService
+          .receiveAlertMessage('ReceiveAlert')
+          .subscribe((message) => {
+            this.htmldata = this._sanitizer.bypassSecurityTrustHtml(
+              message.html
+            );
+            this.subscription = interval(
+              (message.duration - 0.5) * 1000
+            ).subscribe(() => this.removeElement());
+          });
+      });
+    }
   }
 
   private removeElement() {
