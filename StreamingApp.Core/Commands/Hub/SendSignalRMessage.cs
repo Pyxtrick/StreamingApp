@@ -65,7 +65,7 @@ public class SendSignalRMessage : ISendSignalRMessage
         }**/
 
         // Display chat with out Bots
-        if (user.Status.UserType != UserTypeEnum.Bot || user.Ban.IsExcludeChat == false)
+        if (user.Status.UserType != UserTypeEnum.Bot && user.Ban.IsExcludeChat == false)
         {
             // TODO: do someting about when Stream Together is Active
             await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);

@@ -2,5 +2,5 @@
 
 public interface IEmotesApiRequest
 {
-    Task GetTVEmoteSet();
+    Task GetTVEmoteSet(string? channelId);
 }

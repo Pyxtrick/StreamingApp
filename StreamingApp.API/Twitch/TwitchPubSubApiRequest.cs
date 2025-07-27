@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using StreamingApp.API.Twitch.Interfaces;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Enums;
 using TwitchLib.PubSub.Events;
 
 namespace StreamingApp.API.Twitch;

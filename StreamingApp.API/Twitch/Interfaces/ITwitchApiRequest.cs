@@ -17,8 +17,7 @@ public interface ITwitchApiRequest
     void Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e);
     void Bot_OnReSubscriber(object sender, OnReSubscriberArgs e);
     void Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e);
-    
-    
+
 
     void Bot_OnUserBanned(object sender, OnUserBannedArgs e);
     void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e);
