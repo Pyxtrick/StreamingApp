@@ -6,8 +6,8 @@ using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.InternalDB.Stream;
-using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Moderation.BanUser;
@@ -37,6 +37,11 @@ public class TwitchSendRequest : ITwitchSendRequest
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// Get Twitch User Info
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <returns>UserDto</returns>
     public async Task<UserDto?> GetUser(string? userName)
     {
         var usersResponse = await _twitchCache.GetTheTwitchAPI().Helix.Users.GetUsersAsync(null, new() { userName });
@@ -148,12 +153,12 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="message"></param>
     public async Task<StreamHighlight> CreateClip(string message)
     {
-        var t = await _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
+        var clip = await _twitchCache.GetTheTwitchAPI().Helix.Clips.CreateClipAsync(_configuration["Twitch:ChannelId"]);
 
         StreamHighlight streamHighlight = new StreamHighlight()
         {
-            HighlightUrl = t.CreatedClips.Last().EditUrl,
-            Description = t.CreatedClips.Last().Id, 
+            HighlightUrl = clip.CreatedClips.Last().EditUrl,
+            Description = clip.CreatedClips.Last().Id, 
             HighlighteTime = DateTime.UtcNow,
         };
 
@@ -170,7 +175,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     {
         try
         {
-            var t = new ModifyChannelInformationRequest()
+            var channelInfo = new ModifyChannelInformationRequest()
             {
                 GameId = gameId ?? null,
                 Title = title ?? null,
@@ -178,7 +183,7 @@ public class TwitchSendRequest : ITwitchSendRequest
                 Delay = null,
             };
 
-            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_configuration["Twitch:ChannelId"], t);
+            _twitchCache.GetTheTwitchAPI().Helix.Channels.ModifyChannelInformationAsync(_configuration["Twitch:ChannelId"], channelInfo);
 
             return true;
         }
@@ -194,11 +199,11 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// <param name="title"></param>
     /// <param name="options"></param>
     /// <param name="time"></param>
-    /// <param name="pole"></param>
+    /// <param name="isPole"></param>
     /// <returns></returns>
-    public async Task<Pole?> CreatePoleOrPrediction(string title, string[] options, int time, bool pole)
+    public async Task<Pole?> CreatePoleOrPrediction(string title, string[] options, int time, bool isPole)
     {
-        if (pole)
+        if (isPole)
         {
             var pollRequest = new CreatePollRequest()
             {
@@ -218,7 +223,7 @@ public class TwitchSendRequest : ITwitchSendRequest
                 return new Pole()
                 {
                     PoleId = response.Data.LastOrDefault().Id,
-                    IsPole = pole,
+                    IsPole = isPole,
                 };
             }
             return null;
@@ -240,7 +245,7 @@ public class TwitchSendRequest : ITwitchSendRequest
                 return new Pole()
                 {
                     PoleId = response.Data.LastOrDefault().Id,
-                    IsPole = pole,
+                    IsPole = isPole,
                 };
             }
             return null;
@@ -251,11 +256,11 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// Get Last Poles
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="pole"></param>
+    /// <param name="isPole"></param>
     /// <returns></returns>
-    public async Task<Pole?> GetPoleOrPrediction(string id, bool pole)
+    public async Task<Pole?> GetPoleOrPrediction(string id, bool isPole)
     {
-        if (pole)
+        if (isPole)
         {
             var t = await _twitchCache.GetTheTwitchAPI().Helix.Polls.GetPollsAsync(_configuration["Twitch:ChannelId"], new List<string>() { id });
 
@@ -264,7 +269,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             return new Pole()
             {
                 PoleId = data.Id,
-                IsPole = pole,
+                IsPole = isPole,
                 Title = data.Title,
                 StartedAt = data.StartedAt,
                 Choices = data.Choices.Select(option => { return new Domain.Entities.InternalDB.Stream.Choice() { Title = option.Title, Votes = option.Votes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
@@ -279,7 +284,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             return new Pole()
             {
                 PoleId = data.Id,
-                IsPole = pole,
+                IsPole = isPole,
                 Title = data.Title,
                 StartedAt = DateTime.Parse(data.CreatedAt),
                 Choices = data.Outcomes.Select(option => { return new Domain.Entities.InternalDB.Stream.Choice() { Title = option.Title, Votes = option.ChannelPointsVotes, VotesPoints = option.ChannelPointsVotes, ChannelPointsVotes = option.ChannelPointsVotes, BitsVotes = option.ChannelPointsVotes }; }).ToList(),
@@ -290,16 +295,6 @@ public class TwitchSendRequest : ITwitchSendRequest
     public void GetEmotes()
     {
         var emotes = _twitchCache.GetOwnerOfChannelConnection().ChannelEmotes;
-    }
-
-    public async Task RaidChannel()
-    {
-        string fromBroadcasterId = _configuration["Twitch:ChannelId"];
-        string toBroadcasterId = "";
-
-        var t = _twitchCache.GetTheTwitchAPI().Helix.Search.SearchChannelsAsync(toBroadcasterId, true);
-
-        await _twitchCache.GetTheTwitchAPI().Helix.Raids.StartRaidAsync(fromBroadcasterId, toBroadcasterId);
     }
 
     public async Task GetChannelGoals()
@@ -330,7 +325,26 @@ public class TwitchSendRequest : ITwitchSendRequest
 
     public async Task UpdateCustomReward()
     {
-        //var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.UpdateCustomRewardAsync();
+        var customReward = new UpdateCustomRewardRequest()
+        {
+            BroadcasterId = "",
+            Title = "",
+            Prompt = "",
+            Cost = 100,
+            IsEnabled = true,
+            BackgroundColor = "",
+            IsUserInputRequired = false,
+            IsMaxPerStreamEnabled = false,
+            MaxPerStream = 0,
+            IsMaxPerUserPerStreamEnabled = false,
+            MaxPerUserPerStream = 0,
+            IsGlobalCooldownEnabled = false,
+            GlobalCooldownSeconds = 0,
+            IsPaused = false,
+            ShouldRedemptionsSkipRequestQueue = false,
+};
+
+        var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.UpdateCustomRewardAsync("", "", customReward);
     }
 
     /// <summary>
@@ -347,8 +361,9 @@ public class TwitchSendRequest : ITwitchSendRequest
     }
 
     /// <summary>
-    /// Delete Chat Message
+    /// 
     /// </summary>
+    /// <param name="messageId"></param>
     /// <returns></returns>
     public async Task DeleteMessage(string messageId)
     {
@@ -361,8 +376,10 @@ public class TwitchSendRequest : ITwitchSendRequest
     }
 
     /// <summary>
-    /// Timeout User for x Seconds
+    /// 
     /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="reson"></param>
     /// <param name="time"></param>
     /// <returns></returns>
     public async Task TimeoutUser(string userId, string reson, int time)
@@ -375,8 +392,9 @@ public class TwitchSendRequest : ITwitchSendRequest
     }
 
     /// <summary>
-    /// Ban User with Reson
+    /// 
     /// </summary>
+    /// <param name="userId"></param>
     /// <param name="reson"></param>
     /// <returns></returns>
     public async Task BanUser(string userId, string reson)

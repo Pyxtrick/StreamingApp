@@ -21,11 +21,16 @@ public class TwitchInitialise : ITwitchInitialise
 
     // Authentication
     private HttpServer WebServer;
-    private readonly List<string> Scopes = new List<string> { "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions", "moderator:manage:shoutouts", "moderator:manage:announcements", "chat:read", "chat:edit", "whispers:read", "whispers:edit", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions" };
+    private readonly List<string> Scopes = new List<string> { 
+        "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions", 
+        "moderator:manage:shoutouts", "moderator:manage:announcements", "moderator:read:followers", "moderator:read:chat_messages",
+        "chat:read", "chat:edit", 
+        "whispers:read", "whispers:edit", 
+        "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions" };
 
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;
-    private TwitchPubSub pubsub;
+    private TwitchPubSub Pubsub;
     private TwitchAPI TheTwitchAPI;
 
     // Cached Variables
@@ -67,7 +72,7 @@ public class TwitchInitialise : ITwitchInitialise
                 CachedOwnerOfChanelAccessToken = ownerOfChannelAccessAndRefresh.Item1;
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
-                InitalizePubSub(TwitchChannelName, CachedOwnerOfChanelAccessToken);
+                InitalizePubSub(CachedOwnerOfChanelAccessToken);
                 InitializeTwitchAPI(CachedOwnerOfChanelAccessToken);
             }
         };
@@ -78,9 +83,9 @@ public class TwitchInitialise : ITwitchInitialise
 
     public void CloseConntection(object sender, EventArgs e)
     {
-        if(pubsub != null)
+        if(Pubsub != null)
         {
-            pubsub.Disconnect();
+            Pubsub.Disconnect();
         }
 
         if (OwnerOfChannelConnection != null)
@@ -125,21 +130,26 @@ public class TwitchInitialise : ITwitchInitialise
         TwitchChannelName = outhedUser.Users[0].Login;
     }
 
-    private void InitalizePubSub(string username, string accessToken)
+    private void InitalizePubSub(string accessToken)
     {
-        pubsub = new TwitchPubSub();
+        Pubsub = new TwitchPubSub();
 
-        pubsub.OnPubSubServiceConnected += _twitchPubSubApiRequest.Bot_OnPubSubServiceConnected;
-        pubsub.OnChannelPointsRewardRedeemed += _twitchPubSubApiRequest.Bot_OnRewardRedeemed;
-        pubsub.OnEmoteOnly += _twitchPubSubApiRequest.Bot_OnEmoteOnly;
-        pubsub.OnLog += _twitchPubSubApiRequest.Bot_OnLog;
-        pubsub.OnFollow += _twitchPubSubApiRequest.Bot_OnFollow;
-        
-        pubsub.Connect();
-        pubsub.ListenToChannelPoints(_configuration["Twitch:ClientId"]);
-        pubsub.ListenToFollows(_configuration["Twitch:ClientId"]);
-        pubsub.ListenToChatModeratorActions(_configuration["Twitch:ClientId"], _configuration["Twitch:ClientId"]);
-        pubsub.ListenToChatModeratorActions("1039826911", _configuration["Twitch:ClientId"]);
+        Pubsub.OnPubSubServiceConnected += Bot_OnPubSubServiceConnected;
+        Pubsub.OnLog += _twitchPubSubApiRequest.Bot_OnLog;
+        Pubsub.OnChannelPointsRewardRedeemed += _twitchPubSubApiRequest.Bot_OnRewardRedeemed;
+        //Pubsub.OnFollow += _twitchPubSubApiRequest.Bot_OnFollow;
+
+        Pubsub.Connect();
+    }
+
+    private void Bot_OnPubSubServiceConnected(object sender, EventArgs e)
+    {
+        Pubsub.SendTopics(CachedOwnerOfChanelAccessToken);
+        Pubsub.ListenToChannelPoints(_configuration["Twitch:ChannelId"]);
+        //Pubsub.ListenToFollows(_configuration["Twitch:ChannelId"]);
+        //Pubsub.ListenToChatModeratorActions(_configuration["Twitch:ChannelBotId"], _configuration["Twitch:ChannelId"]);
+
+        Console.WriteLine("PubSub Connected");
     }
 
     private void InitializeOwnerOfChannelConnection(string username, string accessToken)
@@ -161,7 +171,7 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnNewSubscriber += _twichApiRequest.Bot_OnNewSubscriber;
         OwnerOfChannelConnection.OnPrimePaidSubscriber += _twichApiRequest.Bot_OnPrimePaidSubscriber;
         OwnerOfChannelConnection.OnReSubscriber += _twichApiRequest.Bot_OnReSubscriber;
-
+        
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
         OwnerOfChannelConnection.OnChannelStateChanged += _twichApiRequest.Bot_OnChannelStateChanged; // TODO: Check on what it is doing 
 

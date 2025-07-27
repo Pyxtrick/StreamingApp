@@ -58,7 +58,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             OnHypeTrain();
         }
-
+        
         // TODO: Test if this is valid
         if (e.ChatMessage.Username.Equals(RaidUser))
         {
@@ -138,14 +138,8 @@ public class TwitchApiRequest : ITwitchApiRequest
             int cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
             string emoteMessage = "";
 
-            //await UpdateSub(e.Subscriber, null);
-
-            TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
-
-            //TODO:
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.Subscriber);
-
-            SubDto subDto = new SubDto(null, e.Subscriber.Id, userName, e.Subscriber.DisplayName, "channel", OriginEnum.Twitch, false, 0, 0, tier, null, false, DateTime.Now);
+            //SubDto subDto = new SubDto(null, e.Subscriber.Id, userName, e.Subscriber.DisplayName, "channel", OriginEnum.Twitch, false, 0, 0, tier, null, false, DateTime.Now);
 
             try
             {
@@ -167,7 +161,9 @@ public class TwitchApiRequest : ITwitchApiRequest
                 Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.Subscriber.MsgParamCumulativeMonths}");
             }
 
-            _twitchCallCache.AddMessage(subDto, CallCacheEnum.CachedSubData);
+            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
+
+            Console.WriteLine(emoteMessage);
 
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
@@ -183,19 +179,10 @@ public class TwitchApiRequest : ITwitchApiRequest
             string userName = e.PrimePaidSubscriber.DisplayName;
             string subscriptionPlan = e.PrimePaidSubscriber.SubscriptionPlan.ToString();
             int cumulativeMonths = int.Parse(e.PrimePaidSubscriber.MsgParamCumulativeMonths);
-            string message = e.PrimePaidSubscriber.ResubMessage;
-
-            MessageDto messageDto = _mapper.Map<MessageDto>(e.PrimePaidSubscriber);
-
             string emoteMessage = "";
 
-            //await UpdateSub(null, e.PrimePaidSubscriber);
-
-            TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan);
-
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.PrimePaidSubscriber);
-
-            SubDto subDto = new SubDto(null, e.PrimePaidSubscriber.Id, userName, e.PrimePaidSubscriber.DisplayName, e.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
+            //SubDto subDto = new SubDto(null, e.PrimePaidSubscriber.Id, userName, e.PrimePaidSubscriber.DisplayName, e.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
 
             try
             {
@@ -217,7 +204,9 @@ public class TwitchApiRequest : ITwitchApiRequest
                 Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
             }
 
-            _twitchCallCache.AddMessage(subDto, CallCacheEnum.CachedSubData);
+            Console.WriteLine(emoteMessage);
+
+            _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
             // TODO: Show emote with Text
             // TODO: SaveSubscription to DB
@@ -231,39 +220,11 @@ public class TwitchApiRequest : ITwitchApiRequest
         string userName = e.ReSubscriber.DisplayName;
         int months = e.ReSubscriber.Months;
         string subscriptionPlan = e.ReSubscriber.SubscriptionPlan.ToString();
-        var message = e.ReSubscriber.ResubMessage;
         int cumulativeMonths = int.Parse(e.ReSubscriber.MsgParamCumulativeMonths);
-
         string emoteMessage = "";
 
-        string colorHex = e.ReSubscriber.ColorHex;
-        List<KeyValuePair<string, string>> badges = e.ReSubscriber.Badges;
-
-        List<AuthEnum> auths = new List<AuthEnum>()
-        {
-            e.ReSubscriber.IsModerator ? AuthEnum.Mod : AuthEnum.Undefined,
-            e.ReSubscriber.IsSubscriber ? AuthEnum.Subscriber : AuthEnum.Undefined,
-            e.ReSubscriber.IsTurbo ? AuthEnum.Turbo : AuthEnum.Undefined,
-            e.ReSubscriber.IsPartner ? AuthEnum.Partner : AuthEnum.Undefined,
-        }.Where(a => a != 0).ToList();
-
-        TierEnum tier = (TierEnum)Enum.Parse(typeof(TierEnum), subscriptionPlan.ToString());
-
-        List<SpecialMessgeEnum> specialMessage = new List<SpecialMessgeEnum>()
-        {
-            SpecialMessgeEnum.SubMessage
-        };
-
-        //TODO: ChatDto chatDto = _mapper.Map<ChatDto>(e.ReSubscriber);
-        //TODO: SubscriptionDto subscriptionDto = _mapper.Map<SubscriptionDto>(e.ReSubscriber);
-
         SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
-        SubDto subDto = new SubDto(null, e.ReSubscriber.Id, userName, e.ReSubscriber.DisplayName, e.ReSubscriber.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
-
-        //MessageDto chatDto = new(e.ReSubscriber.Id, userName, colorHex, "", message, "", null, badges, OriginEnum.Twitch, null, auths, specialMessage, EffectEnum.none, DateTime.UtcNow);
-
-        MessageDto messageDto = _mapper.Map<MessageDto>(e.ReSubscriber);
-        //TODO: SubscriptionDto subscriptionDto = new SubscriptionDto(e.ReSubscriber.Id, userName, null, true, 1, tier, chatDto);
+        //SubDto subDto = new SubDto(null, e.ReSubscriber.Id, userName, e.ReSubscriber.DisplayName, e.ReSubscriber.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
 
         try
         {
@@ -286,10 +247,10 @@ public class TwitchApiRequest : ITwitchApiRequest
             Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
         }
 
-        //TODO:
+        Console.WriteLine(emoteMessage);
+
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
-        // TODO: SaveMessage to Cache
         // TODO: Show emote with Message
         // TODO: SaveSubscription to DB
     }
@@ -370,6 +331,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         //Console.WriteLine($"{e.Username} joined on {DateTime.Now} CET");
         //throw new NotImplementedException();
     }
+
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
         Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
