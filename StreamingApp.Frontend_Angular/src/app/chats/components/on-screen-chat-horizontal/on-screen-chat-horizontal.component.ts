@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnInit,
   QueryList,
   ViewChild,
@@ -31,15 +32,15 @@ export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
     private signalRService: AppSignalRService
   ) {}
   @ViewChild('scrollframe') scrollFrame!: ElementRef;
-
   @ViewChildren('item') itemElements!: QueryList<any>;
+
+  @Input() useSignalR = true;
+  @Input() displayChatMessages: DisplayChat[] = [];
 
   private scrollContainer: any;
   private isNearBottom = true;
 
   private subscription: Subscription | undefined;
-
-  displayChatMessages: DisplayChat[] = [];
 
   ngAfterViewInit(): void {
     this.scrollContainer = this.scrollFrame.nativeElement;
@@ -47,32 +48,36 @@ export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.startConnection().subscribe(() => {
-      this.signalRService
-        .receiveChatMessage('ReceiveOnScreenChatMessage')
-        .subscribe((message) => {
-          if (this.displayChatMessages.length >= 100) {
-            this.displayChatMessages.shift();
-          }
-          this.convertMessageData(message);
-        });
-      this.signalRService
-        .receiveBannedMessage('ReceiveBanned')
-        .subscribe((message) => {
-          const foundMessage = this.displayChatMessages.find(
-            (m) => m.Id == message.id
-          );
-
-          if (foundMessage != undefined) {
-            this.displayChatMessages.splice(
-              this.displayChatMessages.indexOf(foundMessage),
-              1
+    if (this.useSignalR) {
+      this.signalRService.startConnection().subscribe(() => {
+        this.signalRService
+          .receiveChatMessage('ReceiveOnScreenChatMessage')
+          .subscribe((message) => {
+            if (this.displayChatMessages.length >= 100) {
+              this.displayChatMessages.shift();
+            }
+            this.convertMessageData(message);
+          });
+        this.signalRService
+          .receiveBannedMessage('ReceiveBanned')
+          .subscribe((message) => {
+            const foundMessage = this.displayChatMessages.find(
+              (m) => m.Id == message.id
             );
-          }
-        });
-    });
 
-    this.subscription = interval(1000).subscribe((val) => this.removeElement());
+            if (foundMessage != undefined) {
+              this.displayChatMessages.splice(
+                this.displayChatMessages.indexOf(foundMessage),
+                1
+              );
+            }
+          });
+      });
+
+      this.subscription = interval(1000).subscribe((val) =>
+        this.removeElement()
+      );
+    }
   }
 
   private removeElement() {

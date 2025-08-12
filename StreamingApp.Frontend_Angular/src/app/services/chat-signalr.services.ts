@@ -86,6 +86,14 @@ export class AppSignalRService {
     });
   }
 
+  receiveSwitchChat(): Observable<string> {
+    return new Observable<string>((observer) => {
+      this.hubConnection.on('ReceiveSwitchChat', (isVerticalChat: string) => {
+        observer.next(isVerticalChat);
+      });
+    });
+  }
+
   //#region Just for Debugging / testing
   receiveMessage(): Observable<string> {
     return new Observable<string>((observer) => {

@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using TwitchLib.Client.Models;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -23,5 +26,11 @@ public class StreamController : ControllerBase
     public async Task ChangeCategory([FromServices] IManageStream updateStream)
     {
         await updateStream.ChangeCategory();
+    }
+
+    [HttpPost("SwitchChat")]
+    public async Task ChangeChat([FromServices] IHubContext<ChatHub> clientHub)
+    {
+        await clientHub.Clients.All.SendAsync("ReceiveSwitchChat", "SwitchChat");
     }
 }

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
@@ -21,6 +22,7 @@ import { OnScreenChatComponent } from '../../../chats/components/on-screen-chat/
     TextMessageComponent,
     OnScreenChatHorizontalComponent,
     OnScreenChatComponent,
+    CommonModule,
   ],
   templateUrl: './combined.component.html',
   styleUrl: './combined.component.scss',
@@ -47,7 +49,7 @@ export class CombinedComponent implements OnInit, OnDestroy {
   public displayChatMessages: DisplayChat[] = [];
   private chatSubscription: Subscription | undefined;
 
-  public isHorizontalChat = false;
+  public isVerticalChat = false;
 
   ngOnInit(): void {
     this.signalRService.startConnection().subscribe(() => {
@@ -115,6 +117,9 @@ export class CombinedComponent implements OnInit, OnDestroy {
             );
           }
         });
+      this.signalRService.receiveSwitchChat().subscribe(() => {
+        this.isVerticalChat = !this.isVerticalChat;
+      });
     });
 
     this.chatSubscription = interval(1000).subscribe((val) =>
