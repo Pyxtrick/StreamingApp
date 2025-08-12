@@ -35,7 +35,17 @@ public class TwitchCallCache : ITwitchCallCache
                 var subDto = (SubDto)message;
                 if (subDto != null)
                 {
-                    _twitchCallCacheData.CachedSubData.Add(subDto);
+                    var foundSubDto = _twitchCallCacheData.CachedSubData.FirstOrDefault(s => subDto.UserId == subDto.UserId && s.IsUsed == false && s.IsGifftedSub);
+                    if (foundSubDto != null && subDto.IsGifftedSub)
+                    {
+                        var index = _twitchCallCacheData.CachedSubData.FindLastIndex(s => s.IsUsed == false && subDto.UserId == subDto.UserId);
+                        _twitchCallCacheData.CachedSubData[index].GifftedSubCount += subDto.GifftedSubCount;
+                    }
+                    else
+                    {
+                        _twitchCallCacheData.CachedSubData.Add(subDto);
+                    }
+
                     _twitchCallCacheData.CachedSubNumber += subDto.GifftedSubCount > 0 ? subDto.GifftedSubCount : 1;
                 }
                 if(_twitchCallCacheData.CachedSubData.Count > 100)

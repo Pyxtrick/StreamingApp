@@ -6,6 +6,9 @@ using StreamingApp.Domain.Responces;
 
 namespace StreamingApp.Web.Controllers;
 
+/// <summary>
+/// DB Data Controller
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class DataContoller : ControllerBase

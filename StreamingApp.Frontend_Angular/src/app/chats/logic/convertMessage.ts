@@ -53,6 +53,10 @@ export class ConvertMessage {
       }
     }
 
+    if (chatMessage.colorHex == null) {
+      chatMessage.colorHex = 'white';
+    }
+
     finalName +=
       badges +
       '<span class="name-text" style="color: ' +
