@@ -1,0 +1,153 @@
+::ng-deep .cols-link {
+  visibility: hidden !important;
+  height: 0px;
+}
+
+.fullscreen {
+  position: absolute;
+}
+
+.highlight-message {
+  position: absolute;
+  margin-top: 45%;
+  margin-left: 40%;
+}
+
+.text-message {
+  //position: absolute;
+  margin-top: 50%;
+}
+
+.chats {
+  position: absolute;
+  //margin-top: -50%;
+}
+
+.cols-link {
+  visibility: hidden !important;
+  height: 0px;
+}
+
+.badges-image {
+  height: 30px;
+  margin-top: 7px;
+}
+
+.emote-image {
+  height: 40px;
+}
+
+.emote-image-only {
+  height: 80px;
+}
+
+.name-date {
+  font-size: smaller;
+  margin-bottom: 0px !important;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.name-text {
+  font-size: xx-large;
+  margin-bottom: 0px !important;
+  text-shadow: 0.5px 0 #fff, -0.5px 0 #fff, 0 0.5px #fff, 0 -0.5px #fff,
+    0.5px 0.5px #fff, -0.5px -0.5px #fff, 0.5px -0.5px #fff, -0.5px 0.5px #fff;
+  border-radius: 15px;
+  background-color: black;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.message-reply {
+  font-size: large;
+  font-style: oblique;
+  color: white;
+  margin-bottom: 0px;
+}
+
+.message-text {
+  font-size: x-large;
+  color: white;
+  margin-bottom: 0px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  display: inline-block;
+}
+
+.mdc-list-item {
+  padding-left: 5px !important;
+}
+
+/**.list {
+  max-height: 1440px;
+  overflow: hidden;
+  width: 800px;
+}**/
+
+.mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
+.mdc-list-item--with-three-lines .mdc-list-item__primary-text::before,
+.mdc-list-item__secondary-text::before {
+  content: none !important;
+}
+
+.mdc-list-item.mdc-list-item--with-three-lines {
+  height: auto !important;
+}
+
+.mat-mdc-list-item.mdc-list-item--with-three-lines
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+  white-space: wrap !important;
+  word-break: break-word;
+  color: #ffffff;
+}
+
+.mat-typography p {
+  margin: 0 0 0px;
+}
+
+.mdc-list-item.mdc-list-item--with-two-lines {
+  height: initial !important;
+}
+
+.mat-line {
+  word-wrap: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+.mat-list .mat-list-item {
+  height: initial !important;
+}
+
+.mat-mdc-list-item {
+  margin-top: 10px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.message-text-none {
+  display: flex;
+  flex-wrap: wrap;
+}

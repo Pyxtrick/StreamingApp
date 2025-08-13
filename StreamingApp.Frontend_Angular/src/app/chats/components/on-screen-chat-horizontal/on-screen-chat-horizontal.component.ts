@@ -74,9 +74,7 @@ export class OnScreenChatHorizontalComponent implements OnInit, AfterViewInit {
           });
       });
 
-      this.subscription = interval(1000).subscribe((val) =>
-        this.removeElement()
-      );
+      this.subscription = interval(1000).subscribe(() => this.removeElement());
     }
   }
 

@@ -1,3 +1,17 @@
+<div class="chats">
+  <div *ngIf="isVerticalChat === false">
+    <app-on-screen-chat-horizontal
+      [displayChatMessages]="displayChatMessages"
+      [useSignalR]="false"
+    ></app-on-screen-chat-horizontal>
+  </div>
+  <div *ngIf="isVerticalChat">
+    <app-on-screen-chat
+      [displayChatMessages]="displayChatMessages"
+      [useSignalR]="false"
+    ></app-on-screen-chat>
+  </div>
+</div>
 <div class="alerts">
   <div class="fullscreen">
     <app-fullscreen [htmldata]="htmldata" [useSignalR]="false"></app-fullscreen>
@@ -13,19 +27,5 @@
       [message]="message"
       [useSignalR]="false"
     ></app-text-message>
-  </div>
-</div>
-<div class="chats">
-  <div *ngIf="isVerticalChat === false">
-    <app-on-screen-chat-horizontal
-      [displayChatMessages]="displayChatMessages"
-      [useSignalR]="false"
-    ></app-on-screen-chat-horizontal>
-  </div>
-  <div *ngIf="isVerticalChat">
-    <app-on-screen-chat
-      [displayChatMessages]="displayChatMessages"
-      [useSignalR]="false"
-    ></app-on-screen-chat>
   </div>
 </div>

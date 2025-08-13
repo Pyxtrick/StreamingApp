@@ -100,7 +100,6 @@ export class CombinedComponent implements OnInit, OnDestroy {
           if (this.displayChatMessages.length >= 100) {
             this.displayChatMessages.shift();
           }
-          console.log('test');
           this.convertMessageData(message);
         });
       this.signalRService
@@ -122,7 +121,7 @@ export class CombinedComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.chatSubscription = interval(1000).subscribe((val) =>
+    this.chatSubscription = interval(1000).subscribe(() =>
       this.removeChatElement()
     );
   }
