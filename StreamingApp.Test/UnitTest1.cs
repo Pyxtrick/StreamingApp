@@ -1,4 +1,6 @@
-namespace StreamingApp.Test;
+﻿namespace StreamingApp.Test;
+
+using LanguageDetection;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
@@ -81,6 +83,21 @@ public class Tests : DataBaseFixture
 
         // Assert
         Assert.Equal("", reponse);
+    }
+
+    [Fact]
+    public void TranslageTest()
+    {
+        var detector = new LanguageDetector();
+        detector.AddAllLanguages();
+
+        var resultEN = detector.Detect("What is this all about");
+        var resultDE = detector.Detect("Was ist das alles");
+        var result = detector.Detect("これは一体何なのか");
+
+        Assert.Equal("eng", resultEN);
+        Assert.Equal("deu", resultDE);
+        Assert.NotEqual("eng", result);
     }
 
     /** for Mocking classes
