@@ -303,22 +303,30 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async void OnHypeTrain()
     {
-        GetHypeTrainResponse hypeTrain = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ClientId"], 1, null);
-
-        var eventData = hypeTrain.HypeTrain[0].EventData;
-
-        Console.WriteLine($"OnHypeTrain ExpiresAt: {eventData.ExpiresAt} Current Time{DateTime.Now}");
-
-        if (DateTime.Parse(eventData.ExpiresAt) >= DateTime.Now)
+        try
         {
-            Console.WriteLine($"OnHypeTrain Active");
+            GetHypeTrainResponse hypeTrain = await _twitchCache.GetTheTwitchAPI().Helix.HypeTrain.GetHypeTrainEventsAsync(_configuration["Twitch:ClientId"], 1, null);
 
-            int Level = eventData.Level;
-            int total = eventData.Total;
-            int goal = eventData.Goal;
-            int persantage = 100 / goal * total;
+            var eventData = hypeTrain.HypeTrain[0].EventData;
 
-            // TODO: Save Hypetrain To cache
+            Console.WriteLine($"OnHypeTrain ExpiresAt: {eventData.ExpiresAt} Current Time{DateTime.Now}");
+
+            if (DateTime.Parse(eventData.ExpiresAt) >= DateTime.Now)
+            {
+                Console.WriteLine($"OnHypeTrain Active");
+
+                int Level = eventData.Level;
+                int total = eventData.Total;
+                int goal = eventData.Goal;
+                int persantage = 100 / goal * total;
+
+                // TODO: Save Hypetrain To cache
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(Console.Error);
+            Console.WriteLine("Error Message: " + ex);
         }
     }
 

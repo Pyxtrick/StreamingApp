@@ -81,7 +81,7 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
 
   private removeElement() {
     const date = new Date();
-    date.setSeconds(date.getSeconds() - 10);
+    date.setSeconds(date.getSeconds() - 20);
 
     const data = this.displayChatMessages.filter(
       (t) => t.Date!.getTime() <= date.getTime()

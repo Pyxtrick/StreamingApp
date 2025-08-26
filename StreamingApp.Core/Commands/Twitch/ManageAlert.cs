@@ -4,6 +4,7 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
@@ -24,13 +25,16 @@ internal class ManageAlert : IManageAlert
 
     private readonly IMovingText _movingText;
 
-    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub, IMovingText movingText)
+    private readonly IMessageCheck _messageCheck;
+
+    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub, IMovingText movingText, IMessageCheck messageCheck)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
         _subAlertLoong = subAlertLoong;
         _clientHub = clientHub;
         _movingText = movingText;
+        _messageCheck = messageCheck;
     }
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
@@ -39,13 +43,19 @@ internal class ManageAlert : IManageAlert
 
         if (messageAlertDto.AlertType == AlertTypeEnum.Bits)
         {
-            if (messageAlertDto.Bits >= 200)
+            if (messageAlertDto.Bits >= 100)
             {
                 // TODO: Limit Message to a specific lenght
                 // TODO: check for "Spam" or same thing in the message and cut it of at a certan time
                 // TODO: TTS Message Play
                 // TODO: able to skip TTS Message or Mute it
                 // TODO: Show emote
+                if (await _messageCheck.ExecuteMessageOnly(messageAlertDto.Message))
+                {
+                    MessageDto highlightChatMessage = new(messageAlertDto.AlertType.ToString(), false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, null, messageAlertDto.Message, messageAlertDto.EmoteReplacedMessage, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+
+                    await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", highlightChatMessage);
+                }
             }
 
             List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
@@ -140,18 +150,16 @@ internal class ManageAlert : IManageAlert
         int rotation = new Random().Next(1, 360);
         int saturation = new Random().Next(1, 1000);
 
-        //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);
-
         MessageDto chatMessage;
         string message = "";
 
         if (subDto.SubLenght > 1)
         {
-            message = $"Giffted {subDto.GifftedSubCount} {subDto.CurrentTier} Subs";
+            message = $"{subDto.UserName} Giffted {subDto.GifftedSubCount} {subDto.CurrentTier} Subs";
         }
         else
         {
-            message = $"Subscribed with Tier {subDto.CurrentTier} for {subDto.SubLenght}";
+            message = $"{subDto.UserName} Subscribed with Tier {subDto.CurrentTier} for {subDto.SubLenght}";
         }
 
         if (subDto.ChatMessage != null)
@@ -163,6 +171,10 @@ internal class ManageAlert : IManageAlert
             chatMessage = new("sub", false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, "Hex", null, message, "EmoteReplacedMessage", null, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
         }
 
-        await _clientHub.Clients.All.SendAsync("displayEventMessages", chatMessage);
+        //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);
+
+        await _clientHub.Clients.All.SendAsync("ReceiveEventMessage", chatMessage);
+
+        await _movingText.ExecuteAlert(30, message);
     }
 }

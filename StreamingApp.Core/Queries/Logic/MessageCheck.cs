@@ -27,6 +27,70 @@ public class MessageCheck : IMessageCheck
         _hubContext = hubContext;
     }
 
+
+    public async Task<bool> ExecuteMessageOnly(string message)
+    {
+        if (message.Length == 0)
+        {
+            return false;
+        }
+
+        bool isFine = true;
+
+        List<SpecialWords> foundSpecialWords = _unitOfWork.SpecialWords.Where(s => message.Contains(s.Name)).ToList();
+
+        bool isAllowed = foundSpecialWords.Where(s => message.StartsWith(s.Name)).Any(fsw => fsw.Type == SpecialWordEnum.AllowedUrl);
+
+        foreach (var t in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Count))
+        {
+            t.TimesUsed++;
+        }
+
+        foreach (var t in foundSpecialWords.Where(f => f.Type == SpecialWordEnum.Replace))
+        {
+            message = message.Replace(t.Name, "");
+        }
+
+        // For Dot Between two Texts (Text.Text)
+        if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(message).Success)
+        {
+            isFine = false;
+        }
+
+        // For any staring < ending with >
+        if (new Regex("(\\<).*([\\w-]).*(\\>)", RegexOptions.IgnoreCase).Match(message).Success)
+        {
+            isFine = false;
+        }
+
+        if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Delete))
+        {
+            if (foundSpecialWords.Any(f => f.Name.Contains("http")))
+            {
+                var foundHttp = message.Split(" ").Where(s => s.Contains("http"));
+            }
+
+            isFine = false;
+        }
+
+        if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Timeout))
+        {
+            isFine = false;
+        }
+
+        if (foundSpecialWords.Any(f => f.Type == SpecialWordEnum.Banned))
+        {
+            isFine = false;
+        }
+
+        if (isFine == false && isAllowed)
+        {
+            message += "";
+        }
+
+        return isFine;
+    }
+
     /// <summary>
     /// Checks Message if there is any thing that is not to be allowed to show in the Frotnend
     /// </summary>
@@ -35,6 +99,11 @@ public class MessageCheck : IMessageCheck
     /// <returns></returns>
     public async Task<bool> Execute(MessageDto messageDto, User user)
     {
+        if (messageDto.Message.Length == 0)
+        {
+            return false;
+        }
+
         bool isFine = true;
 
         List<SpecialWords> foundSpecialWords = _unitOfWork.SpecialWords.Where(s => messageDto.Message.Contains(s.Name)).ToList();

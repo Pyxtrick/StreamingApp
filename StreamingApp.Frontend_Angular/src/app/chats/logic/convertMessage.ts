@@ -53,7 +53,9 @@ export class ConvertMessage {
       }
     }
 
-    if (chatMessage.colorHex == null) {
+    console.log(chatMessage.colorHex);
+
+    if (chatMessage.colorHex.length == 0) {
       chatMessage.colorHex = 'white';
     }
 
