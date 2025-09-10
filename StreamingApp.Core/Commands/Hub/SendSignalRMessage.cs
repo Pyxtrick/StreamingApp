@@ -61,7 +61,6 @@ public class SendSignalRMessage : ISendSignalRMessage
         if (_translate.GetLanguage(messageDto.Message) != "eng" && _translate.GetLanguage(messageDto.Message) != "deu")
         {
             await TranslateMessage(messageDto);
-            return;
         }
 
         // Display chat with out Bots

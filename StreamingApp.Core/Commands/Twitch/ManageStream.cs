@@ -194,10 +194,10 @@ public class ManageStream : IManageStream
 
             await _unitOfWork.SaveChangesAsync();
 
-            string message = $"Stream is Ending, Thank you for watching <3";
+            string message = $"Stream is Ending, Thank you for watching";
 
-            _twitchSendRequest.SendChatMessage(message);
-            _youTubeSendRequest.SendChatMessage(message);
+            _twitchSendRequest.SendChatMessage(message + " pyxtriHeart");
+            _youTubeSendRequest.SendChatMessage(message + " <3");
 
         }
     }

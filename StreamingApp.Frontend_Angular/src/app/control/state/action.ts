@@ -2,7 +2,7 @@ import { createActionGroup, emptyProps } from '@ngrx/store';
 import { Item, Model, MoveModelData, Toggle } from 'src/api/api.service';
 
 export const ControlActions = createActionGroup({
-  source: 'Shared',
+  source: 'Control',
   events: {
     //#region Vtube-studio
     'load models': emptyProps(),

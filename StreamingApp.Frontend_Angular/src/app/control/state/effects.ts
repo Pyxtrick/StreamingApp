@@ -5,7 +5,7 @@ import { VtubeStudioContollerClient } from '../../../api/api.service';
 import { ControlActions } from './action';
 
 @Injectable()
-export class SettingsEffects {
+export class ControlEffects {
   private actions$ = inject(Actions);
   private api = inject(VtubeStudioContollerClient);
 
@@ -64,6 +64,7 @@ export class SettingsEffects {
     );
   });
 
+  /** Returns Void
   moveChangeModel$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ControlActions.moveChangeModel),
@@ -77,7 +78,9 @@ export class SettingsEffects {
       )
     );
   });
+  **/
 
+  /** Returns Void
   triggerToggle$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ControlActions.triggerToggle),
@@ -91,7 +94,9 @@ export class SettingsEffects {
       )
     );
   });
+  */
 
+  /** Returns Void
   loadMoveDeleteItem$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ControlActions.loadMoveDeleteItem),
@@ -105,5 +110,7 @@ export class SettingsEffects {
       )
     );
   });
+  */
+
   //#endregion
 }

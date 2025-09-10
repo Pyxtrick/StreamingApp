@@ -28,8 +28,8 @@ public class TestController : ControllerBase
          const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
-        MessageDto chatMessage = new("Id", false, "local", "userid", 
-            "streamer", "Pyxtrick_Bot_Test", "#ff6b6b", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
+        MessageDto chatMessage = new("Id", false, "local", "userid",
+            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
@@ -48,7 +48,7 @@ public class TestController : ControllerBase
         Console.WriteLine($"messageId {t}");
 
         MessageDto chatMessage = new("Id", false, "local", "userid",
-            "streamer", "Streamer", "#ff6b6b", "", " tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA tinyka2JamA", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
+            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", "", "pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
             new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");

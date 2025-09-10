@@ -2,20 +2,20 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { GameInfoDto, Model, StreamDto } from 'src/api/api.service';
 import { ControlActions } from './action';
 
-export interface SettingsState {
+export interface ControlState {
   models: Model[];
   streams: StreamDto[];
   gameInfos: GameInfoDto[];
 }
 
-export const initialState: SettingsState = {
+export const initialState: ControlState = {
   models: [],
   streams: [],
   gameInfos: [],
 };
 
-export const settingsFeature = createFeature({
-  name: 'settings',
+export const controlsFeature = createFeature({
+  name: 'control',
   reducer: createReducer(
     initialState,
     //#region Command

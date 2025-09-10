@@ -13,7 +13,22 @@ Fronted
 			Toggle
 		Item
 
+	Add Button to switch between Vertical and Horizontal Chat | and Display witch mode is active
 
+	Check Resubmessage / Hypetrain error
+	Testing: Save message / sub in Chache 
+
+	Fix Names not correcty displaying (no collor)
+
+	Able to Stop AD Text move / anoucement with a call 
+
+	Move queue from Frontendto backend
+		Comunticate between frontend and backend with Alert Queue
+			Backend Sends Alert when OK to send Request
+			After Frontend is Done Playing Request new Alert from Backend, Frontend Confirms to Backend that is recived Alert
+
+	Raid Allert
+		many Snake Peek from the bottom
 
 // Frontnend
 TODO: 1 Show statistics in Frontend
@@ -74,7 +89,7 @@ TODO: 1 able to disable / filter duplicate messages
 
 TODO: 1 Save every Raid User and Number (for now only in a file / Later maybe in the DB)
 
-TOOD Test: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
+TODO Test: 2 create pole on twitch and youtube (!pole [title] [time] [option1] [option2] [option3])
 
 TODO: 1 have a counter for how many times a sound has been played
 TODO: 1 able to respond to good "spam" (Dance Emojis)
@@ -131,10 +146,30 @@ TODO: 5 Create a Discord crawler to get Images / and other tings
 
 TODO: 5 Send Twitter / BlueSky / Youtube Community message for Stream start
 
-TODO: 5 Subathon timer
-	sstart
-	sstop
-	sset
+TODO: 5 Subathon
+	timer
+		!sstart
+		!sstop
+		!sset -> able to add time / set time
+		show next goal
+	Count
+	Goals
+		!sgoals
+		DB
+		Auto Make as Complete / Update Discord
+		Add More
+		Auto Sort / Aragnge
+		Display -> on / off
+	Insenivs
+		DB
+		Show in Goals
+		Depending on the insenvie Update Discord
+	time add
+		DB for the diffrent ways to add time
+		Frontend display
+		show in Goals
+			example -> sub t1 +5m | sub t2 +10m | sub t3 30m | 500 bits 1m | 5$ 1m | raid 20m | if possible merch / code use add Xm
+
 
 TODO: 5 able to Ban users with specific message in the chat message in a specific time area | the Saved Chat messages needs to be able to go back at least 5 - 10 min to catch all Bot accounts
 TODO: 5 able to detect Spam messages from one or multiple users / Bots | needs to avoid Raids or other specific events | show affected Users and there message/s on a new View that has the capability to Ban, Timeout or Delete the message
