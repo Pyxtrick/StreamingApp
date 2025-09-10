@@ -804,7 +804,7 @@ export class StreamClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    startStream(): Observable<void> {
+    startStream(): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Stream/StartStream";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -812,6 +812,7 @@ export class StreamClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -822,14 +823,14 @@ export class StreamClient {
                 try {
                     return this.processStartStream(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<boolean>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<boolean>;
         }));
     }
 
-    protected processStartStream(response: HttpResponseBase): Observable<void> {
+    protected processStartStream(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -838,7 +839,11 @@ export class StreamClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -848,7 +853,7 @@ export class StreamClient {
         return _observableOf(null as any);
     }
 
-    endStream(): Observable<void> {
+    endStream(): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Stream/EndStream";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -856,6 +861,7 @@ export class StreamClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -866,14 +872,14 @@ export class StreamClient {
                 try {
                     return this.processEndStream(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<boolean>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<boolean>;
         }));
     }
 
-    protected processEndStream(response: HttpResponseBase): Observable<void> {
+    protected processEndStream(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -882,7 +888,11 @@ export class StreamClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -892,7 +902,7 @@ export class StreamClient {
         return _observableOf(null as any);
     }
 
-    changeCategory(): Observable<void> {
+    changeCategory(): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Stream/ChangeCategory";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -900,6 +910,7 @@ export class StreamClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -910,14 +921,14 @@ export class StreamClient {
                 try {
                     return this.processChangeCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<boolean>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<boolean>;
         }));
     }
 
-    protected processChangeCategory(response: HttpResponseBase): Observable<void> {
+    protected processChangeCategory(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -926,7 +937,11 @@ export class StreamClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -936,14 +951,19 @@ export class StreamClient {
         return _observableOf(null as any);
     }
 
-    changeChat(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Stream/SwitchChat";
+    changeChat(isVerticalChat: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Stream/SwitchChat?";
+        if (isVerticalChat === null)
+            throw new Error("The parameter 'isVerticalChat' cannot be null.");
+        else if (isVerticalChat !== undefined)
+            url_ += "isVerticalChat=" + encodeURIComponent("" + isVerticalChat) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -954,14 +974,14 @@ export class StreamClient {
                 try {
                     return this.processChangeChat(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<boolean>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<boolean>;
         }));
     }
 
-    protected processChangeChat(response: HttpResponseBase): Observable<void> {
+    protected processChangeChat(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -970,7 +990,64 @@ export class StreamClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    switchAdsDisplay(isDisableAdsDisplay: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Stream/SwitchAdsDisplay?";
+        if (isDisableAdsDisplay === null)
+            throw new Error("The parameter 'isDisableAdsDisplay' cannot be null.");
+        else if (isDisableAdsDisplay !== undefined)
+            url_ += "isDisableAdsDisplay=" + encodeURIComponent("" + isDisableAdsDisplay) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSwitchAdsDisplay(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSwitchAdsDisplay(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
+    }
+
+    protected processSwitchAdsDisplay(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {

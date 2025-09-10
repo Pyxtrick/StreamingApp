@@ -19,6 +19,8 @@ public class Settings
 
     public bool PauseAllerts { get; set; }
 
+    public bool IsAdsDisplay { get; set; }
+
     // Pauses for Send Messages in Chat
     public bool PauseChatMessages { get; set; }
 

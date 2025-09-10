@@ -16,7 +16,7 @@ export class AppSignalRService {
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7033/chathub') // SignalR hub URL
+      .withUrl('http://192.168.111.148:7040/chathub') // SignalR hub URL
       // TODO: Change to get url from somewhere else (security)
       .build();
   }
@@ -86,9 +86,9 @@ export class AppSignalRService {
     });
   }
 
-  receiveSwitchChat(): Observable<string> {
-    return new Observable<string>((observer) => {
-      this.hubConnection.on('ReceiveSwitchChat', (isVerticalChat: string) => {
+  receiveSwitchChat(): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.hubConnection.on('ReceiveSwitchChat', (isVerticalChat: boolean) => {
         observer.next(isVerticalChat);
       });
     });

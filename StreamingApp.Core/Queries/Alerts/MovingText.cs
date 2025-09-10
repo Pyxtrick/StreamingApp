@@ -1,20 +1,29 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.Core.Queries.Alerts;
 
 public class MovingText : IMovingText
 {
-    private readonly IHubContext<ChatHub> clientHub;
+    private readonly IHubContext<ChatHub> _clientHub;
 
-    public MovingText(IHubContext<ChatHub> clientHub)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public MovingText(IHubContext<ChatHub> clientHub, UnitOfWorkContext unitOfWorkContext)
     {
-        this.clientHub = clientHub;
+        this._clientHub = clientHub;
+        this._unitOfWork = unitOfWorkContext;
     }
 
     public async Task ExecuteAlert(int adLength, string text)
     {
+        if (text.Contains("ads") && _unitOfWork.Settings.FirstOrDefault(s => s.Origin == Domain.Enums.OriginEnum.Twitch && s.IsAdsDisplay == true) != null)
+        {
+            return;
+        }
+
         string p = "";
         foreach (var word in text.Split(" "))
         {
@@ -28,6 +37,6 @@ public class MovingText : IMovingText
             "</style>" +
         "</body>";
 
-        await clientHub.Clients.All.SendAsync("receiveOnscreenMessage", new AlertDto() { Html = ads, Duration = adLength });
+        await _clientHub.Clients.All.SendAsync("receiveOnscreenMessage", new AlertDto() { Html = ads, Duration = adLength });
     }
 }

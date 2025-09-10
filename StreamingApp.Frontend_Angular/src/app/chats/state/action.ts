@@ -85,5 +85,21 @@ export const ChatsActions = createActionGroup({
       message,
     }),
     //#endregion
+
+    //#region Custom Requests
+    'switch chat': (isVerticalChat: boolean) => ({
+      isVerticalChat,
+    }),
+
+    'switch chat success': emptyProps(),
+    'switch chat failure': emptyProps(),
+
+    'switch ads display': (isDisableAdsDisplay: boolean) => ({
+      isDisableAdsDisplay,
+    }),
+
+    'switch ads display success': emptyProps(),
+    'switch ads display failure': emptyProps(),
+    //#endregion
   },
 });

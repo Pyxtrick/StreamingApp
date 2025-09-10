@@ -116,8 +116,8 @@ export class CombinedComponent implements OnInit, OnDestroy {
             );
           }
         });
-      this.signalRService.receiveSwitchChat().subscribe(() => {
-        this.isVerticalChat = !this.isVerticalChat;
+      this.signalRService.receiveSwitchChat().subscribe((isVerticalChat) => {
+        this.isVerticalChat = isVerticalChat;
       });
     });
 

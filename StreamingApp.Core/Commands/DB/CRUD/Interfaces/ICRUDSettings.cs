@@ -5,4 +5,6 @@ public interface ICRUDSettings
 {
     Task<List<SettingsDto>> GetAll();
     Task<bool> Update(SettingsDto newSettings);
+
+    Task<bool> SwitchAdsDisplay(bool isDisableAdsDisplay);
 }

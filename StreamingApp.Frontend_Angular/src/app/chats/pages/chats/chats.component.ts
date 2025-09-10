@@ -1,17 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { BannedTargetEnum } from 'src/app/models/enums/BannedTargetEnum';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
+import { NgSwitch } from '../../../../../node_modules/@angular/common/index';
 import { AllChatPageComponent } from '../../components/all-chat/all-chat-page.component';
 import { ConvertMessage } from '../../logic/convertMessage';
+import { ChatsActions } from '../../state/action';
 import { BannedUserDto } from './../../../models/dtos/BannedUserDto';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
   selector: 'app-chats',
   standalone: true,
-  imports: [AllChatPageComponent],
+  imports: [
+    AllChatPageComponent,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    NgSwitch,
+    FormsModule,
+  ],
   templateUrl: './chats.component.html',
   styleUrl: './chats.component.scss',
 })
@@ -20,6 +34,11 @@ export class ChatsComponent implements OnInit {
     private _sanitizer: DomSanitizer,
     private signalRService: AppSignalRService
   ) {}
+
+  private store = inject(Store);
+
+  isDisableAdsDisplay = true;
+  isVerticalChat = false;
 
   displayChatMessages: DisplayChat[] = [];
   displayEventMessages: DisplayChat[] = [];
@@ -176,5 +195,15 @@ export class ChatsComponent implements OnInit {
     }
 
     return '';
+  }
+
+  changeChatDirection() {
+    this.store.dispatch(ChatsActions.switchChat(this.isVerticalChat));
+  }
+
+  switchAdsDisplay() {
+    this.store.dispatch(
+      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
+    );
   }
 }

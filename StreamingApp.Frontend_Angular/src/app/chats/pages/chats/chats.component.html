@@ -1,3 +1,19 @@
+<div class="toggles">
+  <mat-checkbox
+    class="checkbox"
+    [(ngModel)]="isVerticalChat"
+    (change)="changeChatDirection()"
+  >
+    Is VerticalChat
+  </mat-checkbox>
+  <mat-checkbox
+    class="checkbox"
+    [(ngModel)]="isDisableAdsDisplay"
+    (change)="switchAdsDisplay()"
+  >
+    Ads Display
+  </mat-checkbox>
+</div>
 <div class="col">
   <div class="col1">
     <!-- All Chat (no event Chat) -->

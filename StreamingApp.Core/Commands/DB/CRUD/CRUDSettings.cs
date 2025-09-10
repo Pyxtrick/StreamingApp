@@ -44,4 +44,22 @@ public class CRUDSettings : ICRUDSettings
 
         return true;
     }
+
+    public async Task<bool> SwitchAdsDisplay(bool isDisableAdsDisplay)
+    {
+        try
+        {
+            Settings oldSettings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == Domain.Enums.OriginEnum.Twitch);
+
+            oldSettings.IsAdsDisplay = isDisableAdsDisplay;
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

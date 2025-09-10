@@ -282,3 +282,6 @@ yarn-error.log*
 
 # Custom excludes.
 backend/Bekb.Atelier.Stammdaten.Web/wwwroot/Images/
+
+# Custom Images
+StreamingApp.Frontend_Angular/src/assets/stream
