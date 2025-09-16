@@ -13,14 +13,10 @@ Fronted
 			Toggle
 		Item
 
-	Add Button to switch between Vertical and Horizontal Chat | and Display witch mode is active
-
 	Check Resubmessage / Hypetrain error
 	Testing: Save message / sub in Chache 
 
-	Fix Names not correcty displaying (no collor)
-
-	Able to Stop AD Text move / anoucement with a call 
+	Fix? Names not correcty displaying (no collor)
 
 	Move queue from Frontendto backend
 		Comunticate between frontend and backend with Alert Queue

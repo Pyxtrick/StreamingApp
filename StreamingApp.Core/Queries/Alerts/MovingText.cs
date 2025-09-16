@@ -19,7 +19,7 @@ public class MovingText : IMovingText
 
     public async Task ExecuteAlert(int adLength, string text)
     {
-        if (text.Contains("ads") && _unitOfWork.Settings.FirstOrDefault(s => s.Origin == Domain.Enums.OriginEnum.Twitch && s.IsAdsDisplay == true) != null)
+        if (text.Contains("ads", StringComparison.CurrentCultureIgnoreCase) && _unitOfWork.Settings.FirstOrDefault(s => s.Origin == Domain.Enums.OriginEnum.Twitch && s.IsAdsDisplay == true) == null)
         {
             return;
         }
