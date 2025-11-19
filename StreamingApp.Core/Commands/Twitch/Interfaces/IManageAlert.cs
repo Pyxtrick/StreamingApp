@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.Core.Commands.Twitch.Interfaces;
-internal interface IManageAlert
+public interface IManageAlert
 {
     Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto);
 

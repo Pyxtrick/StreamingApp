@@ -4,6 +4,7 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
@@ -27,7 +28,9 @@ internal class ManageAlert : IManageAlert
 
     private readonly IMessageCheck _messageCheck;
 
-    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub, IMovingText movingText, IMessageCheck messageCheck)
+    private readonly IRaidAlert _raidAlert;
+
+    public ManageAlert(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub, IMovingText movingText, IMessageCheck messageCheck, IRaidAlert raidAlert)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
@@ -35,6 +38,7 @@ internal class ManageAlert : IManageAlert
         _clientHub = clientHub;
         _movingText = movingText;
         _messageCheck = messageCheck;
+        _raidAlert = raidAlert;
     }
 
     public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
@@ -52,7 +56,7 @@ internal class ManageAlert : IManageAlert
                 // TODO: Show emote
                 if (await _messageCheck.ExecuteMessageOnly(messageAlertDto.Message))
                 {
-                    MessageDto highlightChatMessage = new(messageAlertDto.AlertType.ToString(), false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, null, messageAlertDto.Message, messageAlertDto.EmoteReplacedMessage, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+                    MessageDto highlightChatMessage = new(false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, messageAlertDto.AlertType.ToString(), null, messageAlertDto.Message, messageAlertDto.EmoteReplacedMessage, DateTime.Now);
 
                     await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", highlightChatMessage);
                 }
@@ -104,7 +108,7 @@ internal class ManageAlert : IManageAlert
             message = $"Fallowed";
         }
 
-        MessageDto chatMessage = new(messageAlertDto.AlertType.ToString(), false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, null, message, messageAlertDto.EmoteReplacedMessage, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        MessageDto chatMessage = new(false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, messageAlertDto.AlertType.ToString(), null, message, messageAlertDto.EmoteReplacedMessage, DateTime.Now);
         await _clientHub.Clients.All.SendAsync("displayEventMessages", chatMessage);
     }
 
@@ -133,12 +137,24 @@ internal class ManageAlert : IManageAlert
 
         string raidMessage = $"{raidDto.UserName} raided with {raidDto.Count} Viewers";
 
-        if (raidDto.UserName.Equals("tiny_karo"))
-        {
-            raidMessage = raidMessage.Replace("Viewers", "Raccoons");
+        string image = string.Empty;
+
+        //TODO: change that it will use DB for raid Message and image
+        switch (raidDto.UserName) {
+            case "tiny_karo":
+                raidMessage = raidMessage.Replace("Viewers", "Raccoons");
+                break;
+            case "Myusagii":
+                raidMessage = raidMessage.Replace("Viewers", "Mangobuns");
+                break;
+            case "fufu":
+                raidMessage = raidMessage.Replace("Viewers", "Garys");
+                break;
         }
 
         Console.WriteLine(raidMessage);
+
+        await _clientHub.Clients.All.SendAsync("ReceiveAlert", await _raidAlert.Execute(raidDto.Count, image));
 
         /**MessageDto chatMessage = new("raidId", false, "local", "userid", "", "", "#ff6b6b", "", raidMessage, null, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
         await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", chatMessage);**/
@@ -164,11 +180,11 @@ internal class ManageAlert : IManageAlert
 
         if (subDto.ChatMessage != null)
         {
-            chatMessage = new("sub", false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, subDto.ChatMessage.ColorHex, null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+            chatMessage = new(false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, subDto.ChatMessage.ColorHex, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "sub", null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, DateTime.Now);
         }
         else
         {
-            chatMessage = new("sub", false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, "Hex", null, message, "EmoteReplacedMessage", null, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+            chatMessage = new(false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, "Hex", null, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "sub", null, message, "EmoteReplacedMessage", DateTime.Now);
         }
 
         //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);

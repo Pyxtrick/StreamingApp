@@ -73,6 +73,7 @@ public static class Registrar
         //Alert
         services.AddScoped<IHighlightMessage, HighlightMessage>();
         services.AddScoped<IMovingText, MovingText>();
+        services.AddScoped<IRaidAlert, RaidAlert>();
         services.AddScoped<ISubAlertLoong, SubAlertLoong>();
 
         //Logic 
