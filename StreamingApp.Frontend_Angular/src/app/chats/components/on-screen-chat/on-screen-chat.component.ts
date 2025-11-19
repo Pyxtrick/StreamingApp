@@ -34,6 +34,7 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollframe') scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
 
+  @Input() isConsistent = false;
   @Input() useSignalR = true;
   @Input() displayChatMessages: DisplayChat[] = [];
 
@@ -48,6 +49,12 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.isConsistent =
+      JSON.parse(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        new URLSearchParams(window.location.search).get('isConsistent')!
+      ) ?? false;
+
     if (this.useSignalR) {
       this.signalRService.startConnection().subscribe(() => {
         this.signalRService
@@ -75,7 +82,11 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
           });
       });
 
-      this.subscription = interval(1000).subscribe(() => this.removeElement());
+      if (!this.isConsistent) {
+        this.subscription = interval(1000).subscribe(() =>
+          this.removeElement()
+        );
+      }
     }
   }
 
