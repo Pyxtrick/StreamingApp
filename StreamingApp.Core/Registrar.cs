@@ -22,6 +22,7 @@ using StreamingApp.Core.VTubeStudio.Cache.CacheData;
 using StreamingApp.Core.Utility.TextToSpeach.Cache.CacheData;
 using StreamingApp.Core.Utility.TextToSpeach.Cache;
 using StreamingApp.Core.Utility.TextToSpeach;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
 
 namespace StreamingApp.Core;
 
@@ -48,16 +49,17 @@ public static class Registrar
 
         // Twitch
         services.AddScoped<IGameCommand, GameCommand>();
+        services.AddScoped<IManageAchievements, ManageAchievements>();
+        services.AddScoped<IManageAlert, ManageAlert>();
         services.AddScoped<IManageCommands, ManageCommands>();
         services.AddScoped<IManageCommandsWithLogic, ManageCommandsWithLogic>();
         services.AddScoped<IManageDeleted, ManageDeleted>();
-        services.AddScoped<IManageScheduler, ManageScheduler>();
         services.AddScoped<IManageMessages, ManageMessages>();
+        services.AddScoped<IManageScheduler, ManageScheduler>();
         services.AddScoped<IManageStream, ManageStream>();
-        //services.AddScoped<IManageSub,  ManageSub>();
-        //services.AddScoped<IManageSubathon,  ManageSubathon>();
-        services.AddScoped<IQueueCommand, QueueCommand>();
+        //services.AddScoped<IManageSubathon, ManageSubathon>();
         services.AddScoped<IPointRedeam, PointRedeam>();
+        services.AddScoped<IQueueCommand, QueueCommand>();
 
         //Commands
         services.AddScoped<IStartTwitchApi, StartInitialise>();
@@ -70,8 +72,8 @@ public static class Registrar
 
         //Alert
         services.AddScoped<IHighlightMessage, HighlightMessage>();
-        services.AddScoped<ISubAlertLoong, SubAlertLoong>();
         services.AddScoped<IMovingText, MovingText>();
+        services.AddScoped<ISubAlertLoong, SubAlertLoong>();
 
         //Logic 
         services.AddScoped<IMessageCheck, MessageCheck>();

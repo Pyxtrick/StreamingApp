@@ -150,8 +150,11 @@ public class SendSignalRMessage : ISendSignalRMessage
     /// <returns></returns>
     public async Task TranslateMessage(MessageDto messageDto)
     {
-        messageDto.Message = await _translate.TranslateMessage(messageDto.Message);
+        object[] paramArray = messageDto.GetType().GetProperties().Select(p => { object value = p.GetValue(messageDto, null); return value; }).ToArray();
+        MessageDto? newMessage = (MessageDto)Activator.CreateInstance(typeof(MessageDto), (object[])paramArray);
 
-        await _hubContext.Clients.All.SendAsync("ReceiveTranslatedMessage", messageDto);
+        newMessage.Message = await _translate.TranslateMessage(messageDto.Message);
+
+        await _hubContext.Clients.All.SendAsync("ReceiveTranslatedMessage", newMessage);
     }
 }
