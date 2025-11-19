@@ -22,6 +22,12 @@ export const routes: Routes = [
   },
   {
     // lasy loading (gets sites when changing to path)
+    path: 'background',
+    loadChildren: () =>
+      import('./background/background.routes').then((m) => m.BACKGROUND_ROUTES),
+  },
+  {
+    // lasy loading (gets sites when changing to path)
     path: 'chats',
     providers: [provideState(chatsFeature), provideEffects(ChatsEffects)],
     loadChildren: () =>
