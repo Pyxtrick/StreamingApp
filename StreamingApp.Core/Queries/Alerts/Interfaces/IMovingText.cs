@@ -1,5 +1,4 @@
-﻿
-namespace StreamingApp.Core.Queries.Alerts;
+﻿namespace StreamingApp.Core.Queries.Alerts.Interfaces;
 
 public interface IMovingText
 {

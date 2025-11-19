@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
 
 namespace StreamingApp.Core.Queries.Alerts;
 
