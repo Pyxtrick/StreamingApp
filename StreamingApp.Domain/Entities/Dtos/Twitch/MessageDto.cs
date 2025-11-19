@@ -6,12 +6,8 @@ namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 /// Message with all Inortant information comming from Twitch / (Youtube)
 /// </summary>
 public class MessageDto(
-    string messageId,
     bool isCommand,
     string channel,
-    string userId,
-    string userName,
-    string displayName,
     string colorHex,
     string? replayMessage,
     string message,
@@ -25,6 +21,10 @@ public class MessageDto(
     bool isSub,
     int subCount,
     bool isUsed,
+    string messageId,
+    string userId,
+    string userName,
+    string displayName,
     DateTime utcNow)
     : TwitchBase(messageId, userId, userName, displayName, utcNow)
 {

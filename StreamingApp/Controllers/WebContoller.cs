@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
-using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.Web.Controllers;

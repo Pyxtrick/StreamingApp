@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
-using StreamingApp.Domain.Enums;
-using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Queries.Achievements;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
+using StreamingApp.DB;
+using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.InternalDB.User;
+using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Responces;
-using StreamingApp.Core.Queries.Alerts;
 
 namespace StreamingApp.Web.Controllers;
 
@@ -28,9 +30,9 @@ public class TestController : ControllerBase
          const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
-        MessageDto chatMessage = new("Id", false, "local", "userid",
-            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", "replymessage", mess, "emoteReply", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
-            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
+        MessageDto chatMessage = new(false, "local", "userid",
+            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", new List<EmoteSet>(), new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, "Id", "replymessage", mess, "emoteReply", DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
 
@@ -47,9 +49,9 @@ public class TestController : ControllerBase
 
         Console.WriteLine($"messageId {t}");
 
-        MessageDto chatMessage = new("Id", false, "local", "userid",
-            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", "", "pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave", "emoteReply", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
-            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.Now);
+        MessageDto chatMessage = new(false, "local", "userid",
+            "Noodle_Snake_Bot_Test", "Noodle_Snake_Bot_Test", "#ff6b6b", new List<EmoteSet>() { new EmoteSet() { Name = "tinyka2JamA", StaticURL = "", AnimatedURL = "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_b8d7d382937a49b2bbaad3bf6df4dabd/default/dark/4.0" } }, new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, "Id", "", "pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave", "emoteReply", DateTime.Now);
 
         Console.WriteLine($"message {chatMessage.UserName}");
 
@@ -60,8 +62,8 @@ public class TestController : ControllerBase
     [HttpPut("AddToChache")]
     public async void AddDataToCache([FromServices] ITwitchCallCache _twitchCallCache)
     {
-        MessageDto message = new("1", false, "testuser", "TestUser", "1", "testuser", "#fff", null, "hello", "", null, new() { new("kekw", "assets/3x.webp") },
-            OriginEnum.Twitch, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, DateTime.UtcNow);
+        MessageDto message = new(false, "testuser", "TestUser", "1", "testuser", "#fff", null, new() { new("kekw", "assets/3x.webp") },
+            OriginEnum.Twitch, new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, "1", null, "hello", "", DateTime.UtcNow);
 
         _twitchCallCache.AddMessage(message, CallCacheEnum.CachedMessageData);
     }
@@ -127,6 +129,12 @@ public class TestController : ControllerBase
         var finalAlert = new AlertDto() { Html = html, Duration = 15 };
 
         await clientHub.Clients.All.SendAsync("ReceiveAlert", finalAlert);
+    }
+
+    [HttpGet("StreamRaidAllert")]
+    public async Task GetRaidAllert([FromServices] IRaidAlert raidAlert, IHubContext<ChatHub> clientHub, int count, string? image)
+    {
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", await raidAlert.Execute(count, image));
     }
 
     [HttpGet("TextAlert")]

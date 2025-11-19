@@ -35,7 +35,7 @@ public class PointRedeam : IPointRedeam
 
         }
 
-        MessageDto chatMessage = new("messageid", false, "channel", userId, userName, userName, "#ff6b6b", "", rewardName, null, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, DateTime.Now);
+        MessageDto chatMessage = new(false, "channel", userId, userName, userName, "#ff6b6b", new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "messageid", "", rewardName, null, DateTime.Now);
         await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", chatMessage);
     }
 }

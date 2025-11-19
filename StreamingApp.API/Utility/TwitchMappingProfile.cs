@@ -10,16 +10,12 @@ public class TwitchMappingProfile : Profile
     {
         CreateMap<ChatMessage, MessageDto>()
             .ConstructUsing(x => new MessageDto(
-                x.Id,
                 false,
                 x.Channel,
                 x.UserId,
                 x.Username,
                 x.DisplayName,
                 x.ColorHex,
-                x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
-                x.Message,
-                x.EmoteReplacedMessage,
                 MappEmotes(x.EmoteSet),
                 x.Badges,
                 OriginEnum.Twitch,
@@ -29,6 +25,10 @@ public class TwitchMappingProfile : Profile
                 x.IsSubscriber,
                 x.SubscribedMonthCount,
                 false,
+                x.Id,
+                x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
+                x.Message,
+                x.EmoteReplacedMessage,
                 DateTime.UtcNow
             ));
 
@@ -102,16 +102,12 @@ public class TwitchMappingProfile : Profile
                 int.Parse(x.MsgParamCumulativeMonths),
                 (TierEnum)Enum.Parse(typeof(TierEnum), x.SubscriptionPlan.ToString()),
                 new MessageDto(
-                    x.Id,
                     false,
                     x.Channel,
                     x.UserId,
                     x.DisplayName,
                     x.DisplayName,
                     x.ColorHex,
-                    null,
-                    x.ResubMessage,
-                    x.EmoteSet,
                     new List<Domain.Entities.Dtos.Twitch.EmoteSet>(),
                     x.Badges,
                     OriginEnum.Twitch,
@@ -121,6 +117,10 @@ public class TwitchMappingProfile : Profile
                     true,
                     int.Parse(x.MsgParamCumulativeMonths),
                     false,
+                    x.Id,
+                    null,
+                    x.ResubMessage,
+                    x.EmoteSet,
                     DateTime.UtcNow
                 ),
                 false,

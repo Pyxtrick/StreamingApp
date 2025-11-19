@@ -1,4 +1,5 @@
-﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
+﻿using StreamingApp.Core.Queries.Alerts.Interfaces;
+using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.Core.Queries.Alerts;
 
