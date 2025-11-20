@@ -34,10 +34,25 @@ public class ManageAchievements : IManageAchievements
         }
         else
         {
-            var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin != sub.Origin);
+            var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == sub.Origin);
 
-            twitchSub.CurrentySubscribed = true;
-            twitchSub.CurrentTier = sub.CurrentTier;
+            if(twitchSub == null)
+            {
+                Console.Error.WriteLine($"Error During Sub with {sub.Origin}");
+                twitchSub = new()
+                {
+                    Origin = sub.Origin,
+                    CurrentTier = sub.CurrentTier,
+                    CurrentySubscribed = true,
+                    SubscribedTime = 1
+                };
+            }
+            else
+            {
+                twitchSub.CurrentySubscribed = true;
+                twitchSub.CurrentTier = sub.CurrentTier;
+                twitchSub.SubscribedTime = twitchSub.SubscribedTime + 1;
+            }
 
             //_unitOfWork.Sub.Update(twitchSub);
             await _unitOfWork.SaveChangesAsync();
