@@ -3,7 +3,6 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.API.Utility.Caching;
 using StreamingApp.Core.Commands;
 using StreamingApp.Core.Commands.FileLogic;
-using StreamingApp.Core.Queries;
 using StreamingApp.Core.Utility;
 using StreamingApp.Core.Utility.Caching.CacheData;
 using StreamingApp.Core.Utility.Scheduler;

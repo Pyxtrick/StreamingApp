@@ -4,10 +4,8 @@ using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Core.Queries.Alerts.Interfaces;
-using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Responces;
 

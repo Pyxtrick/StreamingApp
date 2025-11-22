@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Core.Queries.Alerts;
 using StreamingApp.Core.Queries.Alerts.Interfaces;
 using StreamingApp.Core.Queries.Logic.Interfaces;
 using StreamingApp.DB;

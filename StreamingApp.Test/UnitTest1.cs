@@ -1,12 +1,11 @@
-﻿namespace StreamingApp.Test;
-
-using LanguageDetection;
+﻿using LanguageDetection;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using StreamingApp.Tests;
-using System;
 using Xunit;
+
+namespace StreamingApp.Test;
 
 public class Tests : DataBaseFixture
 {
