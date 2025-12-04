@@ -13,12 +13,49 @@ Fronted
 			Toggle
 		Item
 
+
+	Update "Ads Dispaly" with Data from the backend / DB
+
+	Error => TEST
+
+	Error => Ads Text stoping erlier than expeted
+
+	fail SUB: StreamingApp.Core.Utility.Scheduler.AlertScheduler[0]
+      An error was generated for warning 'Microsoft.EntityFrameworkCore.Query.InvalidIncludePathError':
+	  Unable to find navigation 'Sub' specified in string based include path 'Sub'. 
+	  This exception can be suppressed or logged by passing event ID 'CoreEventId.InvalidIncludePathError' 
+	  to the 'ConfigureWarnings' method in 'DbContext.OnConfiguring' or 'AddDbContext'
+
+
+
+	OnUnaccountedForArgs
+		@badge-info=founder/5;badges=moderator/1,founder/0;color=#FF0000;display-name=NoodleSnekBot;
+		emotes=emotesv2_766a575b6d714bc1a5f0d09edd5dc69e:0-11;flags=;id=ae30ceb5-209b-45d0-89c2-b71ea5c6754a;
+		login=noodlesnekbot;mod=1;
+		msg-id=viewermilestone;
+		msg-param-category=watch-streak;
+		msg-param-copoReward=450;msg-param-id=c471db8b-7505-4c11-a0f8-4a8234c447da;
+		msg-param-value=7;room-id=66716756;subscriber=1;system-msg=NoodleSnekBot\swatched\s7\sconsecutive\sstreams\sand\ssparked\sa\swatch\sstreak!;tmi-sent-ts=1762369579802;user-id=1039826911;user-type=mod;vip=0 :tmi.twitch.tv USERNOTICE #pyxtrick :pyxtriFlower
+
+
+		TODO: See if 15-Stream-Streak is in there
+		OnSendReceiveDataArgs Data: PONG :tmi.twitch.tv
+OnSendReceiveDataArgs Data: @badge-info=founder/6;badges=moderator/1,founder/0;color=#FF0000;display-name=NoodleSnekBot;emotes=emotesv2_766a575b6d714bc1a5f0d09edd5dc69e:0-11;flags=;id=e2456b85-6af5-4398-bc24-1add3cfe5fe8;login=noodlesnekbot;mod=1;msg-id=viewermilestone;msg-param-category=watch-streak;msg-param-copoReward=450;msg-param-id=c471db8b-7505-4c11-a0f8-4a8234c447da;msg-param-value=15;room-id=66716756;subscriber=1;system-msg=NoodleSnekBot\swatched\s15\sconsecutive\sstreams\sand\ssparked\sa\swatch\sstreak!;tmi-sent-ts=1764101511462;user-id=1039826911;user-type=mod;vip=0 :tmi.twitch.tv USERNOTICE #pyxtrick :pyxtriFlower
+OnUnaccountedForArgs @badge-info=founder/6;badges=moderator/1,founder/0;color=#FF0000;display-name=NoodleSnekBot;emotes=emotesv2_766a575b6d714bc1a5f0d09edd5dc69e:0-11;flags=;id=e2456b85-6af5-4398-bc24-1add3cfe5fe8;login=noodlesnekbot;mod=1;msg-id=viewermilestone;msg-param-category=watch-streak;msg-param-copoReward=450;msg-param-id=c471db8b-7505-4c11-a0f8-4a8234c447da;msg-param-value=15;room-id=66716756;subscriber=1;system-msg=NoodleSnekBot\swatched\s15\sconsecutive\sstreams\sand\ssparked\sa\swatch\sstreak!;tmi-sent-ts=1764101511462;user-id=1039826911;user-type=mod;vip=0 :tmi.twitch.tv USERNOTICE #pyxtrick :pyxtriFlower
+
+
+	Error: NoodleSnekBot not showing in the Bot Chat
+
 	Check Resubmessage / Hypetrain error
 	Testing: Save message / sub in Chache 
 
+	Fix Resub not showing on frontend
+
 	Fix? Names not correcty displaying (no collor)
 
-	Move queue from Frontendto backend
+	Check and Fix when they are alone pyxtriRave (pyxtrants) and pyxtriSip (pyxtrisip)
+
+	Move queue from Frontend to backend
 		Comunticate between frontend and backend with Alert Queue
 			Backend Sends Alert when OK to send Request
 			After Frontend is Done Playing Request new Alert from Backend, Frontend Confirms to Backend that is recived Alert
