@@ -277,6 +277,9 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         RaidDto raidDto = new(userName, amount, "", false, DateTime.UtcNow);
 
+
+        // TODO: Works continue with Things todo
+
         //throw new NotImplementedException();
     }
 

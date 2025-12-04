@@ -3,6 +3,7 @@ using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
 using TwitchLib.Api;
 using TwitchLib.Client;
@@ -26,7 +27,8 @@ public class TwitchInitialise : ITwitchInitialise
         "moderator:manage:shoutouts", "moderator:manage:announcements", "moderator:read:followers", "moderator:read:chat_messages",
         "chat:read", "chat:edit", 
         "whispers:read", "whispers:edit",
-        "channel:bot", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions" };
+        "bits:read",
+        "channel:bot", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions", "channel:read:ads", "channel:manage:ads" };
 
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;
@@ -34,7 +36,7 @@ public class TwitchInitialise : ITwitchInitialise
     private TwitchAPI TheTwitchAPI;
 
     // Cached Variables
-    private string CachedOwnerOfChanelAccessToken = "needsaccesstoken";
+    private string CachedOwnerOfChanelAccessToken = "needsaccesstoken"; // Change to AppAccess Tocken
     private string TwitchChannelName;
 
     public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
@@ -52,15 +54,18 @@ public class TwitchInitialise : ITwitchInitialise
         // open browser to Authenticate Bot
         // TODO: update ClientId and ClientSecret in UserSecrets to use the PyxtrickBot Account and not the Pyxtrick Account
         var authUrl = $"https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={_configuration["Twitch:ClientId"]}&redirect_uri={_configuration["Twitch:RedirectUrl"]}&scope={String.Join("+", Scopes)}";
+        var authUrl2 = $"https://id.twitch.tv/oauth2/token?id={_configuration["Twitch:ClientId"]}";
         //For Default Browser:
         //Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
         Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "chrome.exe", Arguments = authUrl });
+        //Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "chrome.exe", Arguments = authUrl2 });
     }
 
     public void InitializeWebServer()
     {
         WebServer = new HttpServer(IPAddress.Loopback, 80);
         var t = IPAddress.Loopback;
+
 
         WebServer.OnGet += async (s, e) =>
         {
@@ -99,7 +104,7 @@ public class TwitchInitialise : ITwitchInitialise
         }
     }
 
-    private async Task<Tuple<string, string>> GetAccessAndRefreshToken(string code)
+    private async Task<Tuple<string, string, string>> GetAccessAndRefreshToken(string code)
     {
         HttpClient client = new HttpClient();
         var values = new Dictionary<string, string>
@@ -107,7 +112,7 @@ public class TwitchInitialise : ITwitchInitialise
             { "client_id", _configuration["Twitch:ClientId"] },
             { "client_secret", _configuration["Twitch:ClientSecret"] },
             { "code", code },
-            { "grant_type", "authorization_code" },
+            { "grant_type", "authorization_code" }, 
             { "redirect_uri", _configuration["Twitch:RedirectUrl"] },
         };
 
@@ -117,7 +122,21 @@ public class TwitchInitialise : ITwitchInitialise
 
         var responseString = await response.Content.ReadAsStringAsync();
         var json = JsonObject.Parse(responseString);
-        return new Tuple<string, string>(json["access_token"].ToString(), json["refresh_token"].ToString());
+
+        /** app access token*/
+        // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow -> client_credentials
+        HttpClient appClient = new HttpClient();
+        var appValues = new Dictionary<string, string>
+        {
+            { "client_id", _configuration["Twitch:ClientId"] },
+            { "client_secret", _configuration["Twitch:ClientSecret"] },
+            { "grant_type", "client_credentials" },
+        };
+
+        var appResponse = await appClient.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(appValues));
+        var appJson = JsonObject.Parse(await appResponse.Content.ReadAsStringAsync());
+        
+        return new Tuple<string, string, string>(json["access_token"].ToString(), json["refresh_token"].ToString(), appJson["access_token"].ToString());
     }
 
     private async Task SetNameAndOuthedUser(string accessToken)
@@ -125,6 +144,15 @@ public class TwitchInitialise : ITwitchInitialise
         var api = new TwitchAPI();
         api.Settings.ClientId = _configuration["Twitch:ClientId"];
         api.Settings.AccessToken = accessToken;
+
+        HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var response = await client.GetAsync("https://id.twitch.tv/oauth2/validate");
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var json = JsonObject.Parse(responseString);
+
+        //TwitchChannelName = "noodlesnekbot";
 
         var outhedUser = await api.Helix.Users.GetUsersAsync();
         TwitchChannelName = outhedUser.Users[0].Login;
@@ -156,7 +184,7 @@ public class TwitchInitialise : ITwitchInitialise
     {
         OwnerOfChannelConnection = new TwitchClient();
         OwnerOfChannelConnection.Initialize(new ConnectionCredentials(username, accessToken), TwitchChannelName);
-
+        
         // Events you want to subscribe to
         OwnerOfChannelConnection.OnConnected += _twichApiRequest.Client_OnConnected;
         OwnerOfChannelConnection.OnDisconnected += _twichApiRequest.OwnerOfChannel_OnDisconnected;

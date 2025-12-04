@@ -107,6 +107,11 @@ public class TwitchSendRequest : ITwitchSendRequest
             if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
             {
                 _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+
+                //https://dev.twitch.tv/docs/api/reference/#send-chat-message -> for_source_only -> no need if using App Access Token
+
+                //https://dev.twitch.tv/docs/api/reference/#send-chat-message
+                //_twitchCache.GetTheTwitchAPI().Helix.Chat.SendMessage()
             }
         }
     }
