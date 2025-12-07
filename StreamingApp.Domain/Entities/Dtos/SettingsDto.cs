@@ -12,7 +12,11 @@ public class SettingsDto
 
     public bool MuteAllerts { get; set; }
 
-    public bool MuteChatMessages { get; set; }
+    public bool PauseAllerts { get; set; }
+
+    public bool IsAdsDisplay { get; set; }
+
+    public bool PauseChatMessages { get; set; }
 
     public bool ComunityDayActive { get; set; }
 
@@ -22,5 +26,7 @@ public class SettingsDto
 
     public int TimeOutSeconds { get; set; }
 
-    public int SpamAmmount { get; set; }
+    public int TTSSpamAmmount { get; set; }
+
+    public int TTSLenghtAmmount { get; set; }
 }

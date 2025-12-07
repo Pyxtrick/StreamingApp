@@ -1,9 +1,13 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 public interface ICRUDSettings
 {
     Task<List<SettingsDto>> GetAll();
+
+    Task<SettingsDto> GetSettingByOrigin(OriginEnum origin);
+
     Task<bool> Update(SettingsDto newSettings);
 
     Task<bool> SwitchAdsDisplay(bool isDisableAdsDisplay);

@@ -8,3 +8,10 @@ public class SettingsRespose
 
     public bool isSucsess { get; set; }
 }
+
+public class SettingRespose
+{
+    public SettingsDto Setting { get; set; }
+
+    public bool isSucsess { get; set; }
+}

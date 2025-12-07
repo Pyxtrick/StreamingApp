@@ -2,6 +2,7 @@
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.InternalDB;
+using StreamingApp.Domain.Enums;
 using StreamingApp.Domain.Responces;
 
 namespace StreamingApp.Web.Controllers;
@@ -97,6 +98,18 @@ public class DataContoller : ControllerBase
         {
             Settings = settings,
             isSucsess = settings.Any(),
+        };
+    }
+
+    [HttpGet("SettingByOrigin")]
+    public async Task<SettingRespose> GetSettingByOrigin([FromServices] ICRUDSettings crudSettings, OriginEnum origin)
+    {
+        var settings = await crudSettings.GetSettingByOrigin(origin);
+
+        return new SettingRespose()
+        {
+            Setting = settings,
+            isSucsess = settings != null,
         };
     }
 

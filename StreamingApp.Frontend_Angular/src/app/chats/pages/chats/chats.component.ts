@@ -5,6 +5,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { map, Observable } from 'rxjs';
+import { OriginEnum, SettingsDto } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { BannedTargetEnum } from 'src/app/models/enums/BannedTargetEnum';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
@@ -12,6 +14,7 @@ import { NgSwitch } from '../../../../../node_modules/@angular/common/index';
 import { AllChatPageComponent } from '../../components/all-chat/all-chat-page.component';
 import { ConvertMessage } from '../../logic/convertMessage';
 import { ChatsActions } from '../../state/action';
+import { chatsFeature } from '../../state/reducers';
 import { BannedUserDto } from './../../../models/dtos/BannedUserDto';
 import { DisplayChat } from './../../models/DisplayChat';
 
@@ -37,6 +40,8 @@ export class ChatsComponent implements OnInit {
 
   private store = inject(Store);
 
+  public setting$!: Observable<SettingsDto>;
+
   isDisableAdsDisplay = true;
   isVerticalChat = false;
 
@@ -54,6 +59,21 @@ export class ChatsComponent implements OnInit {
   displayYoutubeMessages: DisplayChat[] = [];
 
   ngOnInit(): void {
+    this.store.dispatch(ChatsActions.loadSetting(OriginEnum.Twitch));
+    this.setting$ = this.store.select(chatsFeature.selectSetting);
+
+    this.store
+      .select(chatsFeature.selectSetting)
+      .pipe(
+        map((setting) => {
+          if (setting != null) {
+            this.isDisableAdsDisplay = setting.isAdsDisplay;
+          }
+          console.log('test', setting.isAdsDisplay);
+        })
+      )
+      .subscribe();
+
     this.signalRService.startConnection().subscribe(() => {
       this.signalRService
         .receiveChatMessage('ReceiveChatMessage')

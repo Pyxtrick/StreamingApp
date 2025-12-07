@@ -3,6 +3,7 @@ using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.DB.CRUD;
 
@@ -20,9 +21,16 @@ public class CRUDSettings : ICRUDSettings
 
     public async Task<List<SettingsDto>> GetAll()
     {
-        List<Settings> setting = _unitOfWork.Settings.ToList();
+        List<Settings> settings = _unitOfWork.Settings.ToList();
 
-        return setting.Select(_mapper.Map<SettingsDto>).ToList();
+        return settings.Select(_mapper.Map<SettingsDto>).ToList();
+    }
+
+    public async Task<SettingsDto> GetSettingByOrigin(OriginEnum origin)
+    {
+        Settings setting = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == origin);
+
+        return _mapper.Map<SettingsDto>(setting);
     }
 
     public async Task<bool> Update(SettingsDto newSettings)

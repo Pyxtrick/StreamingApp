@@ -542,6 +542,58 @@ export class DataContollerClient {
         return _observableOf(null as any);
     }
 
+    getSettingByOrigin(origin: OriginEnum | undefined): Observable<SettingRespose> {
+        let url_ = this.baseUrl + "/api/DataContoller/SettingByOrigin?";
+        if (origin === null)
+            throw new Error("The parameter 'origin' cannot be null.");
+        else if (origin !== undefined)
+            url_ += "origin=" + encodeURIComponent("" + origin) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSettingByOrigin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSettingByOrigin(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SettingRespose>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SettingRespose>;
+        }));
+    }
+
+    protected processGetSettingByOrigin(response: HttpResponseBase): Observable<SettingRespose> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SettingRespose.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     getAllspecialWords(): Observable<SpecialWordRespose> {
         let url_ = this.baseUrl + "/api/DataContoller/SpecialWords";
         url_ = url_.replace(/[?&]$/, "");
@@ -3240,12 +3292,15 @@ export class SettingsDto implements ISettingsDto {
     origin!: OriginEnum;
     allChat!: AuthEnum;
     muteAllerts!: boolean;
-    muteChatMessages!: boolean;
+    pauseAllerts!: boolean;
+    isAdsDisplay!: boolean;
+    pauseChatMessages!: boolean;
     comunityDayActive!: boolean;
     delay!: string;
     allertDelayS!: number;
     timeOutSeconds!: number;
-    spamAmmount!: number;
+    ttsSpamAmmount!: number;
+    ttsLenghtAmmount!: number;
 
     constructor(data?: ISettingsDto) {
         if (data) {
@@ -3262,12 +3317,15 @@ export class SettingsDto implements ISettingsDto {
             this.origin = _data["origin"] !== undefined ? _data["origin"] : <any>null;
             this.allChat = _data["allChat"] !== undefined ? _data["allChat"] : <any>null;
             this.muteAllerts = _data["muteAllerts"] !== undefined ? _data["muteAllerts"] : <any>null;
-            this.muteChatMessages = _data["muteChatMessages"] !== undefined ? _data["muteChatMessages"] : <any>null;
+            this.pauseAllerts = _data["pauseAllerts"] !== undefined ? _data["pauseAllerts"] : <any>null;
+            this.isAdsDisplay = _data["isAdsDisplay"] !== undefined ? _data["isAdsDisplay"] : <any>null;
+            this.pauseChatMessages = _data["pauseChatMessages"] !== undefined ? _data["pauseChatMessages"] : <any>null;
             this.comunityDayActive = _data["comunityDayActive"] !== undefined ? _data["comunityDayActive"] : <any>null;
             this.delay = _data["delay"] !== undefined ? _data["delay"] : <any>null;
             this.allertDelayS = _data["allertDelayS"] !== undefined ? _data["allertDelayS"] : <any>null;
             this.timeOutSeconds = _data["timeOutSeconds"] !== undefined ? _data["timeOutSeconds"] : <any>null;
-            this.spamAmmount = _data["spamAmmount"] !== undefined ? _data["spamAmmount"] : <any>null;
+            this.ttsSpamAmmount = _data["ttsSpamAmmount"] !== undefined ? _data["ttsSpamAmmount"] : <any>null;
+            this.ttsLenghtAmmount = _data["ttsLenghtAmmount"] !== undefined ? _data["ttsLenghtAmmount"] : <any>null;
         }
     }
 
@@ -3284,12 +3342,15 @@ export class SettingsDto implements ISettingsDto {
         data["origin"] = this.origin !== undefined ? this.origin : <any>null;
         data["allChat"] = this.allChat !== undefined ? this.allChat : <any>null;
         data["muteAllerts"] = this.muteAllerts !== undefined ? this.muteAllerts : <any>null;
-        data["muteChatMessages"] = this.muteChatMessages !== undefined ? this.muteChatMessages : <any>null;
+        data["pauseAllerts"] = this.pauseAllerts !== undefined ? this.pauseAllerts : <any>null;
+        data["isAdsDisplay"] = this.isAdsDisplay !== undefined ? this.isAdsDisplay : <any>null;
+        data["pauseChatMessages"] = this.pauseChatMessages !== undefined ? this.pauseChatMessages : <any>null;
         data["comunityDayActive"] = this.comunityDayActive !== undefined ? this.comunityDayActive : <any>null;
         data["delay"] = this.delay !== undefined ? this.delay : <any>null;
         data["allertDelayS"] = this.allertDelayS !== undefined ? this.allertDelayS : <any>null;
         data["timeOutSeconds"] = this.timeOutSeconds !== undefined ? this.timeOutSeconds : <any>null;
-        data["spamAmmount"] = this.spamAmmount !== undefined ? this.spamAmmount : <any>null;
+        data["ttsSpamAmmount"] = this.ttsSpamAmmount !== undefined ? this.ttsSpamAmmount : <any>null;
+        data["ttsLenghtAmmount"] = this.ttsLenghtAmmount !== undefined ? this.ttsLenghtAmmount : <any>null;
         return data;
     }
 }
@@ -3299,12 +3360,15 @@ export interface ISettingsDto {
     origin: OriginEnum;
     allChat: AuthEnum;
     muteAllerts: boolean;
-    muteChatMessages: boolean;
+    pauseAllerts: boolean;
+    isAdsDisplay: boolean;
+    pauseChatMessages: boolean;
     comunityDayActive: boolean;
     delay: string;
     allertDelayS: number;
     timeOutSeconds: number;
-    spamAmmount: number;
+    ttsSpamAmmount: number;
+    ttsLenghtAmmount: number;
 }
 
 export enum OriginEnum {
@@ -3312,6 +3376,49 @@ export enum OriginEnum {
     Youtube = 1,
     Discord = 2,
     Undefined = 3,
+}
+
+export class SettingRespose implements ISettingRespose {
+    setting!: SettingsDto;
+    isSucsess!: boolean;
+
+    constructor(data?: ISettingRespose) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.setting = new SettingsDto();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.setting = _data["setting"] ? SettingsDto.fromJS(_data["setting"]) : new SettingsDto();
+            this.isSucsess = _data["isSucsess"] !== undefined ? _data["isSucsess"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): SettingRespose {
+        data = typeof data === 'object' ? data : {};
+        let result = new SettingRespose();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["setting"] = this.setting ? this.setting.toJSON() : <any>null;
+        data["isSucsess"] = this.isSucsess !== undefined ? this.isSucsess : <any>null;
+        return data;
+    }
+}
+
+export interface ISettingRespose {
+    setting: SettingsDto;
+    isSucsess: boolean;
 }
 
 export class SpecialWordRespose implements ISpecialWordRespose {

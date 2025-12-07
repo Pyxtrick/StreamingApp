@@ -1,13 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { StreamClient, WebContollerClient } from '../../../api/api.service';
+import {
+  DataContollerClient,
+  StreamClient,
+  WebContollerClient,
+} from '../../../api/api.service';
 import { ChatsActions } from './action';
 
 @Injectable()
 export class ChatsEffects {
   private actions$ = inject(Actions);
   private api = inject(WebContollerClient);
+  private dataApi = inject(DataContollerClient);
   private streamIpi = inject(StreamClient);
 
   sendHighlightMessage$ = createEffect(() => {
@@ -59,6 +64,24 @@ export class ChatsEffects {
             }
           }),
           catchError((_error) => of(ChatsActions.sendHighlightMessageFailure()))
+        )
+      )
+    );
+  });
+
+  loadSettings$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ChatsActions.loadSetting),
+      switchMap((payload) =>
+        this.dataApi.getSettingByOrigin(payload.origin).pipe(
+          map((r) => {
+            if (r.isSucsess) {
+              return ChatsActions.loadSettingSuccess(r.setting);
+            } else {
+              return ChatsActions.loadSettingFailure();
+            }
+          }),
+          catchError((_error) => of(ChatsActions.loadSettingFailure()))
         )
       )
     );

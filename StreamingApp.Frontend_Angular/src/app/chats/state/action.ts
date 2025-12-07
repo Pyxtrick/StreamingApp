@@ -1,4 +1,5 @@
 import { createActionGroup, emptyProps } from '@ngrx/store';
+import { OriginEnum, SettingsDto } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 
 export const ChatsActions = createActionGroup({
@@ -100,6 +101,18 @@ export const ChatsActions = createActionGroup({
 
     'switch ads display success': emptyProps(),
     'switch ads display failure': emptyProps(),
+    //#endregion
+
+    //#region Settings
+    'load setting': (origin: OriginEnum) => ({
+      origin,
+    }),
+    'load setting success': (setting: SettingsDto) => ({
+      setting,
+    }),
+    'load setting failure': (message?: string) => ({
+      message,
+    }),
     //#endregion
   },
 });

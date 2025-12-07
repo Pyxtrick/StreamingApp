@@ -1,4 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
+import { SettingsDto } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { ChatsActions } from './action';
 
@@ -10,6 +11,7 @@ export interface ChatsState {
   friendChat: ChatDto[];
   event: ChatDto[];
   modEvent: ChatDto[];
+  setting: SettingsDto;
 }
 
 export const initialState: ChatsState = {
@@ -20,6 +22,7 @@ export const initialState: ChatsState = {
   friendChat: [],
   event: [],
   modEvent: [],
+  setting: new SettingsDto(),
 };
 
 export const chatsFeature = createFeature({
@@ -87,6 +90,17 @@ export const chatsFeature = createFeature({
     })),
     on(ChatsActions.addModEvents, (state): any => ({
       ...state,
+    })),
+    //#endregion
+
+    //#region Settings Event
+    on(ChatsActions.loadSetting, (state): any => ({
+      ...state,
+    })),
+    on(ChatsActions.loadSettingSuccess, (state, { setting }): any => ({
+      ...state,
+      setting: setting,
+      settingsLoading: false,
     }))
     //#endregion
   ),
