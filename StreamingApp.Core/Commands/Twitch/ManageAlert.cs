@@ -168,7 +168,7 @@ internal class ManageAlert : IManageAlert
         MessageDto chatMessage;
         string message = "";
 
-        if (subDto.SubLenght > 1)
+        if (subDto.IsGifftedSub)
         {
             message = $"{subDto.UserName} Giffted {subDto.GifftedSubCount} {subDto.CurrentTier} Subs";
         }
@@ -179,11 +179,13 @@ internal class ManageAlert : IManageAlert
 
         if (subDto.ChatMessage != null)
         {
-            chatMessage = new(false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, subDto.ChatMessage.ColorHex, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "sub", null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, DateTime.Now);
+            chatMessage = new(false, subDto.Channel, subDto.ChatMessage.ColorHex, null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch,
+                new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, subDto.MessageId, subDto.UserId, subDto.UserName, subDto.UserName, DateTime.Now);
         }
         else
         {
-            chatMessage = new(false, subDto.Channel, subDto.UserId, subDto.UserName, subDto.UserName, "Hex", null, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "sub", null, message, "EmoteReplacedMessage", DateTime.Now);
+            chatMessage = new(false, subDto.Channel, subDto.ChatMessage.ColorHex, null, message, message, null, new(), OriginEnum.Twitch,
+                new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, subDto.MessageId, subDto.UserId, subDto.UserName, subDto.UserName, DateTime.Now);
         }
 
         //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);

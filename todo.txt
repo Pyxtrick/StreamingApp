@@ -1,5 +1,6 @@
 Backend
 	Send chat message to Web to
+	Send Bot messages to Bot Chat to 
 
 	Check for Deleted Messages and send a delete request to Frontend Onscreen Chat
 
