@@ -7,16 +7,16 @@ import { StreamComponent } from '../../components/stream/stream.component';
 import { UsersComponent } from '../../components/users/users.component';
 
 @Component({
-    selector: 'app-setting',
-    imports: [
-        MatTabsModule,
-        CommandComponent,
-        StreamComponent,
-        CategoryComponent,
-        SpecialWordsComponent,
-        UsersComponent,
-    ],
-    templateUrl: './settings.component.html',
-    styleUrl: './settings.component.scss'
+  selector: 'app-setting',
+  imports: [
+    MatTabsModule,
+    CommandComponent,
+    StreamComponent,
+    CategoryComponent,
+    SpecialWordsComponent,
+    UsersComponent,
+  ],
+  templateUrl: './settings.component.html',
+  styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {}
