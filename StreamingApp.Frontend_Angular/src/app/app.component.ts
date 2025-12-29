@@ -9,19 +9,18 @@ import { TranslateModule } from '@ngx-translate/core';
 registerLocaleData(ch);
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    TranslateModule,
-    MatSlideToggleModule,
-    MatButtonModule,
-    MatListModule,
-  ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }],
+    selector: 'app-root',
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        MatSlideToggleModule,
+        MatButtonModule,
+        MatListModule,
+    ],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
 })
 export class AppComponent {
   title = 'Streaming.Web';

@@ -8,11 +8,10 @@ import { SettingsActions } from '../../state/action';
 import { settingsFeature } from '../../state/reducers';
 
 @Component({
-  selector: 'app-category',
-  standalone: true,
-  imports: [CommonModule, MatTableModule],
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.scss',
+    selector: 'app-category',
+    imports: [CommonModule, MatTableModule],
+    templateUrl: './category.component.html',
+    styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit {
   private store = inject(Store);

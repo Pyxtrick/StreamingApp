@@ -5,11 +5,10 @@ import { interval, Subscription } from 'rxjs';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
-  selector: 'app-fullscreen',
-  standalone: true,
-  imports: [MatListModule],
-  templateUrl: './fullscreen.component.html',
-  styleUrl: './fullscreen.component.scss',
+    selector: 'app-fullscreen',
+    imports: [MatListModule],
+    templateUrl: './fullscreen.component.html',
+    styleUrl: './fullscreen.component.scss'
 })
 export class FullscreenComponent implements OnInit {
   constructor(

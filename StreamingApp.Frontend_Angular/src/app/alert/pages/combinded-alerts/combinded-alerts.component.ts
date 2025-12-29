@@ -9,16 +9,15 @@ import { TextMessageComponent } from '../../components/text-message/text-message
 import { HighlightMessageComponent } from './../../components/highlight-message/highlight-message.component';
 
 @Component({
-  selector: 'app-combinded-alerts',
-  standalone: true,
-  imports: [
-    FullscreenComponent,
-    HighlightMessageComponent,
-    TextMessageComponent,
-  ],
-  templateUrl: './combinded-alerts.component.html',
-  styleUrl: './combinded-alerts.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-combinded-alerts',
+    imports: [
+        FullscreenComponent,
+        HighlightMessageComponent,
+        TextMessageComponent,
+    ],
+    templateUrl: './combinded-alerts.component.html',
+    styleUrl: './combinded-alerts.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CombindedAlertsComponent implements OnInit, OnDestroy {
   constructor(

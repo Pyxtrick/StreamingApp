@@ -8,11 +8,10 @@ import { SettingsActions } from '../../state/action';
 import { settingsFeature } from '../../state/reducers';
 
 @Component({
-  selector: 'app-stream',
-  standalone: true,
-  imports: [CommonModule, MatTableModule],
-  templateUrl: './stream.component.html',
-  styleUrl: './stream.component.scss',
+    selector: 'app-stream',
+    imports: [CommonModule, MatTableModule],
+    templateUrl: './stream.component.html',
+    styleUrl: './stream.component.scss'
 })
 export class StreamComponent implements OnInit {
   private store = inject(Store);

@@ -14,19 +14,18 @@ import { OnScreenChatHorizontalComponent } from '../../../chats/components/on-sc
 import { OnScreenChatComponent } from '../../../chats/components/on-screen-chat/on-screen-chat.component';
 
 @Component({
-  selector: 'app-combined',
-  standalone: true,
-  imports: [
-    FullscreenComponent,
-    HighlightMessageComponent,
-    TextMessageComponent,
-    OnScreenChatHorizontalComponent,
-    OnScreenChatComponent,
-    CommonModule,
-  ],
-  templateUrl: './combined.component.html',
-  styleUrl: './combined.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-combined',
+    imports: [
+        FullscreenComponent,
+        HighlightMessageComponent,
+        TextMessageComponent,
+        OnScreenChatHorizontalComponent,
+        OnScreenChatComponent,
+        CommonModule,
+    ],
+    templateUrl: './combined.component.html',
+    styleUrl: './combined.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CombinedComponent implements OnInit, OnDestroy {
   constructor(

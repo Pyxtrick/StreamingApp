@@ -10,12 +10,11 @@ import { interval, Subscription } from 'rxjs';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
-  selector: 'app-text-message',
-  standalone: true,
-  imports: [],
-  templateUrl: './text-message.component.html',
-  styleUrl: './text-message.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-text-message',
+    imports: [],
+    templateUrl: './text-message.component.html',
+    styleUrl: './text-message.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class TextMessageComponent implements OnInit, OnDestroy {
   constructor(

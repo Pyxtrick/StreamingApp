@@ -19,18 +19,17 @@ import { BannedUserDto } from './../../../models/dtos/BannedUserDto';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
-  selector: 'app-chats',
-  standalone: true,
-  imports: [
-    AllChatPageComponent,
-    MatSlideToggleModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    NgSwitch,
-    FormsModule,
-  ],
-  templateUrl: './chats.component.html',
-  styleUrl: './chats.component.scss',
+    selector: 'app-chats',
+    imports: [
+        AllChatPageComponent,
+        MatSlideToggleModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        NgSwitch,
+        FormsModule,
+    ],
+    templateUrl: './chats.component.html',
+    styleUrl: './chats.component.scss'
 })
 export class ChatsComponent implements OnInit {
   constructor(

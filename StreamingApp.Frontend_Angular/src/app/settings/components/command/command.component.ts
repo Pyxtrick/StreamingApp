@@ -12,11 +12,10 @@ import { SettingsActions } from '../../state/action';
 import { settingsFeature } from './../../state/reducers';
 
 @Component({
-  selector: 'app-command',
-  standalone: true,
-  imports: [CommonModule, MatTableModule],
-  templateUrl: './command.component.html',
-  styleUrl: './command.component.scss',
+    selector: 'app-command',
+    imports: [CommonModule, MatTableModule],
+    templateUrl: './command.component.html',
+    styleUrl: './command.component.scss'
 })
 export class CommandComponent implements OnInit {
   private store = inject(Store);
