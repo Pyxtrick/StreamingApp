@@ -1,5 +1,5 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, Injector, LOCALE_ID, importProvidersFrom, isDevMode, inject, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, importProvidersFrom, inject, isDevMode, provideAppInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
     provideAppInitializer(() => {
-        const initializerFn = (appInitializerFactory)(inject(TranslateService), inject(Injector));
+        const initializerFn = (appInitializerFactory)(inject(TranslateService));
         return initializerFn();
       }),
     importProvidersFrom(

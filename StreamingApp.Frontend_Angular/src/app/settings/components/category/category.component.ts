@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,7 @@ import { settingsFeature } from '../../state/reducers';
 
 @Component({
     selector: 'app-category',
-    imports: [CommonModule, MatTableModule],
+    imports: [MatTableModule],
     templateUrl: './category.component.html',
     styleUrl: './category.component.scss'
 })

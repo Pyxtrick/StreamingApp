@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
@@ -16,13 +16,12 @@ import { OnScreenChatComponent } from '../../../chats/components/on-screen-chat/
 @Component({
     selector: 'app-combined',
     imports: [
-        FullscreenComponent,
-        HighlightMessageComponent,
-        TextMessageComponent,
-        OnScreenChatHorizontalComponent,
-        OnScreenChatComponent,
-        CommonModule,
-    ],
+    FullscreenComponent,
+    HighlightMessageComponent,
+    TextMessageComponent,
+    OnScreenChatHorizontalComponent,
+    OnScreenChatComponent
+],
     templateUrl: './combined.component.html',
     styleUrl: './combined.component.scss',
     encapsulation: ViewEncapsulation.None

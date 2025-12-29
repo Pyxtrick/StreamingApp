@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
@@ -13,7 +13,7 @@ import { settingsFeature } from './../../state/reducers';
 
 @Component({
     selector: 'app-command',
-    imports: [CommonModule, MatTableModule],
+    imports: [MatTableModule],
     templateUrl: './command.component.html',
     styleUrl: './command.component.scss'
 })

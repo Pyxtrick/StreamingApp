@@ -1,4 +1,4 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import ch from '@angular/common/locales/de-CH';
 import { Component, LOCALE_ID } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,13 +11,12 @@ registerLocaleData(ch);
 @Component({
     selector: 'app-root',
     imports: [
-        CommonModule,
-        RouterModule,
-        TranslateModule,
-        MatSlideToggleModule,
-        MatButtonModule,
-        MatListModule,
-    ],
+    RouterModule,
+    TranslateModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatListModule
+],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
