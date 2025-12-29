@@ -12,12 +12,11 @@ import { DisplayChat } from 'src/app/chats/models/DisplayChat';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
-  selector: 'app-highlight-message',
-  imports: [],
-  templateUrl: './highlight-message.component.html',
-  styleUrl: './highlight-message.component.scss',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-highlight-message',
+    imports: [],
+    templateUrl: './highlight-message.component.html',
+    styleUrl: './highlight-message.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class HighlightMessageComponent implements OnInit, OnDestroy {
   constructor(

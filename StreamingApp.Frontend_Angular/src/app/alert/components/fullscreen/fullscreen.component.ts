@@ -6,7 +6,6 @@ import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
   selector: 'app-fullscreen',
-  standalone: true,
   imports: [MatListModule],
   templateUrl: './fullscreen.component.html',
   styleUrl: './fullscreen.component.scss',

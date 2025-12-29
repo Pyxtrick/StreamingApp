@@ -1,4 +1,4 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import ch from '@angular/common/locales/de-CH';
 import { Component, LOCALE_ID } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,19 +9,17 @@ import { TranslateModule } from '@ngx-translate/core';
 registerLocaleData(ch);
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-root',
+    imports: [
     RouterModule,
     TranslateModule,
     MatSlideToggleModule,
     MatButtonModule,
-    MatListModule,
-  ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }],
+    MatListModule
+],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
 })
 export class AppComponent {
   title = 'Streaming.Web';

@@ -10,7 +10,7 @@ import { OriginEnum, SettingsDto } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { BannedTargetEnum } from 'src/app/models/enums/BannedTargetEnum';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
-import { NgSwitch } from '../../../../../node_modules/@angular/common/index';
+
 import { AllChatPageComponent } from '../../components/all-chat/all-chat-page.component';
 import { ConvertMessage } from '../../logic/convertMessage';
 import { ChatsActions } from '../../state/action';
@@ -19,18 +19,16 @@ import { BannedUserDto } from './../../../models/dtos/BannedUserDto';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
-  selector: 'app-chats',
-  standalone: true,
-  imports: [
+    selector: 'app-chats',
+    imports: [
     AllChatPageComponent,
     MatSlideToggleModule,
     MatCheckboxModule,
     MatButtonModule,
-    NgSwitch,
-    FormsModule,
-  ],
-  templateUrl: './chats.component.html',
-  styleUrl: './chats.component.scss',
+    FormsModule
+],
+    templateUrl: './chats.component.html',
+    styleUrl: './chats.component.scss'
 })
 export class ChatsComponent implements OnInit {
   constructor(

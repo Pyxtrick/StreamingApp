@@ -19,12 +19,11 @@ import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
-  selector: 'app-on-screen-chat',
-  imports: [MatListModule, MatTooltipModule],
-  templateUrl: './on-screen-chat.component.html',
-  styleUrl: './on-screen-chat.component.scss',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-on-screen-chat',
+    imports: [MatListModule, MatTooltipModule],
+    templateUrl: './on-screen-chat.component.html',
+    styleUrl: './on-screen-chat.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class OnScreenChatComponent implements OnInit, AfterViewInit {
   constructor(

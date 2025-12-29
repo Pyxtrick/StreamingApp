@@ -18,12 +18,11 @@ import { DisplayChat } from '../../models/DisplayChat';
 import { ChatsActions } from '../../state/action';
 
 @Component({
-  selector: 'app-all-chat-page',
-  standalone: true,
-  templateUrl: './all-chat-page.component.html',
-  styleUrls: ['./all-chat-page.component.scss'],
-  imports: [MatListModule, MatTooltipModule, MatToolbarModule, MatIconModule],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-all-chat-page',
+    templateUrl: './all-chat-page.component.html',
+    styleUrls: ['./all-chat-page.component.scss'],
+    imports: [MatListModule, MatTooltipModule, MatToolbarModule, MatIconModule],
+    encapsulation: ViewEncapsulation.None
 })
 export class AllChatPageComponent implements AfterViewInit {
   @ViewChild('scrollframe') scrollFrame!: ElementRef;

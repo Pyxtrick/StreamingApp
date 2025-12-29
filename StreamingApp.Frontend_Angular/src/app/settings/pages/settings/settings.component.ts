@@ -8,7 +8,6 @@ import { UsersComponent } from '../../components/users/users.component';
 
 @Component({
   selector: 'app-setting',
-  standalone: true,
   imports: [
     MatTabsModule,
     CommandComponent,

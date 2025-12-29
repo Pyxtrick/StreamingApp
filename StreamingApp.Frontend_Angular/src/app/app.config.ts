@@ -1,12 +1,5 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-  Injector,
-  LOCALE_ID,
-  importProvidersFrom,
-  isDevMode,
-} from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, importProvidersFrom, inject, isDevMode, provideAppInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
@@ -35,12 +28,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
-      deps: [TranslateService, Injector],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (appInitializerFactory)(inject(TranslateService));
+        return initializerFn();
+      }),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
