@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>bfdf9515-767f-4dc2-bb8d-a6d2790b5a00</UserSecretsId>
@@ -14,8 +14,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.2.0">
+    <PackageReference Include="NSwag.AspNetCore" Version="14.6.3" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -34,7 +34,7 @@
       <_BackendWebDllExists>.\bin\$(Configuration)\$(TargetFramework)\StreamingApp.Web.dll</_BackendWebDllExists>
     </PropertyGroup>
     
-    <Exec Command="$(NSwagExe_Net80) run Properties/nswag.json /variables:Configuration=$(Configuration)" Condition="Exists('$(_BackendWebDllExists)')" />
+    <Exec Command="$(NSwagExe_Net100) run Properties/nswag.json /variables:Configuration=$(Configuration)" Condition="Exists('$(_BackendWebDllExists)')" />
     
   </Target>
 </Project>
