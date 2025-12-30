@@ -12,10 +12,10 @@ public class TwitchMappingProfile : Profile
             .ConstructUsing(x => new MessageDto(
                 false,
                 x.Channel,
-                x.UserId,
-                x.Username,
-                x.DisplayName,
                 x.ColorHex,
+                x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
+                x.Message,
+                x.EmoteReplacedMessage,
                 MappEmotes(x.EmoteSet),
                 x.Badges,
                 OriginEnum.Twitch,
@@ -26,9 +26,9 @@ public class TwitchMappingProfile : Profile
                 x.SubscribedMonthCount,
                 false,
                 x.Id,
-                x.ChatReply != null ? x.ChatReply.ParentMsgBody : "",
-                x.Message,
-                x.EmoteReplacedMessage,
+                x.UserId,
+                x.Username,
+                x.DisplayName,
                 DateTime.UtcNow
             ));
 
