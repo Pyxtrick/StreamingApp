@@ -4,6 +4,7 @@ namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 
 /// <summary>
 /// Message with all Inortant information comming from Twitch / (Youtube)
+/// new essageDto(isCommand, channel, colorHex replayMessage, message, emoteReplacedMessage, emotes, badges, origin, auth, specialMessage, effect, isSub, subCount, isUsed, messageId, userId, userName, displayName, utcNow)
 /// </summary>
 public class MessageDto(
     bool isCommand,

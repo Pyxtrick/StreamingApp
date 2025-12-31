@@ -28,14 +28,16 @@ public class PointRedeam : IPointRedeam
     {
         await _crudUsers.UpdateAchievements(userId, OriginEnum.Twitch);
 
-        var trigger = _unitOfWork.Trigger.Include("Targets").First(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Redeam && t.Description == rewardName);
-
+        var trigger = _unitOfWork.Trigger.Include("Targets").FirstOrDefault(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Redeam && t.Description == rewardName);
+        
         if(trigger != null)
         {
-
+        
         }
 
-        MessageDto chatMessage = new(false, "channel", userId, userName, userName, "#ff6b6b", new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "messageid", "", rewardName, null, DateTime.Now);
+        string message = $"{userName} Redeamed {rewardName}";
+
+        MessageDto chatMessage = new(false, "channel", "#ff6b6b", null, message, message, new(), new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, "messageId", userId, userName, userName, DateTime.Now);
         await _hubContext.Clients.All.SendAsync("ReceiveEventMessage", chatMessage);
     }
 }
