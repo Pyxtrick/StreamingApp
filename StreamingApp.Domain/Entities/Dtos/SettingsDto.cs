@@ -8,25 +8,11 @@ public class SettingsDto
 
     public OriginEnum Origin { get; set; }
 
-    public AuthEnum AllChat { get; set; }
-
     public bool MuteAllerts { get; set; }
 
     public bool PauseAllerts { get; set; }
 
     public bool IsAdsDisplay { get; set; }
 
-    public bool PauseChatMessages { get; set; }
-
-    public bool ComunityDayActive { get; set; }
-
-    public string Delay { get; set; }
-
     public int AllertDelayS { get; set; }
-
-    public int TimeOutSeconds { get; set; }
-
-    public int TTSSpamAmmount { get; set; }
-
-    public int TTSLenghtAmmount { get; set; }
 }

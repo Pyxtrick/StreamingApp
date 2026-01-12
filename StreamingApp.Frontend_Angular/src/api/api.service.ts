@@ -3289,17 +3289,10 @@ export interface ISettingsRespose {
 export class SettingsDto implements ISettingsDto {
     id!: number;
     origin!: OriginEnum;
-    allChat!: AuthEnum;
     muteAllerts!: boolean;
     pauseAllerts!: boolean;
     isAdsDisplay!: boolean;
-    pauseChatMessages!: boolean;
-    comunityDayActive!: boolean;
-    delay!: string;
     allertDelayS!: number;
-    timeOutSeconds!: number;
-    ttsSpamAmmount!: number;
-    ttsLenghtAmmount!: number;
 
     constructor(data?: ISettingsDto) {
         if (data) {
@@ -3314,17 +3307,10 @@ export class SettingsDto implements ISettingsDto {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : null as any;
             this.origin = _data["origin"] !== undefined ? _data["origin"] : null as any;
-            this.allChat = _data["allChat"] !== undefined ? _data["allChat"] : null as any;
             this.muteAllerts = _data["muteAllerts"] !== undefined ? _data["muteAllerts"] : null as any;
             this.pauseAllerts = _data["pauseAllerts"] !== undefined ? _data["pauseAllerts"] : null as any;
             this.isAdsDisplay = _data["isAdsDisplay"] !== undefined ? _data["isAdsDisplay"] : null as any;
-            this.pauseChatMessages = _data["pauseChatMessages"] !== undefined ? _data["pauseChatMessages"] : null as any;
-            this.comunityDayActive = _data["comunityDayActive"] !== undefined ? _data["comunityDayActive"] : null as any;
-            this.delay = _data["delay"] !== undefined ? _data["delay"] : null as any;
             this.allertDelayS = _data["allertDelayS"] !== undefined ? _data["allertDelayS"] : null as any;
-            this.timeOutSeconds = _data["timeOutSeconds"] !== undefined ? _data["timeOutSeconds"] : null as any;
-            this.ttsSpamAmmount = _data["ttsSpamAmmount"] !== undefined ? _data["ttsSpamAmmount"] : null as any;
-            this.ttsLenghtAmmount = _data["ttsLenghtAmmount"] !== undefined ? _data["ttsLenghtAmmount"] : null as any;
         }
     }
 
@@ -3339,17 +3325,10 @@ export class SettingsDto implements ISettingsDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : null as any;
         data["origin"] = this.origin !== undefined ? this.origin : null as any;
-        data["allChat"] = this.allChat !== undefined ? this.allChat : null as any;
         data["muteAllerts"] = this.muteAllerts !== undefined ? this.muteAllerts : null as any;
         data["pauseAllerts"] = this.pauseAllerts !== undefined ? this.pauseAllerts : null as any;
         data["isAdsDisplay"] = this.isAdsDisplay !== undefined ? this.isAdsDisplay : null as any;
-        data["pauseChatMessages"] = this.pauseChatMessages !== undefined ? this.pauseChatMessages : null as any;
-        data["comunityDayActive"] = this.comunityDayActive !== undefined ? this.comunityDayActive : null as any;
-        data["delay"] = this.delay !== undefined ? this.delay : null as any;
         data["allertDelayS"] = this.allertDelayS !== undefined ? this.allertDelayS : null as any;
-        data["timeOutSeconds"] = this.timeOutSeconds !== undefined ? this.timeOutSeconds : null as any;
-        data["ttsSpamAmmount"] = this.ttsSpamAmmount !== undefined ? this.ttsSpamAmmount : null as any;
-        data["ttsLenghtAmmount"] = this.ttsLenghtAmmount !== undefined ? this.ttsLenghtAmmount : null as any;
         return data;
     }
 }
@@ -3357,17 +3336,10 @@ export class SettingsDto implements ISettingsDto {
 export interface ISettingsDto {
     id: number;
     origin: OriginEnum;
-    allChat: AuthEnum;
     muteAllerts: boolean;
     pauseAllerts: boolean;
     isAdsDisplay: boolean;
-    pauseChatMessages: boolean;
-    comunityDayActive: boolean;
-    delay: string;
     allertDelayS: number;
-    timeOutSeconds: number;
-    ttsSpamAmmount: number;
-    ttsLenghtAmmount: number;
 }
 
 export enum OriginEnum {

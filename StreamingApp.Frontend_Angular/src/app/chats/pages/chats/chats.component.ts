@@ -19,16 +19,16 @@ import { BannedUserDto } from './../../../models/dtos/BannedUserDto';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
-    selector: 'app-chats',
-    imports: [
+  selector: 'app-chats',
+  imports: [
     AllChatPageComponent,
     MatSlideToggleModule,
     MatCheckboxModule,
     MatButtonModule,
-    FormsModule
-],
-    templateUrl: './chats.component.html',
-    styleUrl: './chats.component.scss'
+    FormsModule,
+  ],
+  templateUrl: './chats.component.html',
+  styleUrl: './chats.component.scss',
 })
 export class ChatsComponent implements OnInit {
   constructor(
@@ -42,6 +42,9 @@ export class ChatsComponent implements OnInit {
 
   isDisableAdsDisplay = true;
   isVerticalChat = false;
+
+  isPauseAllert = false;
+  isMuteAllert = false;
 
   displayChatMessages: DisplayChat[] = [];
   displayEventMessages: DisplayChat[] = [];
@@ -223,5 +226,17 @@ export class ChatsComponent implements OnInit {
     this.store.dispatch(
       ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
     );
+  }
+
+  switchPauseAllert() {
+    /**this.store.dispatch(
+      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
+    );*/
+  }
+
+  switchMuteAllert() {
+    /**this.store.dispatch(
+      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
+    );*/
   }
 }

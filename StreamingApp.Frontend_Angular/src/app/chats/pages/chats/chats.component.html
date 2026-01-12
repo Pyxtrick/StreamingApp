@@ -13,6 +13,20 @@
   >
     Ads Display
   </mat-checkbox>
+  <mat-checkbox
+    class="checkbox"
+    [(ngModel)]="isPauseAllert"
+    (change)="switchPauseAllert()"
+  >
+    Pause Allert WIP
+  </mat-checkbox>
+  <mat-checkbox
+    class="checkbox"
+    [(ngModel)]="isMuteAllert"
+    (change)="switchMuteAllert()"
+  >
+    Mute Allert WIP
+  </mat-checkbox>
 </div>
 <div class="col">
   <div class="col1">
