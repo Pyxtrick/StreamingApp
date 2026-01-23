@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
+import { FullScreenAlert } from 'src/app/alert/models/FullScreenAlert';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
 
 @Component({
@@ -16,7 +17,7 @@ export class FullscreenComponent implements OnInit {
     private signalRService: AppSignalRService
   ) {}
 
-  @Input() htmldata: SafeHtml | undefined;
+  @Input() alertList: FullScreenAlert[] = [];
   @Input() useSignalR = true;
 
   private subscription: Subscription | undefined;
@@ -27,9 +28,11 @@ export class FullscreenComponent implements OnInit {
         this.signalRService
           .receiveAlertMessage('ReceiveAlert')
           .subscribe((message) => {
-            this.htmldata = this._sanitizer.bypassSecurityTrustHtml(
-              message.html
-            );
+            this.alertList.push({
+              alert: message,
+              html: this._sanitizer.bypassSecurityTrustHtml(message.html),
+              date: new Date(Date.now() + message.duration),
+            });
             this.subscription = interval(message.duration * 1000).subscribe(
               () => this.removeElement()
             );
@@ -38,10 +41,19 @@ export class FullscreenComponent implements OnInit {
     }
   }
 
-  private removeElement() {
+  /**private removeElement() {
     this.htmldata = undefined;
 
     this.subscription && this.subscription.unsubscribe();
+  }**/
+
+  private removeElement() {
+    const date = new Date();
+    date.setSeconds(date.getSeconds() - 20);
+
+    this.alertList = this.alertList.filter(
+      (t) => t.date!.getTime() >= date.getTime()
+    );
   }
 
   ngOnDestroy() {

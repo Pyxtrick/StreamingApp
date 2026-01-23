@@ -19,11 +19,11 @@ import { ConvertMessage } from '../../logic/convertMessage';
 import { DisplayChat } from './../../models/DisplayChat';
 
 @Component({
-    selector: 'app-on-screen-chat',
-    imports: [MatListModule, MatTooltipModule],
-    templateUrl: './on-screen-chat.component.html',
-    styleUrl: './on-screen-chat.component.scss',
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-on-screen-chat',
+  imports: [MatListModule, MatTooltipModule],
+  templateUrl: './on-screen-chat.component.html',
+  styleUrl: './on-screen-chat.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class OnScreenChatComponent implements OnInit, AfterViewInit {
   constructor(
@@ -93,12 +93,9 @@ export class OnScreenChatComponent implements OnInit, AfterViewInit {
     const date = new Date();
     date.setSeconds(date.getSeconds() - 20);
 
-    const data = this.displayChatMessages.filter(
-      (t) => t.Date!.getTime() <= date.getTime()
+    this.displayChatMessages = this.displayChatMessages.filter(
+      (t) => t.Date!.getTime() >= date.getTime()
     );
-    data.forEach(() => {
-      this.displayChatMessages.shift();
-    });
   }
 
   ngOnDestroy() {

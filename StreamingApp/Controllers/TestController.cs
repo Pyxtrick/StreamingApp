@@ -108,8 +108,8 @@ public class TestController : ControllerBase
         await clientHub.Clients.All.SendAsync("ReceiveAlert", t);
     }
 
-    [HttpGet("StreamAllert")]
-    public async Task GetStreamAllert([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
+    [HttpGet("StreamAllerts")]
+    public async Task GetStreamAllerts([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
     {
         List<KeyValuePair<string, List<int>>> data = new()
         {
@@ -132,6 +132,14 @@ public class TestController : ControllerBase
         var finalAlert = new AlertDto() { Html = html, Duration = 15 };
 
         await clientHub.Clients.All.SendAsync("ReceiveAlert", finalAlert);
+    }
+
+    [HttpGet("StreamAllert")]
+    public async Task GetStreamAllert([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
+    {
+        var alert = await subAlertLoong.Execute("Pyxtrick", new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000), true, false);
+
+        await clientHub.Clients.All.SendAsync("ReceiveAlert", alert);
     }
 
     [HttpGet("StreamRaidAllert")]

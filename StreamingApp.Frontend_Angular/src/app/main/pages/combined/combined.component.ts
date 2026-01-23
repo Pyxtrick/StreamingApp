@@ -1,10 +1,10 @@
-
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 import { FullscreenComponent } from 'src/app/alert/components/fullscreen/fullscreen.component';
 import { HighlightMessageComponent } from 'src/app/alert/components/highlight-message/highlight-message.component';
 import { TextMessageComponent } from 'src/app/alert/components/text-message/text-message.component';
+import { FullScreenAlert } from 'src/app/alert/models/FullScreenAlert';
 import { ConvertMessage } from 'src/app/chats/logic/convertMessage';
 import { DisplayChat } from 'src/app/chats/models/DisplayChat';
 import { AlertDto } from 'src/app/models/dtos/AlertDto';
@@ -14,17 +14,17 @@ import { OnScreenChatHorizontalComponent } from '../../../chats/components/on-sc
 import { OnScreenChatComponent } from '../../../chats/components/on-screen-chat/on-screen-chat.component';
 
 @Component({
-    selector: 'app-combined',
-    imports: [
+  selector: 'app-combined',
+  imports: [
     FullscreenComponent,
     HighlightMessageComponent,
     TextMessageComponent,
     OnScreenChatHorizontalComponent,
-    OnScreenChatComponent
-],
-    templateUrl: './combined.component.html',
-    styleUrl: './combined.component.scss',
-    encapsulation: ViewEncapsulation.None
+    OnScreenChatComponent,
+  ],
+  templateUrl: './combined.component.html',
+  styleUrl: './combined.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class CombinedComponent implements OnInit, OnDestroy {
   constructor(
@@ -32,7 +32,7 @@ export class CombinedComponent implements OnInit, OnDestroy {
     private signalRService: AppSignalRService
   ) {}
 
-  public htmldata: SafeHtml | undefined;
+  public alertList: FullScreenAlert[] = [];
   public htmldataList: AlertDto[] = [];
   private fullscreenSubscription: Subscription | undefined;
 
@@ -54,12 +54,14 @@ export class CombinedComponent implements OnInit, OnDestroy {
       this.signalRService
         .receiveAlertMessage('ReceiveAlert')
         .subscribe((message) => {
-          if (this.htmldataList.length != 0 && this.htmldata != undefined) {
+          if (this.htmldataList.length != 0 && this.alertList != undefined) {
             this.htmldataList.push(message);
           } else {
-            this.htmldata = this._sanitizer.bypassSecurityTrustHtml(
-              message.html
-            );
+            this.alertList.push({
+              alert: message,
+              html: this._sanitizer.bypassSecurityTrustHtml(message.html),
+              date: new Date(Date.now() + message.duration),
+            });
             this.fullscreenSubscription = interval(
               (message.duration - 0.5) * 1000
             ).subscribe(() => this.removeFullscreenElement());
@@ -127,7 +129,11 @@ export class CombinedComponent implements OnInit, OnDestroy {
   private removeFullscreenElement() {
     if (this.htmldataList.length != 0) {
       const message = this.htmldataList[0];
-      this.htmldata = this._sanitizer.bypassSecurityTrustHtml(message.html);
+      this.alertList.push({
+        alert: message,
+        html: this._sanitizer.bypassSecurityTrustHtml(message.html),
+        date: new Date(Date.now() + message.duration),
+      });
       this.htmldataList.splice(0);
 
       this.fullscreenSubscription && this.fullscreenSubscription.unsubscribe();
@@ -136,7 +142,7 @@ export class CombinedComponent implements OnInit, OnDestroy {
         this.removeFullscreenElement()
       );
     } else {
-      this.htmldata = undefined;
+      this.alertList = [];
 
       this.fullscreenSubscription && this.fullscreenSubscription.unsubscribe();
     }

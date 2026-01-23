@@ -1941,6 +1941,50 @@ export class TestClient {
         return _observableOf(null as any);
     }
 
+    getStreamAllerts(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test/StreamAllerts";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStreamAllerts(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStreamAllerts(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processGetStreamAllerts(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     getStreamAllert(): Observable<void> {
         let url_ = this.baseUrl + "/api/Test/StreamAllert";
         url_ = url_.replace(/[?&]$/, "");
@@ -4015,7 +4059,7 @@ export class MessageDto extends TwitchBase implements IMessageDto {
     replayMessage?: string | null;
     message!: string;
     emoteReplacedMessage!: string;
-    emotes!: EmoteSet[];
+    emotes!: EmoteSetDto[];
     badges?: KeyValuePairOfStringAndString[] | null;
     origin!: OriginEnum;
     auth!: AuthEnum[];
@@ -4046,7 +4090,7 @@ export class MessageDto extends TwitchBase implements IMessageDto {
             if (Array.isArray(_data["emotes"])) {
                 this.emotes = [] as any;
                 for (let item of _data["emotes"])
-                    this.emotes!.push(EmoteSet.fromJS(item));
+                    this.emotes!.push(EmoteSetDto.fromJS(item));
             }
             else {
                 this.emotes = null as any;
@@ -4135,7 +4179,7 @@ export interface IMessageDto extends ITwitchBase {
     replayMessage?: string | null;
     message: string;
     emoteReplacedMessage: string;
-    emotes: EmoteSet[];
+    emotes: EmoteSetDto[];
     badges?: KeyValuePairOfStringAndString[] | null;
     origin: OriginEnum;
     auth: AuthEnum[];
@@ -4146,12 +4190,12 @@ export interface IMessageDto extends ITwitchBase {
     isUsed: boolean;
 }
 
-export class EmoteSet implements IEmoteSet {
+export class EmoteSetDto implements IEmoteSetDto {
     name!: string;
     animatedURL!: string;
     staticURL!: string;
 
-    constructor(data?: IEmoteSet) {
+    constructor(data?: IEmoteSetDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4168,9 +4212,9 @@ export class EmoteSet implements IEmoteSet {
         }
     }
 
-    static fromJS(data: any): EmoteSet {
+    static fromJS(data: any): EmoteSetDto {
         data = typeof data === 'object' ? data : {};
-        let result = new EmoteSet();
+        let result = new EmoteSetDto();
         result.init(data);
         return result;
     }
@@ -4184,7 +4228,7 @@ export class EmoteSet implements IEmoteSet {
     }
 }
 
-export interface IEmoteSet {
+export interface IEmoteSetDto {
     name: string;
     animatedURL: string;
     staticURL: string;

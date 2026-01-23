@@ -1,24 +1,26 @@
 <div class="chats">
   @if (isVerticalChat === false) {
-    <div>
-      <app-on-screen-chat-horizontal
-        [displayChatMessages]="displayChatMessages"
-        [useSignalR]="false"
-      ></app-on-screen-chat-horizontal>
-    </div>
-  }
-  @if (isVerticalChat) {
-    <div>
-      <app-on-screen-chat
-        [displayChatMessages]="displayChatMessages"
-        [useSignalR]="false"
-      ></app-on-screen-chat>
-    </div>
+  <div>
+    <app-on-screen-chat-horizontal
+      [displayChatMessages]="displayChatMessages"
+      [useSignalR]="false"
+    ></app-on-screen-chat-horizontal>
+  </div>
+  } @if (isVerticalChat) {
+  <div>
+    <app-on-screen-chat
+      [displayChatMessages]="displayChatMessages"
+      [useSignalR]="false"
+    ></app-on-screen-chat>
+  </div>
   }
 </div>
 <div class="alerts">
   <div class="fullscreen">
-    <app-fullscreen [htmldata]="htmldata" [useSignalR]="false"></app-fullscreen>
+    <app-fullscreen
+      [alertList]="alertList"
+      [useSignalR]="false"
+    ></app-fullscreen>
   </div>
   <div class="highlight-message">
     <app-highlight-message
