@@ -144,19 +144,19 @@ public class ManageMessages : IManageMessages
         return badges;
     }
 
-    private List<EmoteSet>? MappEmotes(MessageDto messageDto)
+    private List<EmoteSetDto>? MappEmotes(MessageDto messageDto)
     {
         var emotes = _emotesCache.GetEmotes(null);
 
         var foundEmotes = emotes.Where(e => messageDto.Message.Contains(e.Name)).ToList();
 
-        List<EmoteSet> emoteList = new();
+        List<EmoteSetDto> emoteList = new();
 
         if (foundEmotes.Any())
         {
             foreach (var emote in foundEmotes)
             {
-                emoteList.Add(new EmoteSet() { Name = emote.Name, AnimatedURL = emote.Url, StaticURL = emote.Url });
+                emoteList.Add(new EmoteSetDto() { Name = emote.Name, AnimatedURL = emote.Url, StaticURL = emote.Url });
             }
         }
 

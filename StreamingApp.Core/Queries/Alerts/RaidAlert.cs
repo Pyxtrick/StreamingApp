@@ -8,7 +8,7 @@ public class RaidAlert : IRaidAlert
 {
     public async Task<AlertDto> Execute(int count, string image)
     {
-        bool isEmpty = image.IsNullOrEmpty();
+        bool isEmpty = image.Any();
 
         var animationDuration = 10;
 

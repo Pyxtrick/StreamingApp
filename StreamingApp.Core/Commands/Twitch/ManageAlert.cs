@@ -174,12 +174,12 @@ internal class ManageAlert : IManageAlert
         }
         else
         {
-            message = $"{subDto.UserName} Subscribed with Tier {subDto.CurrentTier} for {subDto.SubLenght}";
+            message = $"{subDto.UserName} Subscribed with {subDto.CurrentTier} for {subDto.SubLenght} Months";
         }
 
         if (subDto.ChatMessage != null)
         {
-            chatMessage = new(false, subDto.Channel, subDto.ChatMessage.ColorHex, null, $"{message} |||| {subDto.ChatMessage.Message}", subDto.ChatMessage.EmoteReplacedMessage, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch,
+            chatMessage = new(false, subDto.Channel, subDto.ChatMessage.ColorHex, null, $"{message}", subDto.ChatMessage.Message, subDto.ChatMessage.Emotes, new(), OriginEnum.Twitch,
                 new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, subDto.MessageId, subDto.UserId, subDto.UserName, subDto.UserName, DateTime.Now);
         }
         else

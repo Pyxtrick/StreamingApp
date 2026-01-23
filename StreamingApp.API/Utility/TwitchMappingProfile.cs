@@ -108,7 +108,7 @@ public class TwitchMappingProfile : Profile
                     x.DisplayName,
                     x.DisplayName,
                     x.ColorHex,
-                    new List<Domain.Entities.Dtos.Twitch.EmoteSet>(),
+                    new List<EmoteSetDto>(),
                     x.Badges,
                     OriginEnum.Twitch,
                     new List<AuthEnum>() { AuthEnum.Subscriber },
@@ -128,10 +128,10 @@ public class TwitchMappingProfile : Profile
             ));
     }
 
-    private List<Domain.Entities.Dtos.Twitch.EmoteSet> MappEmotes(TwitchLib.Client.Models.EmoteSet chatMessage)
+    private static List<EmoteSetDto> MappEmotes(EmoteSet chatMessage)
     {
         return new(from emote in chatMessage.Emotes
-                   select new Domain.Entities.Dtos.Twitch.EmoteSet()
+                   select new EmoteSetDto()
                    {
                        Name = emote.Name,
                        AnimatedURL = $"https://static-cdn.jtvnw.net/emoticons/v2/{emote.Id}/animated/light/4.0",
@@ -139,7 +139,7 @@ public class TwitchMappingProfile : Profile
                    });
     }
 
-    private List<AuthEnum> MappAuth(ChatMessage chatMessage)
+    private static List<AuthEnum> MappAuth(ChatMessage chatMessage)
     {
         return new List<AuthEnum>()
         {
@@ -153,7 +153,7 @@ public class TwitchMappingProfile : Profile
         }.Where(a => a != 0).ToList();
     }
 
-    private List<SpecialMessgeEnum> MappSpecialMessage(ChatMessage chatMessage)
+    private static List<SpecialMessgeEnum> MappSpecialMessage(ChatMessage chatMessage)
     {
         return new List<SpecialMessgeEnum>()
         {

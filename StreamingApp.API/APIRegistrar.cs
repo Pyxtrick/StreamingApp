@@ -33,17 +33,17 @@ public static class APIRegistrar
         services.AddScoped<ITwitchInitialise, TwitchInitialise>();
         services.AddScoped<ITwitchSendRequest, TwitchSendRequest>();
 
-        //YouTube
-        services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
-
-        //utility
-        services.AddAutoMapper(typeof(TwitchMappingProfile));
-
         services.AddScoped<ITwitchCache, TwitchCache>();
         services.AddSingleton<TwitchCacheData>();
 
         services.AddScoped<ITwitchCallCache, TwitchCallCache>();
         services.AddSingleton<TwitchCallCacheData>();
+
+        //YouTube
+        services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
+
+        //utility
+        services.AddAutoMapper(typeof(TwitchMappingProfile));
 
         services.AddScoped<IEmotesCache, EmotesCache>();
         services.AddSingleton<EmotesCacheData>();

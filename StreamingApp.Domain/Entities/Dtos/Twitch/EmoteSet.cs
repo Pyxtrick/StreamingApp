@@ -1,6 +1,6 @@
 ﻿namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 
-public class EmoteSet
+public class EmoteSetDto
 {
     public string Name { get; set; }
     public string AnimatedURL { get; set; }

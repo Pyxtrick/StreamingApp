@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -58,7 +59,7 @@ public class AlertScheduler : BackgroundService
                 List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
                 List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
 
-                if (alertObject.IsNullOrEmpty() == false)
+                if (alertObject.Any() == false)
                 {
                     try
                     {
@@ -76,7 +77,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (subObject.IsNullOrEmpty() == false)
+                if (subObject.Any() == false)
                 {
                     try
                     {
@@ -94,7 +95,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (raidObject.IsNullOrEmpty() == false)
+                if (raidObject.Any() == false)
                 {
                     try
                     {

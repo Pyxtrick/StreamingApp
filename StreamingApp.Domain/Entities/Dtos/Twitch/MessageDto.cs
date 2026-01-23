@@ -13,7 +13,7 @@ public class MessageDto(
     string? replayMessage,
     string message,
     string emoteReplacedMessage,
-    List<EmoteSet> emotes,
+    List<EmoteSetDto> emotes,
     List<KeyValuePair<string, string>> badges,
     OriginEnum origin,
     List<AuthEnum> auth,
@@ -41,7 +41,7 @@ public class MessageDto(
 
     public string EmoteReplacedMessage { get; set; } = emoteReplacedMessage;
 
-    public List<EmoteSet> Emotes { get; set; } = emotes;
+    public List<EmoteSetDto> Emotes { get; set; } = emotes;
 
     // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
