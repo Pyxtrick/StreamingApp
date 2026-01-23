@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using System.Diagnostics;
@@ -15,6 +16,8 @@ namespace StreamingApp.API.Twitch;
 
 public class TwitchInitialise : ITwitchInitialise
 {
+    private readonly ILogger<TwitchInitialise> _logger;
+
     private readonly ITwitchCache _twitchCache;
     private readonly ITwitchApiRequest _twichApiRequest;
     private readonly ITwitchPubSubApiRequest _twitchPubSubApiRequest;
@@ -39,8 +42,9 @@ public class TwitchInitialise : ITwitchInitialise
     private string CachedOwnerOfChanelAccessToken = "needsaccesstoken"; // Change to AppAccess Tocken
     private string TwitchChannelName;
 
-    public TwitchInitialise(ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
+    public TwitchInitialise(ILogger<TwitchInitialise> logger, ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
     {
+        _logger = logger;
         _twichApiRequest = twichApiRequest;
         _twitchCache = twitchCache;
         _configuration = configuration;
@@ -83,7 +87,9 @@ public class TwitchInitialise : ITwitchInitialise
         };
 
         WebServer.Start();
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine($"Web server started on: {WebServer}");
+        Console.ResetColor();
     }
 
     public void CloseConntection(object sender, EventArgs e)
