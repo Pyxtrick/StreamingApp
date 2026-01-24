@@ -124,7 +124,7 @@ public class TestController : ControllerBase
 
         foreach (var k in data)
         {
-            var alert = await subAlertLoong.Execute(k.Key, k.Value[0], k.Value[1], k.Value[2], true, false);
+            var alert = await subAlertLoong.Execute(k.Key, k.Value[0], k.Value[1], k.Value[2], true);
 
             html += $"<div>{alert.Html}</div>";
         }
@@ -137,7 +137,9 @@ public class TestController : ControllerBase
     [HttpGet("StreamAllert")]
     public async Task GetStreamAllert([FromServices] ISubAlertLoong subAlertLoong, IHubContext<ChatHub> clientHub)
     {
-        var alert = await subAlertLoong.Execute("Pyxtrick", new Random().Next(1, 150), new Random().Next(1, 360), new Random().Next(1, 1000), true, false);
+        string userName = $"Pyxtrick{new Random().Next(1, 150)}";
+
+        var alert = await subAlertLoong.Execute(userName, new Random().Next(1, 24), new Random().Next(1, 360), new Random().Next(1, 1000), true);
 
         await clientHub.Clients.All.SendAsync("ReceiveAlert", alert);
     }

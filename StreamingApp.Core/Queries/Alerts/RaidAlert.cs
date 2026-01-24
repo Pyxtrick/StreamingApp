@@ -1,6 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using StreamingApp.Core.Queries.Alerts.Interfaces;
+﻿using StreamingApp.Core.Queries.Alerts.Interfaces;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
+using WebSocketSharp;
 
 namespace StreamingApp.Core.Queries.Alerts;
 
@@ -8,7 +8,7 @@ public class RaidAlert : IRaidAlert
 {
     public async Task<AlertDto> Execute(int count, string image)
     {
-        bool isEmpty = image.Any();
+        bool isEmpty = image.IsNullOrEmpty();
 
         var animationDuration = 10;
 

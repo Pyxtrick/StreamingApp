@@ -5,8 +5,9 @@ namespace StreamingApp.Core.Queries.Alerts;
 
 public class SubAlertLoong : ISubAlertLoong
 {
-    public async Task<AlertDto> Execute(string userName, int Length, int rotation, int saturation, bool directionltr, bool isSub)
+    public async Task<AlertDto> Execute(string userName, int Length, int rotation, int saturation, bool directionltr)
     {
+        string src = "assets/Stream/";
         string body = "";
 
         int width = (56 * Length) + (2 * 56);
@@ -16,10 +17,14 @@ public class SubAlertLoong : ISubAlertLoong
         //Image Colour Change: https://stackoverflow.com/questions/7415872/change-color-of-png-image-via-css
 
         string directionLogic = "";
-        string image = isSub ? "pyxtriSnek" : "pyxtriRaid";
-        string tail = isSub ? $"<img class=\"{userName}bildmed\" src=\"assets/Stream/{image}3.gif\" alt=\"Tail1\">" +
-                              $"<img class=\"{userName}bildmed\" src=\"assets/Stream/{image}4.gif\" alt=\"Tail2\">" :
-                              "";
+        string image = "pyxtriSnakewalk";
+
+        string head = $"<img class=\"{userName}bildmed\" src=\"{src}{image}.png\" alt=\"Head\">";
+        for (int t = 0; t < Length; t++)
+        {
+            body += $"<img class=\"{userName}bildmed\" src=\"{src}{image}.png\" alt=\"Body\">";
+        }
+        string tail = $"<img class=\"{userName}bildmed\" src=\"{src}{image}.png\" alt=\"Tail1\">";//$"<img class=\"{userName}bildmed\" src=\"{src}{image}.png\" alt=\"Tail2\">";
 
         if (directionltr)
         {
@@ -27,24 +32,19 @@ public class SubAlertLoong : ISubAlertLoong
         }
         else
         {
-            directionLogic = "#target { width: " + $"{width}px;" + " bottom: 0;  position: relative;  animation: linear infinite;  animation-name: run;  animation-duration: 15s;  animation-iteration-count: 1}@keyframes run {  0% { left: 100%; } 48% { transform: rotateY(180deg); } 100% { left: -100%; transform: rotateY(180deg); }}";
-        }
-
-        for (int t = 0; t < Length; t++)
-        {
-            body += $"<img class=\"{userName}bildmed\" src=\"assets/Stream/{image}2.gif\" alt=\"Body\">";
+            directionLogic = "#target { width: " + $"{width}px;" + " bottom: 0;  position: relative;  animation: linear infinite;  animation-name: run;  animation-duration: " + animationDuration + "s;  animation-iteration-count: 1}@keyframes run {  0% { left: 100%; } 48% { transform: rotateY(180deg); } 100% { left: -100%; transform: rotateY(180deg); }}";
         }
 
         var sub = "<html lang=\"en\"> <body>" +
             "<div id=\""+$"{userName}"+"\">" +
                 "<div>" +
-                   $"<img class=\"{userName}bildmed\" src=\"assets/Stream/{image}1.gif\" alt=\"Head\">" +
+                   $"{head}" +
                    $"{body}" +
                    $"{tail}" +
                 "</div>" +
             "</div>" +
             "<style>" +
-                 $".{userName}bildmed"+"{ filter: " + $"hue-rotate({rotation}deg) saturate({saturation}%)" + "; }" +
+                 $".{userName}bildmed"+"{  filter: " + $"hue-rotate({rotation}deg) saturate({saturation}%)" + "; height: 50px; }" +
                  $"{directionLogic}" +
             "</body>" +
             "</style>";

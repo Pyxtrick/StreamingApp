@@ -31,10 +31,10 @@ export class FullscreenComponent implements OnInit {
             this.alertList.push({
               alert: message,
               html: this._sanitizer.bypassSecurityTrustHtml(message.html),
-              date: new Date(Date.now() + message.duration),
+              date: new Date(Date.now() + (message.duration - 1) * 1000),
             });
-            this.subscription = interval(message.duration * 1000).subscribe(
-              () => this.removeElement()
+            this.subscription = interval(1000).subscribe(() =>
+              this.removeElement()
             );
           });
       });
@@ -49,7 +49,6 @@ export class FullscreenComponent implements OnInit {
 
   private removeElement() {
     const date = new Date();
-    date.setSeconds(date.getSeconds() - 20);
 
     this.alertList = this.alertList.filter(
       (t) => t.date!.getTime() >= date.getTime()
