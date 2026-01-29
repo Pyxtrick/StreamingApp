@@ -4,7 +4,6 @@ using StreamingApp.API.Twitch.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
 using TwitchLib.Api;
 using TwitchLib.Client;
@@ -36,10 +35,11 @@ public class TwitchInitialise : ITwitchInitialise
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;
     private TwitchPubSub Pubsub;
-    private TwitchAPI TheTwitchAPI;
+    private TwitchAPI ClientTwitchAPI;
+    private TwitchAPI AppTwichAPI;
 
     // Cached Variables
-    private string CachedOwnerOfChanelAccessToken = "needsaccesstoken"; // Change to AppAccess Tocken
+    private string CachedOwnerOfChanelAccessToken = "needsaccesstoken";
     private string TwitchChannelName;
 
     public TwitchInitialise(ILogger<TwitchInitialise> logger, ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
@@ -56,13 +56,9 @@ public class TwitchInitialise : ITwitchInitialise
         InitializeWebServer();
 
         // open browser to Authenticate Bot
-        // TODO: update ClientId and ClientSecret in UserSecrets to use the PyxtrickBot Account and not the Pyxtrick Account
         var authUrl = $"https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={_configuration["Twitch:ClientId"]}&redirect_uri={_configuration["Twitch:RedirectUrl"]}&scope={String.Join("+", Scopes)}";
-        var authUrl2 = $"https://id.twitch.tv/oauth2/token?id={_configuration["Twitch:ClientId"]}";
-        //For Default Browser:
-        //Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
+
         Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "chrome.exe", Arguments = authUrl });
-        //Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "chrome.exe", Arguments = authUrl2 });
     }
 
     public void InitializeWebServer()
@@ -82,7 +78,7 @@ public class TwitchInitialise : ITwitchInitialise
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
                 InitalizePubSub(CachedOwnerOfChanelAccessToken);
-                InitializeTwitchAPI(CachedOwnerOfChanelAccessToken);
+                await InitializeTwitchAPI(CachedOwnerOfChanelAccessToken, ownerOfChannelAccessAndRefresh.Item3);
             }
         };
 
@@ -151,15 +147,6 @@ public class TwitchInitialise : ITwitchInitialise
         api.Settings.ClientId = _configuration["Twitch:ClientId"];
         api.Settings.AccessToken = accessToken;
 
-        HttpClient client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        var response = await client.GetAsync("https://id.twitch.tv/oauth2/validate");
-
-        var responseString = await response.Content.ReadAsStringAsync();
-        var json = JsonObject.Parse(responseString);
-
-        //TwitchChannelName = "noodlesnekbot";
-
         var outhedUser = await api.Helix.Users.GetUsersAsync();
         TwitchChannelName = outhedUser.Users[0].Login;
     }
@@ -226,14 +213,18 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.Connect();
         OwnerOfChannelConnection.JoinChannel(_configuration["Twitch:Channel"]);
 
-        _twitchCache.AddData(OwnerOfChannelConnection, TheTwitchAPI);
+        _twitchCache.AddData(OwnerOfChannelConnection, ClientTwitchAPI, AppTwichAPI);
     }
 
-    private void InitializeTwitchAPI(string accessToken)
+    private async Task InitializeTwitchAPI(string accessToken, string appAccessToken)
     {
-        TheTwitchAPI = new TwitchAPI();
-        TheTwitchAPI.Settings.ClientId = _configuration["Twitch:ClientId"];
-        TheTwitchAPI.Settings.AccessToken = accessToken;
-        _twitchCache.AddData(null, TheTwitchAPI);
+        ClientTwitchAPI = new TwitchAPI();
+        ClientTwitchAPI.Settings.ClientId = _configuration["Twitch:ClientId"];
+        ClientTwitchAPI.Settings.AccessToken = accessToken;
+
+        AppTwichAPI = new TwitchAPI();
+        AppTwichAPI.Settings.ClientId = _configuration["Twitch:ClientId"];
+        AppTwichAPI.Settings.AccessToken = appAccessToken;
+        _twitchCache.AddData(null, ClientTwitchAPI, AppTwichAPI);
     }
 }

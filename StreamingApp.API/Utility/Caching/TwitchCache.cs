@@ -23,13 +23,20 @@ public class TwitchCache : ITwitchCache
         return _twitchCacheData.TheTwitchAPI;
     }
 
-    public void AddData(TwitchClient twitchClient, TwitchAPI TheTwitchAPI)
+    public TwitchAPI GetAppTwitchAPI()
+    {
+        return _twitchCacheData.AppTwitchAPI;
+    }
+
+    public void AddData(TwitchClient twitchClient, TwitchAPI TheTwitchAPI, TwitchAPI AppTwitchAPI)
     {
         if (twitchClient != null)
         {
             _twitchCacheData.OwnerOfChannelConnection = twitchClient;
         }
         _twitchCacheData.TheTwitchAPI = TheTwitchAPI;
+
+        _twitchCacheData.AppTwitchAPI = AppTwitchAPI;
     }
 
     public void AddUnusedData(object unused)

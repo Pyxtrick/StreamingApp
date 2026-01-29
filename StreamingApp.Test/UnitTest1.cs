@@ -81,7 +81,7 @@ public class Tests : DataBaseFixture
         }
 
         // Assert
-        Assert.Equal("", reponse);
+        Xunit.Assert.Equal("", reponse);
     }
 
     [Fact]
@@ -94,9 +94,9 @@ public class Tests : DataBaseFixture
         var resultDE = detector.Detect("Was ist das alles");
         var result = detector.Detect("これは一体何なのか");
 
-        Assert.Equal("eng", resultEN);
-        Assert.Equal("deu", resultDE);
-        Assert.NotEqual("eng", result);
+        Xunit.Assert.Equal("eng", resultEN);
+        Xunit.Assert.Equal("deu", resultDE);
+        Xunit.Assert.NotEqual("eng", result);
     }
 
     /** for Mocking classes

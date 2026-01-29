@@ -113,7 +113,7 @@ public class ManageStream : IManageStream
                 }
                 else
                 {
-                    _twitchSendRequest.SendChatMessage($"pole needs more information (title, option1, option2)");
+                    await _twitchSendRequest.SendChatMessage($"pole needs more information (title, option1, option2)");
                 }
             }
             else if (splitMessage[0].Equals("!prediction"))
@@ -124,7 +124,7 @@ public class ManageStream : IManageStream
                 }
                 else
                 {
-                    _twitchSendRequest.SendChatMessage($"prediction needs more information (title, option1, option2)");
+                    await _twitchSendRequest.SendChatMessage($"prediction needs more information (title, option1, option2)");
                 }
             }
         }
@@ -165,8 +165,8 @@ public class ManageStream : IManageStream
 
             string message = $"Stream Started with Title '{newStream.StreamTitle}'";
 
-            _twitchSendRequest.SendChatMessage(message);
-            _youTubeSendRequest.SendChatMessage(message);
+            await _twitchSendRequest.SendChatMessage(message);
+            await _youTubeSendRequest.SendChatMessage(message);
 
             // TODO: Send Discord Notification
         }
@@ -196,8 +196,8 @@ public class ManageStream : IManageStream
 
             string message = $"Stream is Ending, Thank you for watching";
 
-            _twitchSendRequest.SendChatMessage(message + " pyxtriHeart");
-            _youTubeSendRequest.SendChatMessage(message + " <3");
+            await _twitchSendRequest.SendChatMessage(message + " pyxtriHeart");
+            await _youTubeSendRequest.SendChatMessage(message + " <3");
 
         }
     }
@@ -260,7 +260,7 @@ public class ManageStream : IManageStream
 
         if (isCreateStream == false)
         {
-            _twitchSendRequest.SendChatMessage($"Stream Category has been Changed to '{gameInfo.Game}'");
+            await _twitchSendRequest.SendChatMessage($"Stream Category has been Changed to '{gameInfo.Game}'");
         }
 
         await _unitOfWork.StreamGame.AddAsync(newStreamGame);

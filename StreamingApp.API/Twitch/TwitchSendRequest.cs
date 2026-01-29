@@ -7,6 +7,8 @@ using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos;
 using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Enums;
+using System.Net.Http.Headers;
+using System.Text.Json.Nodes;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
@@ -98,20 +100,22 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// Send Twitch Message
     /// </summary>
     /// <param name="message"></param>
-    public void SendChatMessage(string message)
+    public async Task SendChatMessage(string message)
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
         if (settings.PauseChatMessages == false)
         {
-            if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
+            var appResponse = await SendAppMessage(new(), message);
+
+            if (appResponse.IsSuccessStatusCode)
             {
-                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
-
-                //https://dev.twitch.tv/docs/api/reference/#send-chat-message -> for_source_only -> no need if using App Access Token
-
-                //https://dev.twitch.tv/docs/api/reference/#send-chat-message
-                //_twitchCache.GetTheTwitchAPI().Helix.Chat.SendMessage()
+                var appJson = JsonObject.Parse(await appResponse.Content.ReadAsStringAsync());
+            }
+            else if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
+            {
+                // Client Auth Send Message
+                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);   
             }
         }
     }
@@ -121,14 +125,45 @@ public class TwitchSendRequest : ITwitchSendRequest
     /// </summary>
     /// <param name="message"></param>
     /// <param name="replyToId"></param>
-    public void SendResplyChatMessage(string message, string replyToId)
+    public async Task SendReplyChatMessage(string message, string replyToId)
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
         if (settings.PauseChatMessages == false)
         {
-            _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
+            var appResponse = await SendAppMessage(new(){{ "reply_parent_message_id", replyToId }}, message);
+
+            if (appResponse.IsSuccessStatusCode)
+            {
+                JsonNode? appJson = JsonObject.Parse(await appResponse.Content.ReadAsStringAsync());
+            }
+            else if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
+            {
+                // Client Auth Send Message
+                _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
+            }
         }
+    }
+
+    /// <summary>
+    /// Use App OAuth for Sending Message
+    /// //https://dev.twitch.tv/docs/api/reference/#send-chat-message
+    /// </summary>
+    /// <param name="appValues"></param>
+    /// <returns></returns>
+    private async Task<HttpResponseMessage> SendAppMessage(Dictionary<string, string> appValues, string message)
+    {
+        appValues.Add("broadcaster_id", _configuration["Twitch:ChannelId"]);
+        appValues.Add("sender_id", _configuration["Twitch:ChannelBotId"]);
+        appValues.Add("message", message);
+        appValues.Add("for_source_only", "true");
+
+        HttpClient appClient = new HttpClient();
+        appClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _twitchCache.GetAppTwitchAPI().Settings.AccessToken);
+        appClient.DefaultRequestHeaders.Add("Client-Id", _configuration["Twitch:ClientId"]);
+        appClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        return await appClient.PostAsync("https://api.twitch.tv/helix/chat/messages", new FormUrlEncodedContent(appValues));
     }
 
     /// <summary>

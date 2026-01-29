@@ -100,7 +100,7 @@ public class ManageCommands : IManageCommands
                 message = message.Replace("[StreamStartTime]", stream.StreamStart.ToLocalTime().ToString());
                 message = message.Replace("[StreamLiveTime]", DateTime.UtcNow.Subtract(stream.StreamStart).ToString());
 
-                _twitchSendRequest.SendChatMessage(message);
+                await _twitchSendRequest.SendChatMessage(message);
             }
         }
     }

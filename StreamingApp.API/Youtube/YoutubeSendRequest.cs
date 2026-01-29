@@ -51,17 +51,17 @@ public class YoutubeSendRequest : IYouTubeSendRequest
         }
     }
 
-    public void SendChatMessage(string message)
+    public async Task SendChatMessage(string message)
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Youtube);
 
         if (settings.PauseChatMessages == false)
         {
-            _streamerBotRequest.DoAction("3f953f7d-124f-42cf-9e97-751c60fb60c6", "Scheduled Message", new() { new("rawInput", message) });
+            await _streamerBotRequest.DoAction("3f953f7d-124f-42cf-9e97-751c60fb60c6", "Scheduled Message", new() { new("rawInput", message) });
         }
     }
 
-    public void SendResplyChatMessage(string message, string replyToId)
+    public async Task SendReplyChatMessage(string message, string replyToId)
     {
         var settings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Youtube);
 
@@ -69,7 +69,7 @@ public class YoutubeSendRequest : IYouTubeSendRequest
         {
             var data = new List<KeyValuePair<string, string>> { new("rawInput", message), new("replyTo", replyToId) };
 
-            _streamerBotRequest.DoAction("", "", new() { new("rawInput", message), new("replyTo", replyToId) });
+            await _streamerBotRequest.DoAction("", "", new() { new("rawInput", message), new("replyTo", replyToId) });
         }
     }
 

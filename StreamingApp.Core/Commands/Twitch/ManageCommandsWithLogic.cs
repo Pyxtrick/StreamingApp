@@ -216,13 +216,13 @@ public class ManageCommandsWithLogic : IManageCommandsWithLogic
             {
                 if (reply)
                 {
-                    _twitchSendRequest.SendResplyChatMessage(response, messageDto.MessageId);
+                    await _twitchSendRequest.SendReplyChatMessage(response, messageDto.MessageId);
                 }
                 else
                 {
                     if (messageDto.Origin == OriginEnum.Twitch)
                     {
-                        _twitchSendRequest.SendChatMessage(response);
+                        await _twitchSendRequest.SendChatMessage(response);
                     }
                 }
             }

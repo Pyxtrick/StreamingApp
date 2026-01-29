@@ -11,9 +11,9 @@ public interface ISendRequest
 {
     Task<UserDto?> GetUser(string? userName);
     Task<ChannelInfo?> GetChannelInfo(string? broadcasterId, bool isId);
-    void SendChatMessage(string message);
+    Task SendChatMessage(string message);
 
-    void SendResplyChatMessage(string message, string replyToId);
+    Task SendReplyChatMessage(string message, string replyToId);
     bool SetChannelInfo(string? gameId, string? title);
 
     void SendAnnouncement(string message);

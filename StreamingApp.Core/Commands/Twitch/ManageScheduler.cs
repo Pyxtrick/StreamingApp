@@ -54,8 +54,8 @@ public class ManageScheduler : IManageScheduler
 
             var message = target.CommandAndResponse.Response;
 
-            _twitchSendRequest.SendChatMessage(message);
-            _youTubeSendRequest.SendChatMessage(message);
+            await _twitchSendRequest.SendChatMessage(message);
+            await _youTubeSendRequest.SendChatMessage(message);
         }
     }
 }
