@@ -178,7 +178,7 @@ TODO: 5 Create a Discord crawler to get Images / and other tings
 	Send Discord notification for stram start
 	Get Images / Videos to be able to play on Stream
 
-TODO: 5 Send Twitter / BlueSky / Youtube Community message for Stream start
+TODO: 5 Send Twitter / BlueSky-Done / Youtube Community message for Stream start
 
 TODO: 5 Subathon
 	timer

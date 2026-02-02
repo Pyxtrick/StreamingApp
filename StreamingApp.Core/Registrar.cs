@@ -1,27 +1,28 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.API.Utility.Caching;
+using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands;
+using StreamingApp.Core.Commands.Bluesky;
+using StreamingApp.Core.Commands.DB.CRUD;
+using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.FileLogic;
+using StreamingApp.Core.Commands.Hub;
+using StreamingApp.Core.Commands.Twitch;
+using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Queries.Achievements;
+using StreamingApp.Core.Queries.Alerts;
+using StreamingApp.Core.Queries.Alerts.Interfaces;
+using StreamingApp.Core.Queries.Logic;
+using StreamingApp.Core.Queries.Logic.Interfaces;
+using StreamingApp.Core.Queries.Translate;
 using StreamingApp.Core.Utility;
 using StreamingApp.Core.Utility.Caching.CacheData;
 using StreamingApp.Core.Utility.Scheduler;
-using StreamingApp.Core.Queries.Logic;
-using StreamingApp.Core.Queries.Logic.Interfaces;
-using StreamingApp.Core.Queries.Achievements;
-using StreamingApp.Core.Queries.Translate;
-using StreamingApp.Core.Commands.Hub;
-using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Core.Commands.Twitch;
-using StreamingApp.Core.Commands.DB.CRUD;
-using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
-using StreamingApp.Core.Queries.Alerts;
-using StreamingApp.Core.VTubeStudio.Cache.Interface;
-using StreamingApp.Core.VTubeStudio.Cache.CacheData;
-using StreamingApp.Core.Utility.TextToSpeach.Cache.CacheData;
-using StreamingApp.Core.Utility.TextToSpeach.Cache;
 using StreamingApp.Core.Utility.TextToSpeach;
-using StreamingApp.Core.Queries.Alerts.Interfaces;
+using StreamingApp.Core.Utility.TextToSpeach.Cache;
+using StreamingApp.Core.Utility.TextToSpeach.Cache.CacheData;
+using StreamingApp.Core.VTubeStudio.Cache.CacheData;
+using StreamingApp.Core.VTubeStudio.Cache.Interface;
 
 namespace StreamingApp.Core;
 
@@ -30,6 +31,9 @@ public static class Registrar
     public static void AddCoreOptions(this IServiceCollection services)
     {
         #region Commands
+        // Bluesky
+        services.AddScoped<IManageTweets, ManageTweets>();
+
         // DB
         services.AddScoped<ICRUDCommands, CRUDCommands>();
         services.AddScoped<ICRUDGameInfos, CRUDGameInfos>();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreamingApp.API.StreamerBot;
+using StreamingApp.Core.Commands.Bluesky;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.Core.Queries.Alerts.Interfaces;
@@ -18,11 +19,22 @@ public class StreamerBotContoller : ControllerBase
         return await streamerBotRequest.GetActions();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="updateStream"></param>
+    /// <param name="manageTweets"></param>
+    /// <param name="youtubeId"></param>
+    /// <returns></returns>
     [HttpGet("StartStream")]
-    public async Task StartStream([FromServices] IManageStream updateStream, string youtubeId)
+    public async Task StartStream([FromServices] IManageStream updateStream, [FromServices] IManageTweets manageTweets, string youtubeId)
     {
         await updateStream.StartStream(youtubeId);
-        //TODO: send to YouTube as well
+
+
+        List<KeyValuePair<OriginEnum, string>> test = new List<KeyValuePair<OriginEnum, string>>() { new(OriginEnum.Twitch, ""), new(OriginEnum.Youtube, youtubeId) };
+
+        await manageTweets.SendStreamStartTweet(test);
     }
 
     //http://localhost:7033/api/StreamerBotContoller/UpdateCategory?category=%gameName%

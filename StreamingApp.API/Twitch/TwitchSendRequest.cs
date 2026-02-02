@@ -70,8 +70,6 @@ public class TwitchSendRequest : ITwitchSendRequest
                 broadcasterId = _configuration["Twitch:ChannelId"];
             }
 
-            // TODO: Error
-            // Your request was blocked due to bad credentials (Do you have the right scope for your access token?).
             // BroadcastID = "66716756"
             channel = await _twitchCache.GetTheTwitchAPI().Helix.Channels.GetChannelInformationAsync(broadcasterId);
         }

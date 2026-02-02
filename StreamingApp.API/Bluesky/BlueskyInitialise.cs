@@ -1,6 +1,7 @@
 ﻿using idunno.Bluesky;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Twitch;
 using StreamingApp.API.Utility.Caching.Interface;
 

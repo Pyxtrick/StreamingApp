@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.Core.Commands.Bluesky;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Core.Queries.Alerts.Interfaces;
 using StreamingApp.Domain.Entities.Dtos;
@@ -154,5 +155,11 @@ public class TestController : ControllerBase
     public async Task TextAlert([FromServices] IMovingText movingText, int adLength, string text)
     {
         await movingText.ExecuteAlert(adLength, text);
+    }
+
+    [HttpPost("BlueskyTweet")]
+    public async Task SendBlueskyTweet([FromServices] IManageTweets manageTweets, string text)
+    {
+        await manageTweets.SendBasicTweet(text);
     }
 }

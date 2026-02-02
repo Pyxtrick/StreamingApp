@@ -1,5 +1,4 @@
-﻿
-namespace StreamingApp.API.Bluesky;
+﻿namespace StreamingApp.API.Bluesky.Interfaces;
 
 public interface IBlueskyInitialise
 {

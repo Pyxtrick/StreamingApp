@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Bluesky;
+using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Interfaces;
 using StreamingApp.API.StreamerBot;
 using StreamingApp.API.TTS;
@@ -18,6 +19,7 @@ public static class APIRegistrar
     public static void AddApiOptions(this IServiceCollection services)
     {
         //Bluesky
+        services.AddScoped<IBlueskyApiRequest, BlueskyApiRequest>();
         services.AddScoped<IBlueskyInitialise, BlueskyInitialise>();
 
         services.AddScoped<IBlueskyCache, BlueskyCache>();

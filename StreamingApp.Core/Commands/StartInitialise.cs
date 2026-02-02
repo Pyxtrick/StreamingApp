@@ -1,4 +1,4 @@
-﻿using StreamingApp.API.Bluesky;
+﻿using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Twitch.Interfaces;
 
 namespace StreamingApp.Core.Commands;

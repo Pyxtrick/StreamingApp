@@ -2,8 +2,11 @@
 
 public enum OriginEnum
 {
+    Undefined,
     Twitch,
     Youtube,
+    Kick,
     Discord,
-    Undefined,
+    Twitter,
+    Bluesky,
 }
