@@ -33,6 +33,7 @@ public class SendSignalRMessage : ISendSignalRMessage
     // ReceiveWatchUserMessage
 
     // ReceiveChatMessage
+    // ReceiveSharedMessage
 
     // ReceiveVipViewerMessage
     // ReceiveModMessage
@@ -48,7 +49,9 @@ public class SendSignalRMessage : ISendSignalRMessage
 
     // ReceiveTranslatedMessage
 
+    // ReceiveTwitchMessage
     // ReceiveYoutubeMessage
+    // ReceiveKickMessage
 
     /// <summary>
     /// Uses SignalR to send the message to the correct chat in the Frontend
@@ -66,10 +69,20 @@ public class SendSignalRMessage : ISendSignalRMessage
         // Display chat with out Bots
         if (user.Status.UserType != UserTypeEnum.Bot && user.Ban.IsExcludeChat == false)
         {
-            // TODO: do someting about when Stream Together is Active
-            await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);
+            // Check if Message is from a Shared Chat (Stream Together)
+            if(messageDto.Channel == _configuration["Twitch:Channel"])
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);
+            }
+            else
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveSharedMessage", messageDto);
+            }
 
-            // DO not allow to show links of any kink on the OnScreenChat
+            // Send Message to Specific Locaton using Origin
+            await _hubContext.Clients.All.SendAsync($"Receive{messageDto.Origin.ToString()}Message", messageDto);
+
+            // DO not allow to show any link on the OnScreenChat
             if (new Regex("([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?", RegexOptions.IgnoreCase).Match(messageDto.Message).Success == false
                 && messageDto.Channel.Equals(_configuration["Twitch:Channel"], StringComparison.InvariantCultureIgnoreCase))
             {

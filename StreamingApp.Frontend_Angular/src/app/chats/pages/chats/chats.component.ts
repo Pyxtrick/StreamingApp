@@ -47,6 +47,7 @@ export class ChatsComponent implements OnInit {
   isMuteAllert = false;
 
   displayChatMessages: DisplayChat[] = [];
+  displaySharedMessages: DisplayChat[] = [];
   displayEventMessages: DisplayChat[] = [];
   displayFriendMessages: DisplayChat[] = [];
   displayModMessages: DisplayChat[] = [];
@@ -56,8 +57,9 @@ export class ChatsComponent implements OnInit {
   displayWatchUserMessages: DisplayChat[] = [];
   displayBotMessages: DisplayChat[] = [];
   displayModActionMessages: DisplayChat[] = [];
-  displayActionMessages: DisplayChat[] = [];
+  displayTwitchMessages: DisplayChat[] = [];
   displayYoutubeMessages: DisplayChat[] = [];
+  displayKickMessages: DisplayChat[] = [];
 
   ngOnInit(): void {
     this.store.dispatch(ChatsActions.loadSetting(OriginEnum.Twitch));
@@ -84,6 +86,15 @@ export class ChatsComponent implements OnInit {
           }
 
           this.displayChatMessages.push(this.convertMessageData(message));
+        });
+      this.signalRService
+        .receiveChatMessage('ReceiveSharedMessage')
+        .subscribe((message) => {
+          if (this.displaySharedMessages.length >= 100) {
+            this.displaySharedMessages.shift();
+          }
+
+          this.displaySharedMessages.push(this.convertMessageData(message));
         });
       this.signalRService
         .receiveChatMessage('ReceiveEventMessage')
@@ -167,13 +178,13 @@ export class ChatsComponent implements OnInit {
           this.displayModActionMessages.push(this.convertMessageData(message));
         });
       this.signalRService
-        .receiveChatMessage('ReceiveChatMessage')
+        .receiveChatMessage('ReceiveTwitchMessage')
         .subscribe((message) => {
-          if (this.displayActionMessages.length >= 100) {
-            this.displayActionMessages.shift();
+          if (this.displayTwitchMessages.length >= 100) {
+            this.displayTwitchMessages.shift();
           }
 
-          this.displayActionMessages.push(this.convertMessageData(message));
+          this.displayTwitchMessages.push(this.convertMessageData(message));
         });
       this.signalRService
         .receiveChatMessage('ReceiveYoutubeMessage')
@@ -183,6 +194,16 @@ export class ChatsComponent implements OnInit {
           }
 
           this.displayYoutubeMessages.push(this.convertMessageData(message));
+        });
+
+      this.signalRService
+        .receiveChatMessage('ReceiveKickMessage')
+        .subscribe((message) => {
+          if (this.displayKickMessages.length >= 100) {
+            this.displayKickMessages.shift();
+          }
+
+          this.displayKickMessages.push(this.convertMessageData(message));
         });
 
       this.signalRService
