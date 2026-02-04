@@ -1495,16 +1495,12 @@ export class StreamerBotContollerClient {
         return _observableOf(null as any);
     }
 
-    raidAllert(userName: string | undefined, userId: string | undefined, raidSize: number | undefined): Observable<void> {
+    raidAllert(userName: string | undefined, raidSize: number | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/StreamerBotContoller/Raid?";
         if (userName === null)
             throw new globalThis.Error("The parameter 'userName' cannot be null.");
         else if (userName !== undefined)
             url_ += "userName=" + encodeURIComponent("" + userName) + "&";
-        if (userId === null)
-            throw new globalThis.Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         if (raidSize === null)
             throw new globalThis.Error("The parameter 'raidSize' cannot be null.");
         else if (raidSize !== undefined)

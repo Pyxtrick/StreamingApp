@@ -72,12 +72,13 @@ public class StreamerBotContoller : ControllerBase
         await pointRedeam.Execute(userName, userId, rewardid, rewardName, rewardPrompt);
     }
 
+    //http://localhost:7033/api/StreamerBotContoller/Raid?userName=%userName%&raidSize=%viewers%
     [HttpGet("Raid")]
-    public async Task RaidAllert([FromServices] IManageAlert manageAlert, string userName, string userId, int raidSize)
+    public async Task RaidAllert([FromServices] IManageAlert manageAlert, string userName, int raidSize)
     {
         RaidDto raid = new(userName, raidSize, "", false, DateTime.UtcNow);
 
-        var t = manageAlert.ExecuteRaid(raid);
+        await manageAlert.ExecuteRaid(raid);
     }
 
     //http://localhost:7033/api/StreamerBotContoller/HypeTrain?level=%level%&persentage=%percentDecimal%&hypeTrainStage=%triggerName%&isGoldenKappaTrain=%isGoldenKappaTrain%
