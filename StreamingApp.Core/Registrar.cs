@@ -28,7 +28,7 @@ namespace StreamingApp.Core;
 
 public static class Registrar
 {
-    public static void AddCoreOptions(this IServiceCollection services)
+    public static void AddCoreOptions(this IServiceCollection services, string automapperKey)
     {
         #region Commands
         // Bluesky
@@ -96,7 +96,7 @@ public static class Registrar
         //services.AddHostedService<YoutubeScheduler>();
 
         //Utility
-        services.AddAutoMapper(typeof(CoreMappingProfile));
+        services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(CoreMappingProfile));
 
         services.AddScoped<IQueueCache, QueueCache>();
         services.AddSingleton<QueueData>();

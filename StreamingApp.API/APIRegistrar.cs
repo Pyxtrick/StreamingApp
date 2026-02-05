@@ -16,7 +16,7 @@ namespace StreamingApp.API;
 
 public static class APIRegistrar
 {
-    public static void AddApiOptions(this IServiceCollection services)
+    public static void AddApiOptions(this IServiceCollection services, string automapperKey)
     {
         //Bluesky
         services.AddScoped<IBlueskyApiRequest, BlueskyApiRequest>();
@@ -52,7 +52,7 @@ public static class APIRegistrar
         services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
 
         //utility
-        services.AddAutoMapper(typeof(TwitchMappingProfile));
+        services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(TwitchMappingProfile));
 
         services.AddScoped<IEmotesCache, EmotesCache>();
         services.AddSingleton<EmotesCacheData>();

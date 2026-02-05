@@ -24,7 +24,14 @@ public class StreamerBotRequest : IStreamerBotRequest
 
         var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
-        await new HttpClient().PostAsync("http://localhost:7474/DoAction", content);
+        try
+        {
+            await new HttpClient().PostAsync("http://localhost:7474/DoAction", content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Stream Bot Not Running", ex.ToString());
+        }
     }
 
     private Request TransformData(string id, string name, List<KeyValuePair<string, string>> args)

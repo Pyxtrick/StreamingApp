@@ -41,7 +41,7 @@ public class ManageTweets : IManageTweets
 
             tweetMessage += $"{originMessage}{service.Value} \r\n";
 
-            postBuilder.Append(new Link($"{originMessage}{service.Value}", service.Key.ToString()));
+            postBuilder.Append(new Link($"{originMessage}{service.Value}"));
             postBuilder.Append("\r\n");
             Console.WriteLine(postBuilder);
         }

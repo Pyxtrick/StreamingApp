@@ -50,15 +50,18 @@ Able to Manage Responses, Alerts, Activities and more
 
 #### Backend
 
-- [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
+- [ASP.NET Core 10](https://learn.microsoft.com/en-us/aspnet/core/overview?view=aspnetcore-10.0)
 - [MSSQL](https://docs.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver16)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 - [NSwag](https://github.com/RicoSuter/NSwag)
 - [SignalR](https://learn.microsoft.com/en-us/aspnet/signalr/overview/getting-started/introduction-to-signalr)
 
+- Twtich API [TwitchLib](https://github.com/TwitchLib)
+- Bluesky API [idunno.Bluesky](https://bluesky.idunno.dev/?tabs=commandLine%2Csession%2CpostCreate)
+
 #### Fronetnd
 
-- [Angular](https://angular.io/)
+- [Angular 21](https://angular.io/)
 - [Material](https://material.angular.io/)
 - [RxJS](https://rxjs.dev/)
 - [Ngrx](https://ngrx.io/)
@@ -75,16 +78,16 @@ To get started feel free to clone this repository to your local machine.
 ### Prerequisites
 
 Backend
-For .net 8 "Visual Studio 2022" or higher is needed to run the Backend
+For .net 10 "Visual Studio 2026" or higher is needed to run the Backend
 
 Frontend
-npm version 20.12.2 is used.
+npm version 22.21.1 is used.
 
 ## Installation
 
 ### Backend
 
-Use Visual Studio 2022
+Use Visual Studio 2026
 
 DB will automatically be created / updated but no data will be added.
 NSwag will automatically create "api.service.ts" when backend is started.

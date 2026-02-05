@@ -17,10 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // API Services
-builder.Services.AddApiOptions();
+builder.Services.AddApiOptions(builder.Configuration["AutoMapper:Key"]!);
 
 // Core Services
-builder.Services.AddCoreOptions();
+builder.Services.AddCoreOptions(builder.Configuration["AutoMapper:Key"]!);
 
 // SignalR
 builder.Services.AddSignalR(cfg => cfg.EnableDetailedErrors = true);
