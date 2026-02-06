@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Bluesky;
 using StreamingApp.API.Bluesky.Interfaces;
@@ -52,8 +55,13 @@ public static class APIRegistrar
         services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
 
         //utility
-        services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(TwitchMappingProfile));
-
+        //services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(TwitchMappingProfile));
+        services.AddSingleton(provider => new MapperConfiguration(cfg =>
+        {
+            cfg.LicenseKey = automapperKey;
+            cfg.AddProfile(new TwitchMappingProfile(provider.GetService<IConfiguration>()));
+        }, NullLoggerFactory.Instance).CreateMapper());
+        
         services.AddScoped<IEmotesCache, EmotesCache>();
         services.AddSingleton<EmotesCacheData>();
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Client.Models;
@@ -6,7 +7,7 @@ using TwitchLib.Client.Models;
 namespace StreamingApp.API.Utility;
 public class TwitchMappingProfile : Profile
 {
-    public TwitchMappingProfile()
+    public TwitchMappingProfile(IConfiguration configuration)
     {
         CreateMap<ChatMessage, MessageDto>()
             .ConstructUsing(x => new MessageDto(
