@@ -55,13 +55,13 @@ public static class APIRegistrar
         services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
 
         //utility
-        //services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(TwitchMappingProfile));
-        services.AddSingleton(provider => new MapperConfiguration(cfg =>
+        services.AddAutoMapper(cfg => cfg.LicenseKey = automapperKey, typeof(TwitchMappingProfile));
+        /**services.AddSingleton(provider => new MapperConfiguration(cfg =>
         {
             cfg.LicenseKey = automapperKey;
             cfg.AddProfile(new TwitchMappingProfile(provider.GetService<IConfiguration>()));
         }, NullLoggerFactory.Instance).CreateMapper());
-        
+        **/
         services.AddScoped<IEmotesCache, EmotesCache>();
         services.AddSingleton<EmotesCacheData>();
     }

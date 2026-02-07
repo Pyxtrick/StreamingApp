@@ -7,7 +7,7 @@ using TwitchLib.Client.Models;
 namespace StreamingApp.API.Utility;
 public class TwitchMappingProfile : Profile
 {
-    public TwitchMappingProfile(IConfiguration configuration)
+    public TwitchMappingProfile()
     {
         CreateMap<ChatMessage, MessageDto>()
             .ConstructUsing(x => new MessageDto(
