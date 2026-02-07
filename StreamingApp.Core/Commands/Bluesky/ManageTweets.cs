@@ -31,7 +31,7 @@ public class ManageTweets : IManageTweets
         var channelInfo = await _twitchSendRequest.GetChannelInfo("", true);
         PostBuilder postBuilder = new PostBuilder();
 
-        string tweetIntro = $"{channelInfo.Title} | {channelInfo.GameName}\r\n 🔴Live\r\n";
+        string tweetIntro = $"{channelInfo.Title} | {channelInfo.GameName}\r\n🔴Live\r\n";
         string tweetMessage = tweetIntro;
         postBuilder.Append(tweetIntro);
 
@@ -47,8 +47,8 @@ public class ManageTweets : IManageTweets
         }
 
         tweetMessage += "#Vtuber #VtuberEN";
-        postBuilder.Append(new HashTag("#Vtuber"));
-        postBuilder.Append(new HashTag("#VtuberEN"));
+        postBuilder.Append(new HashTag("Vtuber"));
+        postBuilder.Append(new HashTag("VtuberEN"));
 
         await _blueskyApiRequest.PostTweet(postBuilder);
     }
