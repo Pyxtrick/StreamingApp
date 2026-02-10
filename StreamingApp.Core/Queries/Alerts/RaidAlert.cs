@@ -24,7 +24,7 @@ public class RaidAlert : IRaidAlert
             }
             var delay = new Random().Next(0, 5);
             var duration = new Random().Next(5, animationDuration);
-            var height = new Random().Next(100, 300);
+            var height = new Random().Next(200, 400);
             var position = new Random().Next(0, 95);
 
             style += $".gif{i} {{ animation-delay: {delay}s; animation: gif{i} {duration}s linear 1; height: {height}px; margin-left: {position}%; margin-top: 100vh;}}" +
@@ -38,6 +38,6 @@ public class RaidAlert : IRaidAlert
 
         raid += $"<style>{style} .gif {{ display: inline-block; font-size: 20px; position: fixed;}}</style</div>";
 
-        return new AlertDto() { Html = raid, Duration = animationDuration };
+        return new AlertDto() { Html = raid, Duration = animationDuration + 10 };
     }
 }

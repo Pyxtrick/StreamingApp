@@ -19,15 +19,13 @@ public class TestController : ControllerBase
     [HttpPost("sendChatDto")]
     public async void SendChatDto([FromServices] IHubContext<ChatHub> clientHub)
     {
-        int t = new Random().Next(1, 50);
+        int random = new Random().Next(1, 50);
 
-        Random random = new Random();
-
-        Console.WriteLine($"messageId {t}");
+        Console.WriteLine($"messageId {random}");
 
         string mess = "hello test";
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        mess = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+        mess = new string(Enumerable.Repeat(chars, random).Select(s => s[new Random().Next(s.Length)]).ToArray());
 
         MessageDto chatMessage = new(false, "Channel", "#ff6b6b", "ReplyMessage", mess, "emote Replaced Message", new List<EmoteSetDto>(),
             new() { new("kekw", "https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3") }, OriginEnum.Twitch,
@@ -43,11 +41,9 @@ public class TestController : ControllerBase
     [HttpPost("sendEmoteChatDto")]
     public async void SendEmoteChatDto([FromServices] IHubContext<ChatHub> clientHub)
     {
-        int t = new Random().Next(1, 50);
+        int random = new Random().Next(1, 50);
 
-        Random random = new Random();
-
-        Console.WriteLine($"messageId {t}");
+        Console.WriteLine($"messageId {random}");
         
         string mess = "pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave";
 

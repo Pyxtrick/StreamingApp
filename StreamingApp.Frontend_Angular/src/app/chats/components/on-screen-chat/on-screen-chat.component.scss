@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 .cols-link {
   visibility: hidden !important;
   height: 0px;
@@ -51,13 +53,42 @@ body {
   margin-bottom: 0px;
 }
 
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
 .message-text {
+  font-family: 'VT323', monospace;
   font-size: x-large;
   color: white;
   margin-bottom: 0px;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  //white-space: pre-wrap;
   display: inline-block;
+
+  overflow: hidden;
+  border-right: 0.15em solid orange;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0em;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
 .mdc-list-item {
