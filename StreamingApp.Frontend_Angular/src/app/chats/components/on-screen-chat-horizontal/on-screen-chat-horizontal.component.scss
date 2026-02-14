@@ -91,7 +91,7 @@ mat-list.list-horizontal {
   white-space: nowrap;
   margin: 0 auto;
   letter-spacing: 0em;
-  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
 .message-text-none {
@@ -100,12 +100,11 @@ mat-list.list-horizontal {
   word-wrap: break-word;
   display: inline-block;
 
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: 0.15em solid orange; /* The typwriter cursor */
-  //white-space: nowrap; /* Keeps the content on a single line */
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: 0.15em; /* Adjust as needed */
-  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  overflow: hidden;
+  border-right: 0.15em solid orange;
+  margin: 0 auto;
+  letter-spacing: 0.15em;
+  animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
 .mdc-list-item--with-two-lines .mdc-list-item__primary-text::before,
