@@ -1,7 +1,4 @@
 Backend
-	Send chat message to Web to
-	Send Bot messages to Bot Chat to 
-
 	Check for Deleted Messages and send a delete request to Frontend Onscreen Chat
 
 Fronted
@@ -17,16 +14,13 @@ Fronted
 
 	Update "Ads Dispaly" with Data from the backend / DB
 
-	Error => TEST
-
-	Error => Ads Text stoping erlier than expeted
+	Fix All Chat one Message Text not wraping correctly
 
 	fail SUB: StreamingApp.Core.Utility.Scheduler.AlertScheduler[0]
       An error was generated for warning 'Microsoft.EntityFrameworkCore.Query.InvalidIncludePathError':
 	  Unable to find navigation 'Sub' specified in string based include path 'Sub'. 
 	  This exception can be suppressed or logged by passing event ID 'CoreEventId.InvalidIncludePathError' 
 	  to the 'ConfigureWarnings' method in 'DbContext.OnConfiguring' or 'AddDbContext'
-
 
 
 	OnUnaccountedForArgs
@@ -60,9 +54,6 @@ OnUnaccountedForArgs @badge-info=founder/6;badges=moderator/1,founder/0;color=#F
 		Comunticate between frontend and backend with Alert Queue
 			Backend Sends Alert when OK to send Request
 			After Frontend is Done Playing Request new Alert from Backend, Frontend Confirms to Backend that is recived Alert
-
-	Raid Allert
-		many Snake Peek from the bottom
 
 // Frontnend
 TODO: 1 Show statistics in Frontend
