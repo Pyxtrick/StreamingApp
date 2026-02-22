@@ -1,7 +1,4 @@
 ﻿using LanguageDetection;
-using StreamingApp.DB;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Enums;
 using StreamingApp.Tests;
 using Xunit;
 
@@ -9,48 +6,19 @@ namespace StreamingApp.Test;
 
 public class Tests : DataBaseFixture
 {
-    [Fact]
-    public void Test1()
+    [Xunit.Theory]
+    [InlineData("!live Canada/Pacific", "Stream will be live on Friday at 08:30:00 Canada/Pacific / (UTC -8)")]
+    [InlineData("!live Japan", "Stream will be live on Saturday at 01:30:00 Japan / (UTC +9)")]
+    public void TimeChange(string message, string assert)
     {
         // Arrange
-        DateTime starTime = new(2022, 2, 14);
-
-        using (UnitOfWorkContext unitOfWork = CreateUnitOfWork())
-        {
-            /**User user = UserBuilder.Create(unitOfWork).WithDefaults();
-
-            ActivityBuilder.Create(unitOfWork).WithDefaults().WithUser(user);
-
-            await unitOfWork.SaveChangesAsync();
-            **/
-        }
-
-        var auths = new List<AuthEnum> { AuthEnum.Mod, AuthEnum.Streamer };
-
-        CommandDto commandDto = new("1", "userid1", "userName", "dispalyName", "!live", auths, DateTime.UtcNow, OriginEnum.Twitch);
-
-        //IManageCommands createOrReplaceActivitiesCommand = CreateCommand();
-
-        // Act
-        //await createOrReplaceActivitiesCommand.Execute(commandDto);
-
-        // Assert
-
-    }
-
-    [Fact]
-    public void Test2()
-    {
-        // Arrange
-        string message1 = "!live"; // UTC +2
-        string message = "!live  America"; // UTC -7
-        string message3 = "!live  Japan"; // UTC +9
-
         var splitMessage = message.Split(' ');
 
 
         // Act
         var localTime = DateTime.Now.Date + new TimeSpan(17, 30, 0);
+
+        var t = new DateTime(639073782000000000);
         string reponse = "undefined";
 
 
@@ -60,13 +28,13 @@ public class Tests : DataBaseFixture
             {
                 var result = localTime.AddDays(((int)DayOfWeek.Friday - (int)localTime.DayOfWeek + 7) % 7);
 
-                var timeZone = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitMessage[2]));
+                var timeZone = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById(splitMessage[1]));
 
                 var offset = (timeZone - result.ToUniversalTime()).Hours;
 
                 var offsetText = offset > 0 ? $"+{offset}" : $"{offset}";
 
-                reponse = $"Stream will be live on {timeZone.DayOfWeek} and {timeZone.AddDays(1).DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitMessage[2]} / (UTC {offsetText})";
+                reponse = $"Stream will be live on {timeZone.DayOfWeek} at {timeZone.TimeOfDay.ToString()} {splitMessage[1]} / (UTC {offsetText})";
             }
             catch (Exception)
             {
@@ -81,7 +49,7 @@ public class Tests : DataBaseFixture
         }
 
         // Assert
-        Xunit.Assert.Equal("", reponse);
+        Xunit.Assert.Equal(assert, reponse);
     }
 
     [Fact]
