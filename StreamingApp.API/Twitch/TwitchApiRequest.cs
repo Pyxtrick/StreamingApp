@@ -176,35 +176,9 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         if (e.PrimePaidSubscriber.SubscriptionPlan.Equals("Prime"))
         {
-            string userName = e.PrimePaidSubscriber.DisplayName;
-            string subscriptionPlan = e.PrimePaidSubscriber.SubscriptionPlan.ToString();
-            int cumulativeMonths = int.Parse(e.PrimePaidSubscriber.MsgParamCumulativeMonths);
-            string emoteMessage = "";
-
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.PrimePaidSubscriber);
-            //SubDto subDto = new SubDto(null, e.PrimePaidSubscriber.Id, userName, e.PrimePaidSubscriber.DisplayName, e.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
-
-            try
-            {
-                cumulativeMonths = int.Parse(e.PrimePaidSubscriber.MsgParamCumulativeMonths);
-
-                if (cumulativeMonths == 1)
-                {
-                    emoteMessage = $"Thank you {userName} for joining us for the first month as an {subscriptionPlan} member";
-                }
-                else
-                {
-                    emoteMessage = $"Thank you {userName} for joining us for {cumulativeMonths} months as an {subscriptionPlan} member";
-                }
-            }
-            catch (Exception)
-            {
-                emoteMessage = $"Thank you {userName} for joining us as an {subscriptionPlan} member";
-
-                Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.PrimePaidSubscriber.MsgParamCumulativeMonths}");
-            }
-
-            Console.WriteLine(emoteMessage);
+            
+            Console.WriteLine($"OnPrimePaidSubscriber Trigger {e.PrimePaidSubscriber.SubscriptionPlan}");
 
             _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
@@ -217,42 +191,11 @@ public class TwitchApiRequest : ITwitchApiRequest
     {
         OnHypeTrain();
 
-        string userName = e.ReSubscriber.DisplayName;
-        int months = e.ReSubscriber.Months;
-        string subscriptionPlan = e.ReSubscriber.SubscriptionPlan.ToString();
-        int cumulativeMonths = int.Parse(e.ReSubscriber.MsgParamCumulativeMonths);
-        string emoteMessage = "";
-
         SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
-        //SubDto subDto = new SubDto(null, e.ReSubscriber.Id, userName, e.ReSubscriber.DisplayName, e.ReSubscriber.Channel, OriginEnum.Twitch, false, 0, cumulativeMonths, tier, null, false, DateTime.Now);
 
-        try
-        {
-            cumulativeMonths = int.Parse(e.ReSubscriber.MsgParamCumulativeMonths);
-            var streakMonths = e.ReSubscriber.MsgParamShouldShareStreak ? int.Parse(e.ReSubscriber.MsgParamStreakMonths) : 0;
-            if (streakMonths > 0)
-            {
-                emoteMessage = $"Thank you {userName} for joining us for {cumulativeMonths} months as an {subscriptionPlan} member with a Streak of {streakMonths} months";
-            }
-            else
-            {
-                emoteMessage = $"Thank you {userName} for joining us for {cumulativeMonths} months as an {subscriptionPlan} member";
-            }
-        }
-        catch (Exception)
-        {
-            emoteMessage = $"Thank you {userName} for {months} months of {subscriptionPlan} Sub";
-
-            Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamCumulativeMonths}");
-            Console.WriteLine($"parse MsgParamCumulativeMonths failed: {e.ReSubscriber.MsgParamStreakMonths}");
-        }
-
-        Console.WriteLine(emoteMessage);
-
+        Console.WriteLine($"OnReSubscriber Trigge {e.ReSubscriber.SubscriptionPlan}");
+        
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
-
-        // TODO: Show emote with Message
-        // TODO: SaveSubscription to DB
     }
 
     public void Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e)
@@ -345,6 +288,28 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
+        var t = e.Data.Split(";");
+
+        List<KeyValuePair<string, string>> keyValues = new List<KeyValuePair<string, string>>();
+
+        foreach (var item in t)
+        {
+            var data = item.Split("=");
+            var key = data[0];
+            var index = data[0].IndexOf("msg-param-");
+            if (index >= 0)
+            {
+                key = data[0].Remove(index, 10);
+            }
+            keyValues.Add(new(key, data[1]));
+        }
+        
+
+        if (e.Data.Contains("msg-param-category=watch-streak"))
+        {
+            //Console.WriteLine($"WatchStreak {}");
+        }
+
         Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
     }
     public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
