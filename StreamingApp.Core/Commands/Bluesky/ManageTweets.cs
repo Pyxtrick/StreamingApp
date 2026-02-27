@@ -48,6 +48,7 @@ public class ManageTweets : IManageTweets
 
         tweetMessage += "#Vtuber #VtuberEN";
         postBuilder.Append(new HashTag("Vtuber"));
+        postBuilder.Append(" ");
         postBuilder.Append(new HashTag("VtuberEN"));
 
         await _blueskyApiRequest.PostTweet(postBuilder);

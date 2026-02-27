@@ -21,42 +21,45 @@ public class ManageAchievements : IManageAchievements
 
     public async Task ExecuteSub(SubDto sub)
     {
-        var user = _unitOfWork.User.Include("Achievements").Include("Details").Include("Status").Include("Status.Subs").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == sub.UserId);
+        var user = _unitOfWork.User.Include("Achievements").Include("Details").Include("Status").Include("Status.Subs").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == sub.Origin).ExternalUserId == sub.UserId);
 
         if (sub.IsGifftedSub)
         {
+            Console.WriteLine("IsGiftSub");
             var twichAchievements = user.Achievements.FirstOrDefault(t => t.Origin == sub.Origin);
 
             twichAchievements.GiftedSubsCount += sub.GifftedSubCount;
 
             //_unitOfWork.Achievements.Update(twichAchievements);
             await _unitOfWork.SaveChangesAsync();
+            return;
+        }
+
+        var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == sub.Origin);
+
+        if(twitchSub == null)
+        {
+            Console.WriteLine("IsNotExisting");
+            Console.Error.WriteLine($"Error During Sub with {sub.Origin}");
+            twitchSub = new()
+            {
+                Origin = sub.Origin,
+                CurrentTier = sub.CurrentTier,
+                CurrentySubscribed = true,
+                SubscribedTime = 1
+            };
         }
         else
         {
-            var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == sub.Origin);
-
-            if(twitchSub == null)
-            {
-                Console.Error.WriteLine($"Error During Sub with {sub.Origin}");
-                twitchSub = new()
-                {
-                    Origin = sub.Origin,
-                    CurrentTier = sub.CurrentTier,
-                    CurrentySubscribed = true,
-                    SubscribedTime = 1
-                };
-            }
-            else
-            {
-                twitchSub.CurrentySubscribed = true;
-                twitchSub.CurrentTier = sub.CurrentTier;
-                twitchSub.SubscribedTime = twitchSub.SubscribedTime + 1;
-            }
-
-            //_unitOfWork.Sub.Update(twitchSub);
-            await _unitOfWork.SaveChangesAsync();
+            Console.WriteLine("IsExisting");
+            twitchSub.CurrentySubscribed = true;
+            twitchSub.CurrentTier = sub.CurrentTier;
+            twitchSub.SubscribedTime = twitchSub.SubscribedTime + 1;
         }
+
+        Console.WriteLine("exeting");
+        //_unitOfWork.Sub.Update(twitchSub);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task ExecuteBit(MessageAlertDto alertDto)

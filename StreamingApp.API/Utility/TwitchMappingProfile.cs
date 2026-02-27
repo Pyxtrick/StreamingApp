@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Client.Models;

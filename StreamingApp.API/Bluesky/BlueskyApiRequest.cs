@@ -1,5 +1,4 @@
 ﻿using idunno.Bluesky;
-using idunno.Bluesky.RichText;
 using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Utility.Caching.Interface;
 
@@ -46,6 +45,22 @@ public class BlueskyApiRequest : IBlueskyApiRequest
             return true;
         }
 
+        return false;
+    }
+
+    public async Task<bool> SetLiveStatus(string title, bool IsStart)
+    {
+        var urltext = "https://twitch.tv/pyxtrick";
+
+        var uri = new Uri(urltext);
+
+        var time = IsStart ? 240 : 0;
+        var response = await _blueskyCache.GetBlueskyAgent().SetLiveStatus(uri, urltext, durationMinutes: time);
+        if (response.Succeeded)
+        {
+            Console.WriteLine(response.Result);
+            return true;
+        }
         return false;
     }
 }

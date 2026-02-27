@@ -288,20 +288,27 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
-        var t = e.Data.Split(";");
-
-        List<KeyValuePair<string, string>> keyValues = new List<KeyValuePair<string, string>>();
-
-        foreach (var item in t)
+        try
         {
-            var data = item.Split("=");
-            var key = data[0];
-            var index = data[0].IndexOf("msg-param-");
-            if (index >= 0)
+            var split = e.Data.Split(";");
+
+            List<KeyValuePair<string, string>> keyValues = new List<KeyValuePair<string, string>>();
+
+            foreach (var item in split)
             {
-                key = data[0].Remove(index, 10);
+                var data = item.Split("=");
+                var key = data[0];
+                var index = data[0].IndexOf("msg-param-");
+                if (index >= 0)
+                {
+                    key = data[0].Remove(index, 10);
+                }
+                keyValues.Add(new(key, data[1]));
             }
-            keyValues.Add(new(key, data[1]));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
         
 
