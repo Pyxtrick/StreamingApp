@@ -2,55 +2,54 @@
 using Microsoft.EntityFrameworkCore;
 using StreamingApp.DB;
 
-namespace StreamingApp.Tests
+namespace StreamingApp.Test;
+
+public abstract class DataBaseFixture : IDisposable
 {
-	public abstract class DataBaseFixture : IDisposable
+	private const string ConnectionString = "DataSource=:memory:";
+
+	private SqliteConnection _connection;
+
+	~DataBaseFixture()
 	{
-		private const string ConnectionString = "DataSource=:memory:";
+		Dispose(false);
+	}
 
-		private SqliteConnection _connection;
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
 
-		~DataBaseFixture()
+	protected UnitOfWorkContext CreateUnitOfWork()
+	{
+		if (_connection == null)
 		{
-			Dispose(false);
+			Initialize();
 		}
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
+		DbContextOptions<UnitOfWorkContext> options = new DbContextOptionsBuilder<UnitOfWorkContext>().UseSqlite(_connection).Options;
+		UnitOfWorkContext context = new(options);
+		context.Database.EnsureCreated();
 
-		protected UnitOfWorkContext CreateUnitOfWork()
+		return context;
+	}
+
+	protected virtual void Dispose(bool disposing)
+	{
+		if (disposing)
 		{
-			if (_connection == null)
+			if (_connection != null)
 			{
-				Initialize();
-			}
-
-			DbContextOptions<UnitOfWorkContext> options = new DbContextOptionsBuilder<UnitOfWorkContext>().UseSqlite(_connection).Options;
-			UnitOfWorkContext context = new(options);
-			context.Database.EnsureCreated();
-
-			return context;
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (_connection != null)
-				{
-					_connection.Close();
-					_connection.Dispose();
-				}
+				_connection.Close();
+				_connection.Dispose();
 			}
 		}
+	}
 
-		private void Initialize()
-		{
-			_connection = new SqliteConnection(ConnectionString);
-			_connection.Open();
-		}
+	private void Initialize()
+	{
+		_connection = new SqliteConnection(ConnectionString);
+		_connection.Open();
 	}
 }

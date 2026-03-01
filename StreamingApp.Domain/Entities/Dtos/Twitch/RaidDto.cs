@@ -7,13 +7,13 @@ public class RaidDto(
     bool isUsed,
     DateTime utcNow)
 {
+    public string UserName { get; set; } = userName;
+
     public int Count { get; set; } = count;
 
     public string Game { get; set; } = game;
 
-    public string UserName { get; set; } = userName;
+    public bool IsUsed { get; set; } = isUsed;
 
     public DateTime utcNow { get; set; } = utcNow;
-
-    public bool IsUsed { get; set; } = isUsed;
 }

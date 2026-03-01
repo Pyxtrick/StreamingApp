@@ -13,7 +13,7 @@ using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
 
-internal class ManageAlert : IManageAlert
+public class ManageAlert : IManageAlert
 {
     private readonly UnitOfWorkContext _unitOfWork;
 

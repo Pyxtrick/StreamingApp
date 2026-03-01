@@ -1,5 +1,4 @@
 ﻿using LanguageDetection;
-using StreamingApp.Tests;
 using Xunit;
 
 namespace StreamingApp.Test;
