@@ -10,23 +10,115 @@ using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
-using StreamingApp.Test.TestBuilder;
+using StreamingApp.Domain.Enums.Trigger;
+using StreamingApp.Test.TestBuilder.DB;
+using StreamingApp.Test.TestBuilder.Dto;
 using Xunit;
 
 namespace StreamingApp.Test.Core.Command.Twitch;
 
 public class ManageAlertFixture : DataBaseFixture
 {
-    [Fact] //TODO
-    public async Task ExecuteBitAndRedeamAndFollowTest()
+    [Fact]
+    public async Task ExecuteBitAndRedeamAndFollowTest_Bits()
     {
+        //Arrange
+        MessageAlertDto messageAlertDto = MessageAlertDtoBuilder.Create().WithAlertType(AlertTypeEnum.Bits).WithBitsAndCurrency(100, 0).WithOrigin(OriginEnum.Twitch);
 
+        await using (UnitOfWorkContext unitOfWork = CreateUnitOfWork())
+        {
+            SettingsBuilder.Create(unitOfWork).WithDefaults(1, OriginEnum.Twitch);
+
+            var alert1 = AlertBuilder.Create(unitOfWork).WithDefaults(1);
+            var trigger1 = TriggerBuilder.Create(unitOfWork).WithDefaults(1).WithAmmount(100, false, false);
+            var target1 = TargetBuilder.Create(unitOfWork).WithDefaults(1, TargetCondition.Allert).WitTrigger(trigger1);
+            var targetData1 = TargetDataBuilder.Create(unitOfWork).WithDefaults(1).WithAlert(alert1).WithTarget(target1);
+
+            var alert2 = AlertBuilder.Create(unitOfWork).WithDefaults(2);
+            var trigger2 = TriggerBuilder.Create(unitOfWork).WithDefaults(2).WithAmmount(200, false, false);
+            var target2 = TargetBuilder.Create(unitOfWork).WithDefaults(2, TargetCondition.Allert).WitTrigger(trigger2);
+            var targetData2 = TargetDataBuilder.Create(unitOfWork).WithDefaults(2).WithAlert(alert2).WithTarget(target2);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        Mock<ITwitchSendRequest> twitchSendRequestMock = new();
+        Mock<ISubAlertLoong> subAlertLoongMock = new();
+        Mock<IHubContext<ChatHub>> clientHubMock = new();
+        clientHubMock.Setup(client => client.Clients.All).Returns(new Mock<IClientProxy>().Object);
+
+        Mock<IMovingText> movingTextMock = new();
+        Mock<IMessageCheck> messageCheckMock = new();
+        messageCheckMock.Setup(messageCheck => messageCheck.ExecuteMessageOnly(It.IsAny<string>())).ReturnsAsync(true);
+
+        Mock<IRaidAlert> raidAlertMock = new();
+
+        var manageAlert = CreateManageAlert(twitchSendRequestMock, subAlertLoongMock, clientHubMock, movingTextMock, messageCheckMock, raidAlertMock);
+
+        //Act
+        var resault = await manageAlert.ExecuteBitAndRedeamAndFollow(messageAlertDto);
+
+        //Assert
+        clientHubMock.Verify(client => client.Clients.All, Times.Exactly(2));
+        Assert.Equal("Given 100 Bits", resault);
+    }
+
+    [Fact] //TODO
+    public async Task ExecuteBitAndRedeamAndFollowTest_Redeam()
+    {
+        //Arrange
+        MessageAlertDto messageAlertDto = MessageAlertDtoBuilder.Create().WithPointRedeam("PointRedeam").WithAlertType(AlertTypeEnum.PointRedeam).WithOrigin(OriginEnum.Twitch);
+
+        Mock<ITwitchSendRequest> twitchSendRequestMock = new();
+        Mock<ISubAlertLoong> subAlertLoongMock = new();
+        Mock<IHubContext<ChatHub>> clientHubMock = new();
+        clientHubMock.Setup(client => client.Clients.All).Returns(new Mock<IClientProxy>().Object);
+
+        Mock<IMovingText> movingTextMock = new();
+        Mock<IMessageCheck> messageCheckMock = new();
+        Mock<IRaidAlert> raidAlertMock = new();
+
+        var manageAlert = CreateManageAlert(twitchSendRequestMock, subAlertLoongMock, clientHubMock, movingTextMock, messageCheckMock, raidAlertMock);
+
+        //Act
+        var resault = await manageAlert.ExecuteBitAndRedeamAndFollow(messageAlertDto);
+
+        //Assert
+        clientHubMock.Verify(client => client.Clients.All, Times.Exactly(1));
+        Assert.Equal("Used PointRedeam Point Redeam", resault);
+    }
+
+    [Fact] //TODO
+    public async Task ExecuteBitAndRedeamAndFollowTest_Follow()
+    {
+        //Arrange
+        MessageAlertDto messageAlertDto = MessageAlertDtoBuilder.Create().WithAlertType(AlertTypeEnum.Follow).WithOrigin(OriginEnum.Twitch);
+
+        Mock<ITwitchSendRequest> twitchSendRequestMock = new();
+        Mock<ISubAlertLoong> subAlertLoongMock = new();
+        Mock<IHubContext<ChatHub>> clientHubMock = new();
+        clientHubMock.Setup(client => client.Clients.All).Returns(new Mock<IClientProxy>().Object);
+
+        Mock<IMovingText> movingTextMock = new();
+        Mock<IMessageCheck> messageCheckMock = new();
+        Mock<IRaidAlert> raidAlertMock = new();
+
+        var manageAlert = CreateManageAlert(twitchSendRequestMock, subAlertLoongMock, clientHubMock, movingTextMock, messageCheckMock, raidAlertMock);
+
+        //Act
+        var resault = await manageAlert.ExecuteBitAndRedeamAndFollow(messageAlertDto);
+
+        //Assert
+        clientHubMock.Verify(client => client.Clients.All, Times.Exactly(1));
+        Assert.Equal("Fallowed", resault);
     }
 
     [Fact]
     public async Task ExecuteRaidTest_NoChannelInfo()
     {
         //Arrange
+        RaidDto raidDto = new("UserNmae", 1, "Test", false, DateTime.UtcNow);
+
         Mock<ITwitchSendRequest> twitchSendRequestMock = new();
         Mock<ISubAlertLoong> subAlertLoongMock = new();
         Mock<IHubContext<ChatHub>> clientHubMock = new();
@@ -35,8 +127,6 @@ public class ManageAlertFixture : DataBaseFixture
         Mock<IMovingText> movingTextMock = new();
         Mock<IMessageCheck> messageCheckMock = new();
         Mock<IRaidAlert> raidAlertMock = new();
-
-        RaidDto raidDto = new("UserNmae", 1, "Test", false, DateTime.UtcNow);
 
         var manageAlert = CreateManageAlert(twitchSendRequestMock, subAlertLoongMock, clientHubMock, movingTextMock, messageCheckMock, raidAlertMock);
 
@@ -86,6 +176,12 @@ public class ManageAlertFixture : DataBaseFixture
     public async Task ExecuteSubTest()
     {
         //Arrange
+        MessageDto chatMessage = new(false, "Channel", "#ff6b6b", null, "Sub", "Sub", new List<EmoteSetDto>(),
+            null, OriginEnum.Twitch,
+            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, "message Id", "userId",
+            "UserName", "DisplayName", DateTime.Now);
+        SubDto subDto = new("1", "1", "Username", "Dispayname", "Channel", OriginEnum.Twitch, false, 0, 3, TierEnum.Tier1, chatMessage, false, DateTime.Now);
+
         Mock<ITwitchSendRequest> twitchSendRequestMock = new();
         Mock<ISubAlertLoong> subAlertLoongMock = new();
         Mock<IHubContext<ChatHub>> clientHubMock = new();
@@ -96,12 +192,6 @@ public class ManageAlertFixture : DataBaseFixture
 
         Mock<IMessageCheck> messageCheckMock = new();
         Mock<IRaidAlert> raidAlertMock = new();
-
-        MessageDto chatMessage = new(false, "Channel", "#ff6b6b", null, "Sub", "Sub", new List<EmoteSetDto>(),
-            null, OriginEnum.Twitch,
-            new() { AuthEnum.Undefined }, new() { SpecialMessgeEnum.Undefined }, EffectEnum.none, false, 0, false, "message Id", "userId",
-            "UserName", "DisplayName", DateTime.Now);
-        SubDto subDto = new("1", "1", "Username", "Dispayname", "Channel", OriginEnum.Twitch, false, 0, 3, TierEnum.Tier1, chatMessage, false, DateTime.Now);
 
         var manageAlert = CreateManageAlert(twitchSendRequestMock, subAlertLoongMock, clientHubMock, movingTextMock, messageCheckMock, raidAlertMock);
 

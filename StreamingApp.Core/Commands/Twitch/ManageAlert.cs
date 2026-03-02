@@ -40,61 +40,44 @@ public class ManageAlert : IManageAlert
         _raidAlert = raidAlert;
     }
 
-    public async Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
+    public async Task<string> ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto)
     {
         string message = "";
 
         if (messageAlertDto.AlertType == AlertTypeEnum.Bits)
         {
-            if (messageAlertDto.Bits >= 100)
+            // For TTS
+            var setting = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == messageAlertDto.Origin);
+
+            if (messageAlertDto.Bits >= setting.TTSAmount && await _messageCheck.ExecuteMessageOnly(messageAlertDto.Message))
             {
                 // TODO: Limit Message to a specific lenght
                 // TODO: check for "Spam" or same thing in the message and cut it of at a certan time
                 // TODO: TTS Message Play
-                // TODO: able to skip TTS Message or Mute it
+                // TODO: able to skip TTS Message or Mute it => Frontend
                 // TODO: Show emote
-                if (await _messageCheck.ExecuteMessageOnly(messageAlertDto.Message))
-                {
-                    MessageDto highlightChatMessage = new(false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, messageAlertDto.AlertType.ToString(), null, messageAlertDto.Message, messageAlertDto.EmoteReplacedMessage, DateTime.Now);
+                MessageDto highlightChatMessage = new(false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, messageAlertDto.AlertType.ToString(), null, messageAlertDto.Message, messageAlertDto.EmoteReplacedMessage, DateTime.Now);
 
-                    await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", highlightChatMessage);
-                }
+                await _clientHub.Clients.All.SendAsync("ReceiveHighlightMessage", highlightChatMessage);
             }
 
-            List<Trigger> data = _unitOfWork.Trigger.Include("Targets").Include("TargetData").ToList();
+            var bitsAmount = messageAlertDto.Origin == OriginEnum.Twitch ? messageAlertDto.Bits : Convert.ToInt32(Math.Round(messageAlertDto.Currency * setting.Conversion));
 
-            int found = 0;
+            Trigger data = _unitOfWork.Trigger.Include("Targets").Include("Targets.TargetData")
+                .Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits && t.Ammount <= bitsAmount && t.Active)
+                .Where(t => t.AmmountCloser == false || (t.ExactAmmount == true && t.Ammount == bitsAmount))
+                .OrderBy(t => t.Ammount)
+                .Last();
 
-            for (int i = 0; i < data.Count; i++)
+            if (data != null)
             {
-                data = ((List<Trigger>)data.Where(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Bits)).OrderBy(t => t.Ammount).ToList();
+                //AlertDto alert = t.Alert;
 
-                if (messageAlertDto.Bits == data[i].Ammount)
-                {
-                    var t = data[i].Targets.First(t => t.TargetCondition == Domain.Enums.Trigger.TargetCondition.Allert).TargetData;
-
-                    //AlertDto alert = t.Alert;
-
-                    // TODO: Show emote
-                    //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageAlertDto, t);
-                }
-                else
-                {
-                    if (messageAlertDto.Bits < data[i].Ammount)
-                    {
-                        if (data[i].Active && data[i].ExactAmmount == false)
-                        {
-                            found = i;
-                        }
-                    }
-                    else if (messageAlertDto.Bits > data[i].Ammount)
-                    {
-                        // TODO: Show emote
-                    }
-                }
+                // TODO: Show emote
+                //await _sendSignalRMessage.SendAllertAndEventMessage(user, messageAlertDto, t);
             }
 
-            message = $"Given {messageAlertDto.Bits} Bits";
+            message = $"Given {bitsAmount} Bits";
         }
         if (messageAlertDto.AlertType == AlertTypeEnum.PointRedeam)
         {
@@ -109,6 +92,8 @@ public class ManageAlert : IManageAlert
 
         MessageDto chatMessage = new(false, messageAlertDto.Channel, messageAlertDto.UserId, messageAlertDto.UserName, messageAlertDto.UserName, messageAlertDto.ColorHex, messageAlertDto.Emotes, new(), OriginEnum.Twitch, new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, messageAlertDto.AlertType.ToString(), null, message, messageAlertDto.EmoteReplacedMessage, DateTime.Now);
         await _clientHub.Clients.All.SendAsync("displayEventMessages", chatMessage);
+
+        return message;
     }
 
     public async Task ExecuteRaid(RaidDto raidDto)
@@ -191,6 +176,7 @@ public class ManageAlert : IManageAlert
 
         //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);
 
+        Console.WriteLine("SubMessage ",message);
         await _clientHub.Clients.All.SendAsync("ReceiveEventMessage", chatMessage);
 
         await _movingText.ExecuteAlert(30, message);

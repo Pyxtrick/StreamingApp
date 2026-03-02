@@ -66,7 +66,7 @@ public class ManageAchievements : IManageAchievements
     {
         var user = _unitOfWork.User.Include("Achievements").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == alertDto.UserId);
 
-        var twichAchievements = user.Achievements.FirstOrDefault(t => t.Origin == alertDto.origin);
+        var twichAchievements = user.Achievements.FirstOrDefault(t => t.Origin == alertDto.Origin);
 
         twichAchievements.GiftedBitsCount += alertDto.Bits;
 

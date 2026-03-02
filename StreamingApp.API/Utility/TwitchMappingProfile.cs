@@ -44,6 +44,7 @@ public class TwitchMappingProfile : Profile
                 x.EmoteReplacedMessage,
                 x.CustomRewardId,
                 x.Bits,
+                0,
                 MappEmotes(x.EmoteSet),
                 x.Badges,
                 OriginEnum.Twitch,

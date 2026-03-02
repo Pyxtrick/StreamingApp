@@ -3,7 +3,7 @@
 namespace StreamingApp.Core.Commands.Twitch.Interfaces;
 public interface IManageAlert
 {
-    Task ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto);
+    Task<string> ExecuteBitAndRedeamAndFollow(MessageAlertDto messageAlertDto);
 
     Task ExecuteRaid(RaidDto raidDto);
 

@@ -4487,11 +4487,11 @@ export interface IAlertDto {
 }
 
 export class RaidDto implements IRaidDto {
+    userName!: string;
     count!: number;
     game!: string;
-    userName!: string;
-    utcNow!: Date;
     isUsed!: boolean;
+    utcNow!: Date;
 
     constructor(data?: IRaidDto) {
         if (data) {
@@ -4504,11 +4504,11 @@ export class RaidDto implements IRaidDto {
 
     init(_data?: any) {
         if (_data) {
+            this.userName = _data["userName"] !== undefined ? _data["userName"] : null as any;
             this.count = _data["count"] !== undefined ? _data["count"] : null as any;
             this.game = _data["game"] !== undefined ? _data["game"] : null as any;
-            this.userName = _data["userName"] !== undefined ? _data["userName"] : null as any;
-            this.utcNow = _data["utcNow"] ? new Date(_data["utcNow"].toString()) : null as any;
             this.isUsed = _data["isUsed"] !== undefined ? _data["isUsed"] : null as any;
+            this.utcNow = _data["utcNow"] ? new Date(_data["utcNow"].toString()) : null as any;
         }
     }
 
@@ -4521,21 +4521,21 @@ export class RaidDto implements IRaidDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName !== undefined ? this.userName : null as any;
         data["count"] = this.count !== undefined ? this.count : null as any;
         data["game"] = this.game !== undefined ? this.game : null as any;
-        data["userName"] = this.userName !== undefined ? this.userName : null as any;
-        data["utcNow"] = this.utcNow ? this.utcNow.toISOString() : null as any;
         data["isUsed"] = this.isUsed !== undefined ? this.isUsed : null as any;
+        data["utcNow"] = this.utcNow ? this.utcNow.toISOString() : null as any;
         return data;
     }
 }
 
 export interface IRaidDto {
+    userName: string;
     count: number;
     game: string;
-    userName: string;
-    utcNow: Date;
     isUsed: boolean;
+    utcNow: Date;
 }
 
 export class EmoteDto implements IEmoteDto {

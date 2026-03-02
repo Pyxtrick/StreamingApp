@@ -16,6 +16,7 @@ public class MessageAlertDto(
     string emoteReplacedMessage,
     string? pointRediam,
     int bits,
+    double currency,
     List<EmoteSetDto> emotes,
     List<KeyValuePair<string, string>> badges,
     OriginEnum origin,
@@ -38,12 +39,14 @@ public class MessageAlertDto(
 
     public int Bits { get; set; } = bits;
 
+    public double Currency { get; set; } = currency;
+
     public List<EmoteSetDto> Emotes { get; set; } = emotes;
 
     // Prediction / Sub / mod / vip / staff / Verified / bit / gif / hypetrain / prime / turbo / events
     public List<KeyValuePair<string, string>>? Badges { get; set; } = badges;
 
-    public OriginEnum origin { get; set; } = origin;
+    public OriginEnum Origin { get; set; } = origin;
 
     public AlertTypeEnum AlertType { get; set; } = alertType;
 

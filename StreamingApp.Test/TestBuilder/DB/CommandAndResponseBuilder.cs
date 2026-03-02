@@ -2,7 +2,7 @@
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
-namespace StreamingApp.Test.TestBuilder;
+namespace StreamingApp.Test.TestBuilder.DB;
 
 public static class CommandAndResponseBuilder
 {
