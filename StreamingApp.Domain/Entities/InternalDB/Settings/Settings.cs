@@ -46,4 +46,10 @@ public class Settings
 
     // Stops TTS if the message is longer than X Words
     public int TTSLenghtAmmount { get; set; }
+
+    // Amount to trigger TTS
+    public double TTSAmount { get; set; }
+
+    // Amount to bits Conversion
+    public double Conversion { get; set; }
 }
