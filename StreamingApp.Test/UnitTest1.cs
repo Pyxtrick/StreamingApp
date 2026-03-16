@@ -5,7 +5,7 @@ namespace StreamingApp.Test;
 
 public class Tests : DataBaseFixture
 {
-    [Xunit.Theory]
+    [Theory]
     [InlineData("!live Canada/Pacific", "Stream will be live on Friday at 08:30:00 Canada/Pacific / (UTC -8)")]
     [InlineData("!live Japan", "Stream will be live on Saturday at 01:30:00 Japan / (UTC +9)")]
     public void TimeChange(string message, string assert)
@@ -48,7 +48,8 @@ public class Tests : DataBaseFixture
         }
 
         // Assert
-        Xunit.Assert.Equal(assert, reponse);
+        //FIX for Summer / Winter
+        Assert.Equal(assert, reponse);
     }
 
     [Fact]
@@ -61,9 +62,9 @@ public class Tests : DataBaseFixture
         var resultDE = detector.Detect("Was ist das alles");
         var result = detector.Detect("これは一体何なのか");
 
-        Xunit.Assert.Equal("eng", resultEN);
-        Xunit.Assert.Equal("deu", resultDE);
-        Xunit.Assert.NotEqual("eng", result);
+        Assert.Equal("eng", resultEN);
+        Assert.Equal("deu", resultDE);
+        Assert.NotEqual("eng", result);
     }
 
     /** for Mocking classes

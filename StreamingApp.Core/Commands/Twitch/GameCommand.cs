@@ -3,6 +3,7 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
@@ -20,7 +21,7 @@ public class GameCommand : IGameCommand
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Execute(CommandAndResponse commandAndResponse)
+    public async Task<string> Execute(CommandAndResponse commandAndResponse)
     {
         // Change to Gameinfo from ongoing Stream 
         ChannelInfo channelInfo = new();
@@ -49,55 +50,36 @@ public class GameCommand : IGameCommand
             channelInfo.GameId = stream.GameCategory.GameId;
         }
 
-        string gameId = channelInfo.GameId;
-        string gameName = channelInfo.GameName;
-
         string responseMessage = "";
+
+        GameInfo gameInfo = null;
 
         switch (commandAndResponse.Command)
         {
             //Fix
             case "gameinfo":
-                var gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.Info);
-
-                if (gameInfo != null)
-                {
-                    responseMessage = gameInfo.Message;
-                }
-                else
-                {
-                    // There is no Info about this Category: Game
-                    responseMessage = $"{commandAndResponse.Response}{gameName}";
-                }
+                gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == channelInfo.GameId && t.GameCategory == GameCategoryEnum.Info);
                 break;
             case "modpack":
-                var gameModpack = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.ModPack);
-
-                if (gameModpack != null)
-                {
-                    responseMessage = gameModpack.Message;
-                }
-                else
-                {
-                    // There is no Modpack about this Category: Game
-                    responseMessage = $"{commandAndResponse.Response}{gameName}";
-                }
+                gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == channelInfo.GameId && t.GameCategory == GameCategoryEnum.ModPack);
                 break;
             case "gameprogress":
-                var gameProgress = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == gameId && t.GameCategory == GameCategoryEnum.Progress);
-
-                if (gameProgress != null)
-                {
-                    responseMessage = gameProgress.Message;
-                }
-                else
-                {
-                    // There is no Progress about this Category: Game
-                    responseMessage = $"{commandAndResponse.Response}{gameName}";
-                }
+                gameInfo = _unitOfWork.GameInfo.FirstOrDefault(t => t.GameId == channelInfo.GameId && t.GameCategory == GameCategoryEnum.Progress);
                 break;
         }
 
-        _sendRequest.SendChatMessage(responseMessage);
+        if (gameInfo != null)
+        {
+            responseMessage = gameInfo.Message;
+        }
+        else
+        {
+            // There is no Info about this Category: Game
+            responseMessage = $"{commandAndResponse.Response} {channelInfo.GameName}";
+        }
+
+        await _sendRequest.SendChatMessage(responseMessage);
+
+        return responseMessage;
     }
 }
