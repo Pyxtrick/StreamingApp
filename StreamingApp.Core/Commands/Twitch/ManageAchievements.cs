@@ -54,7 +54,7 @@ public class ManageAchievements : IManageAchievements
             Console.WriteLine("IsExisting");
             twitchSub.CurrentySubscribed = true;
             twitchSub.CurrentTier = sub.CurrentTier;
-            twitchSub.SubscribedTime = twitchSub.SubscribedTime + 1;
+            twitchSub.SubscribedTime = sub.SubLenght;
         }
 
         Console.WriteLine("exeting");

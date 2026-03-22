@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StreamingApp.API.Twitch.Interfaces;
@@ -305,16 +306,15 @@ public class TwitchApiRequest : ITwitchApiRequest
                 }
                 keyValues.Add(new(key, data[1]));
             }
+            var t = keyValues.Where(k => k.Value.Equals("watch-streak"));
+            if (t != null)
+            {
+                Console.WriteLine(keyValues);
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-        }
-        
-
-        if (e.Data.Contains("msg-param-category=watch-streak"))
-        {
-            //Console.WriteLine($"WatchStreak {}");
         }
 
         Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");

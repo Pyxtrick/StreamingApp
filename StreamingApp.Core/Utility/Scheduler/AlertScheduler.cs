@@ -1,4 +1,5 @@
 ﻿using AutoMapper.Internal;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
+using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
@@ -59,7 +61,7 @@ public class AlertScheduler : BackgroundService
                 List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
                 List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
 
-                if (alertObject.Any() == false)
+                if (alertObject.Any())
                 {
                     try
                     {
@@ -67,6 +69,7 @@ public class AlertScheduler : BackgroundService
 
                         foreach (var alert in alerts)
                         {
+                            _logger.Log(LogLevel.Information, $"AlertSchedular {alert.DisplayName}");
                             await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteBit(alert);
                             await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
                         }
@@ -77,7 +80,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (subObject.Any() == false)
+                if (subObject.Any())
                 {
                     try
                     {
@@ -85,6 +88,7 @@ public class AlertScheduler : BackgroundService
 
                         foreach (var sub in subs)
                         {
+                            _logger.Log(LogLevel.Information, $"SubSchedular {sub.DisplayName}");
                             await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteSub(sub);
                             await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
                         }
@@ -95,7 +99,7 @@ public class AlertScheduler : BackgroundService
                     }
                 }
 
-                if (raidObject.Any() == false)
+                if (raidObject.Any())
                 {
                     try
                     {
@@ -103,6 +107,7 @@ public class AlertScheduler : BackgroundService
 
                         foreach (var raid in raids)
                         {
+                            _logger.Log(LogLevel.Information, $"RaidSchedular {raid.UserName}");
                             await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
                         }
                     }
