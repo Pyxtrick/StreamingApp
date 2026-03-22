@@ -1,6 +1,5 @@
-﻿using StreamingApp.Domain.Enums.Trigger;
+﻿namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 
-namespace StreamingApp.Domain.Entities.Dtos.Twitch;
 public class AlertDto
 {
     // Volume at with the audio is played at 100 is default

@@ -6,6 +6,7 @@ using StreamingApp.Domain.Entities.Dtos;
 using Stream = StreamingApp.Domain.Entities.InternalDB.Stream.Stream;
 
 namespace StreamingApp.Core.Commands.DB.CRUD;
+
 public class CRUDStreams : ICRUDStreams
 {
     private readonly UnitOfWorkContext _unitOfWork;

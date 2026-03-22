@@ -28,7 +28,7 @@ public class SubAlertLoong : ISubAlertLoong
 
         if (directionltr)
         {
-            directionLogic = $"#{userName}" + " { width:" + $"{width}px" + $"; bottom: {bottom}px; position: relative; animation: linear infinite; animation-name: " + $"{userName}" + $"; animation-duration: {animationDuration}s;"+" animation-iteration-count: 1 } @keyframes " + $"{userName}" + " { 0% {left: " + $"-{width}px" + ";transform: rotateY(180deg); } 100% { left: calc(100% + 600px); transform: rotateY(180deg); }}";
+            directionLogic = $"#{userName}" + " { width:" + $"{width}px" + $"; bottom: {bottom}px; position: relative; animation: linear infinite; animation-name: " + $"{userName}" + $"; animation-duration: {animationDuration}s;" + " animation-iteration-count: 1 } @keyframes " + $"{userName}" + " { 0% {left: " + $"-{width}px" + ";transform: rotateY(180deg); } 100% { left: calc(100% + 600px); transform: rotateY(180deg); }}";
         }
         else
         {
@@ -36,7 +36,7 @@ public class SubAlertLoong : ISubAlertLoong
         }
 
         var sub = "<html lang=\"en\"> <body>" +
-            "<div id=\""+$"{userName}"+"\">" +
+            "<div id=\"" + $"{userName}" + "\">" +
                 "<div>" +
                    $"{head}" +
                    $"{body}" +
@@ -44,7 +44,7 @@ public class SubAlertLoong : ISubAlertLoong
                 "</div>" +
             "</div>" +
             "<style>" +
-                 $".{userName}bildmed"+"{  filter: " + $"hue-rotate({rotation}deg) saturate({saturation}%)" + "; height: 50px; }" +
+                 $".{userName}bildmed" + "{  filter: " + $"hue-rotate({rotation}deg) saturate({saturation}%)" + "; height: 50px; }" +
                  $"{directionLogic}" +
             "</body>" +
             "</style>";

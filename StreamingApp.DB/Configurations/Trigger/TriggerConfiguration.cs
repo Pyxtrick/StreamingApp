@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using trigger = StreamingApp.Domain.Entities.InternalDB.Trigger.Trigger;
 
 namespace StreamingApp.DB.Configurations.Trigger;

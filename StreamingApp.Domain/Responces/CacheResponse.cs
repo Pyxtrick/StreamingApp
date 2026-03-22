@@ -2,6 +2,7 @@
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.Domain.Responces;
+
 public class CacheResponse
 {
     public List<MessageDto> messages { get; set; }

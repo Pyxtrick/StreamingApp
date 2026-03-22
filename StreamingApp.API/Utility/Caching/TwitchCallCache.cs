@@ -5,6 +5,7 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Utility.Caching;
+
 public class TwitchCallCache : ITwitchCallCache
 {
     private readonly TwitchCallCacheData _twitchCallCacheData;
@@ -48,14 +49,14 @@ public class TwitchCallCache : ITwitchCallCache
 
                     _twitchCallCacheData.CachedSubNumber += subDto.GifftedSubCount > 0 ? subDto.GifftedSubCount : 1;
                 }
-                if(_twitchCallCacheData.CachedSubData.Count > 100)
+                if (_twitchCallCacheData.CachedSubData.Count > 100)
                 {
                     _twitchCallCacheData.CachedSubData.RemoveRange(0, 10);
                 }
                 break;
             case CallCacheEnum.CachedAlertData:
                 var alertDto = (MessageAlertDto)message;
-                if(alertDto != null)
+                if (alertDto != null)
                 {
                     _twitchCallCacheData.CachedAlertData.Add(alertDto);
                     if (alertDto.AlertType == AlertTypeEnum.Follow)
@@ -108,7 +109,7 @@ public class TwitchCallCache : ITwitchCallCache
                 case CallCacheEnum.CachedMessageData:
                     var messageIndex = _twitchCallCacheData.CachedMessageData.FindIndex(t => t.MessageId == ((MessageDto)item).MessageId);
 
-                    if(messageIndex != -1)
+                    if (messageIndex != -1)
                     {
                         _twitchCallCacheData.CachedMessageData[messageIndex].IsUsed = true;
                     }
@@ -140,7 +141,7 @@ public class TwitchCallCache : ITwitchCallCache
                 case CallCacheEnum.CachedBannedData:
                     var bannedIndex = _twitchCallCacheData.CachedBannedData.FindIndex(t => t.UserName == ((BannedUserDto)item).UserName);
 
-                    if(bannedIndex != -1)
+                    if (bannedIndex != -1)
                     {
                         _twitchCallCacheData.CachedBannedData[bannedIndex].IsUsed = true;
                     }

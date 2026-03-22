@@ -126,7 +126,8 @@ public class ManageAlert : IManageAlert
         string image = string.Empty;
 
         //TODO: change that it will use DB for raid Message and image
-        switch (raidDto.UserName) {
+        switch (raidDto.UserName)
+        {
             case "tiny_karo":
                 raidMessage = raidMessage.Replace("Viewers", "Raccoons");
                 break;
@@ -142,7 +143,7 @@ public class ManageAlert : IManageAlert
 
         MessageDto chatMessage = new(false, raidDto.UserName, "FFFFFF", null, raidMessage, raidMessage, new(), new(), OriginEnum.Twitch,
                 new() { AuthEnum.Undefined }, new(), EffectEnum.none, false, 0, false, null, "000000", raidDto.UserName, raidDto.UserName, DateTime.Now);
-        
+
         await _clientHub.Clients.All.SendAsync("ReceiveOnScreenChatMessage", chatMessage);
     }
 
@@ -176,7 +177,7 @@ public class ManageAlert : IManageAlert
 
         //await _subAlertLoong.Execute(subDto.DisplayName, subDto.GifftedSubCount, rotation, saturation, true, true);
 
-        Console.WriteLine("SubMessage ",message);
+        Console.WriteLine("SubMessage ", message);
         await _clientHub.Clients.All.SendAsync("ReceiveEventMessage", chatMessage);
 
         await _movingText.ExecuteAlert(30, message);

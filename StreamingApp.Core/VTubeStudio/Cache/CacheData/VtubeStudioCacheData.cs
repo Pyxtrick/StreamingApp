@@ -1,5 +1,4 @@
-﻿using StreamingApp.Domain.Entities.Dtos;
-using StreamingApp.Domain.Entities.VtubeStudio;
+﻿using StreamingApp.Domain.Entities.VtubeStudio;
 
 namespace StreamingApp.Core.VTubeStudio.Cache.CacheData;
 

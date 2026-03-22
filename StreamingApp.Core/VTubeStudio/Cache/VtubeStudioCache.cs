@@ -20,7 +20,8 @@ public class VtubeStudioCache : IVtubeStudioCache
         if (vtubeStudioData.ItemsInScene != null) _vtubeStudioCacheData.ItemsInScene = vtubeStudioData.ItemsInScene;
 
 
-        if (vtubeStudioData.Models != null) {
+        if (vtubeStudioData.Models != null)
+        {
             if (vtubeStudioData.Models.Count > 1)
             {
                 _vtubeStudioCacheData.Models = vtubeStudioData.Models;

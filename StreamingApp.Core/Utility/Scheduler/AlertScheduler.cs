@@ -1,15 +1,11 @@
-﻿using AutoMapper.Internal;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;

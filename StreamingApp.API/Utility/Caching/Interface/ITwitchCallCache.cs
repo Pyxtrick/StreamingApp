@@ -2,6 +2,7 @@
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.API.Utility.Caching.Interface;
+
 public interface ITwitchCallCache
 {
     void AddMessage(Object message, CallCacheEnum callCacheEnum);

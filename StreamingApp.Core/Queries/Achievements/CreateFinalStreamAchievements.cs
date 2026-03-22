@@ -3,9 +3,7 @@ using StreamingApp.API.Utility.Caching.Interface;
 using StreamingApp.Core.Commands.FileLogic;
 using StreamingApp.DB;
 using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
-using System.Text;
 
 namespace StreamingApp.Core.Queries.Achievements;
 

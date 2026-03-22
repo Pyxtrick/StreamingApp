@@ -3,7 +3,7 @@
 namespace StreamingApp.Domain.Entities.Dtos;
 
 public class UserQueueDto(string userName, bool isActive, int queue, OriginEnum origin)
-    {
+{
 
     public string UserName { get; set; } = userName;
 

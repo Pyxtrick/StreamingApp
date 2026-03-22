@@ -2,6 +2,7 @@
 using StreamingApp.Domain.Entities.Dtos.Twitch;
 
 namespace StreamingApp.API.Utility.Caching.CacheData;
+
 public class TwitchCallCacheData
 {
     public List<MessageDto> CachedMessageData { get; set; } = new();

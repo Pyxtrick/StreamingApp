@@ -3,6 +3,7 @@ using StreamingApp.Domain.Entities.InternalDB.User;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
+
 public interface ICRUDUsers
 {
     Task<List<UserDto>> GetAll();

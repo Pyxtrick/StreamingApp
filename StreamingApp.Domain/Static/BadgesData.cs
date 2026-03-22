@@ -12,7 +12,7 @@ public class BadgesData
             new KeyValuePair<string, string>("5527c58c-fb7d-422d-b71b-f309dcb85cc1", "broadcaster"),
             new KeyValuePair<string, string>("b817aba4-fad8-49e2-b88a-7cc744dfa6ec", "vip"),
             new KeyValuePair<string, string>("4300a897-03dc-4e83-8c0e-c332fee7057f", "artist-badge"),
-            
+
             new KeyValuePair<string, string>("bbbe0db0-a598-423e-86d0-f9fb98ca1933", "premium"),
 
             new KeyValuePair<string, string>("aef2cd08-f29b-45a1-8c12-d44d7fd5e6f0", "no_audio"),
@@ -22,7 +22,7 @@ public class BadgesData
             new KeyValuePair<string, string>("4300a897-03dc-4e83-8c0e-c332fee7057f", "artist-badge"),
             new KeyValuePair<string, string>("d12a2e27-16f6-41d0-ab77-b780518f00a3", "partner"),
             new KeyValuePair<string, string>("3267646d-33f0-4b17-b3df-f923a41db1d0", "moderator"),
-            
+
             new KeyValuePair<string, string>("511b78a9-ab37-472f-9569-457753bbe7d3", "founder"),
             new KeyValuePair<string, string>("5d9f2208-5dd8-11e7-8513-2ff4adfae661", "subscriber"),
             new KeyValuePair<string, string>("25a03e36-2bb2-4625-bd37-d6d9d406238d", "2-Month Subscriber"),

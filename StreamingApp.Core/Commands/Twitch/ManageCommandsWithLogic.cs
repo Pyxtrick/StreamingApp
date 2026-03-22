@@ -33,7 +33,8 @@ public class ManageCommandsWithLogic : IManageCommandsWithLogic
 
         if (splitMessage.Length > 1)
         {
-            if (splitMessage[1].Contains("\U000e0000")) {
+            if (splitMessage[1].Contains("\U000e0000"))
+            {
                 splitMessage = splitMessage.Where(s => s == splitMessage[1]).ToArray();
             }
             splitNoCommandTextMessage = messageDto.Message[(messageDto.Message.Split()[0].Length + 1)..].Split(' ');

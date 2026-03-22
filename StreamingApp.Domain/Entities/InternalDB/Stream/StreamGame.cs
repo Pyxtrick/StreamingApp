@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace StreamingApp.Domain.Entities.InternalDB.Stream;
+﻿namespace StreamingApp.Domain.Entities.InternalDB.Stream;
 
 /// <summary>
 /// games / categorys played durring a stream

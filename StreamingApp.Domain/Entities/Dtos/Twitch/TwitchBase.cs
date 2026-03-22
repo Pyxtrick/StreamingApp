@@ -1,4 +1,5 @@
 ﻿namespace StreamingApp.Domain.Entities.Dtos.Twitch;
+
 public class TwitchBase(
     string messageId,
     string userId,

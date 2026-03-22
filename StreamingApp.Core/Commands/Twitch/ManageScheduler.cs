@@ -30,7 +30,7 @@ public class ManageScheduler : IManageScheduler
     {
         Console.WriteLine("test");
         // Prevent Chat spaming by the Bot
-        if(trigger.ScheduleTime < 30)
+        if (trigger.ScheduleTime < 30)
         {
             var messageCount = 0;
             List<object> value = _twitchCallCache.GetAllUnusedMessages(CallCacheEnum.CachedMessageData);

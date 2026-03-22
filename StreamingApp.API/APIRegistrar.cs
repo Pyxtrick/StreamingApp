@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
 using StreamingApp.API.BetterTV_7TV;
 using StreamingApp.API.Bluesky;
 using StreamingApp.API.Bluesky.Interfaces;

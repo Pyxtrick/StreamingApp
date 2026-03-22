@@ -132,7 +132,7 @@ public class CRUDUsers : ICRUDUsers
     public async Task CombineUser(string twitchUserId, string youtubeUserId)
     {
         User user = _unitOfWork.User.Include("Achievements").Include("Details").Where(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == twitchUserId).ToList().First();
-        
+
         // TODO: Combine both user (add data from the newest one to the oldest one + remove the one that is not needed anymore)
     }
 
@@ -148,12 +148,12 @@ public class CRUDUsers : ICRUDUsers
             {
                 user = _unitOfWork.User.Include("Achievements").Include("Details").FirstOrDefault(u => u.Details.FirstOrDefault(t => t.Origin == OriginEnum.Twitch).ExternalUserId == userId);
             }
-            else if(Origin == OriginEnum.Youtube)
+            else if (Origin == OriginEnum.Youtube)
             {
                 //user = _unitOfWork.User.Include("YouTubeAchievements").Include("YouTubeDetail").Where(u => u.Youtube.UserId == userId).ToList().First();
             }
 
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
@@ -178,7 +178,7 @@ public class CRUDUsers : ICRUDUsers
                 }
             }
         }
-        
+
         return false;
     }
 

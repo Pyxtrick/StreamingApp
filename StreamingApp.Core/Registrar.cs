@@ -108,7 +108,7 @@ public static class Registrar
         services.AddSingleton<TTSCacheData>();
 
         // File
-        services.AddScoped<IFileAchievements , FileAchievements>();
+        services.AddScoped<IFileAchievements, FileAchievements>();
         services.AddScoped<IManageFile, ManageFile>();
 
         //VtubeStudio

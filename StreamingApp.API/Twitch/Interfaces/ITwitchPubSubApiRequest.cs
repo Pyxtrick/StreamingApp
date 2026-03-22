@@ -1,6 +1,7 @@
 ﻿using TwitchLib.PubSub.Events;
 
 namespace StreamingApp.API.Twitch.Interfaces;
+
 public interface ITwitchPubSubApiRequest
 {
     void Bot_OnEmoteOnly(object sender, OnEmoteOnlyArgs e);

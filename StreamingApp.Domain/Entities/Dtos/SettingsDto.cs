@@ -1,7 +1,7 @@
 ﻿using StreamingApp.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace StreamingApp.Domain.Entities.Dtos;
+
 public class SettingsDto
 {
     public int Id { get; set; }

@@ -70,7 +70,7 @@ public class SendSignalRMessage : ISendSignalRMessage
         if (user.Status.UserType != UserTypeEnum.Bot && user.Ban.IsExcludeChat == false)
         {
             // Check if Message is from a Shared Chat (Stream Together)
-            if(messageDto.Channel == _configuration["Twitch:Channel"])
+            if (messageDto.Channel == _configuration["Twitch:Channel"])
             {
                 await _hubContext.Clients.All.SendAsync("ReceiveChatMessage", messageDto);
             }

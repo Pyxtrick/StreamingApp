@@ -6,6 +6,7 @@ using StreamingApp.Domain.Entities.InternalDB;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 
 namespace StreamingApp.Core.Commands.DB.CRUD;
+
 public class CRUDCommands : ICRUDCommands
 {
     private readonly UnitOfWorkContext _unitOfWork;

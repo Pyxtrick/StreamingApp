@@ -15,7 +15,7 @@ public class GameCommandFixture : DataBaseFixture
     [Fact]
     public async Task ExecuteGameInfo()
     {
-        CommandAndResponse commandAndResponse = new() { Category = CategoryEnum.Game, Command = "gameinfo", Response = "game Info"};
+        CommandAndResponse commandAndResponse = new() { Category = CategoryEnum.Game, Command = "gameinfo", Response = "game Info" };
         ChannelInfo channelInfo = new ChannelInfo() { GameId = "1111", GameName = "Test Game", Title = "" };
 
         await using (UnitOfWorkContext unitOfWork = CreateUnitOfWork())

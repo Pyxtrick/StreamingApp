@@ -4,6 +4,7 @@ using StreamingApp.Domain.Enums;
 using TwitchLib.Client.Models;
 
 namespace StreamingApp.API.Utility;
+
 public class TwitchMappingProfile : Profile
 {
     public TwitchMappingProfile()

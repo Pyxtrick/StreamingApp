@@ -4,6 +4,7 @@ using System.Net;
 using System.Web;
 
 namespace StreamingApp.Core.Queries.Translate;
+
 public class Translate : ITranslate
 {
     /// <summary>

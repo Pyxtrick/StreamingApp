@@ -113,7 +113,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             else if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
             {
                 // Client Auth Send Message
-                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);   
+                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
             }
         }
     }
@@ -129,7 +129,7 @@ public class TwitchSendRequest : ITwitchSendRequest
 
         if (settings.PauseChatMessages == false)
         {
-            var appResponse = await SendAppMessage(new(){{ "reply_parent_message_id", replyToId }}, message);
+            var appResponse = await SendAppMessage(new() { { "reply_parent_message_id", replyToId } }, message);
 
             if (appResponse.IsSuccessStatusCode)
             {
@@ -196,7 +196,7 @@ public class TwitchSendRequest : ITwitchSendRequest
         StreamHighlight streamHighlight = new StreamHighlight()
         {
             HighlightUrl = clip.CreatedClips.Last().EditUrl,
-            Description = clip.CreatedClips.Last().Id, 
+            Description = clip.CreatedClips.Last().Id,
             HighlighteTime = DateTime.UtcNow,
         };
 
@@ -271,7 +271,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             var predictionRequest = new CreatePredictionRequest()
             {
                 BroadcasterId = _configuration["Twitch:ChannelId"],
-                Title=title ?? null,
+                Title = title ?? null,
                 Outcomes = options.Select(option => { return new Outcome() { Title = option }; }).ToList().ToArray(),
                 PredictionWindowSeconds = time,
             };
@@ -380,7 +380,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             GlobalCooldownSeconds = 0,
             IsPaused = false,
             ShouldRedemptionsSkipRequestQueue = false,
-};
+        };
 
         var t = await _twitchCache.GetTheTwitchAPI().Helix.ChannelPoints.UpdateCustomRewardAsync("", "", customReward);
     }
@@ -406,7 +406,7 @@ public class TwitchSendRequest : ITwitchSendRequest
     public async Task DeleteMessage(string messageId)
     {
         // TODO: Delete Message (maybe with Reason)
-        
+
         var messages = _twitchCallCache.GetAllMessages(CallCacheEnum.CachedMessageData, true).ConvertAll(s => (string)s);
 
         _logger.LogCritical(messages.FirstOrDefault(m => m.Contains(messageId)));

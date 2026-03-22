@@ -50,7 +50,7 @@ public class DataContoller : ControllerBase
         };
     }
     #endregion
-    
+
     #region GameInfo
     [HttpGet("GameInfos")]
     public async Task<GameInfoRespose> GetAllGameInfos([FromServices] ICRUDGameInfos crudGameInfos)

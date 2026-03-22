@@ -35,7 +35,7 @@ public static class AlertBuilder
     public static Alert WithDefaults(this Alert alert, List<TargetData> targetData)
     {
         alert.TargetData = targetData;
-        
+
         return alert;
     }
 }

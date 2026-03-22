@@ -1,4 +1,5 @@
 ﻿namespace StreamingApp.Domain.Enums;
+
 public enum ChatDisplayEnum
 {
     allChat,

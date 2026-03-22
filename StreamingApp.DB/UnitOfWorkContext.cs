@@ -24,7 +24,7 @@ public class UnitOfWorkContext : DbContext, IDisposable, IAsyncDisposable
 
     //Stream
     public DbSet<Choice> Choice { get; set; }
-    
+
     public DbSet<GameInfo> GameInfo { get; set; } = null!;
 
     public DbSet<Pole> Pole { get; set; } = null!;

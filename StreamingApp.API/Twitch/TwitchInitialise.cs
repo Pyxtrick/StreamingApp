@@ -25,9 +25,9 @@ public class TwitchInitialise : ITwitchInitialise
     // Authentication
     private HttpServer WebServer;
     private readonly List<string> Scopes = new List<string> {
-        "user:bot", "user:write:chat", "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions", 
+        "user:bot", "user:write:chat", "user:edit", "user:read:chat", "user:read:email", "user:read:subscriptions",
         "moderator:manage:shoutouts", "moderator:manage:announcements", "moderator:read:followers", "moderator:read:chat_messages",
-        "chat:read", "chat:edit", 
+        "chat:read", "chat:edit",
         "whispers:read", "whispers:edit",
         "bits:read",
         "channel:bot", "channel:moderate", "channel:read:subscriptions", "channel:read:goals", "channel:read:polls", "channel:read:hype_train", "channel:read:predictions", "channel:read:redemptions", "channel:read:ads", "channel:manage:ads" };
@@ -90,7 +90,7 @@ public class TwitchInitialise : ITwitchInitialise
 
     public void CloseConntection(object sender, EventArgs e)
     {
-        if(Pubsub != null)
+        if (Pubsub != null)
         {
             Pubsub.Disconnect();
         }
@@ -114,7 +114,7 @@ public class TwitchInitialise : ITwitchInitialise
             { "client_id", _configuration["Twitch:ClientId"] },
             { "client_secret", _configuration["Twitch:ClientSecret"] },
             { "code", code },
-            { "grant_type", "authorization_code" }, 
+            { "grant_type", "authorization_code" },
             { "redirect_uri", _configuration["Twitch:RedirectUrl"] },
         };
 
@@ -137,7 +137,7 @@ public class TwitchInitialise : ITwitchInitialise
 
         var appResponse = await appClient.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(appValues));
         var appJson = JsonObject.Parse(await appResponse.Content.ReadAsStringAsync());
-        
+
         return new Tuple<string, string, string>(json["access_token"].ToString(), json["refresh_token"].ToString(), appJson["access_token"].ToString());
     }
 
@@ -177,7 +177,7 @@ public class TwitchInitialise : ITwitchInitialise
     {
         OwnerOfChannelConnection = new TwitchClient();
         OwnerOfChannelConnection.Initialize(new ConnectionCredentials(username, accessToken), TwitchChannelName);
-        
+
         // Events you want to subscribe to
         OwnerOfChannelConnection.OnConnected += _twichApiRequest.Client_OnConnected;
         OwnerOfChannelConnection.OnDisconnected += _twichApiRequest.OwnerOfChannel_OnDisconnected;
@@ -192,7 +192,7 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnNewSubscriber += _twichApiRequest.Bot_OnNewSubscriber;
         OwnerOfChannelConnection.OnPrimePaidSubscriber += _twichApiRequest.Bot_OnPrimePaidSubscriber;
         OwnerOfChannelConnection.OnReSubscriber += _twichApiRequest.Bot_OnReSubscriber;
-        
+
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
         OwnerOfChannelConnection.OnChannelStateChanged += _twichApiRequest.Bot_OnChannelStateChanged; // TODO: Check on what it is doing 
 

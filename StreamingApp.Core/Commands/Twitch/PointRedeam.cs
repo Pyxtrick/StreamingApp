@@ -29,10 +29,10 @@ public class PointRedeam : IPointRedeam
         await _crudUsers.UpdateAchievements(userId, OriginEnum.Twitch);
 
         var trigger = _unitOfWork.Trigger.Include("Targets").FirstOrDefault(t => t.TriggerCondition == Domain.Enums.Trigger.TriggerCondition.Redeam && t.Description == rewardName);
-        
-        if(trigger != null)
+
+        if (trigger != null)
         {
-        
+
         }
 
         string message = $"{userName} Redeamed {rewardName}";

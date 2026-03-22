@@ -3,7 +3,7 @@
 namespace StreamingApp.Domain.Entities.Dtos;
 
 public class BannedUserDto(string userId, string messageId, string userName, string lastMessage, string reson, BannedTargetEnum targetEnum, bool isUsed, OriginEnum origin, DateTime date)
-    {
+{
 
     public string UserId { get; set; } = userId;
 

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DnsClient.Protocol;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StreamingApp.API.Twitch.Interfaces;
@@ -59,14 +58,14 @@ public class TwitchApiRequest : ITwitchApiRequest
         {
             OnHypeTrain();
         }
-        
+
         // TODO: Test if this is valid
         if (e.ChatMessage.Username.Equals(RaidUser))
         {
             Console.WriteLine($"Raid User {RaidUser} chatted");
         }
 
-        if(e.ChatMessage.Message.Contains("Followed ALOO"))
+        if (e.ChatMessage.Message.Contains("Followed ALOO"))
         {
             Console.WriteLine("Follow Message Resived");
         }
@@ -147,7 +146,7 @@ public class TwitchApiRequest : ITwitchApiRequest
                 cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
 
                 if (cumulativeMonths == 0)
-                {   
+                {
                     emoteMessage = $"Thank you {userName} for joining us for the first month as an {subscriptionPlan} Sub";
                 }
                 else
@@ -178,7 +177,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         if (e.PrimePaidSubscriber.SubscriptionPlan.Equals("Prime"))
         {
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.PrimePaidSubscriber);
-            
+
             Console.WriteLine($"OnPrimePaidSubscriber Trigger {e.PrimePaidSubscriber.SubscriptionPlan}");
 
             _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
@@ -195,7 +194,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
 
         Console.WriteLine($"OnReSubscriber Trigge {e.ReSubscriber.SubscriptionPlan}");
-        
+
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
     }
 
@@ -230,21 +229,21 @@ public class TwitchApiRequest : ITwitchApiRequest
     public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
         BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, OriginEnum.Twitch, DateTime.Now);
-        
+
         _twitchCallCache.AddMessage(bannedUser, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
     {
         BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, OriginEnum.Twitch, DateTime.Now);
-        
+
         _twitchCallCache.AddMessage(userTimeOout, CallCacheEnum.CachedBannedData);
     }
 
     public void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
     {
         BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, OriginEnum.Twitch, DateTime.Now);
-        
+
         _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }
 

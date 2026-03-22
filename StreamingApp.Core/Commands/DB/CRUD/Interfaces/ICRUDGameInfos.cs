@@ -1,6 +1,7 @@
 ﻿using StreamingApp.Domain.Entities.Dtos;
 
 namespace StreamingApp.Core.Commands.DB.CRUD.Interfaces;
+
 public interface ICRUDGameInfos
 {
     Task<List<GameInfoDto>> GetAll();

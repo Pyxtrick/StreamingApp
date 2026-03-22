@@ -14,7 +14,7 @@ public class Target
     public int? TargetDataId { get; set; }
     public TargetData? TargetData { get; set; }
 
-    public int? CommandAndResponseId {  get; set; }
+    public int? CommandAndResponseId { get; set; }
     public CommandAndResponse? CommandAndResponse { get; set; }
 
     public bool IsSameTime { get; set; }

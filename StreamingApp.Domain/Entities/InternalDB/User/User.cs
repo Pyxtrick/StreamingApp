@@ -6,7 +6,7 @@ public class User
 
     // can be used to set specific text what the person is or other tings
     public string? UserText { get; set; }
-    
+
     public List<UserDetail> Details { get; set; }
 
     //public int DiscordDetailId { get; set; }
@@ -15,7 +15,7 @@ public class User
     public Status? Status { get; set; }
 
     public List<Achievements> Achievements { get; set; }
-    
+
     public int BanId { get; set; }
     public Ban? Ban { get; set; }
 }

@@ -123,7 +123,7 @@ public class ManageAlertFixture : DataBaseFixture
         Mock<ISubAlertLoong> subAlertLoongMock = new();
         Mock<IHubContext<ChatHub>> clientHubMock = new();
         clientHubMock.Setup(client => client.Clients.All).Returns(new Mock<IClientProxy>().Object);
-        
+
         Mock<IMovingText> movingTextMock = new();
         Mock<IMessageCheck> messageCheckMock = new();
         Mock<IRaidAlert> raidAlertMock = new();
@@ -142,7 +142,7 @@ public class ManageAlertFixture : DataBaseFixture
     {
         //Arrange
         RaidDto raidDto = new("UserNmae", 1, "Test", false, DateTime.UtcNow);
-        ChannelInfo channelInfo = new ChannelInfo(){ GameId = "111",GameName = "TestGame", Title = "Title" };
+        ChannelInfo channelInfo = new ChannelInfo() { GameId = "111", GameName = "TestGame", Title = "Title" };
 
         await using (UnitOfWorkContext unitOfWork = CreateUnitOfWork())
         {

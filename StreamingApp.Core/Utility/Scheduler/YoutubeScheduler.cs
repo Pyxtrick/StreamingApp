@@ -2,10 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StreamingApp.API.Utility.Caching.Interface;
-using StreamingApp.Core.Commands.Twitch.Interfaces;
-using StreamingApp.Domain.Entities.Dtos.Twitch;
-using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Utility.Scheduler;
 

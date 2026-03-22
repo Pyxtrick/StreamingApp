@@ -1,6 +1,7 @@
 ﻿using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Domain.Entities.Dtos.Twitch;
+
 public class CommandDto(
         string messageId,
         string userId,

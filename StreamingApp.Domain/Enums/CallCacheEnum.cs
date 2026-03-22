@@ -3,9 +3,9 @@
 public enum CallCacheEnum
 {
     CachedMessageData,
-    
+
     CachedSubData,
-    
+
     CachedRaidData,
     CachedRaidUserData,
 

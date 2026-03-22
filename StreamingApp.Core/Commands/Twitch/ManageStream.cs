@@ -10,6 +10,7 @@ using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
 
 namespace StreamingApp.Core.Commands.Twitch;
+
 public class ManageStream : IManageStream
 {
     private readonly UnitOfWorkContext _unitOfWork;
@@ -84,7 +85,7 @@ public class ManageStream : IManageStream
                 // TODO: Twitch Shouout user
                 if (splitMessage[1] != null)
                 {
-                    if(messageDto.Origin == OriginEnum.Youtube)
+                    if (messageDto.Origin == OriginEnum.Youtube)
                     {
                         //_youtubeSendRequest.SendChatMessage($"");
                         return;

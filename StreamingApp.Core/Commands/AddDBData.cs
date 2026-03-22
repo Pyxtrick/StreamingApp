@@ -1,8 +1,8 @@
 ﻿using StreamingApp.DB;
 using StreamingApp.Domain.Entities.InternalDB.Settings;
+using StreamingApp.Domain.Entities.InternalDB.Stream;
 using StreamingApp.Domain.Entities.InternalDB.Trigger;
 using StreamingApp.Domain.Enums;
-using StreamingApp.Domain.Entities.InternalDB.Stream;
 
 namespace StreamingApp.Core.Commands;
 
@@ -31,14 +31,14 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "discord", Response = "Discord is currenty under constuction 🛠️", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "donate", Response = "If you want to support the stream, you can donate using the following link: XYZ", Description = "", Active = false, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "collab", Response = "There is currenty no Collab going on", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                
+
                 new CommandAndResponse() {Command = "raidsub", Response = "There is currenty no Twitch Raid message with Sub Emotes use raid command instead", Description = "", Active = false, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "raidbit", Response = "There is currenty no Twitch Raid message with Bit Emotes use raid command instead", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "raid", Response = "<3 Pyxtrick twitchRaid", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
-                
+
                 new CommandAndResponse() {Command = "emotes", Response = "Cannot see Emotes like hiii get 7tv browser addon from https://7tv.app/", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "statistics", Response = "Currenty no statistics can be found :(", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = true },
-                
+
                 new CommandAndResponse() {Command = "language", Response = "English only please | bitte nur englisch | solo inglés por favor | solo inglese per favore | apenas inglês por favor | anglais seulement s'il vous plait | alleen engels alstublieft | proszę tylko po angielsku | только английский пожалуйста | 英語のみお願いします | 请只说英语 | 영어만 쓰시길 바랍니다", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "english", Response = "The Stream is Primarly Englisch only that includes the chat.", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Undefined, HasLogic = false },
                 new CommandAndResponse() {Command = "english2", Response = "The Stream is Primarly Englisch only that includes the chat. But in rare acations it can be in Schwizer Dütsch.", Description = "", Active = true, Auth = AuthEnum.Mod, Category = CategoryEnum.Undefined, HasLogic = false },
@@ -101,7 +101,7 @@ public class AddDBData : IAddDBData
                 new CommandAndResponse() {Command = "modpack", Response = "There is no Modpack about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
                 new CommandAndResponse() {Command = "gameinfo", Response = "There is no Info about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
                 new CommandAndResponse() {Command = "gameprogress", Response = "There is no Progress about this Category: [Category]", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Game, HasLogic = true },
-                
+
                 new CommandAndResponse() {Command = "song", Response = "There is no Info about this Song", Description = "", Active = true, Auth = AuthEnum.Undefined, Category = CategoryEnum.Song, HasLogic = true },
                 
                 // Subathon

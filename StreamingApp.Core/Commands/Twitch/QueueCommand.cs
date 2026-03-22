@@ -143,25 +143,25 @@ public class QueueCommand : IQueueCommand
                     SendMessage($"@{randomUser.UserName} {commandAndResponse.Response}", origin);
                 }
                 break;
-            /**case "ccount":
-                var count = _queueCache.GetQueueCount();
+                /**case "ccount":
+                    var count = _queueCache.GetQueueCount();
 
-                if (count != 0)
-                {
-                    SendMessage($"{commandAndResponse.Response.Replace('X', char.Parse(count.ToString()))}", origin);
-                }
-                else
-                {
-                    SendMessage($"There are no Users in the list", origin);
-                }
-                break;**/
+                    if (count != 0)
+                    {
+                        SendMessage($"{commandAndResponse.Response.Replace('X', char.Parse(count.ToString()))}", origin);
+                    }
+                    else
+                    {
+                        SendMessage($"There are no Users in the list", origin);
+                    }
+                    break;**/
         }
     }
 
     private void SendMessage(string response, OriginEnum origin)
     {
         switch (origin)
-        { 
+        {
             case OriginEnum.Twitch:
                 _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], response);
                 break;

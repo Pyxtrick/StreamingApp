@@ -44,7 +44,7 @@ public class TestController : ControllerBase
         int random = new Random().Next(1, 50);
 
         Console.WriteLine($"messageId {random}");
-        
+
         string mess = "pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave pyxtriRave";
 
         MessageDto chatMessage = new(false, "Channel", "#ff6b6b", null, mess, "emote Replaced Message",

@@ -37,7 +37,7 @@ public class ManageAchievements : IManageAchievements
 
         var twitchSub = user.Status.Subs.FirstOrDefault(t => t.Origin == sub.Origin);
 
-        if(twitchSub == null)
+        if (twitchSub == null)
         {
             Console.WriteLine("IsNotExisting");
             Console.Error.WriteLine($"Error During Sub with {sub.Origin}");
