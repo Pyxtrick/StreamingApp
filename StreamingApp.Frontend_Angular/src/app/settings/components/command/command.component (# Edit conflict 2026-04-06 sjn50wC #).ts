@@ -60,10 +60,13 @@ export class CommandComponent implements OnInit {
   isEditVisible = false;
 
   showModal(command: CommandEditComponent) {
+    console.log(command);
     const dialogConfig = new MatDialogConfig();
+
     dialogConfig.data = {
       command: command,
     };
+    console.log('test' + dialogConfig);
 
     this.dialog.open(CommandEditComponent, dialogConfig);
   }

@@ -1,0 +1,41 @@
+<div class="edit-overlay" (click)="closeEdit()">
+  <div class="edit-content" (click)="$event.stopPropagation()">
+    <h2>Edit Command {{ command.id }}</h2>
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>Command</mat-label>
+        <input matInput value="{{ command.command }}" />
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Response</mat-label>
+        <input matInput value="{{ command.response }}" />
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Description</mat-label>
+        <input matInput value="{{ command.description }}" />
+      </mat-form-field>
+
+      <mat-slide-toggle labelPosition="before" [checked]="command.active">
+        Active
+      </mat-slide-toggle>
+
+      <!--<mat-form-field class="example-full-width">
+        <mat-label>Favorite food</mat-label>
+        <mat-select [(ngModel)]="command.auth" name="auth">
+          @for (auth of auths; track auth) {
+          <mat-option [value]="auth.value">{{ auth.value }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>-->
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Category List</mat-label>
+        <input matInput value="{{ command.category }}" />
+      </mat-form-field>
+    </form>
+
+    <button (click)="closeEdit()">Close</button>
+  </div>
+</div>
