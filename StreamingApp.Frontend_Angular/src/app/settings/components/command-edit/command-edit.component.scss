@@ -4,18 +4,39 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(62, 62, 62, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .edit-content {
-  background-color: #4b4b4b;
+  background-color: black;
   padding: 30px;
   border-radius: 10px;
   text-align: center;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+::ng-deep .edit-content * {
+  color: white !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: black !important;
+}
+
+::ng-deep div.mat-mdc-select-panel {
+  background-color: black !important;
+  border: 1px solid white;
+  border-radius: 10px !important;
+}
+
+.exitButton {
+  height: 50px;
+  width: 100px;
+  background-color: rgba(62, 62, 62, 1);
+  border-radius: 10px;
 }

@@ -2,40 +2,61 @@
   <div class="edit-content" (click)="$event.stopPropagation()">
     <h2>Edit Command {{ command.id }}</h2>
     <form class="example-form">
-      <mat-form-field class="example-full-width">
-        <mat-label>Command</mat-label>
-        <input matInput value="{{ command.command }}" />
-      </mat-form-field>
+      <mat-grid-list cols="2" rowHeight="2:1">
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width">
+            <mat-label>Command</mat-label>
+            <input matInput value="{{ command.command }}" />
+          </mat-form-field>
+        </mat-grid-tile>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>Response</mat-label>
-        <input matInput value="{{ command.response }}" />
-      </mat-form-field>
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width">
+            <mat-label>Response</mat-label>
+            <input matInput value="{{ command.response }}" />
+          </mat-form-field>
+        </mat-grid-tile>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>Description</mat-label>
-        <input matInput value="{{ command.description }}" />
-      </mat-form-field>
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <input matInput value="{{ command.description }}" />
+          </mat-form-field>
+        </mat-grid-tile>
 
-      <mat-slide-toggle labelPosition="before" [checked]="command.active">
-        Active
-      </mat-slide-toggle>
+        <mat-grid-tile>
+          <mat-slide-toggle labelPosition="before" [checked]="command.active">
+            Active
+          </mat-slide-toggle>
+        </mat-grid-tile>
 
-      <!--<mat-form-field class="example-full-width">
-        <mat-label>Favorite food</mat-label>
-        <mat-select [(ngModel)]="command.auth" name="auth">
-          @for (auth of auths; track auth) {
-          <mat-option [value]="auth.value">{{ auth.value }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>-->
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width">
+            <mat-label>Auth</mat-label>
+            <mat-select [(ngModel)]="authEnum[command.auth]" name="auth">
+              @for (auth of authList; track auth) {
+              <mat-option [value]="auth">{{ auth }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>Category List</mat-label>
-        <input matInput value="{{ command.category }}" />
-      </mat-form-field>
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width">
+            <mat-label>Category</mat-label>
+            <mat-select
+              [(ngModel)]="categoryEnum[command.category]"
+              name="category"
+            >
+              @for (category of categoryList; track category) {
+              <mat-option [value]="category">{{ category }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
     </form>
 
-    <button (click)="closeEdit()">Close</button>
+    <button class="exitButton" (click)="closeEdit()">Close</button>
   </div>
 </div>
