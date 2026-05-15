@@ -6,7 +6,9 @@ import {
   MatDialog,
   MatDialogConfig,
 } from '@angular/material/dialog';
-import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import {
@@ -20,7 +22,13 @@ import { settingsFeature } from './../../state/reducers';
 
 @Component({
   selector: 'app-command',
-  imports: [MatTableModule, MatButton, CommonModule],
+  imports: [
+    MatTableModule,
+    MatButton,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './command.component.html',
   styleUrl: './command.component.scss',
 })
@@ -30,6 +38,8 @@ export class CommandComponent implements OnInit {
   public commands!: CommandAndResponseDto[];
 
   readonly dialog = inject(MatDialog);
+
+  public dataSource = new MatTableDataSource(this.commands);
 
   displayedColumns: string[] = [
     'command',
@@ -52,6 +62,7 @@ export class CommandComponent implements OnInit {
       .pipe(
         map((command) => {
           this.commands = command;
+          this.dataSource = new MatTableDataSource(this.commands);
         })
       )
       .subscribe();
@@ -70,6 +81,11 @@ export class CommandComponent implements OnInit {
 
   hideModal() {
     this.isEditVisible = false;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

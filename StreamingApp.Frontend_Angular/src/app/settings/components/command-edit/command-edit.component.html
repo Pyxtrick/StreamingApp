@@ -1,7 +1,7 @@
 <div class="edit-overlay" (click)="closeEdit()">
   <div class="edit-content" (click)="$event.stopPropagation()">
     <h2>Edit Command {{ command.id }}</h2>
-    <form class="example-form">
+    <form #f="ngForm" class="example-form">
       <mat-grid-list cols="2" rowHeight="2:1">
         <mat-grid-tile>
           <mat-form-field class="example-full-width">

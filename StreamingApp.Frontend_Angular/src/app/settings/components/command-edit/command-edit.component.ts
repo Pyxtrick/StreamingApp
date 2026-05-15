@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -34,7 +34,6 @@ export class CommandEditComponent {
   categoryEnum = CategoryEnum;
 
   constructor(
-    private fb: FormBuilder,
     private dialogRef: MatDialogRef<CommandAndResponseDto>,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
@@ -43,6 +42,7 @@ export class CommandEditComponent {
   @Output() close = new EventEmitter<void>();
 
   closeEdit(): void {
+    console.log(this.command);
     this.dialogRef.close();
   }
 }

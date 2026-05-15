@@ -1,5 +1,9 @@
 <article>
-  <table mat-table [dataSource]="commands">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. " #input />
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="command">
       <th mat-header-cell *matHeaderCellDef>Command</th>
       <td mat-cell *matCellDef="let element">{{ element.command }}</td>
