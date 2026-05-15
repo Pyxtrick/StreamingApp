@@ -1,0 +1,23 @@
+<div class="edit-overlay" (click)="closeEdit()">
+  <div class="edit-content" (click)="$event.stopPropagation()">
+    <h2>Edit Twitch Data</h2>
+    <form #f="ngForm" class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>Title</mat-label>
+        <input matInput value="{{ twitch.title }}" />
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Go Live Notification</mat-label>
+        <input matInput value="{{ twitch.notification }}" />
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Category</mat-label>
+        <input matInput value="{{ twitch.category }}" />
+      </mat-form-field>
+    </form>
+
+    <button class="exitButton" (click)="closeEdit()">Close</button>
+  </div>
+</div>
