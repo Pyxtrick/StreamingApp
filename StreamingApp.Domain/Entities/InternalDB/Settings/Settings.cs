@@ -52,4 +52,10 @@ public class Settings
 
     // Amount to bits Conversion
     public double Conversion { get; set; }
+
+    // Use Game Name for Social media Post
+    public bool UseGameName { get; set; }
+
+    // Link
+    public string StreamLink { get; set; }
 }

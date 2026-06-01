@@ -3,13 +3,15 @@ using Moq;
 using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Interfaces;
 using StreamingApp.Core.Commands.Bluesky;
+using StreamingApp.DB;
 using StreamingApp.Domain.Entities.APIs;
 using StreamingApp.Domain.Enums;
+using StreamingApp.Test.TestBuilder.DB;
 using Xunit;
 
 namespace StreamingApp.Test.Core.Command.Bluesky;
 
-public class ManageTweetsFixture
+public class ManageTweetsFixture : DataBaseFixture
 {
     [Fact]
     public async Task SendStreamStartTweet()
@@ -22,10 +24,17 @@ public class ManageTweetsFixture
 
         var channelinfo = new ChannelInfo() { GameId = "111", GameName = "TestGame", Title = "TestTitle" };
 
+        await using (UnitOfWorkContext unitOfWork = CreateUnitOfWork())
+        {
+            var setting = SettingsBuilder.Create(unitOfWork).WithDefaults(1, OriginEnum.Twitch);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
         Mock<ITwitchSendRequest> twitchSendRequestMock = new();
         twitchSendRequestMock.Setup(twitchSendRequest => twitchSendRequest.GetChannelInfo("", true)).ReturnsAsync(channelinfo);
 
-        IManageTweets manageTweets = new ManageTweets(blueskyApiRequestMock.Object, twitchSendRequestMock.Object);
+        IManageTweets manageTweets = new ManageTweets(blueskyApiRequestMock.Object, twitchSendRequestMock.Object, CreateUnitOfWork());
 
         //Act
         await manageTweets.SendStreamStartTweet(servicesParameters);

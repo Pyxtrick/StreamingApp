@@ -2,6 +2,7 @@
 using idunno.Bluesky.RichText;
 using StreamingApp.API.Bluesky.Interfaces;
 using StreamingApp.API.Interfaces;
+using StreamingApp.DB;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
 
@@ -13,10 +14,13 @@ public class ManageTweets : IManageTweets
 
     private readonly ITwitchSendRequest _twitchSendRequest;
 
-    public ManageTweets(IBlueskyApiRequest blueskyApiRequest, ITwitchSendRequest twitchSendRequest)
+    private readonly UnitOfWorkContext _unitOfWork;
+
+    public ManageTweets(IBlueskyApiRequest blueskyApiRequest, ITwitchSendRequest twitchSendRequest, UnitOfWorkContext unitOfWorkContext)
     {
         _blueskyApiRequest = blueskyApiRequest;
         _twitchSendRequest = twitchSendRequest;
+        _unitOfWork = unitOfWorkContext;
     }
 
     public async Task SendBasicTweet(string message)
@@ -31,13 +35,17 @@ public class ManageTweets : IManageTweets
         var channelInfo = await _twitchSendRequest.GetChannelInfo("", true);
         PostBuilder postBuilder = new PostBuilder();
 
-        string tweetIntro = $"{channelInfo.Title} | {channelInfo.GameName}\r\n🔴Live\r\n";
+        var setting = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
+
+        string tweetIntro = $"{channelInfo.Title}";
+        tweetIntro += setting.UseGameName ? $" | {channelInfo.GameName}" : "";
+        tweetIntro += "\r\n🔴Live\r\n";
         string tweetMessage = tweetIntro;
         postBuilder.Append(tweetIntro);
 
         foreach (var service in services)
         {
-            var originMessage = OriginLookupText(service.Key);
+            var originMessage = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == service.Key).StreamLink;
 
             tweetMessage += $"{originMessage}{service.Value} \r\n";
 
@@ -52,21 +60,5 @@ public class ManageTweets : IManageTweets
         postBuilder.Append(new HashTag("VtuberEN"));
 
         await _blueskyApiRequest.PostTweet(postBuilder);
-    }
-
-    // Move to DB in the future
-    private string OriginLookupText(OriginEnum originEnum)
-    {
-        switch (originEnum)
-        {
-            case OriginEnum.Twitch:
-                return "https://twitch.tv/pyxtrick";
-            case OriginEnum.Youtube:
-                return "https://youtube.com/watch?v=";
-            case OriginEnum.Kick:
-                return "https://kick.com/pyxtrick";
-            default:
-                return "";
-        }
     }
 }

@@ -31,6 +31,8 @@ public static class SettingsBuilder
         settings.TTSLenghtAmmount = 10;
         settings.TTSAmount = 100;
         settings.Conversion = 1;
+        settings.UseGameName = true;
+        settings.StreamLink = "";
 
         return settings;
     }
