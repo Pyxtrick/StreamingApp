@@ -11,5 +11,5 @@ public interface ICRUDSettings
 
     Task<bool> Update(SettingsDto newSettings);
 
-    Task<bool> SwitchAdsDisplay(bool isDisableAdsDisplay);
+    Task<bool> SwitchData(SettingsEnum setting, bool data);
 }

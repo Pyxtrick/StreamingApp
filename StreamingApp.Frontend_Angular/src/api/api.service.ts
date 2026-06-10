@@ -1055,12 +1055,16 @@ export class StreamClient {
         return _observableOf(null as any);
     }
 
-    switchAdsDisplay(isDisableAdsDisplay: boolean | undefined): Observable<boolean> {
-        let url_ = this.baseUrl + "/api/Stream/SwitchAdsDisplay?";
-        if (isDisableAdsDisplay === null)
-            throw new globalThis.Error("The parameter 'isDisableAdsDisplay' cannot be null.");
-        else if (isDisableAdsDisplay !== undefined)
-            url_ += "isDisableAdsDisplay=" + encodeURIComponent("" + isDisableAdsDisplay) + "&";
+    switchData(setting: SettingsEnum | undefined, data: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Stream/SwitchData?";
+        if (setting === null)
+            throw new globalThis.Error("The parameter 'setting' cannot be null.");
+        else if (setting !== undefined)
+            url_ += "setting=" + encodeURIComponent("" + setting) + "&";
+        if (data === null)
+            throw new globalThis.Error("The parameter 'data' cannot be null.");
+        else if (data !== undefined)
+            url_ += "data=" + encodeURIComponent("" + data) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1072,11 +1076,11 @@ export class StreamClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSwitchAdsDisplay(response_);
+            return this.processSwitchData(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSwitchAdsDisplay(response_ as any);
+                    return this.processSwitchData(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<boolean>;
                 }
@@ -1085,7 +1089,7 @@ export class StreamClient {
         }));
     }
 
-    protected processSwitchAdsDisplay(response: HttpResponseBase): Observable<boolean> {
+    protected processSwitchData(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3891,6 +3895,13 @@ export enum UserTypeEnum {
     Editor = 6,
     Artist = 7,
     Viewer = 8,
+}
+
+export enum SettingsEnum {
+    AdsDisplay = 0,
+    PauseAllert = 1,
+    MuteAllert = 2,
+    UseGameName = 3,
 }
 
 export class Actions implements IActions {

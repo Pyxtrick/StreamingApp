@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps } from '@ngrx/store';
-import { OriginEnum, SettingsDto } from 'src/api/api.service';
+import { OriginEnum, SettingsDto, SettingsEnum } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 
 export const ChatsActions = createActionGroup({
@@ -91,16 +91,15 @@ export const ChatsActions = createActionGroup({
     'switch chat': (isVerticalChat: boolean) => ({
       isVerticalChat,
     }),
-
     'switch chat success': emptyProps(),
     'switch chat failure': emptyProps(),
 
-    'switch ads display': (isDisableAdsDisplay: boolean) => ({
-      isDisableAdsDisplay,
+    'switch data': (setting: SettingsEnum, data: boolean) => ({
+      setting,
+      data,
     }),
-
-    'switch ads display success': emptyProps(),
-    'switch ads display failure': emptyProps(),
+    'switch data success': emptyProps(),
+    'switch data failure': emptyProps(),
     //#endregion
 
     //#region Settings

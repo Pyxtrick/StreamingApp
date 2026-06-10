@@ -51,16 +51,16 @@ export class ChatsEffects {
     );
   });
 
-  switchAdsDisplay$ = createEffect(() => {
+  switchData$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(ChatsActions.switchAdsDisplay),
+      ofType(ChatsActions.switchData),
       switchMap((payload) =>
-        this.streamIpi.switchAdsDisplay(payload.isDisableAdsDisplay).pipe(
+        this.streamIpi.switchData(payload.setting, payload.data).pipe(
           map((r) => {
             if (r) {
-              return ChatsActions.switchAdsDisplaySuccess();
+              return ChatsActions.switchDataSuccess();
             } else {
-              return ChatsActions.switchAdsDisplayFailure();
+              return ChatsActions.switchDataFailure();
             }
           }),
           catchError((_error) => of(ChatsActions.sendHighlightMessageFailure()))

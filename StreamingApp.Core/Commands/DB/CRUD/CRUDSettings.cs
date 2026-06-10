@@ -53,13 +53,28 @@ public class CRUDSettings : ICRUDSettings
         return true;
     }
 
-    public async Task<bool> SwitchAdsDisplay(bool isDisableAdsDisplay)
+    public async Task<bool> SwitchData(SettingsEnum setting, bool data)
     {
         try
         {
-            Settings oldSettings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == Domain.Enums.OriginEnum.Twitch);
+            Settings oldSettings = _unitOfWork.Settings.FirstOrDefault(s => s.Origin == OriginEnum.Twitch);
 
-            oldSettings.IsAdsDisplay = isDisableAdsDisplay;
+            switch (setting)
+            {
+                case SettingsEnum.adsDisplay:
+                    oldSettings.IsAdsDisplay = data;
+                    break;
+                case SettingsEnum.pauseAllert:
+                    oldSettings.PauseAllerts = data;
+                    break;
+                case SettingsEnum.muteAllert:
+                    oldSettings.MuteAllerts = data;
+                    break;
+                case SettingsEnum.useGameName:
+                    oldSettings.UseGameName = data;
+                    break;
+                default: break;
+            }
 
             await _unitOfWork.SaveChangesAsync();
         }

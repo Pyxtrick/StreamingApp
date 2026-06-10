@@ -6,7 +6,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
-import { OriginEnum, SettingsDto } from 'src/api/api.service';
+import { OriginEnum, SettingsDto, SettingsEnum } from 'src/api/api.service';
 import { ChatDto } from 'src/app/models/dtos/ChatDto';
 import { BannedTargetEnum } from 'src/app/models/enums/BannedTargetEnum';
 import { AppSignalRService } from 'src/app/services/chat-signalr.services';
@@ -45,6 +45,8 @@ export class ChatsComponent implements OnInit {
 
   isPauseAllert = false;
   isMuteAllert = false;
+
+  isUseGameName = false;
 
   displayChatMessages: DisplayChat[] = [];
   displaySharedMessages: DisplayChat[] = [];
@@ -245,19 +247,25 @@ export class ChatsComponent implements OnInit {
 
   switchAdsDisplay() {
     this.store.dispatch(
-      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
+      ChatsActions.switchData(SettingsEnum.AdsDisplay, this.isDisableAdsDisplay)
     );
   }
 
   switchPauseAllert() {
-    /**this.store.dispatch(
-      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
-    );*/
+    this.store.dispatch(
+      ChatsActions.switchData(SettingsEnum.PauseAllert, this.isPauseAllert)
+    );
   }
 
   switchMuteAllert() {
-    /**this.store.dispatch(
-      ChatsActions.switchAdsDisplay(this.isDisableAdsDisplay)
-    );*/
+    this.store.dispatch(
+      ChatsActions.switchData(SettingsEnum.MuteAllert, this.isMuteAllert)
+    );
+  }
+
+  switchUseGameName() {
+    this.store.dispatch(
+      ChatsActions.switchData(SettingsEnum.UseGameName, this.isUseGameName)
+    );
   }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Domain.Enums;
 namespace StreamingApp.Web.Controllers;
 
 [Route("api/[controller]")]
@@ -37,10 +38,10 @@ public class StreamController : ControllerBase
         return true;
     }
 
-    [HttpPost("SwitchAdsDisplay")]
-    public async Task<bool> SwitchAdsDisplay([FromServices] ICRUDSettings cRUDSettings, bool isDisableAdsDisplay)
+    [HttpPost("SwitchData")]
+    public async Task<bool> SwitchData([FromServices] ICRUDSettings cRUDSettings, SettingsEnum setting, bool data)
     {
-        await cRUDSettings.SwitchAdsDisplay(isDisableAdsDisplay);
+        await cRUDSettings.SwitchData(setting, data);
         return true;
     }
 }
