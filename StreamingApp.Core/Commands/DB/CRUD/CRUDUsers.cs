@@ -59,7 +59,8 @@ public class CRUDUsers : ICRUDUsers
                     {
                         ExternalUserId = twitchUserId,
                         UserName = userName,
-                        AppAuthEnum = AppAuthEnum.user
+                        AppAuthEnum = AppAuthEnum.user,
+                        Origin = Origin,
                     }
                 },
                 Achievements = new()
@@ -71,7 +72,8 @@ public class CRUDUsers : ICRUDUsers
                         GiftedSubsCount = 0,
                         GiftedBitsCount = 0,
                         GiftedDonationCount = 0,
-                        WachedStreams = 1
+                        WachedStreams = 1,
+                        Origin = Origin,
                     }
                 },
                 Status = new()
@@ -83,6 +85,7 @@ public class CRUDUsers : ICRUDUsers
                             CurrentySubscribed = Origin == OriginEnum.Twitch ? isSub : false,
                             SubscribedTime = Origin == OriginEnum.Twitch ? subTime : 0,
                             CurrentTier = Origin == OriginEnum.Twitch ? (isSub ? TierEnum.Tier1 : TierEnum.None) : TierEnum.None, // cannot get data ATM
+                            Origin = Origin,
                         }
                         /**
                         new()
