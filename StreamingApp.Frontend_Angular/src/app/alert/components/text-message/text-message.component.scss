@@ -18,7 +18,7 @@
   display: inline-block;
   font-size: 20px;
   position: relative;
-  left: 100%;
+  left: 250%;
   animation: marquee 10s linear infinite;
 }
 
@@ -36,6 +36,15 @@
 }
 .marquee span:nth-child(5) {
   animation-delay: 2s;
+}
+.marquee span:nth-child(6) {
+  animation-delay: 2.5s;
+}
+.marquee span:nth-child(7) {
+  animation-delay: 3s;
+}
+.marquee span:nth-child(8) {
+  animation-delay: 3.5s;
 }
 
 .marquee span {
