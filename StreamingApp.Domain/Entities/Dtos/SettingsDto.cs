@@ -14,5 +14,7 @@ public class SettingsDto
 
     public bool IsAdsDisplay { get; set; }
 
+    public bool UseGameName { get; set; }
+
     public int AllertDelayS { get; set; }
 }

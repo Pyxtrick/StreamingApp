@@ -73,8 +73,10 @@ export class ChatsComponent implements OnInit {
         map((setting) => {
           if (setting != null) {
             this.isDisableAdsDisplay = setting.isAdsDisplay;
+            this.isPauseAllert = setting.pauseAllerts;
+            this.isMuteAllert = setting.muteAllerts;
+            this.isUseGameName = setting.useGameName;
           }
-          console.log('test', setting.isAdsDisplay);
         })
       )
       .subscribe();

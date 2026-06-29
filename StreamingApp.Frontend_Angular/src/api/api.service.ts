@@ -3384,6 +3384,7 @@ export class SettingsDto implements ISettingsDto {
     muteAllerts!: boolean;
     pauseAllerts!: boolean;
     isAdsDisplay!: boolean;
+    useGameName!: boolean;
     allertDelayS!: number;
 
     constructor(data?: ISettingsDto) {
@@ -3402,6 +3403,7 @@ export class SettingsDto implements ISettingsDto {
             this.muteAllerts = _data["muteAllerts"] !== undefined ? _data["muteAllerts"] : null as any;
             this.pauseAllerts = _data["pauseAllerts"] !== undefined ? _data["pauseAllerts"] : null as any;
             this.isAdsDisplay = _data["isAdsDisplay"] !== undefined ? _data["isAdsDisplay"] : null as any;
+            this.useGameName = _data["useGameName"] !== undefined ? _data["useGameName"] : null as any;
             this.allertDelayS = _data["allertDelayS"] !== undefined ? _data["allertDelayS"] : null as any;
         }
     }
@@ -3420,6 +3422,7 @@ export class SettingsDto implements ISettingsDto {
         data["muteAllerts"] = this.muteAllerts !== undefined ? this.muteAllerts : null as any;
         data["pauseAllerts"] = this.pauseAllerts !== undefined ? this.pauseAllerts : null as any;
         data["isAdsDisplay"] = this.isAdsDisplay !== undefined ? this.isAdsDisplay : null as any;
+        data["useGameName"] = this.useGameName !== undefined ? this.useGameName : null as any;
         data["allertDelayS"] = this.allertDelayS !== undefined ? this.allertDelayS : null as any;
         return data;
     }
@@ -3431,6 +3434,7 @@ export interface ISettingsDto {
     muteAllerts: boolean;
     pauseAllerts: boolean;
     isAdsDisplay: boolean;
+    useGameName: boolean;
     allertDelayS: number;
 }
 
