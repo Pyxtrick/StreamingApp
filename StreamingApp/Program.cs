@@ -16,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // API Services
-builder.Services.AddApiOptions(builder.Configuration["AutoMapper:Key"]!);
+builder.Services.AddApiOptions(builder.Configuration["AutoMapper:Key"]!, builder.Configuration);
 
 // Core Services
 builder.Services.AddCoreOptions(builder.Configuration["AutoMapper:Key"]!);
