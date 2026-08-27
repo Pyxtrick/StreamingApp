@@ -51,67 +51,70 @@ public class AlertScheduler : BackgroundService
         {
             var settings = scope.ServiceProvider.GetRequiredService<UnitOfWorkContext>().Settings.FirstOrDefault();
 
-            if (settings.MuteAllerts == false)
+            if (settings.MuteAllerts == true)
             {
-                List<object> alertObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedAlertData);
-                List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
-                List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
+                return;
+            }
 
-                if (alertObject.Any())
+            List<object> alertObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedAlertData);
+            List<object> subObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedSubData);
+            List<object> raidObject = scope.ServiceProvider.GetRequiredService<ITwitchCallCache>().GetAllUnusedMessages(CallCacheEnum.CachedRaidData);
+
+            if (alertObject.Any())
+            {
+                try
                 {
-                    try
-                    {
-                        var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
+                    var alerts = alertObject.ConvertAll(s => (MessageAlertDto)s);
 
-                        foreach (var alert in alerts)
-                        {
-                            _logger.Log(LogLevel.Information, $"AlertSchedular {alert.DisplayName}");
-                            await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteBit(alert);
-                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
-                        }
-                    }
-                    catch (Exception ex)
+                    foreach (var alert in alerts)
                     {
-                        _logger.LogError(ex.Message);
+                        _logger.Log(LogLevel.Information, $"AlertSchedular {alert.DisplayName}");
+                        await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteBit(alert);
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteBitAndRedeamAndFollow(alert);
                     }
                 }
-
-                if (subObject.Any())
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var subs = subObject.ConvertAll(s => (SubDto)s);
+                    _logger.LogError(ex.Message);
+                }
+            }
 
-                        foreach (var sub in subs)
-                        {
-                            _logger.Log(LogLevel.Information, $"SubSchedular {sub.DisplayName}");
-                            await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteSub(sub);
-                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
-                        }
-                    }
-                    catch (Exception ex)
+            if (subObject.Any())
+            {
+                try
+                {
+                    var subs = subObject.ConvertAll(s => (SubDto)s);
+
+                    foreach (var sub in subs)
                     {
-                        _logger.LogError(ex.Message);
+                        _logger.Log(LogLevel.Information, $"SubSchedular {sub.DisplayName}");
+                        await scope.ServiceProvider.GetRequiredService<IManageAchievements>().ExecuteSub(sub);
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteSub(sub);
                     }
                 }
-
-                if (raidObject.Any())
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var raids = raidObject.ConvertAll(s => (RaidDto)s);
+                    _logger.LogError(ex.Message);
+                }
+            }
 
-                        foreach (var raid in raids)
-                        {
-                            _logger.Log(LogLevel.Information, $"RaidSchedular {raid.UserName}");
-                            await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
-                        }
-                    }
-                    catch (Exception ex)
+            if (raidObject.Any())
+            {
+                try
+                {
+                    var raids = raidObject.ConvertAll(s => (RaidDto)s);
+
+                    foreach (var raid in raids)
                     {
-                        _logger.LogError(ex.Message);
+                        _logger.Log(LogLevel.Information, $"RaidSchedular {raid.UserName}");
+                        await scope.ServiceProvider.GetRequiredService<IManageAlert>().ExecuteRaid(raid);
                     }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                }
+            
             }
         }
     }

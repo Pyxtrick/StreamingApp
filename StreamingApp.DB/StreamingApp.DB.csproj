@@ -28,6 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="DataModel\User.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>User.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="DataModel\Allerts.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>Allerts.Designer.cs</LastGenOutput>
