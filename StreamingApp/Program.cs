@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using StreamingApp.API;
 using StreamingApp.API.BetterTV_7TV;
-using StreamingApp.API.Bluesky;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core;
 using StreamingApp.Core.Commands;

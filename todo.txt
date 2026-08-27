@@ -3,7 +3,7 @@ Backend
 
 Fronted
 	Update Data Display
-	Add create and edit Data
+	Add create and edit Data Woring on
 
 	Show VTS Data
 		possition
@@ -11,10 +11,11 @@ Fronted
 			Toggle
 		Item
 
-
-	Update "Ads Dispaly" with Data from the backend / DB
-
 	Fix All Chat one Message Text not wraping correctly
+
+	Fix: Resub text to Long overlapping end of text
+
+	Fix: resub 
 
 	fail SUB: StreamingApp.Core.Utility.Scheduler.AlertScheduler[0]
       An error was generated for warning 'Microsoft.EntityFrameworkCore.Query.InvalidIncludePathError':

@@ -13,7 +13,10 @@ public class FileAchievements : IFileAchievements
     }
 
     /// <summary>
+    /// file Logic
+    /// Platform     Who     What            Number
     /// Twitch       UserX   gifted Subs    5
+    /// Twitch-UserX-gifted Subs-5
     /// </summary>
     /// <param name="platform"></param>
     /// <param name="user"></param>
@@ -23,11 +26,6 @@ public class FileAchievements : IFileAchievements
     public async Task Execute(OriginEnum platform, string user, string what, int count, string contence = "Achievements")
     {
         List<string> lines = _manageFile.ReadFile(contence);
-
-        // file Logic
-        // Platform     Who     What            Number
-        // Twitch       UserX   gifted Subs    5
-        // Twitch-UserX-gifted Subs-5
 
         string line = $"{nameof(platform)}-{user}-{what}";
 

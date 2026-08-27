@@ -15,13 +15,15 @@ public class ManageFile : IManageFile
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// File Names
+    /// Stream Id        Online      Contence        Date
+    /// 4                .0 / .5     Achievements    12.11.2024
+    /// 4.0-Achievemnts-12.11.2024.txt
+    /// </summary>
+    /// <param name="contence"></param>
     public void CreateFile(string contence = "Achievements")
     {
-        // File Names
-        // Stream Id        Online      Contence        Date
-        // 4                .0 / .5     Achievements    12.11.2024
-        // 4.0-Achievemnts-12.11.2024.txt
-
         var stream = _unitOfWork.StreamHistory.OrderBy(s => s.StreamStart).Last();
 
         // TODO: Fix path to a specific file location to D/StreamFiles

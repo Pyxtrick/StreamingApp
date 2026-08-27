@@ -6,7 +6,7 @@ namespace StreamingApp.Test;
 public class Tests : DataBaseFixture
 {
     [Theory]
-    [InlineData("!live Canada/Pacific", "Stream will be live on Friday at 08:30:00 Canada/Pacific / (UTC -8)")]
+    [InlineData("!live Canada/Pacific", "Stream will be live on Friday at 09:30:00 Canada/Pacific / (UTC -8)")]
     [InlineData("!live Japan", "Stream will be live on Saturday at 01:30:00 Japan / (UTC +9)")]
     public void TimeChange(string message, string assert)
     {
