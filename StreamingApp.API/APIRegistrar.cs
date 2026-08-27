@@ -53,7 +53,7 @@ public static class APIRegistrar
         services.AddSingleton<TwitchCallCacheData>();
 
         //YouTube
-        services.AddYTLiveChat(configuration);
+        /**services.AddYTLiveChat(configuration);
         services.Configure<YTLiveChatOptions>(options =>
         {
             options.RequestFrequency = 1000;
@@ -61,7 +61,7 @@ public static class APIRegistrar
             options.DebugLogFilePath = "logs/ytlivechat_debug.json";
         });
         services.AddHostedService<ChatWorker>();
-
+        **/
         services.AddScoped<IYouTubeSendRequest, YoutubeSendRequest>();
         services.AddScoped<IYoutubeInitialise, YoutubeInitialise>();
 
