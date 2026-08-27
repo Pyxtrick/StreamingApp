@@ -22,18 +22,18 @@ public class ManageCommands : IManageCommands
 
     private readonly IManageCommandsWithLogic _manageCommandsWithLogic;
 
-    private readonly IManageStream _manageStream;
+    private readonly IManageStreamCommands _manageStreamCommands;
 
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IGameCommand gameCommand, IManageTextToSpeach manageTextToSpeach, IManageCommandsWithLogic manageCommandsWithLogic, IManageStream manageStream, IHubContext<ChatHub> hubContext)
+    public ManageCommands(UnitOfWorkContext unitOfWork, ITwitchSendRequest twitchSendRequest, IGameCommand gameCommand, IManageTextToSpeach manageTextToSpeach, IManageCommandsWithLogic manageCommandsWithLogic, IManageStreamCommands manageStreamCommands, IHubContext<ChatHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _twitchSendRequest = twitchSendRequest;
         _gameCommand = gameCommand;
         _manageTextToSpeach = manageTextToSpeach;
         _manageCommandsWithLogic = manageCommandsWithLogic;
-        _manageStream = manageStream;
+        _manageStreamCommands = manageStreamCommands;
         _hubContext = hubContext;
     }
 
@@ -86,7 +86,7 @@ public class ManageCommands : IManageCommands
             }
             else if (commandAndResponse.Category == CategoryEnum.StreamUpdate)
             {
-                await _manageStream.Execute(messageDto);
+                await _manageStreamCommands.Execute(messageDto);
             }
             else
             {

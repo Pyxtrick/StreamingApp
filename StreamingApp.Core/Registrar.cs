@@ -60,6 +60,7 @@ public static class Registrar
         services.AddScoped<IManageMessages, ManageMessages>();
         services.AddScoped<IManageScheduler, ManageScheduler>();
         services.AddScoped<IManageStream, ManageStream>();
+        services.AddScoped<IManageStreamCommands, ManageStreamCommands>();
         //services.AddScoped<IManageSubathon, ManageSubathon>();
         services.AddScoped<IPointRedeam, PointRedeam>();
         services.AddScoped<IQueueCommand, QueueCommand>();

@@ -1,11 +1,10 @@
-﻿using StreamingApp.Domain.Entities.Dtos.Twitch;
-
-namespace StreamingApp.Core.Commands.Twitch.Interfaces;
+﻿namespace StreamingApp.Core.Commands.Twitch.Interfaces;
 
 public interface IManageStream
 {
-    Task Execute(MessageDto messageDto);
     Task ChangeCategory(bool isCreateStream = false);
     Task StartStream(string youtubeId = "");
     Task EndStream();
+    Task CreatePole(string[] splitMessage);
+    Task CreatePrediction(string[] splitMessage);
 }
