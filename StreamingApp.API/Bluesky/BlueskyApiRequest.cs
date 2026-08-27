@@ -48,19 +48,32 @@ public class BlueskyApiRequest : IBlueskyApiRequest
         return false;
     }
 
-    public async Task<bool> SetLiveStatus(string title, bool IsStart)
+    public async Task<bool> SetLiveStatus(string title, string description, int durationMinutes, bool IsStart)
     {
         var urltext = "https://twitch.tv/pyxtrick";
 
-        var uri = new Uri(urltext);
-
-        var time = IsStart ? 240 : 0;
-        var response = await _blueskyCache.GetBlueskyAgent().SetLiveStatus(uri, urltext, durationMinutes: time);
-        if (response.Succeeded)
+        if (IsStart)
         {
-            Console.WriteLine(response.Result);
+            var createLiveStatusResult = await _blueskyCache.GetBlueskyAgent().CreateLiveStatus(
+                uri: new Uri(urltext),
+                title: title,
+                description: description,
+                durationMinutes: durationMinutes);
+
+            if (createLiveStatusResult.Succeeded)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            var deleteStatusResult = await _blueskyCache.GetBlueskyAgent().DeleteStatus();
+
+            Console.WriteLine(deleteStatusResult.Succeeded);
+
             return true;
         }
+
         return false;
     }
 }

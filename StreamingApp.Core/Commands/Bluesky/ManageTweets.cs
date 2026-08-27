@@ -5,6 +5,7 @@ using StreamingApp.API.Interfaces;
 using StreamingApp.DB;
 using StreamingApp.Domain.Enums;
 using System.Text.RegularExpressions;
+using WebSocketSharp;
 
 namespace StreamingApp.Core.Commands.Bluesky;
 
@@ -25,9 +26,7 @@ public class ManageTweets : IManageTweets
 
     public async Task SendBasicTweet(string message)
     {
-        var t = Regex.Unescape(message);
-
-        await _blueskyApiRequest.PostTweet(t);
+        await _blueskyApiRequest.PostTweet(Regex.Unescape(message));
     }
 
     public async Task SendStreamStartTweet(List<KeyValuePair<OriginEnum, string>> services)
