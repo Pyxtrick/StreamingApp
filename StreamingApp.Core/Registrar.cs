@@ -102,6 +102,8 @@ public static class Registrar
         services.AddScoped<IQueueCache, QueueCache>();
         services.AddSingleton<QueueData>();
 
+        services.AddScoped<IStreamHandler, StreamHandler>();
+
         // TTS
         services.AddScoped<IManageTextToSpeach, ManageTextToSpeach>();
 

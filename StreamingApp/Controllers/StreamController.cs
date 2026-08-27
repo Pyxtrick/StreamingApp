@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.Core.Commands.DB.CRUD.Interfaces;
 using StreamingApp.Core.Commands.Twitch.Interfaces;
+using StreamingApp.Core.Utility;
 using StreamingApp.Domain.Enums;
 namespace StreamingApp.Web.Controllers;
 
@@ -11,16 +12,16 @@ namespace StreamingApp.Web.Controllers;
 public class StreamController : ControllerBase
 {
     [HttpPost("StartStream")]
-    public async Task<bool> StartStream([FromServices] IManageStream updateStream)
+    public async Task<bool> StartStream([FromServices] IStreamHandler streamHandler)
     {
-        await updateStream.StartStream();
+        await streamHandler.Start();
         return true;
     }
 
     [HttpPost("EndStream")]
-    public async Task<bool> EndStream([FromServices] IManageStream updateStream)
+    public async Task<bool> EndStream([FromServices] IStreamHandler streamHandler)
     {
-        await updateStream.EndStream();
+        await streamHandler.Stop();
         return true;
     }
 
