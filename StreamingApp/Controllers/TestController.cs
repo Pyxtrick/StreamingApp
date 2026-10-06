@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using StreamingApp.API.SignalRHub;
 using StreamingApp.API.Utility.Caching.Interface;
+using StreamingApp.API.Youtube;
 using StreamingApp.Core.Commands.Bluesky;
 using StreamingApp.Core.Queries.Achievements;
 using StreamingApp.Core.Queries.Alerts.Interfaces;
@@ -157,5 +158,11 @@ public class TestController : ControllerBase
     public async Task SendBlueskyTweet([FromServices] IManageTweets manageTweets, string text)
     {
         await manageTweets.SendBasicTweet(text);
+    }
+
+    [HttpPost("YoutubeStart")]
+    public async Task StartYoutube([FromServices] IYoutubeInitialise youtubeInitialise)
+    {
+        await youtubeInitialise.StartYoutubeBot();
     }
 }
