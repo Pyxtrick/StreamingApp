@@ -113,7 +113,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             else if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
             {
                 // Client Auth Send Message
-                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], message);
+                _twitchCache.GetOwnerOfChannelConnection().SendMessageAsync(_configuration["Twitch:Channel"], message);
             }
         }
     }
@@ -138,7 +138,7 @@ public class TwitchSendRequest : ITwitchSendRequest
             else if (_twitchCache.GetOwnerOfChannelConnection().IsInitialized != false)
             {
                 // Client Auth Send Message
-                _twitchCache.GetOwnerOfChannelConnection().SendReply(_configuration["Twitch:Channel"], replyToId, message);
+                _twitchCache.GetOwnerOfChannelConnection().SendReplyAsync(_configuration["Twitch:Channel"], replyToId, message);
             }
         }
     }
@@ -248,7 +248,6 @@ public class TwitchSendRequest : ITwitchSendRequest
                 BroadcasterId = _configuration["Twitch:ChannelId"],
                 Title = title ?? null,
                 Choices = options.Select(option => { return new TwitchLib.Api.Helix.Models.Polls.CreatePoll.Choice() { Title = option }; }).ToList().ToArray(),
-                BitsVotingEnabled = false,
                 ChannelPointsVotingEnabled = false,
                 DurationSeconds = time,
             };
@@ -365,7 +364,6 @@ public class TwitchSendRequest : ITwitchSendRequest
     {
         var customReward = new UpdateCustomRewardRequest()
         {
-            BroadcasterId = "",
             Title = "",
             Prompt = "",
             Cost = 100,

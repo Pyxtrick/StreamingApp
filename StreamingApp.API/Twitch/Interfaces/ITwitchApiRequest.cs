@@ -8,8 +8,8 @@ public interface ITwitchApiRequest
     void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e);
     void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e);
     void Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e);
-    void Client_OnConnected(object sender, OnConnectedArgs e);
-    void OwnerOfChannelConnection_OnLog(object sender, OnLogArgs e);
+    void Client_OnConnected(object sender, TwitchLib.Client.Events.OnConnectedEventArgs e);
+    void OwnerOfChannelConnection_OnLog(object sender, OnDisconnectedArgs e);
     void OwnerOfChannel_OnDisconnected(object sender, OnDisconnectedEventArgs e);
     void Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e);
 

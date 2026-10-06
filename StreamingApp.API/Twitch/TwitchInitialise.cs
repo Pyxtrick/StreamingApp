@@ -8,7 +8,6 @@ using System.Text.Json.Nodes;
 using TwitchLib.Api;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
-using TwitchLib.PubSub;
 using WebSocketSharp.Server;
 
 namespace StreamingApp.API.Twitch;
@@ -19,7 +18,6 @@ public class TwitchInitialise : ITwitchInitialise
 
     private readonly ITwitchCache _twitchCache;
     private readonly ITwitchApiRequest _twichApiRequest;
-    private readonly ITwitchPubSubApiRequest _twitchPubSubApiRequest;
     private readonly IConfiguration _configuration;
 
     // Authentication
@@ -34,7 +32,6 @@ public class TwitchInitialise : ITwitchInitialise
 
     // TwichLib
     private TwitchClient OwnerOfChannelConnection;
-    private TwitchPubSub Pubsub;
     private TwitchAPI ClientTwitchAPI;
     private TwitchAPI AppTwichAPI;
 
@@ -42,13 +39,12 @@ public class TwitchInitialise : ITwitchInitialise
     private string CachedOwnerOfChanelAccessToken = "needsaccesstoken";
     private string TwitchChannelName;
 
-    public TwitchInitialise(ILogger<TwitchInitialise> logger, ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration, ITwitchPubSubApiRequest twitchPubSubApiRequest)
+    public TwitchInitialise(ILogger<TwitchInitialise> logger, ITwitchApiRequest twichApiRequest, ITwitchCache twitchCache, IConfiguration configuration)
     {
         _logger = logger;
         _twichApiRequest = twichApiRequest;
         _twitchCache = twitchCache;
         _configuration = configuration;
-        _twitchPubSubApiRequest = twitchPubSubApiRequest;
     }
 
     public void StartTwitchBot()
@@ -77,7 +73,7 @@ public class TwitchInitialise : ITwitchInitialise
                 CachedOwnerOfChanelAccessToken = ownerOfChannelAccessAndRefresh.Item1;
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
-                InitalizePubSub(CachedOwnerOfChanelAccessToken);
+                //InitalizePubSub(CachedOwnerOfChanelAccessToken);
                 await InitializeTwitchAPI(CachedOwnerOfChanelAccessToken, ownerOfChannelAccessAndRefresh.Item3);
             }
         };
@@ -90,14 +86,9 @@ public class TwitchInitialise : ITwitchInitialise
 
     public void CloseConntection(object sender, EventArgs e)
     {
-        if (Pubsub != null)
-        {
-            Pubsub.Disconnect();
-        }
-
         if (OwnerOfChannelConnection != null)
         {
-            OwnerOfChannelConnection.Disconnect();
+            //OwnerOfChannelConnection.OnDisconnected();
         }
 
         if (WebServer != null)
@@ -151,28 +142,6 @@ public class TwitchInitialise : ITwitchInitialise
         TwitchChannelName = outhedUser.Users[0].Login;
     }
 
-    private void InitalizePubSub(string accessToken)
-    {
-        Pubsub = new TwitchPubSub();
-
-        Pubsub.OnPubSubServiceConnected += Bot_OnPubSubServiceConnected;
-        Pubsub.OnLog += _twitchPubSubApiRequest.Bot_OnLog;
-        Pubsub.OnChannelPointsRewardRedeemed += _twitchPubSubApiRequest.Bot_OnRewardRedeemed;
-        //Pubsub.OnFollow += _twitchPubSubApiRequest.Bot_OnFollow;
-
-        Pubsub.Connect();
-    }
-
-    private void Bot_OnPubSubServiceConnected(object sender, EventArgs e)
-    {
-        Pubsub.SendTopics(CachedOwnerOfChanelAccessToken);
-        Pubsub.ListenToChannelPoints(_configuration["Twitch:ChannelId"]);
-        //Pubsub.ListenToFollows(_configuration["Twitch:ChannelId"]);
-        //Pubsub.ListenToChatModeratorActions(_configuration["Twitch:ChannelBotId"], _configuration["Twitch:ChannelId"]);
-
-        Console.WriteLine("PubSub Connected");
-    }
-
     private void InitializeOwnerOfChannelConnection(string username, string accessToken)
     {
         OwnerOfChannelConnection = new TwitchClient();
@@ -210,8 +179,8 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnSendReceiveData += _twichApiRequest.Bot_OnSendReceiveData;
         #endregion
 
-        OwnerOfChannelConnection.Connect();
-        OwnerOfChannelConnection.JoinChannel(_configuration["Twitch:Channel"]);
+        OwnerOfChannelConnection.ConnectAsync();
+        OwnerOfChannelConnection.JoinChannelAsync(_configuration["Twitch:Channel"]);
 
         _twitchCache.AddData(OwnerOfChannelConnection, ClientTwitchAPI, AppTwichAPI);
     }
