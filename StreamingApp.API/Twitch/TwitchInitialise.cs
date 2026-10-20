@@ -73,7 +73,6 @@ public class TwitchInitialise : ITwitchInitialise
                 CachedOwnerOfChanelAccessToken = ownerOfChannelAccessAndRefresh.Item1;
                 SetNameAndOuthedUser(CachedOwnerOfChanelAccessToken).Wait();
                 InitializeOwnerOfChannelConnection(TwitchChannelName, CachedOwnerOfChanelAccessToken);
-                //InitalizePubSub(CachedOwnerOfChanelAccessToken);
                 await InitializeTwitchAPI(CachedOwnerOfChanelAccessToken, ownerOfChannelAccessAndRefresh.Item3);
             }
         };
@@ -142,7 +141,7 @@ public class TwitchInitialise : ITwitchInitialise
         TwitchChannelName = outhedUser.Users[0].Login;
     }
 
-    private void InitializeOwnerOfChannelConnection(string username, string accessToken)
+    private async Task InitializeOwnerOfChannelConnection(string username, string accessToken)
     {
         OwnerOfChannelConnection = new TwitchClient();
         OwnerOfChannelConnection.Initialize(new ConnectionCredentials(username, accessToken), TwitchChannelName);
@@ -179,7 +178,7 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnSendReceiveData += _twichApiRequest.Bot_OnSendReceiveData;
         #endregion
 
-        OwnerOfChannelConnection.ConnectAsync();
+        await OwnerOfChannelConnection.ConnectAsync();
         OwnerOfChannelConnection.JoinChannelAsync(_configuration["Twitch:Channel"]);
 
         _twitchCache.AddData(OwnerOfChannelConnection, ClientTwitchAPI, AppTwichAPI);
