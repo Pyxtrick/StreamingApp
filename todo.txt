@@ -13,10 +13,6 @@ Fronted
 
 	Fix All Chat one Message Text not wraping correctly
 
-	Fix: Resub text to Long overlapping end of text
-
-	Fix: resub 
-
 	fail SUB: StreamingApp.Core.Utility.Scheduler.AlertScheduler[0]
       An error was generated for warning 'Microsoft.EntityFrameworkCore.Query.InvalidIncludePathError':
 	  Unable to find navigation 'Sub' specified in string based include path 'Sub'. 
