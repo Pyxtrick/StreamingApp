@@ -8,6 +8,7 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.HypeTrain;
 using TwitchLib.Client.Events;
+using TwitchLib.Communication.Events;
 using WebSocketSharp;
 
 namespace StreamingApp.API.Twitch;
@@ -29,22 +30,22 @@ public class TwitchApiRequest : ITwitchApiRequest
         _mapper = mapper;
     }
 
-    public void Client_OnConnected(object sender, OnConnectedArgs e)
+    public async Task Client_OnConnected(object sender, TwitchLib.Client.Events.OnConnectedEventArgs e)
     {
         Console.WriteLine($"User {e.BotUsername} connected (bot access)");
     }
 
-    public void OwnerOfChannel_OnDisconnected(object sender, TwitchLib.Communication.Events.OnDisconnectedEventArgs e)
+    public async Task OwnerOfChannel_OnDisconnected(object sender, OnDisconnectedArgs e)
     {
         Console.WriteLine($"OnDisconnectet event");
     }
 
-    public void OwnerOfChannelConnection_OnLog(object sender, OnLogArgs e)
+    public async Task OwnerOfChannelConnection_OnLog(object sender, OnDisconnectedArgs e)
     {
-        Console.WriteLine($"OnLog: {e.Data}");
+        Console.WriteLine($"OnLog: {e}");
     }
 
-    public void Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
+    public async Task Bot_OnChannelStateChanged(object sender, OnChannelStateChangedArgs e)
     {
         //TODO: Is this when i go online and offline ?
         Console.WriteLine($"Chanel state Change: {e.ChannelState}");
@@ -52,7 +53,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         //throw new NotImplementedException();
     }
 
-    public void Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
+    public async Task Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
         if (e.ChatMessage.Bits != 0)
         {
@@ -93,16 +94,16 @@ public class TwitchApiRequest : ITwitchApiRequest
         }
     }
 
-    public void Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
+    public async Task Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
     {
-        MessageDto commandDto = _mapper.Map<MessageDto>(e.Command.ChatMessage);
+        MessageDto commandDto = _mapper.Map<MessageDto>(e.Command.Name);
         commandDto.IsCommand = true;
 
         Console.WriteLine("Command Called");
         //_twitchCallCache.AddMessage(commandDto, CallCacheEnum.CachedMessageData);
     }
 
-    public async void Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
+    public async Task Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
     {
         OnHypeTrain();
 
@@ -110,7 +111,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         string recipientUserName = e.GiftedSubscription.MsgParamRecipientUserName;
         TwitchLib.Client.Enums.SubscriptionPlan subscriptionPlan = e.GiftedSubscription.MsgParamSubPlan;
         string amount = e.GiftedSubscription.MsgParamMonths;
-        string lenght = e.GiftedSubscription.MsgParamMultiMonthGiftDuration;
+        int lenght = e.GiftedSubscription.MsgParamMultiMonthGiftDuration;
         string resiveUserName = e.GiftedSubscription.MsgParamRecipientUserName;
         string emoteMessage;
 
@@ -127,15 +128,15 @@ public class TwitchApiRequest : ITwitchApiRequest
         // TODO: SaveGiftedSubscription to DB
     }
 
-    public async void Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
+    public async Task Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
     {
         OnHypeTrain();
 
-        if (!e.Subscriber.SubscriptionPlan.Equals("Prime"))
+        if (!e.Subscriber.MsgParamSubPlan.Equals("Prime"))
         {
             string userName = e.Subscriber.DisplayName;
-            string subscriptionPlan = e.Subscriber.SubscriptionPlan.ToString();
-            int cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
+            string subscriptionPlan = e.Subscriber.MsgParamSubPlan.ToString();
+            int cumulativeMonths = e.Subscriber.MsgParamCumulativeMonths;
             string emoteMessage = "";
 
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.Subscriber);
@@ -143,7 +144,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
             try
             {
-                cumulativeMonths = int.Parse(e.Subscriber.MsgParamCumulativeMonths);
+                cumulativeMonths = e.Subscriber.MsgParamCumulativeMonths;
 
                 if (cumulativeMonths == 0)
                 {
@@ -170,15 +171,15 @@ public class TwitchApiRequest : ITwitchApiRequest
         }
     }
 
-    public async void Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e)
+    public async Task Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e)
     {
         OnHypeTrain();
 
-        if (e.PrimePaidSubscriber.SubscriptionPlan.Equals("Prime"))
+        if (e.PrimePaidSubscriber.MsgParamSubPlan.Equals("Prime"))
         {
             SubDto subscriptionDto = _mapper.Map<SubDto>(e.PrimePaidSubscriber);
 
-            Console.WriteLine($"OnPrimePaidSubscriber Trigger {e.PrimePaidSubscriber.SubscriptionPlan}");
+            Console.WriteLine($"OnPrimePaidSubscriber Trigger {e.PrimePaidSubscriber.MsgParamSubPlan}");
 
             _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
 
@@ -187,18 +188,18 @@ public class TwitchApiRequest : ITwitchApiRequest
         }
     }
 
-    public void Bot_OnReSubscriber(object sender, OnReSubscriberArgs e)
+    public async Task Bot_OnReSubscriber(object sender, OnReSubscriberArgs e)
     {
         OnHypeTrain();
 
         SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
 
-        Console.WriteLine($"OnReSubscriber Trigge {e.ReSubscriber.SubscriptionPlan}");
+        Console.WriteLine($"OnReSubscriber Trigge {e.ReSubscriber.MsgParamSubPlan}");
 
         _twitchCallCache.AddMessage(subscriptionDto, CallCacheEnum.CachedSubData);
     }
 
-    public void Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e)
+    public async Task Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e)
     {
         string? userName = e.RaidNotification.DisplayName;
         int amount = 0;
@@ -226,28 +227,28 @@ public class TwitchApiRequest : ITwitchApiRequest
         //throw new NotImplementedException();
     }
 
-    public void Bot_OnUserBanned(object sender, OnUserBannedArgs e)
+    public async Task Bot_OnUserBanned(object sender, OnUserBannedArgs e)
     {
-        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", e.UserBan.BanReason, BannedTargetEnum.Banned, false, OriginEnum.Twitch, DateTime.Now);
+        BannedUserDto bannedUser = new(e.UserBan.TargetUserId, "", e.UserBan.Username, "message", "e.UserBan.BanReason", BannedTargetEnum.Banned, false, OriginEnum.Twitch, DateTime.Now);
 
         _twitchCallCache.AddMessage(bannedUser, CallCacheEnum.CachedBannedData);
     }
 
-    public void Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
+    public async Task Bot_OnUserTimedout(object sender, OnUserTimedoutArgs e)
     {
-        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", e.UserTimeout.TimeoutReason, BannedTargetEnum.TimeOut, false, OriginEnum.Twitch, DateTime.Now);
+        BannedUserDto userTimeOout = new(e.UserTimeout.TargetUserId, "", e.UserTimeout.Username, "message", "e.UserTimeout.TimeoutReason", BannedTargetEnum.TimeOut, false, OriginEnum.Twitch, DateTime.Now);
 
         _twitchCallCache.AddMessage(userTimeOout, CallCacheEnum.CachedBannedData);
     }
 
-    public void Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
+    public async Task Bot_OnMessageCleared(object sender, OnMessageClearedArgs e)
     {
         BannedUserDto deletedMessage = new("", e.TargetMessageId, "UserName", e.Message, "Reson", BannedTargetEnum.Message, false, OriginEnum.Twitch, DateTime.Now);
 
         _twitchCallCache.AddMessage(deletedMessage, CallCacheEnum.CachedBannedData);
     }
 
-    public async void OnHypeTrain()
+    public async Task OnHypeTrain()
     {
         try
         {
@@ -278,7 +279,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
 
     #region toTest
-    public void Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
+    public async Task Bot_OnUserJoined(object sender, OnUserJoinedArgs e)
     {
         // TODO: Save to DB
         //Console.WriteLine("Check this if it also does it when user followed");
@@ -286,7 +287,7 @@ public class TwitchApiRequest : ITwitchApiRequest
         //throw new NotImplementedException();
     }
 
-    public void Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
+    public async Task Bot_OnSendReceiveData(object sender, OnSendReceiveDataArgs e)
     {
         try
         {
@@ -318,7 +319,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
         Console.WriteLine($"OnSendReceiveDataArgs Data: {e.Data}");
     }
-    public void Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
+    public async Task Bot_OnUnaccountedFor(object sender, OnUnaccountedForArgs e)
     {
         Console.WriteLine($"OnUnaccountedForArgs {e.RawIRC}");
     }

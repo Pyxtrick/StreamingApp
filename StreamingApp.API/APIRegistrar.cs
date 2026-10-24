@@ -38,7 +38,6 @@ public static class APIRegistrar
 
         //twitch
         services.AddScoped<ITwitchApiRequest, TwitchApiRequest>();
-        services.AddScoped<ITwitchPubSubApiRequest, TwitchPubSubApiRequest>();
         services.AddScoped<ITwitchInitialise, TwitchInitialise>();
         services.AddScoped<ITwitchSendRequest, TwitchSendRequest>();
 

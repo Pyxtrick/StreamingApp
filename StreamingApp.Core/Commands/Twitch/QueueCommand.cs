@@ -163,7 +163,7 @@ public class QueueCommand : IQueueCommand
         switch (origin)
         {
             case OriginEnum.Twitch:
-                _twitchCache.GetOwnerOfChannelConnection().SendMessage(_configuration["Twitch:Channel"], response);
+                _twitchCache.GetOwnerOfChannelConnection().SendMessageAsync(_configuration["Twitch:Channel"], response);
                 break;
             case OriginEnum.Youtube:
                 break;
