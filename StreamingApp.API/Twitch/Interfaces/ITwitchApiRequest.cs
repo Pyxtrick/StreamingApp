@@ -1,5 +1,4 @@
 ﻿using TwitchLib.Client.Events;
-using TwitchLib.Communication.Events;
 
 namespace StreamingApp.API.Twitch.Interfaces;
 
@@ -14,6 +13,8 @@ public interface ITwitchApiRequest
     Task Bot_OnRaidNotification(object sender, OnRaidNotificationArgs e);
     
     Task Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e);
+    Task Bot_OnContinuedGiftedSubscription(object sender, OnContinuedGiftedSubscriptionArgs e);
+    Task Bot_OnAnonGiftPaidUpgrade(object sender, OnAnonGiftPaidUpgradeArgs e);
     Task Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e);
     Task Bot_OnReSubscriber(object sender, OnReSubscriberArgs e);
     Task Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e);

@@ -8,7 +8,6 @@ using StreamingApp.Domain.Entities.Dtos.Twitch;
 using StreamingApp.Domain.Enums;
 using TwitchLib.Api.Helix.Models.HypeTrain;
 using TwitchLib.Client.Events;
-using TwitchLib.Communication.Events;
 using WebSocketSharp;
 
 namespace StreamingApp.API.Twitch;
@@ -55,9 +54,9 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async Task Bot_OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
-        if (e.ChatMessage.Bits != 0)
+        if (e.ChatMessage.Bits != 0)    
         {
-            OnHypeTrain();
+            await OnHypeTrain();
         }
 
         // TODO: Test if this is valid
@@ -96,7 +95,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async Task Bot_OnChatCommandRecived(object sender, OnChatCommandReceivedArgs e)
     {
-        MessageDto commandDto = _mapper.Map<MessageDto>(e.Command.Name);
+        MessageDto commandDto = _mapper.Map<MessageDto>(e.ChatMessage);
         commandDto.IsCommand = true;
 
         Console.WriteLine("Command Called");
@@ -105,7 +104,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async Task Bot_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
     {
-        OnHypeTrain();
+        await OnHypeTrain();
 
         string? userName = e.GiftedSubscription.DisplayName;
         string recipientUserName = e.GiftedSubscription.MsgParamRecipientUserName;
@@ -128,9 +127,34 @@ public class TwitchApiRequest : ITwitchApiRequest
         // TODO: SaveGiftedSubscription to DB
     }
 
+    public async Task Bot_OnContinuedGiftedSubscription(object sender, OnContinuedGiftedSubscriptionArgs e)
+    {
+        string userName = e.ContinuedGiftedSubscription.DisplayName;
+        string origionalGifterUserName = e.ContinuedGiftedSubscription.MsgParamSenderName;
+        
+        await ContinuedGiftedSubscription(userName, origionalGifterUserName);
+    }
+
+    public async Task Bot_OnAnonGiftPaidUpgrade(object sender, OnAnonGiftPaidUpgradeArgs e)
+    {
+        string userName = e.AnonGiftPaidUpgrade.DisplayName;
+        string origionalGifterUserName = e.AnonGiftPaidUpgrade.MsgParamPromoName;
+
+        await ContinuedGiftedSubscription(userName, origionalGifterUserName);
+    }
+
+    public async Task ContinuedGiftedSubscription(string userName, string origionalGifterUserName)
+    {
+        string emoteMessage = "";
+
+        emoteMessage = $"Thank you {userName} for Continuing the Sub from {origionalGifterUserName}";
+
+        // TODO: Do someting here
+    }
+
     public async Task Bot_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
     {
-        OnHypeTrain();
+        await OnHypeTrain();
 
         if (!e.Subscriber.MsgParamSubPlan.Equals("Prime"))
         {
@@ -173,7 +197,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async Task Bot_OnPrimePaidSubscriber(object sender, OnPrimePaidSubscriberArgs e)
     {
-        OnHypeTrain();
+        await OnHypeTrain();
 
         if (e.PrimePaidSubscriber.MsgParamSubPlan.Equals("Prime"))
         {
@@ -190,7 +214,7 @@ public class TwitchApiRequest : ITwitchApiRequest
 
     public async Task Bot_OnReSubscriber(object sender, OnReSubscriberArgs e)
     {
-        OnHypeTrain();
+        await OnHypeTrain();
 
         SubDto subscriptionDto = _mapper.Map<SubDto>(e.ReSubscriber);
 

@@ -150,16 +150,20 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnConnected += _twichApiRequest.Client_OnConnected;
         OwnerOfChannelConnection.OnDisconnected += _twichApiRequest.OwnerOfChannel_OnDisconnected;
 
-        // All messages can be usefull during debug
-        //OwnerOfChannelConnection.OnLog = _twichApiRequest.OwnerOfChannelConnection_OnLog;
         OwnerOfChannelConnection.OnMessageReceived += _twichApiRequest.Bot_OnMessageReceived;
         OwnerOfChannelConnection.OnChatCommandReceived += _twichApiRequest.Bot_OnChatCommandRecived;
 
         OwnerOfChannelConnection.OnGiftedSubscription += _twichApiRequest.Bot_OnGiftedSubscription;
-        //OwnerOfChannelConnection.OnContinuedGiftedSubscription += _twichApiRequest.Bot_OnContinuedGiftedSubscription;
+        OwnerOfChannelConnection.OnContinuedGiftedSubscription += _twichApiRequest.Bot_OnContinuedGiftedSubscription;
+        OwnerOfChannelConnection.OnAnonGiftPaidUpgrade += _twichApiRequest.Bot_OnAnonGiftPaidUpgrade;
         OwnerOfChannelConnection.OnNewSubscriber += _twichApiRequest.Bot_OnNewSubscriber;
         OwnerOfChannelConnection.OnPrimePaidSubscriber += _twichApiRequest.Bot_OnPrimePaidSubscriber;
         OwnerOfChannelConnection.OnReSubscriber += _twichApiRequest.Bot_OnReSubscriber;
+        
+        //TODO: OwnerOfChannelConnection.OnFallow += ???
+        //TODO: OwnerOfChannelConnection.OnRewardRedeemd += ???
+        //TODO: OwnerOfChannelConnection.OnBitsRecived += ???
+        //TODO: OwnerOfChannelConnection.OnHypeTrain += ???
 
         OwnerOfChannelConnection.OnRaidNotification += _twichApiRequest.Bot_OnRaidNotification;
         OwnerOfChannelConnection.OnChannelStateChanged += _twichApiRequest.Bot_OnChannelStateChanged; // TODO: Check on what it is doing 
@@ -168,11 +172,11 @@ public class TwitchInitialise : ITwitchInitialise
         OwnerOfChannelConnection.OnUserTimedout += _twichApiRequest.Bot_OnUserTimedout;
         OwnerOfChannelConnection.OnMessageCleared += _twichApiRequest.Bot_OnMessageCleared;
         //OwnerOfChannelConnection.OnDuplicate
-        // TODO: Not there jet OwnerOfChannelConnection.OnNewFollower
 
         // check for add's / advertisements
 
         #region toTest
+        //OwnerOfChannelConnection.OnLog = _twichApiRequest.OwnerOfChannelConnection_OnLog;
         OwnerOfChannelConnection.OnUserJoined += _twichApiRequest.Bot_OnUserJoined; // TODO: Check on what it is doing if follows also count and other then chatting users
         OwnerOfChannelConnection.OnUnaccountedFor += _twichApiRequest.Bot_OnUnaccountedFor;
         OwnerOfChannelConnection.OnSendReceiveData += _twichApiRequest.Bot_OnSendReceiveData;
