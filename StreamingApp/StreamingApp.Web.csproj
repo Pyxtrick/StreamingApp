@@ -9,14 +9,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.13" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="3.11.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.7.1">
+    <PackageReference Include="NSwag.AspNetCore" Version="14.8.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
